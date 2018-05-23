@@ -1,22 +1,34 @@
-// server.js
-// where your node app starts
+var debug = true;
 
-// init project
-var express = require('express');
-var app = express();
+var hostname = 'glitch' || 'localhost';
+var port = process .env .PORT || 8080;
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
+var static_path = require ('path') .join (__dirname, 'static');
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
-});
+require ('koa-qs') (new (require ('koa')) ())
+	.use (require ('koa-compress') ())
+	.use (require ('koa-cors') ())
+	.use (function (ctx, next) {
+		return	next ()
+					.catch (function (err) {
+						console .error (err)
+						
+						ctx .type = 'application/json'
+						ctx .status = /*err .code || */500
+						//ctx .message = err .message || 'Internal Server Error'
+						ctx .body =	{
+										error:	err .message
+									}
+						if (debug)
+							ctx .body .stack = err .stack;
+					});
+	})
+	.use (require ('koa-morgan') ('combined'))
+	.use (require ('koa-bodyparser') ())
+	.use (require ('koa-json') ())
+	.use (require ('koa-static') (static_path))
+	
+	.listen (port);
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+console .log ('Listening at ' + hostname + ':' + port + '...')
