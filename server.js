@@ -17,7 +17,10 @@ var clean_rooms = _ => {
 
 		if (cleaning_time > ref_time + 60 * 60 * 1000) {
 			; delete rooms [i] }}
+
+	; setTimeout (clean_rooms, 5 * 60 * 1000)
 }
+; clean_rooms ()
 
 
 ;; require ('koa-qs') (new (require ('koa')) ())
