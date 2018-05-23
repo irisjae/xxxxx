@@ -6,6 +6,11 @@ var port = process .env .PORT || 8080
 var static_path = require ('path') .join (__dirname, 'static')
 
 
+
+var rooms = {}
+
+
+
 ;; require ('koa-qs') (new (require ('koa')) ())
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
@@ -28,6 +33,9 @@ var static_path = require ('path') .join (__dirname, 'static')
 	.use (require ('koa-morgan') ('combined'))
 	.use (require ('koa-bodyparser') ())
 	.use (require ('koa-json') ())
+	.use (function (ctx, next) {
+
+	})
 	.use (require ('koa-static') (static_path))
 	
 	.listen (port)
