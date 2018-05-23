@@ -12,13 +12,14 @@ Your Project
 ------------
 
 On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
+- build to /static
+- don't forget to add all the surplus!
 
 On the back-end,
-- your app starts at `server.js`
+- your app starts at server.js`
 - add frameworks and packages in `package.json`
 - safely store app secrets in `.env` (nobody can see this but you and people you invite)
+- five mins done, easy oxfords!
 
 
 Made by [Fog Creek](https://fogcreek.com/)
