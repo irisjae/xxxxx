@@ -43,12 +43,13 @@ var clean_rooms = _ => {
 			})
 	})
 	.use (require ('koa-morgan') ('combined'))
-	.use (require ('koa-bodyparser') ())
+	.use (require ('koa-bodyparser') ({ strict : false }))
 	.use (require ('koa-json') ())
 	.use (require ('koa-static') (static_path))
 	.use (require ('koa-router') () .post ('/log/:room', (ctx, next) => {
 		return Promise .resolve ()
 		.then (x => ctx .request .body)
+.then(x=>{console.log (x);return x})
 		.then (x => {
 			var id = ctx .params .room
 
@@ -70,6 +71,10 @@ var clean_rooms = _ => {
 		.catch (x => {
 			;; console .error (x)
 			return { error: 'An unexpected error occured' } })
+		.then (x => { ;; ctx .body = x })
+	}) .get ('/peephole', (ctx, next) => {
+		return Promise .resolve ()
+		.then (_ => rooms)
 		.then (x => { ;; ctx .body = x })
 	}) .routes ())
 	
