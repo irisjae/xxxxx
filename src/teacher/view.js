@@ -1,0 +1,8 @@
+
+
+
+
+
+window .view = <div>
+	{ }
+</div>
