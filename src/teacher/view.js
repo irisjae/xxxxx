@@ -3,6 +3,14 @@ var Z = sanctuary
 
 
 
+var completed_questions = number
+var setup = data ({ setup: [ list (student), room, list (question), game_rules ] })
+
+
+var state = data ({
+	before: [ maybe (room), list (student), list (questions), game_rules ],
+	during: [ completed_questions, setup ],
+	after: [] })
 
 var room = S .data (Z .Nothing)
 
