@@ -1,6 +1,15 @@
 var Z = sanctuary
 
+var number = x => {
+  if (x === + x)
+    return x
+  else
+    ;throw 'Not a Number'}
+var 
 
+
+var then = x => Xx (x,
+  pp ())
 
 
 var completed_questions = number
@@ -12,7 +21,7 @@ var state = data ({
 	during: [ completed_questions, setup ],
 	after: [] })
 
-var room = S .data (Z .Nothing)
+var before_state = S .data (Z .Nothing)
 
 
 
