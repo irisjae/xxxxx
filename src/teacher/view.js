@@ -35,8 +35,8 @@ var setup = data ({ setup: [ list (student), room, list (question), game_rules ]
 
 
 var state = data ({
-	before: [ maybe (room), list (student), list (questions), game_rules ],
-	during: [ completed_questions, setup ],
+	before: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => {},
+	during: ( completed_questions, setup ) => {},
 	after: [] })
 
 
