@@ -41,9 +41,6 @@ var state = data ({
 
 
 var q_state = S .data (Z .Nothing)
-var before_state = S (() => q_state () .before)
-var during_state = S (() => q_state () .during)
-var after_state = S (() => q_state () .after)
 
 
 
