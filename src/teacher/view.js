@@ -8,8 +8,8 @@ var number = x => {
 var ;
 
 
-var and = (x, y) => z => 
-  Z .reduce ((_, z) => y (z), x, z)
+var and = (from_nothing, from_just) => maybe => 
+  Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
 
 var completed_questions = number
@@ -37,9 +37,9 @@ window .view = <div>
 
 
 var get_room = _ => {;
-	var id = Oo (Math .random (),
-		o (x => x * 100000000),
-		o (x => Math .floor (x)))
+	var id = Xx (Math .random (),
+		pp (x => x * 100000000),
+		pp (x => Math .floor (x)))
 	
 	fetch ('/log/' + id)
 	.then (x => x .json ())
