@@ -1,10 +1,10 @@
 var xx = function (x) {
 	return { xx: x } }
-var pp = function (x) {
-	return { pp: x } }
+var oo = function (x) {
+	return { oo: x } }
 
-var Xx = function () {
-	if ('pp' in arguments [1]) {
+var Oo = function () {
+	if ('oo' in arguments [1]) {
 		var answer = arguments [0]
 		for (var i = 1; i < arguments .length; i ++) {
 			;answer = arguments [i] (answer) }
@@ -15,4 +15,4 @@ var Xx = function () {
 			;answer = answer (arguments [i]) }
 		return answer }
 	else {
-		;throw 'Syntax Error; no pp or xx after focus Xx;' } }
+		;throw 'Syntax Error; no oo or xx after focus Oo;' } }

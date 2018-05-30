@@ -1,11 +1,10 @@
 var Z = sanctuary
 
 var number = x => {
-  if (x === + x)
-    return x
-  else
-    ;throw 'Not a Number'}
-var ;
+  if (x === + x) {
+    return x}
+  else {
+    ;throw 'Not a Number'}}
 
 
 var and = (from_nothing, from_just) => maybe => 
@@ -22,24 +21,24 @@ var state = data ({
 	after: [] })
 
 
-var io_state = S .data (Z .Nothing)
-var before_state = S (() => io_state () .before)
-var during_state = S (() => io_state () .during)
-var after_state = S (() => io_state () .after)
+var q_state = S .data (Z .Nothing)
+var before_state = S (() => q_state () .before)
+var during_state = S (() => q_state () .during)
+var after_state = S (() => q_state () .after)
 
 
 
 window .view = <div>
-	{ Xx (before_state (), pp (and (Z .Nothing, x => x .)), pp (and ('Generating Code', x => 'Room: ' + room))) }
+	{ Oo (before_state (), oo (and (Z .Nothing, x => x .)), oo (and ('Generating Code', x => 'Room: ' + room))) }
 </div>
 
 
 
 
 var get_room = _ => {;
-	var id = Xx (Math .random (),
-		pp (x => x * 100000000),
-		pp (x => Math .floor (x)))
+	var id = Oo (Math .random (),
+		oo (x => x * 100000000),
+		oo (x => Math .floor (x)))
 	
 	fetch ('/log/' + id)
 	.then (x => x .json ())
@@ -48,5 +47,5 @@ var get_room = _ => {;
 			;room (id)}
 		else {
 			;throw 'taken' }})
-	.catch (_ => {; get_room ()}) }
+	.catch (_ => {;get_room ()}) }
 ;get_room ()
