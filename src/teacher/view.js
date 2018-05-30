@@ -1,38 +1,24 @@
 var Z = sanctuary
 
 
+var defined
 
-var number = x => {
-  /*if (x === + x) {
-    return x}
-  else {
-    ;throw 'Not a Number'}*/}
-
-var list = x => {
-  /*if (x .constructor === Array)
-    return x
-  else if (x .constructor === String)
-    return x
-  else {
-    ;throw 'Not a List'}*/}
-
-var maybe = x => {
-  /*if (Maybe ._test (x))
-    return x
-  else {
-    ;throw 'Not a Maybe'}*/}
+var number = defined
+var list = a => defined
+var maybe = a => defined
 
 
 
-
-
-var fro = (from_nothing, from_just) => maybe => 
+var fro = (from_nothing, from_just) => (maybe = maybe) => 
   Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
 
-var completed_questions = number
-var setup = data ({ setup: [ list (student), room, list (question), game_rules ] })
+var progress = number
+var setup = data ({ setup: ( list (student), room, list (question), game_rules ) => defined })
 
+var game_rules = data ({
+  rules: (time_limit = number, size = number) => defined })
+var default_rules = game_rules .rules (10, 10)
 
 var state = data ({
 	before: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => defined,
@@ -40,7 +26,8 @@ var state = data ({
 	after: () => defined })
 
 
-var q_state = S .data (Z .Nothing)
+var now_state = S .data (
+  state .before (Z .Nothing), [], [], default_rules)
 
 
 
