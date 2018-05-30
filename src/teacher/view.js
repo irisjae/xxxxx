@@ -5,11 +5,11 @@ var number = x => {
     return x
   else
     ;throw 'Not a Number'}
-var 
+var ;
 
 
-var then = x => Xx (x,
-  pp ())
+var and = (x, y) => z => 
+  Z .reduce ((_, z) => y (z), x, z)
 
 
 var completed_questions = number
@@ -21,15 +21,17 @@ var state = data ({
 	during: [ completed_questions, setup ],
 	after: [] })
 
-var before_state = S .data (Z .Nothing)
+
+var io_state = S .data (Z .Nothing)
+var before_state = S (() => io_state () .before)
+var during_state = S (() => io_state () .during)
+var after_state = S (() => io_state () .after)
 
 
 
 window .view = <div>
-	{ Z .reduce (
-		(_, room) => 'Room: ' + room
-		'Generating Code',
-		room ()) } </div>
+	{ Xx (before_state (), pp (and (Z .Nothing, x => x .)), pp (and ('Generating Code', x => 'Room: ' + room))) }
+</div>
 
 
 
