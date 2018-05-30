@@ -35,9 +35,9 @@ var setup = data ({ setup: [ list (student), room, list (question), game_rules ]
 
 
 var state = data ({
-	before: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => {},
-	during: ( completed_questions, setup ) => {},
-	after: [] })
+	before: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => defined,
+	during: ( completed_questions = progress, setup = setup ) => defined,
+	after: () => defined })
 
 
 var q_state = S .data (Z .Nothing)
