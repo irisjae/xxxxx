@@ -1,13 +1,32 @@
 var Z = sanctuary
 
+
+
 var number = x => {
-  if (x === + x) {
+  /*if (x === + x) {
     return x}
   else {
-    ;throw 'Not a Number'}}
+    ;throw 'Not a Number'}*/}
+
+var list = x => {
+  /*if (x .constructor === Array)
+    return x
+  else if (x .constructor === String)
+    return x
+  else {
+    ;throw 'Not a List'}*/}
+
+var maybe = x => {
+  /*if (Maybe ._test (x))
+    return x
+  else {
+    ;throw 'Not a Maybe'}*/}
 
 
-var and = (from_nothing, from_just) => maybe => 
+
+
+
+var fro = (from_nothing, from_just) => maybe => 
   Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
 
@@ -29,7 +48,7 @@ var after_state = S (() => q_state () .after)
 
 
 window .view = <div>
-	{ Oo (before_state (), oo (and (Z .Nothing, x => x .)), oo (and ('Generating Code', x => 'Room: ' + room))) }
+	{ Oo (before_state (), oo (fro (Z .Nothing, x => x .)), oo (fro ('Generating Code', x => 'Room: ' + room))) }
 </div>
 
 
