@@ -58,13 +58,24 @@ var get_room = _ => {;
 		oo (x => x * 100000000),
 		oo (x => Math .floor (x)))
 	
+  var presumed_state
+  
 	fetch ('/log/' + id)
 	.then (x => x .json ())
 	.then (x => {;
 		if (x .length !== 0) {
 			;throw new Error ('taken') }})
-  .then (_ => {
-			;the_state (state .ready ( setup .setup ( id, default_questions, default_rules ), [] ))
+  .then (_ =>
+    presumed_state = )
+  .then (_ => fetch ('/log/' + id, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json' },
+    body: JSON .stringify ({ questions:  })
+  }))
+  .then (x => {
+			;the_state ())
     })
 	.catch (_ => {;get_room ()}) }
 ;get_room ()
