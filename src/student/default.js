@@ -20,16 +20,17 @@ var id = window .id
 
 var student = id
 var question = string
-
 var progress = number
-var setup = data ({ setup: ( students = list (student), room = room, questions = list (question), rules = game_rules ) => defined })
 
-var game_rules = data ({
+
+var rules = data ({
   rules: (time_limit = number, size = number) => defined })
-var default_rules = game_rules .rules (10, 10)
+var default_rules = rules .rules (10, 10)
+
+var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
 var state = data ({
-	setup: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => defined,
+	prepare: ( setup = maybe (setup) ) => defined,
 	during: ( stats, completed_questions = progress, setup = setup ) => defined,
 	done: () => defined })
 
@@ -46,7 +47,7 @@ var setup_room = [the_setup, the_room]
 
 
 window .view = S .root (() => <div>
-	{ Oo (L .get (setup_room, the_state ()), oo (fro ('Generating Code', x => 'Room: ' + x))) }
+	{ Oo (L .get (setup_room, the_state ()), oo (fro ('hmmmm', x => 'Room: ' + x))) }
 </div>)
 
 

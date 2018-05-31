@@ -4,7 +4,7 @@
   "description": "Boo-yea!",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "./build; node server.js"
   },
   "dependencies": {
     "browserify": "^16.2.2",
