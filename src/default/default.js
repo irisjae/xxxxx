@@ -19,6 +19,8 @@ window .list = a => defined
 window .maybe = a => defined
 window .id = window .string
 
+var maybe = window .maybe
+
 window .data = constructors => Oo (constructors,
   oo (R .mapObjIndexed ((fn, key) => {
     var args_slice = fn .toString() .match (/\((.*?)\)/) [1]
@@ -28,8 +30,8 @@ window .data = constructors => Oo (constructors,
 
 
 
-window .fro = (from_nothing, from_just) => (maybe = maybe) => 
-  Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
+window .fro = (from_nothing, from_just) => (mmaybe = maybe) => 
+  mmaybe .reduce ((_, x) => from_just (x), from_nothing)
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;
