@@ -1,4 +1,8 @@
-var Z = sanctuary
+var Oo = window .Oo
+var oo = window .oo
+
+var R = window .r
+var Z = window .sanctuary
 
 
 var defined
@@ -8,9 +12,11 @@ var list = a => defined
 var maybe = a => defined
 
 var data = constructors => Oo (constructors,
-  oo (Z .map (fn =>
-    (...vals) => 
-      Z .fromPairs (R .zip (fn , vals)))))
+  oo (Z .map (fn => {
+    var args_slice = fn .toString() .match (/\((.+?)\)/) [1]
+    var portions = args_slice .split (',')
+    return (...vals) => 
+      Z .fromPairs (R .zip (portions, vals))})))
 
 
 
@@ -22,7 +28,7 @@ var fro = (from_nothing, from_just) => (maybe = maybe) =>
 
 
 var progress = number
-var setup = data ({ setup: ( list (student), room, list (question), game_rules ) => defined })
+var setup = data ({ setup: ( students = list (student), room = room, questions = list (question), rules = game_rules ) => defined })
 
 var game_rules = data ({
   rules: (time_limit = number, size = number) => defined })
@@ -40,7 +46,7 @@ var now_state = S .data (
 
 
 window .view = <div>
-	{ Oo (before_state (), oo (fro (Z .Nothing, x => x .)), oo (fro ('Generating Code', x => 'Room: ' + room))) }
+	{ Oo (before_state (), oo (fro (Z .Nothing, x => x .x)), oo (fro ('Generating Code', x => 'Room: ' + room))) }
 </div>
 
 
