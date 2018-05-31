@@ -30,6 +30,10 @@ var default_rules = rules .rules (10, 10)
 
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
+
+var consensus = data ({
+  consensus: (  ) => defined })
+
 var state = data ({
 	ready: ( setup = setup, students = list (student) ) => defined,
 	during: ( setup = setup, students = list (student), completed_questions = progress ) => defined,
