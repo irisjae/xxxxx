@@ -1,8 +1,9 @@
 var Oo = window .Oo
 var oo = window .oo
-var R = window .R
-var S = window .S
-var Z = window .sanctuary
+var L = require ('partial.lenses')
+var R = require ('ramda')
+var S = require ('s-js')
+var Z = require ('sanctuary')
 
 var defined
 
