@@ -23,8 +23,8 @@ var student = id
 var question = string
 var progress = number
 
-var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ
-)var rules = data ({
+var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+var rules = data ({
   rules: (time_limit = number, size = number) => defined })
 var default_rules = rules .rules (10, 10)
 
@@ -39,14 +39,14 @@ var the_state = S .data (Z .Nothing)
 
 
 
-var the_setup = ['setup']
-var the_room = ['room', L .define (Z .Nothing), L .rewrite (x => Z .Just (x))]
-var setup_room = [the_setup, the_room]
+var the_ready = ['ready']
+var the_room = ['room', L .defaults (Z .Nothing), L .rewrite (x => Z .Just (x))]
+var ready_room = [the_ready, the_room]
 
 
 
 window .view = S .root (() => <div>
-	{ Oo (L .get (setup_room, the_state ()), oo (fro ('hmmmm', x => 'Room: ' + x))) }
+	{ Oo (L .get (ready_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
 </div>)
 
 
@@ -60,10 +60,10 @@ var get_room = _ => {;
 	fetch ('/log/' + id)
 	.then (x => x .json ())
 	.then (x => {;
-		if (x .length =!= 0) {
+		if (x .length !== 0) {
 			;throw new Error ('taken') }})
-
   .then (_ => {
 			;the_state (state .ready ( id, default_questions, default_rules ))
-    })	.catch (_ => {;get_room ()}) }
-;get_room ()jj
+    })
+	.catch (_ => {;get_room ()}) }
+;get_room ()
