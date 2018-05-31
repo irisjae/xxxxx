@@ -7,6 +7,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "browserify": "^16.2.2",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-compress": "^3.0.0",
@@ -16,6 +17,10 @@
     "koa-qs": "^2.0.0",
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.3",
+    "partial.lenses": "^13.12.0",
+    "ramda": "^0.25.0",
+    "s-js": "^0.4.8",
+    "sanctuary": "^0.14.1",
     "surplus": "^0.5.2"
   },
   "engines": {

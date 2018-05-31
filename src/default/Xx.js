@@ -16,3 +16,7 @@ var Oo = function () {
 		return answer }
 	else {
 		;throw 'Syntax Error; no oo or xx after focus Oo;' } }
+
+window .xx = xx
+window .oo = oo
+window .Oo = Oo

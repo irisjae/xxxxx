@@ -1,19 +1,25 @@
 var Oo = window .Oo
 var oo = window .oo
-var L = require ('partial.lenses')
-var R = require ('ramda')
-var S = require ('s-js')
-var Z = require ('sanctuary')
+
+window .L = require ('partial.lenses')
+window .R = require ('ramda')
+window .S = require ('s-js')
+window .Z = require ('sanctuary')
+window .Surplus = require ('surplus')
+
+var R = window .R
+var Z = window .Z
 
 var defined
+window .defined = defined
 
-var number = defined
-var string = defined
-var list = a => defined
-var maybe = a => defined
-var id = string
+window .number = defined
+window .string = defined
+window .list = a => defined
+window .maybe = a => defined
+window .id = window .string
 
-var data = constructors => Oo (constructors,
+window .data = constructors => Oo (constructors,
   oo (R .map ((fn, key) => {
     var args_slice = fn .toString() .match (/\((.+?)\)/) [1]
     var portions = args_slice .split (',')
@@ -22,7 +28,7 @@ var data = constructors => Oo (constructors,
 
 
 
-var fro = (from_nothing, from_just) => (maybe = maybe) => 
+window .fro = (from_nothing, from_just) => (maybe = maybe) => 
   Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
 
