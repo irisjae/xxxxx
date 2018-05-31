@@ -30,8 +30,8 @@ window .data = constructors => Oo (constructors,
 
 
 
-window .fro = (from_nothing, from_just) => (mmaybe = maybe) => 
-  mmaybe .reduce ((_, x) => from_just (x), from_nothing)
+window .fro = (from_nothing, from_just) => (maybe = maybe) => 
+  maybe .reduce ((_, x) => from_just (x), from_nothing)
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;
