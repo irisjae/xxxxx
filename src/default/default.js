@@ -59,6 +59,9 @@ window .fro = (from_nothing, from_just) => (maybe = maybe) =>
   Z .reduce (_ => x => from_just (x), from_nothing, maybe)
 
 
+
+
+
 document .addEventListener ('DOMContentLoaded', _ => {;
 	;; document .body .appendChild (window .view)
 })
