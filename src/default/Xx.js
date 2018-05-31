@@ -7,12 +7,12 @@ var Oo = function () {
 	if ('oo' in arguments [1]) {
 		var answer = arguments [0]
 		for (var i = 1; i < arguments .length; i ++) {
-			;answer = arguments [i] (answer) }
+			;answer = arguments [i] .oo (answer) }
 		return answer }
 	else if ('xx' in arguments [1]) {
 		var answer = arguments [0]
 		for (var i = 1; i < arguments .length; i ++) {
-			;answer = answer (arguments [i]) }
+			;answer = answer (arguments [i] .xx) }
 		return answer }
 	else {
 		;throw 'Syntax Error; no oo or xx after focus Oo;' } }

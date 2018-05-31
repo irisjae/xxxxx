@@ -20,8 +20,8 @@ window .maybe = a => defined
 window .id = window .string
 
 window .data = constructors => Oo (constructors,
-  oo (R .map ((fn, key) => {
-    var args_slice = fn .toString() .match (/\((.+?)\)/) [1]
+  oo (R .mapObjIndexed ((fn, key) => {
+    var args_slice = fn .toString() .match (/\((.*?)\)/) [1]
     var portions = args_slice .split (',')
     return (...vals) => 
       R .objOf (key, Z .fromPairs (R .zip (portions, vals)))})))
