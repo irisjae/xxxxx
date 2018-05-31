@@ -12,6 +12,7 @@ var string = window .string
 var list = window .list
 var maybe = window .maybe
 var id = window .id
+var shuffle = window .shuffle
 
 
 
@@ -22,9 +23,8 @@ var student = id
 var question = string
 var progress = number
 
-var default_questions = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-var rules = data ({
+var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ
+)var rules = data ({
   rules: (time_limit = number, size = number) => defined })
 var default_rules = rules .rules (10, 10)
 
@@ -60,9 +60,10 @@ var get_room = _ => {;
 	fetch ('/log/' + id)
 	.then (x => x .json ())
 	.then (x => {;
-		if (x .length === 0) {
-			;the_state (state .ready ( id, default_questions, default_rules ))}
-		else {
+		if (x .length =!= 0) {
 			;throw new Error ('taken') }})
-	.catch (_ => {;get_room ()}) }
-;get_room ()
+
+  .then (_ => {
+			;the_state (state .ready ( id, default_questions, default_rules ))
+    })	.catch (_ => {;get_room ()}) }
+;get_room ()jj
