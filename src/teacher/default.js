@@ -13,6 +13,7 @@ var list = window .list
 var maybe = window .maybe
 var id = window .id
 var shuffle = window .shuffle
+var post = window .post
 
 
 
@@ -31,7 +32,7 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 var state = data ({
 	ready: ( setup = setup, students = list (student) ) => defined,
-	during: ( stats, completed_questions = progress, setup = setup ) => defined,
+	during: ( setup = setup, students = list (student), completed_questions = progress ) => defined,
 	done: () => defined })
 
 
@@ -41,15 +42,17 @@ var the_state = S .data (Z .Nothing)
 
 
 var state_setup = [L .choices ('ready', 'during'), 'setup']
-var setup_room = ['room']
-var setup_questions = ['questions']
-var setup_rules = ['rules']
+var setup_room = ['setup', 'room']
+var setup_questions = ['setup', 'questions']
+var setup_rules = ['setup', 'rules']
+var state_students = [L .choices ('ready', 'during'), 'students']
 
 var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
 
 
 window .view = S .root (() => <div>
 	{ Oo (L .get (state_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+  { Oo (L .get (state_room, the_state ()), oo (R .map (x => x + ' student is here'))) }
 </div>)
 
 
@@ -62,21 +65,11 @@ var get_room = _ => {;
 	
   var the_setup
   
-	fetch ('/log/' + id)
-	.then (x => x .json ())
-	.then (x => {;
-		if (x .length !== 0) {
-			;throw new Error ('taken') }})
+	fetch ('/log/' + id) .then (x => x .json ())
+	.then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }})
   .then (_ => { ;the_setup = setup .setup ( id, default_questions, default_rules ) })
-  .then (_ => fetch ('/log/' + id, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json' },
-    body: JSON .stringify ({ questions: L .get (setup_questions, the_setup), rules: L .get (setup_rules, the_setup) }) }))
-  .then (x => {
-    if (! x .ok) {
-      ;throw new Error ('cannot post')} })
+  .then (_ => fetch ('/log/' + id, post ({ questions: L .get (setup_questions, the_setup), rules: L .get (setup_rules, the_setup) })) .then (x => x .json ()))
+  .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} })
   .then (_ => { ;the_state (state .ready (the_setup, [])) })
 	.catch (x => {
     ;console .error (x)
