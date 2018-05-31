@@ -62,28 +62,28 @@ var state_students = [L .choices ('ready', 'during'), 'students']
 var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
 
 
-window .view = S .root (() => <div>
-	{ Oo (L .get (state_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
-  { Oo (L .get (state_room, the_state ()), oo (R .map (x => x + ' student is here'))) }
-</div>)
+S .root (() => {
+ 
+  window .view =  <div>
+    { Oo (L .get (state_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+    { Oo (L .get (state_room, the_state ()), oo (R .map (x => x + ' student is here'))) }
+  </div>
 
+  var get_room = time => {;
+    var id = Oo (Math .random (),
+      oo (x => x * 100000000),
+      oo (x => Math .floor (x)))
 
+    var the_setup = setup .setup ( id, default_questions, default_rules )
 
-
-var get_room = _ => {;
-	var id = Oo (Math .random (),
-		oo (x => x * 100000000),
-		oo (x => Math .floor (x)))
-	
-  var the_setup
+    fetch ('/log/' + id) .then (x => x .json ())
+    .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }})
+    .then (_ => fetch ('/log/' + id, post ({ questions: L .get (setup_questions, the_setup), rules: L .get (setup_rules, the_setup) })) .then (x => x .json ()))
+    .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} })
+    .then (_ => { ;the_state (state .ready (the_setup, [])) })
+    .catch (x => {
+      ;console .error (x)
+      ;get_room ()}) }
+  ;get_room ()
   
-	fetch ('/log/' + id) .then (x => x .json ())
-	.then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }})
-  .then (_ => { ;the_setup = setup .setup ( id, default_questions, default_rules ) })
-  .then (_ => fetch ('/log/' + id, post ({ questions: L .get (setup_questions, the_setup), rules: L .get (setup_rules, the_setup) })) .then (x => x .json ()))
-  .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} })
-  .then (_ => { ;the_state (state .ready (the_setup, [])) })
-	.catch (x => {
-    ;console .error (x)
-    ;get_room ()}) }
-;get_room ()
+})
