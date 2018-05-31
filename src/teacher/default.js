@@ -24,12 +24,13 @@ var question = string
 var progress = number
 
 var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-var rules = data ({
-  rules: (time_limit = number, size = number) => defined })
+var rules = data ({ rules: (time_limit = number, size = number) => defined })
 var default_rules = rules .rules (10, 10)
 
+var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
+
 var state = data ({
-	ready: ( room = room, questions = list (question), rules = rules ) => defined,
+	ready: ( setup = setup, students = list (student) ) => defined,
 	during: ( stats, completed_questions = progress, setup = setup ) => defined,
 	done: () => defined })
 
@@ -63,7 +64,7 @@ var get_room = _ => {;
 		if (x .length !== 0) {
 			;throw new Error ('taken') }})
   .then (_ => {
-			;the_state (state .ready ( id, default_questions, default_rules ))
+			;the_state (state .ready ( setup .setup ( id, default_questions, default_rules ), [] ))
     })
 	.catch (_ => {;get_room ()}) }
 ;get_room ()

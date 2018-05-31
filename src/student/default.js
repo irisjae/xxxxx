@@ -23,8 +23,7 @@ var question = string
 var progress = number
 
 
-var rules = data ({
-  rules: (time_limit = number, size = number) => defined })
+var rules = data ({ rules: (time_limit = number, size = number) => defined })
 var default_rules = rules .rules (10, 10)
 
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
