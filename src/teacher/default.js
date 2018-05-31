@@ -40,8 +40,8 @@ var the_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
 
 
 var the_setup = ['setup']
-var the_room = ['room']
-var setup_room = [the_setup, the_room, L .valueOr (Z .Nothing), L .reread (x => Z .Just (x))]
+var the_room = ['room', L .rewrite (x => Z .Just (x))]
+var setup_room = [the_setup, the_room]
 
 
 
