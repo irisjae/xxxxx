@@ -3,26 +3,15 @@ var oo = window .oo
 var R = window .R
 var S = window .S
 var Z = window .sanctuary
+var data = window .data
+var fro = window .fro
+var defined = window .defined
+var number = window .number
+var string = window .string
+var list = window .list
+var maybe = window .maybe
+var id = window .id
 
-var defined
-
-var number = defined
-var string = defined
-var list = a => defined
-var maybe = a => defined
-var id = string
-
-var data = constructors => Oo (constructors,
-  oo (Z .map (fn => {
-    var args_slice = fn .toString() .match (/\((.+?)\)/) [1]
-    var portions = args_slice .split (',')
-    return (...vals) => 
-      Z .fromPairs (R .zip (portions, vals))})))
-
-
-
-var fro = (from_nothing, from_just) => (maybe = maybe) => 
-  Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
 
 
@@ -46,11 +35,10 @@ var state = data ({
 
 
 
-var now_state = S .data (
-  state .before (Z .Nothing), [], [], default_rules)
+var now_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
 
 
-var 
+
 
 
 window .view = <div>
