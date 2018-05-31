@@ -11,6 +11,7 @@ done
 
 touch ~/static/default.js
 find ~/static/ -type f | grep default/ | grep \\.js | grep -v default\\.js | while read f; do
+  echo ';' >> ~/static/default.js
   cat "$f" >> ~/static/default.js
   rm "$f"
 done
