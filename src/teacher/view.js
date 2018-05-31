@@ -1,6 +1,7 @@
 var Oo = window .Oo
 var oo = window .oo
-var R = window .r
+var R = window .R
+var S = window .S
 var Z = window .sanctuary
 
 var defined
@@ -29,6 +30,7 @@ var fro = (from_nothing, from_just) => (maybe = maybe) =>
 
 
 var student = id
+var question = string
 
 var progress = number
 var setup = data ({ setup: ( students = list (student), room = room, questions = list (question), rules = game_rules ) => defined })
@@ -38,14 +40,17 @@ var game_rules = data ({
 var default_rules = game_rules .rules (10, 10)
 
 var state = data ({
-	before: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => defined,
-	during: ( completed_questions = progress, setup = setup ) => defined,
-	after: () => defined })
+	setup: ( room = maybe (room), students = list (student), questions = list (questions), rules = game_rules ) => defined,
+	during: ( stats, completed_questions = progress, setup = setup ) => defined,
+	done: () => defined })
+
 
 
 var now_state = S .data (
   state .before (Z .Nothing), [], [], default_rules)
 
+
+var 
 
 
 window .view = <div>
