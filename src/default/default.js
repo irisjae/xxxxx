@@ -31,7 +31,7 @@ window .data = constructors => Oo (constructors,
 
 
 window .fro = (from_nothing, from_just) => (maybe = maybe) => 
-  maybe .reduce ((_, x) => from_just (x), from_nothing)
+  Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;

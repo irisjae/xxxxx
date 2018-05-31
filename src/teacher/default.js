@@ -45,9 +45,9 @@ var setup_room = [the_setup, the_room]
 
 
 
-window .view = <div>
+window .view = S .root (() => <div>
 	{ Oo (L .get (setup_room, the_state ()), oo (fro ('Generating Code', x => 'Room: ' + x))) }
-</div>
+</div>)
 
 
 
