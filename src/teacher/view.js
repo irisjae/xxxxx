@@ -1,15 +1,15 @@
 var Oo = window .Oo
 var oo = window .oo
-
 var R = window .r
 var Z = window .sanctuary
-
 
 var defined
 
 var number = defined
+var string = defined
 var list = a => defined
 var maybe = a => defined
+var id = string
 
 var data = constructors => Oo (constructors,
   oo (Z .map (fn => {
@@ -20,12 +20,15 @@ var data = constructors => Oo (constructors,
 
 
 
-
-
-
 var fro = (from_nothing, from_just) => (maybe = maybe) => 
   Z .reduce ((_, x) => from_just (x), from_nothing, maybe)
 
+
+
+
+
+
+var student = id
 
 var progress = number
 var setup = data ({ setup: ( students = list (student), room = room, questions = list (question), rules = game_rules ) => defined })
