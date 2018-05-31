@@ -13,11 +13,11 @@ var maybe = a => defined
 var id = string
 
 var data = constructors => Oo (constructors,
-  oo (Z .map (fn => {
+  oo (R .map ((fn, key) => {
     var args_slice = fn .toString() .match (/\((.+?)\)/) [1]
     var portions = args_slice .split (',')
     return (...vals) => 
-      Z .fromPairs (R .zip (portions, vals))})))
+      R .objOf (key, Z .fromPairs (R .zip (portions, vals)))})))
 
 
 

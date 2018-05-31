@@ -1,6 +1,7 @@
 var Oo = window .Oo
 var oo = window .oo
 var R = window .R
+var L = window .L
 var S = window .S
 var Z = window .sanctuary
 var data = window .data
@@ -11,7 +12,6 @@ var string = window .string
 var list = window .list
 var maybe = window .maybe
 var id = window .id
-
 
 
 
@@ -35,14 +35,18 @@ var state = data ({
 
 
 
-var now_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
+var the_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
 
 
+
+var the_setup = [L .valueOr ({setup: Z .Nothing}), L .prop ('setup')]
+var the_room = [L .valueOr ({room: Z .Nothing}), L .prop ('room')]
+var setup_room = [the_setup, the_room]
 
 
 
 window .view = <div>
-	{ Oo (before_state (), oo (fro (Z .Nothing, x => x .x)), oo (fro ('Generating Code', x => 'Room: ' + room))) }
+	{ Oo (L .get (setup_room, the_state ()), oo (fro ('Generating Code', x => 'Room: ' + x))) }
 </div>
 
 
@@ -57,7 +61,7 @@ var get_room = _ => {;
 	.then (x => x .json ())
 	.then (x => {;
 		if (x .length === 0) {
-			;room (id)}
+			;the_state (L .set (setup_room, id, the_state ()))}
 		else {
 			;throw 'taken' }})
 	.catch (_ => {;get_room ()}) }

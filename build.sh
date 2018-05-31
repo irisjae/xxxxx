@@ -1,3 +1,4 @@
 rm -r ~/static/*
+cp -r ~/src/* ~/static/
 
-find src -type f | grep default.html | while read f; 
+find ~/static/ -type f | grep default | while read f; do 
