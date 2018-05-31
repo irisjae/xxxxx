@@ -17,19 +17,20 @@ var post = window .post
 
 
 
-var latency = number
-var v = (...types) => defined
-
-
-var attempt = data ({ attempt: (guess) => defined })
-var performance = data ({ performance: (attempts = list (attempt)) => defined })
-var history = data ({ history: (performances = list (performance)) => defined })
-
-
 
 var student = id
 var question = string
 var progress = number
+var answer = question
+var latency = number
+var v = (...types) => defined
+
+
+
+var attempt = data ({ attempt: (guess = answer, time = latency) => defined })
+var performance = data ({ performance: (attempts = list (attempt)) => defined })
+var history = data ({ history: (performances = list (performance)) => defined })
+
 
 var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 var rules = data ({ rules: (time_limit = number, size = number) => defined })
