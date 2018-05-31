@@ -1,21 +1,4 @@
-var xx = function (x) {
-	return { xx: x } }
-var oo = function (x) {
-	return { oo: x } }
-
-var Oo = function () {
-	if ('oo' in arguments [1]) {
-		var answer = arguments [0]
-		for (var i = 1; i < arguments .length; i ++) {
-			;answer = arguments [i] (answer) }
-		return answer }
-	else if ('xx' in arguments [1]) {
-		var answer = arguments [0]
-		for (var i = 1; i < arguments .length; i ++) {
-			;answer = answer (arguments [i]) }
-		return answer }
-	else {
-		;throw 'Syntax Error; no oo or xx after focus Oo;' } }(function (global, factory) {
+(function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
 	(global.S = factory());
@@ -5169,6 +5152,5534 @@ return S;
 //. [`Either#fantasy-land/map`]:        #Either.prototype.fantasy-land/map
 //. [`Either#toString`]:                #Either.prototype.toString
 //. [`Maybe#toString`]:                 #Maybe.prototype.toString
+var xx = function (x) {
+	return { xx: x } }
+var oo = function (x) {
+	return { oo: x } }
+
+var Oo = function () {
+	if ('oo' in arguments [1]) {
+		var answer = arguments [0]
+		for (var i = 1; i < arguments .length; i ++) {
+			;answer = arguments [i] (answer) }
+		return answer }
+	else if ('xx' in arguments [1]) {
+		var answer = arguments [0]
+		for (var i = 1; i < arguments .length; i ++) {
+			;answer = answer (arguments [i]) }
+		return answer }
+	else {
+		;throw 'Syntax Error; no oo or xx after focus Oo;' } }(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('infestines')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'infestines'], factory) :
+  (factory((global.L = {}),global.I));
+}(this, (function (exports,I) { 'use strict';
+
+  var addU = function addU(x, y) {
+    return x + y;
+  };
+  var multiplyU = function multiplyU(x, y) {
+    return x * y;
+  };
+
+  var add = /*#__PURE__*/I.curry(addU);
+  var multiply = /*#__PURE__*/I.curry(multiplyU);
+
+  var divideBy = /*#__PURE__*/I.curry(function (d, n) {
+    return n / d;
+  });
+
+  var negate = function negate(x) {
+    return -x;
+  };
+
+  var ltU = function ltU(x, y) {
+    return x < y;
+  };
+  var gtU = function gtU(x, y) {
+    return x > y;
+  };
+
+  var isInstanceOf = /*#__PURE__*/I.curry(function (Class, x) {
+    return x instanceof Class;
+  });
+
+  var create = Object.create;
+  var protoless = function protoless(o) {
+    return I.assign(create(null), o);
+  };
+  var protoless0 = /*#__PURE__*/I.freeze( /*#__PURE__*/protoless(I.object0));
+
+  var replace = /*#__PURE__*/I.curry(function (p, r, s) {
+    return s.replace(p, r);
+  });
+
+  var dep = function dep(xs2xsyC) {
+    return function (xsy) {
+      return I.arityN(xsy.length, function () {
+        return xs2xsyC.apply(undefined, arguments)(xsy).apply(undefined, arguments);
+      });
+    };
+  };
+
+  var fn = function fn(xsC, yC) {
+    return function (xsy) {
+      return I.arityN(xsy.length, function () {
+        for (var _len = arguments.length, xs = Array(_len), _key = 0; _key < _len; _key++) {
+          xs[_key] = arguments[_key];
+        }
+
+        return yC(xsy.apply(null, xsC(xs)));
+      });
+    };
+  };
+
+  var res = function res(yC) {
+    return fn(I.id, yC);
+  };
+
+  var args = function args(xsC) {
+    return fn(xsC, I.id);
+  };
+
+  var nth = function nth(i, xC) {
+    return function (xs) {
+      var ys = xs.slice(0);
+      ys[i] = xC(ys[i]);
+      return ys;
+    };
+  };
+
+  var par = function par(i, xC) {
+    return args(nth(i, xC));
+  };
+
+  var and = function and() {
+    for (var _len2 = arguments.length, xCs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      xCs[_key2] = arguments[_key2];
+    }
+
+    return function (x) {
+      for (var i = 0, n = xCs.length; i < n; ++i) {
+        x = xCs[i](x);
+      }return x;
+    };
+  };
+
+  var or = function or() {
+    for (var _len3 = arguments.length, xCs = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      xCs[_key3] = arguments[_key3];
+    }
+
+    return function (x) {
+      var es = null;
+      for (var i = 0, n = xCs.length; i < n; ++i) {
+        try {
+          return xCs[i](x);
+        } catch (e) {
+          es = e;
+        }
+      }
+      throw es;
+    };
+  };
+
+  var ef = function ef(xE) {
+    return function (x) {
+      xE(x);
+      return x;
+    };
+  };
+
+  var tup = function tup() {
+    for (var _len4 = arguments.length, xCs = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      xCs[_key4] = arguments[_key4];
+    }
+
+    return function (xs) {
+      if (xs.length !== xCs.length) throw Error('Expected array of ' + xCs.length + ' elements, but got ' + xs.length);
+      return and.apply(null, xCs.map(function (xC, i) {
+        return nth(i, xC);
+      }))(xs);
+    };
+  };
+
+  var arr = function arr(xC) {
+    return function (xs) {
+      return xs.map(xC);
+    };
+  };
+
+  //
+
+  var toRegExpU = function toRegExpU(str, flags) {
+    return I.isString(str) ? new RegExp(replace(/[|\\{}()[\]^$+*?.]/g, '\\$&', str), flags) : str;
+  };
+
+  //
+
+  var returnAsync = function returnAsync(x) {
+    return Promise.resolve(x);
+  };
+
+  var chainAsync = function chainAsync(xyP, xP) {
+    return null != xP && I.isFunction(xP.then) ? xP.then(xyP) : xyP(xP);
+  };
+
+  //
+
+  var toStringPartial = function toStringPartial(x) {
+    return void 0 !== x ? String(x) : '';
+  };
+
+  var sliceIndex = function sliceIndex(m, l, d, i) {
+    return void 0 !== i ? Math.min(Math.max(m, i < 0 ? l + i : i), l) : d;
+  };
+
+  var cpair = function cpair(xs) {
+    return function (x) {
+      return [x, xs];
+    };
+  };
+
+  var unto = function unto(c) {
+    return function (x) {
+      return void 0 !== x ? x : c;
+    };
+  };
+  var unto0 = /*#__PURE__*/unto(0);
+
+  var notPartial = function notPartial(x) {
+    return void 0 !== x ? !x : x;
+  };
+
+  var singletonPartial = function singletonPartial(x) {
+    return void 0 !== x ? [x] : x;
+  };
+
+  var expect = function expect(p, f) {
+    return function (x) {
+      return p(x) ? f(x) : void 0;
+    };
+  };
+
+  function deepFreeze(x) {
+    if (I.isArray(x)) {
+      x.forEach(deepFreeze);
+      I.freeze(x);
+    } else if (I.isObject(x)) {
+      for (var k in x) {
+        deepFreeze(x[k]);
+      }I.freeze(x);
+    }
+    return x;
+  }
+
+  function freezeArrayOfObjects(xs) {
+    xs.forEach(I.freeze);
+    return I.freeze(xs);
+  }
+
+  var isArrayOrPrimitive = function isArrayOrPrimitive(x) {
+    return !(x instanceof Object) || I.isArray(x);
+  };
+
+  var rev = /*#__PURE__*/(res(I.freeze))(function (xs) {
+    if (seemsArrayLike(xs)) {
+      var n = xs.length;
+      var ys = Array(n);
+      var i = 0;
+      while (n) {
+        ys[i++] = xs[--n];
+      }return ys;
+    }
+  });
+
+  //
+
+  var isEmptyArrayStringOrObject = function isEmptyArrayStringOrObject(x) {
+    return I.acyclicEqualsU(I.array0, x) || I.acyclicEqualsU(I.object0, x) || x === '';
+  };
+
+  var warnEmpty = function warnEmpty(o, v, f) {
+    var msg = '`' + f + '(' + JSON.stringify(v) + ')` is likely unnecessary, because combinators no longer remove empty arrays, objects, or strings by default.  See CHANGELOG for more information.';
+    return function (x) {
+      if (I.acyclicEqualsU(v, x)) warn(o, msg);
+      return x;
+    };
+  };
+
+  //
+
+  var mapPartialIndexU = /*#__PURE__*/(function (fn$$1) {
+    return function (xi2y, xs, skip) {
+      var ys = fn$$1(xi2y, xs, skip);
+      if (xs !== ys) I.freeze(ys);
+      return ys;
+    };
+  })(function (xi2y, xs, skip) {
+    var n = xs.length;
+    var ys = Array(n);
+    var j = 0;
+    var same = true;
+    for (var i = 0; i < n; ++i) {
+      var x = xs[i];
+      var y = xi2y(x, i);
+      if (skip !== y) {
+        ys[j++] = y;
+        if (same) same = x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
+      }
+    }
+    if (j !== n) {
+      ys.length = j;
+      return ys;
+    } else if (same) {
+      return xs;
+    } else {
+      return ys;
+    }
+  });
+
+  var mapIfArrayLike = function mapIfArrayLike(xi2y, xs) {
+    return seemsArrayLike(xs) ? mapPartialIndexU(xi2y, xs, void 0) : void 0;
+  };
+
+  var copyToFrom = /*#__PURE__*/(function (fn$$1) {
+    return function (ys, k, xs, i, j) {
+      return ys.length === k + j - i ? I.freeze(fn$$1(ys, k, xs, i, j)) : fn$$1(ys, k, xs, i, j);
+    };
+  })(function (ys, k, xs, i, j) {
+    while (i < j) {
+      ys[k++] = xs[i++];
+    }return ys;
+  });
+
+  //
+
+  function selectInArrayLike(xi2v, xs) {
+    for (var i = 0, n = xs.length; i < n; ++i) {
+      var v = xi2v(xs[i], i);
+      if (void 0 !== v) return v;
+    }
+  }
+
+  //
+
+  var Select = {
+    map: I.sndU,
+    of: function of() {},
+    ap: function ap(l, r) {
+      return void 0 !== l ? l : r;
+    }
+  };
+
+  var ConcatOf = function ConcatOf(ap, empty) {
+    return { map: I.sndU, ap: ap, of: I.always(empty) };
+  };
+
+  var Sum = /*#__PURE__*/ConcatOf(addU, 0);
+
+  var mumBy = function mumBy(ord) {
+    return I.curry(function (xi2y, t, s) {
+      var minX = void 0;
+      var minY = void 0;
+      traverseU(Select, function (x, i) {
+        var y = xi2y(x, i);
+        if (void 0 !== y && (void 0 === minY || ord(y, minY))) {
+          minX = x;
+          minY = y;
+        }
+      }, t, s);
+      return minX;
+    });
+  };
+
+  //
+
+  var traverseU = function traverseU(C, xi2yC, t, s) {
+    return toFunction(t)(s, void 0, C, xi2yC);
+  };
+
+  //
+
+  var expectedOptic = 'Expecting an optic';
+  var opticIsEither = 'An optic can be either\n- a string,\n- a non-negative integer,\n- a quaternary optic function,\n- an ordinary unary or binary function, or\n- an array of optics.\nSee documentation of `toFunction` and `compose` for details.';
+  var header = 'partial.lenses: ';
+
+  function warn(f, m) {
+    if (!f.warned) {
+      f.warned = 1;
+      console.warn(header + m);
+    }
+  }
+
+  function errorGiven(m, o, e) {
+    m = header + m + '.';
+    e = e ? '\n' + e : '';
+    console.error(m, 'Given:', o, e);
+    throw Error(m + e);
+  }
+
+  function reqIndex(x) {
+    if (!Number.isInteger(x) || x < 0) errorGiven('`index` expects a non-negative integer', x);
+  }
+
+  function reqFunction(o) {
+    if (!(I.isFunction(o) && (o.length === 4 || o.length <= 2))) errorGiven(expectedOptic, o, opticIsEither);
+  }
+
+  function reqFn(x) {
+    if (!I.isFunction(x)) errorGiven('Expected a function', x);
+  }
+
+  function reqArray(o) {
+    if (!I.isArray(o)) errorGiven(expectedOptic, o, opticIsEither);
+  }
+
+  function reqOptic(o) {
+    switch (typeof o) {
+      case 'string':
+        break;
+      case 'number':
+        reqIndex(o);
+        break;
+      case 'object':
+        reqArray(o);
+        for (var i = 0, n = o.length; i < n; ++i) {
+          reqOptic(o[i]);
+        }break;
+      default:
+        reqFunction(o);
+        break;
+    }
+  }
+
+  //
+
+  var reqString = function reqString(msg) {
+    return function (x) {
+      if (!I.isString(x)) errorGiven(msg, x);
+    };
+  };
+
+  var reqMaybeArray = function reqMaybeArray(msg) {
+    return function (zs) {
+      if (!(void 0 === zs || seemsArrayLike(zs))) errorGiven(msg, zs);
+    };
+  };
+
+  //
+
+  var reqApplicative = function reqApplicative(name, arg) {
+    return function (C) {
+      if (!C.of) errorGiven('`' + name + (arg ? '(' + arg + ')' : '') + '` requires an applicative', C, 'Note that you cannot `get` a traversal. Perhaps you wanted to `collect` it?');
+    };
+  };
+
+  var reqMonad = function reqMonad(name) {
+    return function (C) {
+      if (!C.chain) errorGiven('`' + name + '` requires a monad', C, 'Note that you can only `modify`, `remove`, `set`, and `traverse` a transform.');
+    };
+  };
+
+  //
+
+  var mkTraverse = function mkTraverse(after, toC) {
+    return I.curryN(4, function (xi2yC, m) {
+      return m = toC(m), function (t, s) {
+        return after(traverseU(m, xi2yC, t, s));
+      };
+    });
+  };
+
+  //
+
+  var consExcept = function consExcept(skip) {
+    return function (t) {
+      return function (h) {
+        return skip !== h ? [h, t] : t;
+      };
+    };
+  };
+  var consTo = /*#__PURE__*/(res(I.freeze))(function (n) {
+    var xs = [];
+    while (consExcept !== n) {
+      xs.push(n[0]);
+      n = n[1];
+    }
+    return xs.reverse();
+  });
+
+  function traversePartialIndex(A, xi2yA, xs, skip) {
+    var map = A.map,
+        ap = A.ap;
+
+    var xsA = A.of(consExcept);
+    var n = xs.length;
+    if (map === I.sndU) {
+      for (var i = 0; i < n; ++i) {
+        xsA = ap(xsA, xi2yA(xs[i], i));
+      }return xsA;
+    } else {
+      var cons = consExcept(skip);
+      for (var _i2 = 0; _i2 < n; ++_i2) {
+        xsA = ap(map(cons, xsA), xi2yA(xs[_i2], _i2));
+      }return map(consTo, xsA);
+    }
+  }
+
+  //
+
+  var lensFrom = function lensFrom(get, set) {
+    return function (i) {
+      return function (x, _i, F, xi2yF) {
+        return F.map(function (v) {
+          return set(i, v, x);
+        }, xi2yF(get(i, x), i));
+      };
+    };
+  };
+
+  //
+
+  var getProp = function getProp(k, o) {
+    return o instanceof Object ? o[k] : void 0;
+  };
+
+  var setProp = /*#__PURE__*/(res(I.freeze))(function (k, v, o) {
+    return void 0 !== v ? I.assocPartialU(k, v, o) : I.dissocPartialU(k, o) || I.object0;
+  });
+
+  var funProp = /*#__PURE__*/lensFrom(getProp, setProp);
+
+  //
+
+  var getIndex = function getIndex(i, xs) {
+    return seemsArrayLike(xs) ? xs[i] : void 0;
+  };
+
+  var setIndex = /*#__PURE__*/(fn(nth(0, ef(reqIndex)), I.freeze))(function (i, x, xs) {
+    if (!seemsArrayLike(xs)) xs = '';
+    var n = xs.length;
+    if (void 0 !== x) {
+      var m = Math.max(i + 1, n);
+      var ys = Array(m);
+      for (var j = 0; j < m; ++j) {
+        ys[j] = xs[j];
+      }ys[i] = x;
+      return ys;
+    } else {
+      if (n <= i) return copyToFrom(Array(n), 0, xs, 0, n);
+      var _ys = Array(n - 1);
+      for (var _j = 0; _j < i; ++_j) {
+        _ys[_j] = xs[_j];
+      }for (var _j2 = i + 1; _j2 < n; ++_j2) {
+        _ys[_j2 - 1] = xs[_j2];
+      }return _ys;
+    }
+  });
+
+  var funIndex = /*#__PURE__*/lensFrom(getIndex, setIndex);
+
+  //
+
+  var composedMiddle = function composedMiddle(o, r) {
+    return function (F, xi2yF) {
+      return xi2yF = r(F, xi2yF), function (x, i) {
+        return o(x, i, F, xi2yF);
+      };
+    };
+  };
+
+  function composed(oi0, os) {
+    var n = os.length - oi0;
+    if (n < 2) {
+      return n ? toFunction(os[oi0]) : identity;
+    } else {
+      var _last = toFunction(os[oi0 + --n]);
+      var r = function r(F, xi2yF) {
+        return function (x, i) {
+          return _last(x, i, F, xi2yF);
+        };
+      };
+      while (--n) {
+        r = composedMiddle(toFunction(os[oi0 + n]), r);
+      }var _first = toFunction(os[oi0]);
+      return function (x, i, F, xi2yF) {
+        return _first(x, i, F, r(F, xi2yF));
+      };
+    }
+  }
+
+  var setU = /*#__PURE__*/(par(0, ef(reqOptic)))(function (o, x, s) {
+    switch (typeof o) {
+      case 'string':
+        return setProp(o, x, s);
+      case 'number':
+        return setIndex(o, x, s);
+      case 'object':
+        return modifyComposed(o, 0, s, x);
+      default:
+        return o.length === 4 ? o(s, void 0, Identity, I.always(x)) : s;
+    }
+  });
+
+  var modifyU = /*#__PURE__*/(par(0, ef(reqOptic)))(function (o, xi2x, s) {
+    switch (typeof o) {
+      case 'string':
+        return setProp(o, xi2x(getProp(o, s), o), s);
+      case 'number':
+        return setIndex(o, xi2x(getIndex(o, s), o), s);
+      case 'object':
+        return modifyComposed(o, xi2x, s);
+      default:
+        return o.length === 4 ? o(s, void 0, Identity, xi2x) : (xi2x(o(s, void 0), void 0), s);
+    }
+  });
+
+  var modifyAsyncU = function modifyAsyncU(o, f, s) {
+    return returnAsync(toFunction(o)(s, void 0, IdentityAsync, f));
+  };
+
+  function makeIx(i) {
+    var ix = function ix(s, j) {
+      return ix.v = j, s;
+    };
+    ix.v = i;
+    return ix;
+  }
+
+  function getNestedU(l, s, j, ix) {
+    for (var n = l.length, o; j < n; ++j) {
+      switch (typeof (o = l[j])) {
+        case 'string':
+          s = getProp(ix.v = o, s);
+          break;
+        case 'number':
+          s = getIndex(ix.v = o, s);
+          break;
+        case 'object':
+          s = getNestedU(o, s, 0, ix);
+          break;
+        default:
+          s = o(s, ix.v, Constant, ix);
+      }
+    }return s;
+  }
+
+  var getU = /*#__PURE__*/(par(0, ef(reqOptic)))(function (l, s) {
+    switch (typeof l) {
+      case 'string':
+        return getProp(l, s);
+      case 'number':
+        return getIndex(l, s);
+      case 'object':
+        for (var i = 0, n = l.length, o; i < n; ++i) {
+          switch (typeof (o = l[i])) {
+            case 'string':
+              s = getProp(o, s);
+              break;
+            case 'number':
+              s = getIndex(o, s);
+              break;
+            default:
+              return getNestedU(l, s, i, makeIx(l[i - 1]));
+          }
+        }return s;
+      default:
+        return l(s, void 0, Constant, I.id);
+    }
+  });
+
+  function modifyComposed(os, xi2y, x, y) {
+    var n = os.length;
+    var xs = Array(n);
+    for (var i = 0, o; i < n; ++i) {
+      xs[i] = x;
+      switch (typeof (o = os[i])) {
+        case 'string':
+          x = getProp(o, x);
+          break;
+        case 'number':
+          x = getIndex(o, x);
+          break;
+        default:
+          x = composed(i, os)(x, os[i - 1], Identity, xi2y || I.always(y));
+          n = i;
+          break;
+      }
+    }
+    if (n === os.length) x = xi2y ? xi2y(x, os[n - 1]) : y;
+    for (var _o; 0 <= --n;) {
+      x = I.isString(_o = os[n]) ? setProp(_o, x, xs[n]) : setIndex(_o, x, xs[n]);
+    }return x;
+  }
+
+  //
+
+  var lensU = function lensU(get, set) {
+    return function (x, i, F, xi2yF) {
+      return F.map(function (y) {
+        return set(y, x, i);
+      }, xi2yF(get(x, i), i));
+    };
+  };
+
+  var isoU = function isoU(bwd, fwd) {
+    return function (x, i, F, xi2yF) {
+      return F.map(fwd, xi2yF(bwd(x), i));
+    };
+  };
+
+  var stringIsoU = function stringIsoU(bwd, fwd) {
+    return isoU(expect(I.isString, bwd), expect(I.isString, fwd));
+  };
+
+  var numberIsoU = function numberIsoU(bwd, fwd) {
+    return isoU(expect(I.isNumber, bwd), expect(I.isNumber, fwd));
+  };
+
+  //
+
+  var getPick = /*#__PURE__*/(res(I.freeze))(function (template, x) {
+    var r = void 0;
+    for (var k in template) {
+      var t = template[k];
+      var v = I.isObject(t) ? getPick(t, x) : getU(t, x);
+      if (void 0 !== v) {
+        if (!r) r = {};
+        r[k] = v;
+      }
+    }
+    return r;
+  });
+
+  var reqTemplate = function reqTemplate(name) {
+    return function (template) {
+      if (!I.isObject(template)) errorGiven('`' + name + '` expects a plain Object template', template);
+    };
+  };
+
+  var reqObject = function reqObject(msg) {
+    return function (value) {
+      if (!(void 0 === value || value instanceof Object)) errorGiven(msg, value);
+    };
+  };
+
+  var setPick = /*#__PURE__*/(par(1, ef(reqObject('`pick` must be set with undefined or an object'))))(function (template, value, x) {
+    for (var k in template) {
+      var v = value && value[k];
+      var t = template[k];
+      x = I.isObject(t) ? setPick(t, v, x) : setU(t, v, x);
+    }
+    return x;
+  });
+
+  //
+
+  var toObject = function toObject(x) {
+    return I.constructorOf(x) !== Object ? I.toObject(x) : x;
+  };
+
+  //
+
+  var identity = function identity(x, i, _F, xi2yF) {
+    return xi2yF(x, i);
+  };
+
+  //
+
+  var branchAssemble = /*#__PURE__*/(res(res(I.freeze)))(function (ks) {
+    return function (xs) {
+      var r = {};
+      var i = ks.length;
+      while (i--) {
+        var v = xs[0];
+        if (void 0 !== v) {
+          r[ks[i]] = v;
+        }
+        xs = xs[1];
+      }
+      return r;
+    };
+  });
+
+  var branchOr1LevelIdentity = /*#__PURE__*/(function (fn$$1) {
+    return function (otherwise, k2o, xO, x, A, xi2yA) {
+      var y = fn$$1(otherwise, k2o, xO, x, A, xi2yA);
+      if (x !== y) I.freeze(y);
+      return y;
+    };
+  })(function (otherwise, k2o, xO, x, A, xi2yA) {
+    var written = void 0;
+    var same = true;
+    var r = {};
+    for (var k in k2o) {
+      written = 1;
+      var _x2 = xO[k];
+      var y = k2o[k](_x2, k, A, xi2yA);
+      if (void 0 !== y) {
+        r[k] = y;
+        if (same) same = _x2 === y && (_x2 !== 0 || 1 / _x2 === 1 / y) || _x2 !== _x2 && y !== y;
+      } else {
+        same = false;
+      }
+    }
+    var t = written;
+    for (var _k in xO) {
+      if (void 0 === (t && k2o[_k])) {
+        written = 1;
+        var _x3 = xO[_k];
+        var _y = otherwise(_x3, _k, A, xi2yA);
+        if (void 0 !== _y) {
+          r[_k] = _y;
+          if (same) same = _x3 === _y && (_x3 !== 0 || 1 / _x3 === 1 / _y) || _x3 !== _x3 && _y !== _y;
+        } else {
+          same = false;
+        }
+      }
+    }
+    return written ? same && xO === x ? x : r : x;
+  });
+
+  var branchOr1Level = function branchOr1Level(otherwise, k2o) {
+    return function (x, _i, A, xi2yA) {
+      var xO = x instanceof Object ? toObject(x) : I.object0;
+
+      if (Identity === A) {
+        return branchOr1LevelIdentity(otherwise, k2o, xO, x, A, xi2yA);
+      } else if (Select === A) {
+        for (var k in k2o) {
+          var y = k2o[k](xO[k], k, A, xi2yA);
+          if (void 0 !== y) return y;
+        }
+        for (var _k2 in xO) {
+          if (void 0 === k2o[_k2]) {
+            var _y2 = otherwise(xO[_k2], _k2, A, xi2yA);
+            if (void 0 !== _y2) return _y2;
+          }
+        }
+      } else {
+        var map = A.map,
+            ap = A.ap,
+            of = A.of;
+
+        var xsA = of(cpair);
+        var ks = [];
+        for (var _k3 in k2o) {
+          ks.push(_k3);
+          xsA = ap(map(cpair, xsA), k2o[_k3](xO[_k3], _k3, A, xi2yA));
+        }
+        var t = ks.length ? true : void 0;
+        for (var _k4 in xO) {
+          if (void 0 === (t && k2o[_k4])) {
+            ks.push(_k4);
+            xsA = ap(map(cpair, xsA), otherwise(xO[_k4], _k4, A, xi2yA));
+          }
+        }
+        return ks.length ? map(branchAssemble(ks), xsA) : of(x);
+      }
+    };
+  };
+
+  function branchOrU(otherwise, template) {
+    var k2o = create(null);
+    for (var k in template) {
+      var v = template[k];
+      k2o[k] = I.isObject(v) ? branchOrU(otherwise, v) : toFunction(v);
+    }
+    return branchOr1Level(otherwise, k2o);
+  }
+
+  var replaced = function replaced(inn, out, x) {
+    return I.acyclicEqualsU(x, inn) ? out : x;
+  };
+
+  function findIndexHint(hint, xi2b, xs) {
+    var u = hint.hint;
+    var n = xs.length;
+    if (n <= u) u = n - 1;
+    if (u < 0) u = 0;
+    var d = u - 1;
+    for (; 0 <= d && u < n; ++u, --d) {
+      if (xi2b(xs[u], u, hint)) return u;
+      if (xi2b(xs[d], d, hint)) return d;
+    }
+    for (; u < n; ++u) {
+      if (xi2b(xs[u], u, hint)) return u;
+    }for (; 0 <= d; --d) {
+      if (xi2b(xs[d], d, hint)) return d;
+    }return n;
+  }
+
+  var partitionIntoIndex = /*#__PURE__*/(dep(function (_xi2b, _xs, ts, fs) {
+    return res(ef(function () {
+      I.freeze(ts);
+      I.freeze(fs);
+    }));
+  }))(function (xi2b, xs, ts, fs) {
+    for (var i = 0, n = xs.length, x; i < n; ++i) {
+      (xi2b(x = xs[i], i) ? ts : fs).push(x);
+    }
+  });
+
+  var fromReader = function fromReader(wi2x) {
+    return function (w, i, F, xi2yF) {
+      return F.map(I.always(w), xi2yF(wi2x(w, i), i));
+    };
+  };
+
+  //
+
+  var reValue = function reValue(m) {
+    return m[0];
+  };
+  var reIndex = function reIndex(m) {
+    return m.index;
+  };
+  var reLastIndex = function reLastIndex(m) {
+    return reIndex(m) + m[0].length;
+  };
+
+  var reNext = /*#__PURE__*/(function (fn$$1) {
+    return function (m, re) {
+      var res$$1 = fn$$1(m, re);
+      if ('' === res$$1) warn(reNext, '`matches(' + re + ')` traversal terminated due to empty match.  `matches` traversal shouldn\'t be used with regular expressions that can produce empty matches.');
+      return res$$1;
+    };
+  })(function (m, re) {
+    var lastIndex = re.lastIndex;
+    re.lastIndex = reLastIndex(m);
+    var n = re.exec(m.input);
+    re.lastIndex = lastIndex;
+    return n && n[0] && n;
+  });
+
+  //
+
+  var iterCollect = function iterCollect(s) {
+    return function (xs) {
+      return function (x) {
+        return [s, x, xs];
+      };
+    };
+  };
+
+  var iterToArray = function iterToArray(xs) {
+    var ys = [];
+    while (iterCollect !== xs) {
+      ys.push(xs[0], xs[1]);
+      xs = xs[2];
+    }
+    return ys;
+  };
+
+  function iterSelect(xi2y, t, s) {
+    while (s = reNext(s, t)) {
+      var y = xi2y(reValue(s), reIndex(s));
+      if (void 0 !== y) return y;
+    }
+  }
+
+  function iterEager(map, ap, of, xi2yA, t, s) {
+    var r = of(iterCollect);
+    while (s = reNext(s, t)) {
+      r = ap(ap(map(iterCollect, of(s)), r), xi2yA(reValue(s), reIndex(s)));
+    }return r;
+  }
+
+  //
+
+  var keyed = /*#__PURE__*/isoU( /*#__PURE__*/expect( /*#__PURE__*/isInstanceOf(Object), /*#__PURE__*/(res(freezeArrayOfObjects))(function (x) {
+    x = toObject(x);
+    var es = [];
+    for (var key in x) {
+      es.push([key, x[key]]);
+    }return es;
+  })), /*#__PURE__*/expect(I.isArray, /*#__PURE__*/(res(I.freeze))(function (es) {
+    var o = {};
+    for (var i = 0, n = es.length; i < n; ++i) {
+      var entry = es[i];
+      if (entry.length === 2) o[entry[0]] = entry[1];
+    }
+    return o;
+  })));
+
+  //
+
+  var matchesJoin = function matchesJoin(input) {
+    return function (matchesIn) {
+      var result = '';
+      var lastIndex = 0;
+      var matches = iterToArray(matchesIn);
+      var n = matches.length;
+      for (var j = n - 2; j !== -2; j += -2) {
+        var m = matches[j];
+        result += input.slice(lastIndex, reIndex(m));
+        var s = matches[j + 1];
+        if (void 0 !== s) result += s;
+        lastIndex = reLastIndex(m);
+      }
+
+      result += input.slice(lastIndex);
+      return result;
+    };
+  };
+
+  //
+
+  var eitherU = function eitherU(t, e) {
+    return function (c) {
+      return function (x, i, C, xi2yC) {
+        return (c(x, i) ? t : e)(x, i, C, xi2yC);
+      };
+    };
+  };
+
+  var orElseU = function orElseU(back, prim) {
+    return prim = toFunction(prim), back = toFunction(back), function (x, i, C, xi2yC) {
+      return (isDefined(prim, x) ? prim : back)(x, i, C, xi2yC);
+    };
+  };
+
+  function zeroOp(y, i, C, xi2yC, x) {
+    var of = C.of;
+    return of ? of(y) : C.map(I.always(y), xi2yC(x, i));
+  }
+
+  //
+
+  var elemsI = function elemsI(xs, _i, A, xi2yA) {
+    return A === Identity ? mapPartialIndexU(xi2yA, xs, void 0) : A === Select ? selectInArrayLike(xi2yA, xs) : traversePartialIndex(A, xi2yA, xs, void 0);
+  };
+
+  //
+
+  var seq2U = function seq2U(l, r) {
+    return function (x, i, M, xi2yM) {
+      return M.chain(function (x) {
+        return r(x, i, M, xi2yM);
+      }, l(x, i, M, xi2yM));
+    };
+  };
+
+  //
+
+  var pickInAux = function pickInAux(t, k) {
+    return [k, pickIn(t)];
+  };
+
+  //
+
+  var condOfDefault = /*#__PURE__*/I.always(zeroOp);
+  var condOfCase = function condOfCase(p, o, r) {
+    return function (y, j) {
+      return p(y, j) ? o : r(y, j);
+    };
+  };
+
+  // Auxiliary
+
+  var seemsArrayLike = function seemsArrayLike(x) {
+    return x instanceof Object && (x = x.length, x === x >> 0 && 0 <= x) || I.isString(x);
+  };
+
+  // Internals
+
+  var Identity = /*#__PURE__*/(0, I.freeze)({
+    map: I.applyU,
+    of: I.id,
+    ap: I.applyU,
+    chain: I.applyU
+  });
+
+  var IdentityAsync = /*#__PURE__*/(0, I.freeze)({
+    map: chainAsync,
+    ap: function ap(xyP, xP) {
+      return chainAsync(function (xP) {
+        return chainAsync(function (xyP) {
+          return xyP(xP);
+        }, xyP);
+      }, xP);
+    },
+    of: I.id,
+    chain: chainAsync
+  });
+
+  var Constant = /*#__PURE__*/(0, I.freeze)({
+    map: I.sndU
+  });
+
+  var toFunction = /*#__PURE__*/(par(0, ef(reqOptic)))(function (o) {
+    switch (typeof o) {
+      case 'string':
+        return funProp(o);
+      case 'number':
+        return funIndex(o);
+      case 'object':
+        return composed(0, o);
+      default:
+        return o.length === 4 ? o : fromReader(o);
+    }
+  });
+
+  // Operations on optics
+
+  var assign = /*#__PURE__*/I.curry(function (o, x, s) {
+    return setU([o, propsOf(x)], x, s);
+  });
+
+  var modify = /*#__PURE__*/I.curry(modifyU);
+
+  var modifyAsync = /*#__PURE__*/I.curry(modifyAsyncU);
+
+  var remove = /*#__PURE__*/I.curry(function (o, s) {
+    return setU(o, void 0, s);
+  });
+
+  var set = /*#__PURE__*/I.curry(setU);
+
+  var transform = /*#__PURE__*/I.curry(function (o, s) {
+    return modifyU(o, I.id, s);
+  });
+
+  var transformAsync = /*#__PURE__*/I.curry(function (o, s) {
+    return modifyAsyncU(o, I.id, s);
+  });
+
+  var traverse = /*#__PURE__*/I.curry(traverseU);
+
+  // Nesting
+
+  function compose() {
+    var n = arguments.length;
+    if (n < 2) {
+      return n ? arguments[0] : identity;
+    } else {
+      var os = Array(n);
+      while (n--) {
+        os[n] = arguments[n];
+      }return os;
+    }
+  }
+
+  function flat() {
+    var r = [flatten];
+    for (var i = 0, n = arguments.length; i < n; ++i) {
+      r.push(arguments[i], flatten);
+    }return r;
+  }
+
+  // Recursing
+
+  function lazy(o2o) {
+    var _memo = function memo(x, i, C, xi2yC) {
+      return (_memo = toFunction(o2o(rec)))(x, i, C, xi2yC);
+    };
+    function rec(x, i, C, xi2yC) {
+      return _memo(x, i, C, xi2yC);
+    }
+    return rec;
+  }
+
+  // Adapting
+
+  var choices = function choices(o) {
+    for (var _len = arguments.length, os = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      os[_key - 1] = arguments[_key];
+    }
+
+    return os.length ? orElseU(os.reduceRight(orElseU), o) : o;
+  };
+
+  var choose = function choose(xiM2o) {
+    return function (x, i, C, xi2yC) {
+      return toFunction(xiM2o(x, i))(x, i, C, xi2yC);
+    };
+  };
+
+  var cond = /*#__PURE__*/(function (fn$$1) {
+    return function () {
+      for (var _len2 = arguments.length, cs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        cs[_key2] = arguments[_key2];
+      }
+
+      var pair = tup(ef(reqFn), ef(reqOptic));
+      arr(pair)(cs.slice(0, -1));
+      arr(or(tup(ef(reqOptic)), pair))(cs.slice(-1));
+      return fn$$1.apply(undefined, cs);
+    };
+  })(function () {
+    var n = arguments.length;
+    var r = zero;
+    while (n--) {
+      var c = arguments[n];
+      r = c.length < 2 ? toFunction(c[0]) : eitherU(toFunction(c[1]), r)(c[0]);
+    }
+    return r;
+  });
+
+  var condOf = /*#__PURE__*/(function (fn$$1) {
+    return function (of) {
+      for (var _len3 = arguments.length, cs = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        cs[_key3 - 1] = arguments[_key3];
+      }
+
+      var pair = tup(ef(reqFn), ef(reqOptic));
+      arr(pair)(cs.slice(0, -1));
+      arr(or(tup(ef(reqOptic)), pair))(cs.slice(-1));
+      return fn$$1.apply(undefined, [of].concat(cs));
+    };
+  })(function (of) {
+    of = toFunction(of);
+    var op = condOfDefault;
+    var n = arguments.length;
+    while (--n) {
+      var c = arguments[n];
+      op = c.length === 1 ? I.always(toFunction(c[0])) : condOfCase(c[0], toFunction(c[1]), op);
+    }
+    return function (x, i, C, xi2yC) {
+      return of(x, i, Constant, op)(x, i, C, xi2yC);
+    };
+  });
+
+  var ifElse = /*#__PURE__*/I.curry(function (c, t, e) {
+    return eitherU(toFunction(t), toFunction(e))(c);
+  });
+
+  var iftes = /*#__PURE__*/(function (fn$$1) {
+    return function (_c, _t) {
+      warn(iftes, '`iftes` has been obsoleted.  Use `ifElse` or `cond` instead.  See CHANGELOG for details.');
+      return fn$$1.apply(null, arguments);
+    };
+  })(function (_c, _t) {
+    var n = arguments.length;
+    var r = n & 1 ? toFunction(arguments[--n]) : zero;
+    while (0 <= (n -= 2)) {
+      r = eitherU(toFunction(arguments[n + 1]), r)(arguments[n]);
+    }return r;
+  });
+
+  var orElse = /*#__PURE__*/I.curry(orElseU);
+
+  // Querying
+
+  var chain = /*#__PURE__*/I.curry(function (xi2yO, xO) {
+    return [xO, choose(function (xM, i) {
+      return void 0 !== xM ? xi2yO(xM, i) : zero;
+    })];
+  });
+
+  var choice = function choice() {
+    for (var _len4 = arguments.length, os = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      os[_key4] = arguments[_key4];
+    }
+
+    return os.reduceRight(orElseU, zero);
+  };
+
+  var unless = /*#__PURE__*/eitherU(zeroOp, identity);
+
+  var when = /*#__PURE__*/eitherU(identity, zeroOp);
+
+  var optional = /*#__PURE__*/when(I.isDefined);
+
+  var zero = function zero(x, i, C, xi2yC) {
+    return zeroOp(x, i, C, xi2yC);
+  };
+
+  // Transforming
+
+  var assignOp = function assignOp(x) {
+    return [propsOf(x), setOp(x)];
+  };
+
+  var modifyOp = function modifyOp(xi2y) {
+    return function (x, i, C, xi2yC) {
+      return zeroOp(x = xi2y(x, i), i, C, xi2yC, x);
+    };
+  };
+
+  var setOp = function setOp(y) {
+    return function (_x, i, C, xi2yC) {
+      return zeroOp(y, i, C, xi2yC, y);
+    };
+  };
+
+  var removeOp = /*#__PURE__*/setOp();
+
+  // Debugging
+
+  function log() {
+    var _arguments = arguments;
+
+    var show = I.curry(function (dir, x) {
+      return console.log.apply(console, copyToFrom([], 0, _arguments, 0, _arguments.length).concat([dir, x])), x;
+    });
+    return isoU(show('get'), show('set'));
+  }
+
+  // Sequencing
+
+  var seq = /*#__PURE__*/(function (fn$$1) {
+    return function () {
+      return par(2, ef(reqMonad('seq')))(fn$$1.apply(undefined, arguments));
+    };
+  })(function () {
+    var n = arguments.length;
+    var r = zero;
+    if (n) {
+      r = toFunction(arguments[--n]);
+      while (n) {
+        r = seq2U(toFunction(arguments[--n]), r);
+      }
+    }
+    return r;
+  });
+
+  // Creating new traversals
+
+  var branchOr = /*#__PURE__*/(par(1, ef(reqTemplate('branchOr'))))( /*#__PURE__*/I.curryN(2, function (otherwise) {
+    return otherwise = toFunction(otherwise), function (template) {
+      return branchOrU(otherwise, template);
+    };
+  }));
+
+  var branch = /*#__PURE__*/branchOr(zero);
+
+  function branches() {
+    var n = arguments.length;
+    var template = {};
+    for (var i = 0; i < n; ++i) {
+      template[arguments[i]] = identity;
+    }return branch(template);
+  }
+
+  // Traversals and combinators
+
+  var elems = /*#__PURE__*/(par(2, ef(reqApplicative('elems'))))(function (xs, i, A, xi2yA) {
+    return seemsArrayLike(xs) ? elemsI(xs, i, A, xi2yA) : A.of(xs);
+  });
+
+  var elemsTotal = function elemsTotal(xs, i, A, xi2yA) {
+    return seemsArrayLike(xs) ? A === Identity ? mapPartialIndexU(xi2yA, xs, mapPartialIndexU) : A === Select ? selectInArrayLike(xi2yA, xs) : traversePartialIndex(A, xi2yA, xs, traversePartialIndex) : A.of(xs);
+  };
+
+  var entries = /*#__PURE__*/toFunction([keyed, elems]);
+
+  var keys = /*#__PURE__*/toFunction([keyed, elems, 0]);
+
+  var matches = /*#__PURE__*/(dep(function (re) {
+    return re.global ? res(par(2, ef(reqApplicative('matches', re)))) : I.id;
+  }))(function (re) {
+    return function (x, _i, C, xi2yC) {
+      if (I.isString(x)) {
+        var map = C.map;
+
+        if (re.global) {
+          var m0 = [''];
+          m0.input = x;
+          m0.index = 0;
+          if (Select === C) {
+            return iterSelect(xi2yC, re, m0);
+          } else {
+            var ap = C.ap,
+                of = C.of;
+
+            return map(matchesJoin(x), iterEager(map, ap, of, xi2yC, re, m0));
+          }
+        } else {
+          var m = x.match(re);
+          if (m) return map(function (y) {
+            return x.replace(re, void 0 !== y ? y : '');
+          }, xi2yC(m[0], reIndex(m)));
+        }
+      }
+      return zeroOp(x, void 0, C, xi2yC);
+    };
+  });
+
+  var values = /*#__PURE__*/(par(2, ef(reqApplicative('values'))))( /*#__PURE__*/branchOr1Level(identity, protoless0));
+
+  var children = /*#__PURE__*/(par(2, ef(reqApplicative('children'))))(function (x, i, C, xi2yC) {
+    return I.isArray(x) ? elemsI(x, i, C, xi2yC) : I.isObject(x) ? values(x, i, C, xi2yC) : C.of(x);
+  });
+
+  var flatten = /*#__PURE__*/(par(2, ef(reqApplicative('flatten'))))(function (x, i, C, xi2yC) {
+    var rec = function rec(x, i) {
+      return I.isArray(x) ? elemsI(x, i, C, rec) : void 0 !== x ? xi2yC(x, i) : C.of(x);
+    };
+    return rec(x, i);
+  });
+
+  function query() {
+    var r = [];
+    for (var i = 0, n = arguments.length; i < n; ++i) {
+      var o = toFunction(arguments[i]);
+      r.push(satisfying(isDefined(o)), o);
+    }
+    return r;
+  }
+
+  var satisfying = function satisfying(p) {
+    return function (x, i, C, xi2yC) {
+      var rec = function rec(x, i) {
+        return p(x, i) ? xi2yC(x, i) : children(x, i, C, rec);
+      };
+      return rec(x, i);
+    };
+  };
+
+  var leafs = /*#__PURE__*/satisfying(function (x) {
+    return void 0 !== x && !I.isArray(x) && !I.isObject(x);
+  });
+
+  // Folds over traversals
+
+  var all = /*#__PURE__*/I.curry(function (xi2b, t, s) {
+    return !traverseU(Select, function (x, i) {
+      if (!xi2b(x, i)) return true;
+    }, t, s);
+  });
+
+  var and$1 = /*#__PURE__*/all(I.id);
+
+  var any = /*#__PURE__*/I.curry(function (xi2b, t, s) {
+    return !!traverseU(Select, function (x, i) {
+      if (xi2b(x, i)) return true;
+    }, t, s);
+  });
+
+  var collectAs = /*#__PURE__*/(res(I.freeze))(function (xi2y, t, s) {
+    var results = [];
+    traverseU(Select, function (x, i) {
+      var y = xi2y(x, i);
+      if (void 0 !== y) results.push(y);
+    }, t, s);
+    return results;
+  });
+
+  var collect = /*#__PURE__*/collectAs(I.id);
+
+  var concatAs = /*#__PURE__*/mkTraverse(I.id, function (m) {
+    return ConcatOf(m.concat, m.empty());
+  });
+
+  var concat = /*#__PURE__*/concatAs(I.id);
+
+  var countIf = /*#__PURE__*/I.curry(function (p, t, s) {
+    return traverseU(Sum, function (x, i) {
+      return p(x, i) ? 1 : 0;
+    }, t, s);
+  });
+
+  var count = /*#__PURE__*/countIf(I.isDefined);
+
+  var countsAs = /*#__PURE__*/I.curry(function (xi2k, t, s) {
+    var counts = new Map();
+    traverseU(Select, function (x, i) {
+      var k = xi2k(x, i);
+      var n = counts.get(k);
+      counts.set(k, void 0 !== n ? n + 1 : 1);
+    }, t, s);
+    return counts;
+  });
+
+  var counts = /*#__PURE__*/countsAs(I.id);
+
+  var foldl = /*#__PURE__*/I.curry(function (f, r, t, s) {
+    traverseU(Select, function (x, i) {
+      r = f(r, x, i);
+    }, t, s);
+    return r;
+  });
+
+  var foldr = /*#__PURE__*/I.curry(function (f, r, t, s) {
+    var is = [];
+    var xs = [];
+    traverseU(Select, function (x, i) {
+      xs.push(x);
+      is.push(i);
+    }, t, s);
+    for (var i = xs.length - 1; 0 <= i; --i) {
+      r = f(r, xs[i], is[i]);
+    }return r;
+  });
+
+  var forEach = /*#__PURE__*/I.curry(function (f, t, s) {
+    return traverseU(Select, function (x, i) {
+      f(x, i);
+    }, t, s);
+  });
+
+  var forEachWith = /*#__PURE__*/I.curry(function (newC, ef$$1, t, s) {
+    var c = newC();
+    traverseU(Select, function (x, i) {
+      ef$$1(c, x, i);
+    }, t, s);
+    return c;
+  });
+
+  var isDefined = /*#__PURE__*/I.curry(function (t, s) {
+    return void 0 !== traverseU(Select, I.id, t, s);
+  });
+
+  var isEmpty = /*#__PURE__*/I.curry(function (t, s) {
+    return !traverseU(Select, I.always(true), t, s);
+  });
+
+  var joinAs = /*#__PURE__*/mkTraverse(toStringPartial, /*#__PURE__*/(par(0, ef(reqString('`join` and `joinAs` expect a string delimiter'))))(function (d) {
+    return ConcatOf(function (x, y) {
+      return void 0 !== x ? void 0 !== y ? x + d + y : x : y;
+    });
+  }));
+
+  var join = /*#__PURE__*/joinAs(I.id);
+
+  var maximumBy = /*#__PURE__*/mumBy(gtU);
+
+  var maximum = /*#__PURE__*/maximumBy(I.id);
+
+  var meanAs = /*#__PURE__*/I.curry(function (xi2y, t, s) {
+    var sum = 0;
+    var num = 0;
+    traverseU(Select, function (x, i) {
+      var y = xi2y(x, i);
+      if (void 0 !== y) {
+        num += 1;
+        sum += y;
+      }
+    }, t, s);
+    return sum / num;
+  });
+
+  var mean = /*#__PURE__*/meanAs(I.id);
+
+  var minimumBy = /*#__PURE__*/mumBy(ltU);
+
+  var minimum = /*#__PURE__*/minimumBy(I.id);
+
+  var none = /*#__PURE__*/I.curry(function (xi2b, t, s) {
+    return !traverseU(Select, function (x, i) {
+      if (xi2b(x, i)) return true;
+    }, t, s);
+  });
+
+  var or$1 = /*#__PURE__*/any(I.id);
+
+  var productAs = /*#__PURE__*/traverse( /*#__PURE__*/ConcatOf(multiplyU, 1));
+
+  var product = /*#__PURE__*/productAs( /*#__PURE__*/unto(1));
+
+  var selectAs = /*#__PURE__*/traverse(Select);
+
+  var select = /*#__PURE__*/selectAs(I.id);
+
+  var sumAs = /*#__PURE__*/traverse(Sum);
+
+  var sum = /*#__PURE__*/sumAs(unto0);
+
+  // Operations on lenses
+
+  function get(l, s) {
+    return 1 < arguments.length ? getU(l, s) : function (s) {
+      return getU(l, s);
+    };
+  }
+
+  // Creating new lenses
+
+  var lens = /*#__PURE__*/I.curry(lensU);
+
+  var setter = /*#__PURE__*/lens(I.id);
+
+  var foldTraversalLens = /*#__PURE__*/I.curry(function (fold, traversal) {
+    return lensU(fold(traversal), set(traversal));
+  });
+
+  // Enforcing invariants
+
+  function defaults(out) {
+    function o2u(x) {
+      return replaced(out, void 0, x);
+    }
+    return function (x, i, F, xi2yF) {
+      return F.map(o2u, xi2yF(void 0 !== x ? x : out, i));
+    };
+  }
+
+  var define = /*#__PURE__*/(function (fn$$1) {
+    return function (inn) {
+      var res$$1 = fn$$1(inn);
+      if (isEmptyArrayStringOrObject(inn)) return toFunction([isoU(warnEmpty(fn$$1, inn, 'define'), I.id), res$$1, isoU(I.id, warnEmpty(define, inn, 'define'))]);else return res$$1;
+    };
+  })(function (v) {
+    var untoV = unto(v);
+    return function (x, i, F, xi2yF) {
+      return F.map(untoV, xi2yF(void 0 !== x ? x : v, i));
+    };
+  });
+
+  var normalize = function normalize(xi2x) {
+    return [reread(xi2x), rewrite(xi2x)];
+  };
+
+  var required = /*#__PURE__*/(function (fn$$1) {
+    return function (inn) {
+      var res$$1 = fn$$1(inn);
+      if (isEmptyArrayStringOrObject(inn)) return toFunction([res$$1, isoU(I.id, warnEmpty(required, inn, 'required'))]);else return res$$1;
+    };
+  })(function (inn) {
+    return replace$1(inn, void 0);
+  });
+
+  var reread = function reread(xi2x) {
+    return function (x, i, _F, xi2yF) {
+      return xi2yF(void 0 !== x ? xi2x(x, i) : x, i);
+    };
+  };
+
+  var rewrite = function rewrite(yi2y) {
+    return function (x, i, F, xi2yF) {
+      return F.map(function (y) {
+        return void 0 !== y ? yi2y(y, i) : y;
+      }, xi2yF(x, i));
+    };
+  };
+
+  // Lensing arrays
+
+  function append(xs, _, F, xi2yF) {
+    var i = seemsArrayLike(xs) ? xs.length : 0;
+    return F.map(function (x) {
+      return setIndex(i, x, xs);
+    }, xi2yF(void 0, i));
+  }
+
+  var filter = /*#__PURE__*/(res(function (lens) {
+    return toFunction([lens, isoU(I.id, ef(reqMaybeArray('`filter` must be set with undefined or an array-like object')))]);
+  }))(function (xi2b) {
+    return function (xs, i, F, xi2yF) {
+      var ts = void 0;
+      var fs = I.array0;
+      if (seemsArrayLike(xs)) partitionIntoIndex(xi2b, xs, ts = [], fs = []);
+      return F.map(function (ts) {
+        var tsN = ts ? ts.length : 0;
+        var fsN = fs.length;
+        var n = tsN + fsN;
+        return n === fsN ? fs : copyToFrom(copyToFrom(Array(n), 0, ts, 0, tsN), tsN, fs, 0, fsN);
+      }, xi2yF(ts, i));
+    };
+  });
+
+  function find(xih2b) {
+    var hint = arguments.length > 1 ? arguments[1] : { hint: 0 };
+    return function (xs, _i, F, xi2yF) {
+      var ys = seemsArrayLike(xs) ? xs : '';
+      var i = hint.hint = findIndexHint(hint, xih2b, ys);
+      return F.map(function (v) {
+        return setIndex(i, v, ys);
+      }, xi2yF(ys[i], i));
+    };
+  }
+
+  function findWith(o) {
+    var oo = toFunction(o);
+    var p = isDefined(oo);
+    return [arguments.length > 1 ? find(p, arguments[1]) : find(p), oo];
+  }
+
+  var first = 0;
+
+  var index = ef(reqIndex);
+
+  var last = /*#__PURE__*/choose(function (maybeArray) {
+    return seemsArrayLike(maybeArray) && maybeArray.length ? maybeArray.length - 1 : 0;
+  });
+
+  var prefix = function prefix(n) {
+    return slice(0, n);
+  };
+
+  var slice = /*#__PURE__*/(res(function (lens) {
+    return toFunction([lens, isoU(I.id, ef(reqMaybeArray('`slice` must be set with undefined or an array-like object')))]);
+  }))(function (begin, end) {
+    return function (xs, i, F, xsi2yF) {
+      var seems = seemsArrayLike(xs);
+      var xsN = seems && xs.length;
+      var b = sliceIndex(0, xsN, 0, begin);
+      var e = sliceIndex(b, xsN, xsN, end);
+      return F.map(function (zs) {
+        var zsN = zs ? zs.length : 0;
+        var bPzsN = b + zsN;
+        var n = xsN - e + bPzsN;
+        return copyToFrom(copyToFrom(copyToFrom(Array(n), 0, xs, 0, b), b, zs, 0, zsN), bPzsN, xs, e, xsN);
+      }, xsi2yF(seems ? copyToFrom(Array(Math.max(0, e - b)), 0, xs, b, e) : void 0, i));
+    };
+  });
+
+  var suffix = function suffix(n) {
+    return slice(0 === n ? Infinity : !n ? 0 : -n, void 0);
+  };
+
+  // Lensing objects
+
+  var pickIn = function pickIn(t) {
+    return I.isObject(t) ? pick(modify(values, pickInAux, t)) : t;
+  };
+
+  var prop = function (x) {
+    if (!I.isString(x)) errorGiven('`prop` expects a string', x);
+    return x;
+  };
+
+  function props() {
+    var n = arguments.length;
+    var template = {};
+    for (var i = 0, k; i < n; ++i) {
+      template[k = arguments[i]] = k;
+    }return pick(template);
+  }
+
+  var propsOf = function propsOf(o) {
+    return props.apply(null, I.keys(o));
+  };
+
+  function removable() {
+    for (var _len5 = arguments.length, ps = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+      ps[_key5] = arguments[_key5];
+    }
+
+    function drop(y) {
+      if (!(y instanceof Object)) return y;
+      for (var i = 0, n = ps.length; i < n; ++i) {
+        if (I.hasU(ps[i], y)) return y;
+      }
+    }
+    return function (x, i, F, xi2yF) {
+      return F.map(drop, xi2yF(x, i));
+    };
+  }
+
+  // Providing defaults
+
+  var valueOr = function valueOr(v) {
+    return function (x, i, _F, xi2yF) {
+      return xi2yF(x != null ? x : v, i);
+    };
+  };
+
+  // Transforming data
+
+  var pick = /*#__PURE__*/(par(0, ef(reqTemplate('pick'))))(function (template) {
+    return function (x, i, F, xi2yF) {
+      return F.map(function (v) {
+        return setPick(template, v, x);
+      }, xi2yF(getPick(template, x), i));
+    };
+  });
+
+  var replace$1 = /*#__PURE__*/I.curry(function (inn, out) {
+    function o2i(x) {
+      return replaced(out, inn, x);
+    }
+    return function (x, i, F, xi2yF) {
+      return F.map(o2i, xi2yF(replaced(inn, out, x), i));
+    };
+  });
+
+  // Operations on isomorphisms
+
+  function getInverse(o, s) {
+    return 1 < arguments.length ? setU(o, s, void 0) : function (s) {
+      return setU(o, s, void 0);
+    };
+  }
+
+  // Creating new isomorphisms
+
+  var iso = /*#__PURE__*/I.curry(isoU);
+
+  // Isomorphism combinators
+
+  var array = function array(elem) {
+    var fwd = getInverse(elem);
+    var bwd = get(elem);
+    var mapFwd = function mapFwd(x) {
+      return mapIfArrayLike(fwd, x);
+    };
+    return function (x, i, F, xi2yF) {
+      return F.map(mapFwd, xi2yF(mapIfArrayLike(bwd, x), i));
+    };
+  };
+
+  var inverse = function inverse(iso) {
+    return function (x, i, F, xi2yF) {
+      return F.map(function (x) {
+        return getU(iso, x);
+      }, xi2yF(setU(iso, x, void 0), i));
+    };
+  };
+
+  // Basic isomorphisms
+
+  var complement = /*#__PURE__*/isoU(notPartial, notPartial);
+
+  var indexed = /*#__PURE__*/isoU( /*#__PURE__*/expect(seemsArrayLike, /*#__PURE__*/(res(freezeArrayOfObjects))(function (xs) {
+    var n = xs.length;
+    var xis = Array(n);
+    for (var i = 0; i < n; ++i) {
+      xis[i] = [i, xs[i]];
+    }return xis;
+  })), /*#__PURE__*/expect(I.isArray, /*#__PURE__*/(res(I.freeze))(function (xis) {
+    var n = xis.length;
+    var xs = Array(n);
+    for (var i = 0; i < n; ++i) {
+      var xi = xis[i];
+      if (xi.length === 2) xs[xi[0]] = xi[1];
+    }
+    n = xs.length;
+    var j = 0;
+    for (var _i3 = 0; _i3 < n; ++_i3) {
+      var x = xs[_i3];
+      if (void 0 !== x) {
+        if (_i3 !== j) xs[j] = x;
+        ++j;
+      }
+    }
+    xs.length = j;
+    return xs;
+  })));
+
+  var is = function is(v) {
+    return isoU(function (x) {
+      return I.acyclicEqualsU(v, x);
+    }, function (b) {
+      return true === b ? v : void 0;
+    });
+  };
+
+  var reverse = /*#__PURE__*/isoU(rev, rev);
+
+  var singleton = /*#__PURE__*/(function (iso) {
+    return toFunction([isoU(I.id, I.freeze), iso]);
+  })(function (x, i, F, xi2yF) {
+    return F.map(singletonPartial, xi2yF((x instanceof Object || I.isString(x)) && x.length === 1 ? x[0] : void 0, i));
+  });
+
+  // Standard isomorphisms
+
+  var uri = /*#__PURE__*/stringIsoU(decodeURI, encodeURI);
+
+  var uriComponent = /*#__PURE__*/stringIsoU(decodeURIComponent, encodeURIComponent);
+
+  var json = /*#__PURE__*/(res(function (iso) {
+    return toFunction([iso, isoU(deepFreeze, I.id)]);
+  }))(function (options) {
+    var _ref = options || I.object0,
+        reviver = _ref.reviver,
+        replacer = _ref.replacer,
+        space = _ref.space;
+
+    return isoU(expect(I.isString, function (text) {
+      return JSON.parse(text, reviver);
+    }), expect(I.isDefined, function (value) {
+      return JSON.stringify(value, replacer, space);
+    }));
+  });
+
+  // String isomorphisms
+
+  var dropPrefix = function dropPrefix(pfx) {
+    return stringIsoU(function (x) {
+      return x.startsWith(pfx) ? x.slice(pfx.length) : undefined;
+    }, function (x) {
+      return pfx + x;
+    });
+  };
+
+  var dropSuffix = function dropSuffix(sfx) {
+    return stringIsoU(function (x) {
+      return x.endsWith(sfx) ? x.slice(0, x.length - sfx.length) : undefined;
+    }, function (x) {
+      return x + sfx;
+    });
+  };
+
+  var replaces = /*#__PURE__*/I.curry(function (i, o) {
+    return stringIsoU(replace(toRegExpU(i, 'g'), o), replace(toRegExpU(o, 'g'), i));
+  });
+
+  var split = /*#__PURE__*/(function (fn$$1) {
+    return function (_sep) {
+      return toFunction([fn$$1.apply(null, arguments), isoU(I.freeze, I.id)]);
+    };
+  })(function (sep) {
+    var re = arguments.length > 1 ? arguments[1] : sep;
+    return isoU(expect(I.isString, function (x) {
+      return x.split(re);
+    }), expect(I.isArray, function (xs) {
+      return xs.join(sep);
+    }));
+  });
+
+  var uncouple = /*#__PURE__*/(function (fn$$1) {
+    return function (_sep) {
+      return toFunction([fn$$1.apply(null, arguments), isoU(I.freeze, I.id)]);
+    };
+  })(function (sep) {
+    var re = toRegExpU(arguments.length > 1 ? arguments[1] : sep, '');
+    return isoU(expect(I.isString, function (x) {
+      var m = re.exec(x);
+      return m ? [x.slice(0, reIndex(m)), x.slice(reLastIndex(m))] : [x, ''];
+    }), function (kv) {
+      if (I.isArray(kv) && kv.length === 2) {
+        var k = kv[0];
+        var v = kv[1];
+        return v ? k + sep + v : k;
+      }
+    });
+  });
+
+  // Arithmetic isomorphisms
+
+  var add$1 = function add$$1(c) {
+    return numberIsoU(add(c), add(-c));
+  };
+  var divide = function divide(c) {
+    return numberIsoU(divideBy(c), multiply(c));
+  };
+  var multiply$1 = function multiply$$1(c) {
+    return numberIsoU(multiply(c), divideBy(c));
+  };
+  var negate$1 = /*#__PURE__*/numberIsoU(negate, negate);
+  var subtract = function subtract(c) {
+    return numberIsoU(add(-c), add(c));
+  };
+
+  // Interop
+
+  var pointer = function pointer(s) {
+    if (s[0] === '#') s = decodeURIComponent(s);
+    var ts = s.split('/');
+    var n = ts.length;
+    for (var i = 1; i < n; ++i) {
+      var t = ts[i];
+      ts[i - 1] = /^(0|[1-9]\d*)$/.test(t) ? ifElse(isArrayOrPrimitive, Number(t), t) : '-' === t ? ifElse(isArrayOrPrimitive, append, t) : t.replace('~1', '/').replace('~0', '~');
+    }
+    ts.length = n - 1;
+    return ts;
+  };
+
+  exports.seemsArrayLike = seemsArrayLike;
+  exports.Identity = Identity;
+  exports.IdentityAsync = IdentityAsync;
+  exports.Constant = Constant;
+  exports.toFunction = toFunction;
+  exports.assign = assign;
+  exports.modify = modify;
+  exports.modifyAsync = modifyAsync;
+  exports.remove = remove;
+  exports.set = set;
+  exports.transform = transform;
+  exports.transformAsync = transformAsync;
+  exports.traverse = traverse;
+  exports.compose = compose;
+  exports.flat = flat;
+  exports.lazy = lazy;
+  exports.choices = choices;
+  exports.choose = choose;
+  exports.cond = cond;
+  exports.condOf = condOf;
+  exports.ifElse = ifElse;
+  exports.iftes = iftes;
+  exports.orElse = orElse;
+  exports.chain = chain;
+  exports.choice = choice;
+  exports.unless = unless;
+  exports.when = when;
+  exports.optional = optional;
+  exports.zero = zero;
+  exports.assignOp = assignOp;
+  exports.modifyOp = modifyOp;
+  exports.setOp = setOp;
+  exports.removeOp = removeOp;
+  exports.log = log;
+  exports.seq = seq;
+  exports.branchOr = branchOr;
+  exports.branch = branch;
+  exports.branches = branches;
+  exports.elems = elems;
+  exports.elemsTotal = elemsTotal;
+  exports.entries = entries;
+  exports.keys = keys;
+  exports.matches = matches;
+  exports.values = values;
+  exports.children = children;
+  exports.flatten = flatten;
+  exports.query = query;
+  exports.satisfying = satisfying;
+  exports.leafs = leafs;
+  exports.all = all;
+  exports.and = and$1;
+  exports.any = any;
+  exports.collectAs = collectAs;
+  exports.collect = collect;
+  exports.concatAs = concatAs;
+  exports.concat = concat;
+  exports.countIf = countIf;
+  exports.count = count;
+  exports.countsAs = countsAs;
+  exports.counts = counts;
+  exports.foldl = foldl;
+  exports.foldr = foldr;
+  exports.forEach = forEach;
+  exports.forEachWith = forEachWith;
+  exports.isDefined = isDefined;
+  exports.isEmpty = isEmpty;
+  exports.joinAs = joinAs;
+  exports.join = join;
+  exports.maximumBy = maximumBy;
+  exports.maximum = maximum;
+  exports.meanAs = meanAs;
+  exports.mean = mean;
+  exports.minimumBy = minimumBy;
+  exports.minimum = minimum;
+  exports.none = none;
+  exports.or = or$1;
+  exports.productAs = productAs;
+  exports.product = product;
+  exports.selectAs = selectAs;
+  exports.select = select;
+  exports.sumAs = sumAs;
+  exports.sum = sum;
+  exports.get = get;
+  exports.lens = lens;
+  exports.setter = setter;
+  exports.foldTraversalLens = foldTraversalLens;
+  exports.defaults = defaults;
+  exports.define = define;
+  exports.normalize = normalize;
+  exports.required = required;
+  exports.reread = reread;
+  exports.rewrite = rewrite;
+  exports.append = append;
+  exports.filter = filter;
+  exports.find = find;
+  exports.findWith = findWith;
+  exports.first = first;
+  exports.index = index;
+  exports.last = last;
+  exports.prefix = prefix;
+  exports.slice = slice;
+  exports.suffix = suffix;
+  exports.pickIn = pickIn;
+  exports.prop = prop;
+  exports.props = props;
+  exports.propsOf = propsOf;
+  exports.removable = removable;
+  exports.valueOr = valueOr;
+  exports.pick = pick;
+  exports.replace = replace$1;
+  exports.getInverse = getInverse;
+  exports.iso = iso;
+  exports.array = array;
+  exports.inverse = inverse;
+  exports.complement = complement;
+  exports.identity = identity;
+  exports.indexed = indexed;
+  exports.is = is;
+  exports.keyed = keyed;
+  exports.reverse = reverse;
+  exports.singleton = singleton;
+  exports.uri = uri;
+  exports.uriComponent = uriComponent;
+  exports.json = json;
+  exports.dropPrefix = dropPrefix;
+  exports.dropSuffix = dropSuffix;
+  exports.replaces = replaces;
+  exports.split = split;
+  exports.uncouple = uncouple;
+  exports.add = add$1;
+  exports.divide = divide;
+  exports.multiply = multiply$1;
+  exports.negate = negate$1;
+  exports.subtract = subtract;
+  exports.pointer = pointer;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('s-js')) :
+	typeof define === 'function' && define.amd ? define(['exports', 's-js'], factory) :
+	(factory((global.Surplus = {}),global.S));
+}(this, (function (exports,S) { 'use strict';
+
+S = S && S.hasOwnProperty('default') ? S['default'] : S;
+
+var TEXT_NODE = 3;
+function insert(range, value) {
+    var parent = range.start.parentNode, test = range.start, good = null, t = typeof value;
+    //if (parent === null) {
+    //    throw new Error("Surplus.insert() can only be used on a node that has a parent node. \n"
+    //        + "Node ``" + range.start + "'' is currently unattached to a parent.");
+    //}
+    //if (range.end.parentNode !== parent) {
+    //    throw new Error("Surplus.insert() requires that the inserted nodes remain sibilings \n"
+    //        + "of the original node.  The DOM has been modified such that this is \n"
+    //        + "no longer the case.");
+    //}
+    if (t === 'string' || t === 'number') {
+        value = value.toString();
+        if (test.nodeType === TEXT_NODE) {
+            test.data = value;
+            good = test;
+        }
+        else {
+            value = document.createTextNode(value);
+            parent.replaceChild(value, test);
+            if (range.end === test)
+                range.end = value;
+            range.start = good = value;
+        }
+    }
+    else if (value instanceof Node) {
+        if (test !== value) {
+            parent.replaceChild(value, test);
+            if (range.end === test)
+                range.end = value;
+            range.start = value;
+        }
+        good = value;
+    }
+    else if (Array.isArray(value)) {
+        insertArray(value);
+    }
+    else if (value instanceof Function) {
+        S(function () {
+            insert(range, value());
+        });
+        good = range.end;
+    }
+    else if (value !== null && value !== undefined && value !== true && value !== false) {
+        value = value.toString();
+        if (test.nodeType === TEXT_NODE) {
+            test.data = value;
+            good = test;
+        }
+        else {
+            value = document.createTextNode(value);
+            parent.replaceChild(value, test);
+            if (range.end === test)
+                range.end = value;
+            range.start = good = value;
+        }
+    }
+    if (good === null) {
+        if (range.start === parent.firstChild && range.end === parent.lastChild && range.start !== range.end) {
+            // fast delete entire contents
+            parent.textContent = "";
+            value = document.createTextNode("");
+            parent.appendChild(value);
+            good = range.start = range.end = value;
+        }
+        else if (test.nodeType === TEXT_NODE) {
+            test.data = "";
+            good = test;
+        }
+        else {
+            value = document.createTextNode("");
+            parent.replaceChild(value, test);
+            if (range.end === test)
+                range.end = value;
+            range.start = good = value;
+        }
+    }
+    // remove anything left after the good cursor from the insert range
+    while (good !== range.end) {
+        test = range.end;
+        range.end = test.previousSibling;
+        parent.removeChild(test);
+    }
+    return range;
+    function insertArray(array) {
+        for (var i = 0, len = array.length; i < len; i++) {
+            var value = array[i];
+            if (good === range.end) {
+                if (value instanceof Node) {
+                    good = range.end = (good.nextSibling ? parent.insertBefore(value, good.nextSibling) : parent.appendChild(value));
+                }
+                else if (value instanceof Array) {
+                    insertArray(value);
+                }
+                else if (value !== null && value !== undefined && value !== false && value !== true) {
+                    value = document.createTextNode(value.toString());
+                    good = range.end = (good.nextSibling ? parent.insertBefore(value, good.nextSibling) : parent.appendChild(value));
+                }
+            }
+            else {
+                if (value instanceof Node) {
+                    if (test !== value) {
+                        if (good === null) {
+                            if (range.end === value)
+                                range.end = value.previousSibling;
+                            parent.replaceChild(value, test);
+                            range.start = value;
+                            if (range.end === test)
+                                range.end = value;
+                            test = value.nextSibling;
+                        }
+                        else {
+                            if (test.nextSibling === value && test !== value.nextSibling && test !== range.end) {
+                                parent.removeChild(test);
+                                test = value.nextSibling;
+                            }
+                            else {
+                                if (range.end === value)
+                                    range.end = value.previousSibling;
+                                parent.insertBefore(value, test);
+                            }
+                        }
+                    }
+                    else {
+                        test = test.nextSibling;
+                    }
+                    good = value;
+                }
+                else if (value instanceof Array) {
+                    insertArray(value);
+                }
+                else if (value !== null && value !== undefined && value !== true && value !== false) {
+                    value = value.toString();
+                    if (test.nodeType === TEXT_NODE) {
+                        test.data = value;
+                        if (good === null)
+                            range.start = test;
+                        good = test, test = good.nextSibling;
+                    }
+                    else {
+                        value = document.createTextNode(value);
+                        parent.insertBefore(value, test);
+                        if (good === null)
+                            range.start = value;
+                        good = value;
+                    }
+                }
+            }
+        }
+    }
+}
+
+function content(parent, value, current) {
+    var t = typeof value;
+    if (current === value) {
+        // nothing to do
+    }
+    else if (t === 'string') {
+        // if a Text node already exists, it's faster to set its .data than set the parent.textContent
+        if (current !== "" && typeof current === 'string') {
+            current = parent.firstChild.data = value;
+        }
+        else {
+            current = parent.textContent = value;
+        }
+    }
+    else if (t === 'number') {
+        value = value.toString();
+        if (current !== "" && typeof current === 'string') {
+            current = parent.firstChild.data = value;
+        }
+        else {
+            current = parent.textContent = value;
+        }
+    }
+    else if (value == null || t === 'boolean') {
+        clear(parent);
+        current = "";
+    }
+    else if (t === 'function') {
+        S(function () {
+            current = content(parent, value(), current);
+        });
+    }
+    else if (value instanceof Node) {
+        if (Array.isArray(current)) {
+            if (current.length === 0) {
+                parent.appendChild(value);
+            }
+            else if (current.length === 1) {
+                parent.replaceChild(value, current[0]);
+            }
+            else {
+                clear(parent);
+                parent.appendChild(value);
+            }
+        }
+        else if (current === "") {
+            parent.appendChild(value);
+        }
+        else {
+            parent.replaceChild(value, parent.firstChild);
+        }
+        current = value;
+    }
+    else if (Array.isArray(value)) {
+        var array = normalizeIncomingArray([], value);
+        if (array.length === 0) {
+            clear(parent);
+        }
+        else {
+            if (Array.isArray(current)) {
+                if (current.length === 0) {
+                    appendNodes(parent, array, 0, array.length);
+                }
+                else {
+                    reconcileArrays(parent, current, array);
+                }
+            }
+            else if (current === "") {
+                appendNodes(parent, array, 0, array.length);
+            }
+            else {
+                reconcileArrays(parent, [parent.firstChild], array);
+            }
+        }
+        current = array;
+    }
+    else {
+        throw new Error("content must be Node, stringable, or array of same");
+    }
+    return current;
+}
+var NOMATCH = -1;
+var NOINSERT = -2;
+var RECONCILE_ARRAY_BATCH = 0;
+var RECONCILE_ARRAY_BITS = 16;
+var RECONCILE_ARRAY_INC = 1 << RECONCILE_ARRAY_BITS;
+var RECONCILE_ARRAY_MASK = RECONCILE_ARRAY_INC - 1;
+// reconcile the content of parent from ns to us
+// see ivi's excellent writeup of diffing arrays in a vdom library: 
+// https://github.com/ivijs/ivi/blob/2c81ead934b9128e092cc2a5ef2d3cabc73cb5dd/packages/ivi/src/vdom/implementation.ts#L1187
+// this code isn't identical, since we're diffing real dom nodes to nodes-or-strings, 
+// but the core methodology of trimming ends and reversals, matching nodes, then using
+// the longest increasing subsequence to minimize DOM ops is inspired by ivi.
+function reconcileArrays(parent, ns, us) {
+    var ulen = us.length, 
+    // n = nodes, u = updates
+    // ranges defined by min and max indices
+    nmin = 0, nmax = ns.length - 1, umin = 0, umax = ulen - 1, 
+    // start nodes of ranges
+    n = ns[nmin], u = us[umin], 
+    // end nodes of ranges
+    nx = ns[nmax], ux = us[umax], 
+    // node, if any, just after ux, used for doing .insertBefore() to put nodes at end
+    ul = nx.nextSibling, i, j, k, loop = true;
+    // scan over common prefixes, suffixes, and simple reversals
+    fixes: while (loop) {
+        loop = false;
+        // common prefix, u === n
+        while (equable(u, n, umin, us)) {
+            umin++;
+            nmin++;
+            if (umin > umax || nmin > nmax)
+                break fixes;
+            u = us[umin];
+            n = ns[nmin];
+        }
+        // common suffix, ux === nx
+        while (equable(ux, nx, umax, us)) {
+            ul = nx;
+            umax--;
+            nmax--;
+            if (umin > umax || nmin > nmax)
+                break fixes;
+            ux = us[umax];
+            nx = ns[nmax];
+        }
+        // reversal u === nx, have to swap node forward
+        while (equable(u, nx, umin, us)) {
+            loop = true;
+            parent.insertBefore(nx, n);
+            umin++;
+            nmax--;
+            if (umin > umax || nmin > nmax)
+                break fixes;
+            u = us[umin];
+            nx = ns[nmax];
+        }
+        // reversal ux === n, have to swap node back
+        while (equable(ux, n, umax, us)) {
+            loop = true;
+            if (ul === null)
+                parent.appendChild(n);
+            else
+                parent.insertBefore(n, ul);
+            ul = n;
+            umax--;
+            nmin++;
+            if (umin > umax || nmin > nmax)
+                break fixes;
+            ux = us[umax];
+            n = ns[nmin];
+        }
+    }
+    // if that covered all updates, just need to remove any remaining nodes and we're done
+    if (umin > umax) {
+        // remove any remaining nodes
+        while (nmin <= nmax) {
+            parent.removeChild(ns[nmax]);
+            nmax--;
+        }
+        return;
+    }
+    // if that covered all current nodes, just need to insert any remaining updates and we're done
+    if (nmin > nmax) {
+        // insert any remaining nodes
+        while (umin <= umax) {
+            insertOrAppend(parent, us[umin], ul, umin, us);
+            umin++;
+        }
+        return;
+    }
+    // simple cases don't apply, have to actually match up nodes and figure out minimum DOM ops
+    // loop through nodes and mark them with a special property indicating their order
+    // we'll then go through the updates and look for those properties
+    // in case any of the updates have order properties left over from earlier runs, we 
+    // use the low bits of the order prop to record a batch identifier.
+    // I'd much rather use a Map than a special property, but Maps of objects are really
+    // slow currently, like only 100k get/set ops / second
+    // for Text nodes, all that matters is their order, as they're easily, interchangeable
+    // so we record their positions in ntext[]
+    var ntext = [];
+    // update global batch identifer
+    RECONCILE_ARRAY_BATCH = (RECONCILE_ARRAY_BATCH + 1) % RECONCILE_ARRAY_INC;
+    for (i = nmin, j = (nmin << RECONCILE_ARRAY_BITS) + RECONCILE_ARRAY_BATCH; i <= nmax; i++, j += RECONCILE_ARRAY_INC) {
+        n = ns[i];
+        // add or update special order property
+        if (n.__surplus_order === undefined) {
+            Object.defineProperty(n, '__surplus_order', { value: j, writable: true });
+        }
+        else {
+            n.__surplus_order = j;
+        }
+        if (n instanceof Text) {
+            ntext.push(i);
+        }
+    }
+    // now loop through us, looking for the order property, otherwise recording NOMATCH
+    var src = new Array(umax - umin + 1), utext = [], preserved = 0;
+    for (i = umin; i <= umax; i++) {
+        u = us[i];
+        if (typeof u === 'string') {
+            utext.push(i);
+            src[i - umin] = NOMATCH;
+        }
+        else if ((j = u.__surplus_order) !== undefined && (j & RECONCILE_ARRAY_MASK) === RECONCILE_ARRAY_BATCH) {
+            j >>= RECONCILE_ARRAY_BITS;
+            src[i - umin] = j;
+            ns[j] = null;
+            preserved++;
+        }
+        else {
+            src[i - umin] = NOMATCH;
+        }
+    }
+    if (preserved === 0 && nmin === 0 && nmax === ns.length - 1) {
+        // no nodes preserved, use fast clear and append
+        clear(parent);
+        while (umin <= umax) {
+            insertOrAppend(parent, us[umin], null, umin, us);
+            umin++;
+        }
+        return;
+    }
+    // find longest common sequence between ns and us, represented as the indices 
+    // of the longest increasing subsequence in src
+    var lcs = longestPositiveIncreasingSubsequence(src);
+    // we know we can preserve their order, so march them as NOINSERT
+    for (i = 0; i < lcs.length; i++) {
+        src[lcs[i]] = NOINSERT;
+    }
+    /*
+              0   1   2   3   4   5   6   7
+    ns    = [ n,  n,  t,  n,  n,  n,  t,  n ]
+                  |          /   /       /
+                  |        /   /       /
+                  +------/---/-------/----+
+                       /   /       /      |
+    us    = [ n,  s,  n,  n,  s,  n,  s,  n ]
+    src   = [-1, -1,  4,  5, -1,  7, -1,  1 ]
+    lis   = [         2,  3,      5]
+                      j
+    utext = [     1,          4,      6 ]
+                  i
+    ntext = [         2,              6 ]
+                      k
+    */
+    // replace strings in us with Text nodes, reusing Text nodes from ns when we can do so without moving them
+    var utexti = 0, lcsj = 0, ntextk = 0;
+    for (i = 0, j = 0, k = 0; i < utext.length; i++) {
+        utexti = utext[i];
+        // need to answer qeustion "if utext[i] falls between two lcs nodes, is there an ntext between them which we can reuse?"
+        // first, find j such that lcs[j] is the first lcs node *after* utext[i]
+        while (j < lcs.length && (lcsj = lcs[j]) < utexti - umin)
+            j++;
+        // now, find k such that ntext[k] is the first ntext *after* lcs[j-1] (or after start, if j === 0)
+        while (k < ntext.length && (ntextk = ntext[k], j !== 0) && ntextk < src[lcs[j - 1]])
+            k++;
+        // if ntext[k] < lcs[j], then we know ntext[k] falls between lcs[j-1] (or start) and lcs[j] (or end)
+        // that means we can re-use it without moving it
+        if (k < ntext.length && (j === lcs.length || ntextk < src[lcsj])) {
+            n = ns[ntextk];
+            u = us[utexti];
+            if (n.data !== u)
+                n.data = u;
+            ns[ntextk] = null;
+            us[utexti] = n;
+            src[utexti] = NOINSERT;
+            k++;
+        }
+        else {
+            // if we didn't find one to re-use, make a new Text node
+            us[utexti] = document.createTextNode(us[utexti]);
+        }
+    }
+    // remove stale nodes in ns
+    while (nmin <= nmax) {
+        n = ns[nmin];
+        if (n !== null) {
+            parent.removeChild(n);
+        }
+        nmin++;
+    }
+    // insert new nodes
+    while (umin <= umax) {
+        ux = us[umax];
+        if (src[umax - umin] !== NOINSERT) {
+            if (ul === null)
+                parent.appendChild(ux);
+            else
+                parent.insertBefore(ux, ul);
+        }
+        ul = ux;
+        umax--;
+    }
+}
+// two nodes are "equable" if they are identical (===) or if we can make them the same, i.e. they're 
+// Text nodes, which we can reuse with the new text
+function equable(u, n, i, us) {
+    if (u === n) {
+        return true;
+    }
+    else if (typeof u === 'string' && n instanceof Text) {
+        if (n.data !== u)
+            n.data = u;
+        us[i] = n;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+function appendNodes(parent, array, i, end) {
+    var node;
+    for (; i < end; i++) {
+        node = array[i];
+        if (node instanceof Node) {
+            parent.appendChild(node);
+        }
+        else {
+            node = array[i] = document.createTextNode(node);
+            parent.appendChild(node);
+        }
+    }
+}
+function insertOrAppend(parent, node, marker, i, us) {
+    if (typeof node === 'string') {
+        node = us[i] = document.createTextNode(node);
+    }
+    if (marker === null)
+        parent.appendChild(node);
+    else
+        parent.insertBefore(node, marker);
+}
+function normalizeIncomingArray(normalized, array) {
+    for (var i = 0, len = array.length; i < len; i++) {
+        var item = array[i];
+        if (item instanceof Node) {
+            normalized.push(item);
+        }
+        else if (item == null || item === true || item === false) {
+            // skip
+        }
+        else if (Array.isArray(item)) {
+            normalizeIncomingArray(normalized, item);
+        }
+        else if (typeof item === 'string') {
+            normalized.push(item);
+        }
+        else {
+            normalized.push(item.toString());
+        }
+    }
+    return normalized;
+}
+function clear(node) {
+    node.textContent = "";
+}
+// return an array of the indices of ns that comprise the longest increasing subsequence within ns
+function longestPositiveIncreasingSubsequence(ns) {
+    var seq = [], is = [], l = -1, pre = new Array(ns.length);
+    for (var i = 0, len = ns.length; i < len; i++) {
+        var n = ns[i];
+        if (n < 0)
+            continue;
+        var j = findGreatestIndexLEQ(seq, n);
+        if (j !== -1)
+            pre[i] = is[j];
+        if (j === l) {
+            l++;
+            seq[l] = n;
+            is[l] = i;
+        }
+        else if (n < seq[j + 1]) {
+            seq[j + 1] = n;
+            is[j + 1] = i;
+        }
+    }
+    for (i = is[l]; l >= 0; i = pre[i], l--) {
+        seq[l] = i;
+    }
+    return seq;
+}
+function findGreatestIndexLEQ(seq, n) {
+    // invariant: lo is guaranteed to be index of a value <= n, hi to be >
+    // therefore, they actually start out of range: (-1, last + 1)
+    var lo = -1, hi = seq.length;
+    // fast path for simple increasing sequences
+    if (hi > 0 && seq[hi - 1] <= n)
+        return hi - 1;
+    while (hi - lo > 1) {
+        var mid = Math.floor((lo + hi) / 2);
+        if (seq[mid] > n) {
+            hi = mid;
+        }
+        else {
+            lo = mid;
+        }
+    }
+    return lo;
+}
+
+var svgNS = "http://www.w3.org/2000/svg";
+function createElement(tag, className, parent) {
+    var el = document.createElement(tag);
+    if (className)
+        el.className = className;
+    if (parent)
+        parent.appendChild(el);
+    return el;
+}
+function createSvgElement(tag, className, parent) {
+    var el = document.createElementNS(svgNS, tag);
+    if (className)
+        el.setAttribute("class", className);
+    if (parent)
+        parent.appendChild(el);
+    return el;
+}
+function createComment(text, parent) {
+    var comment = document.createComment(text);
+    parent.appendChild(comment);
+    return comment;
+}
+function createTextNode(text, parent) {
+    var node = document.createTextNode(text);
+    parent.appendChild(node);
+    return node;
+}
+function setAttribute(node, name, value) {
+    if (value === false || value === null || value === undefined)
+        node.removeAttribute(name);
+    else
+        node.setAttribute(name, value);
+}
+function setAttributeNS(node, namespace, name, value) {
+    if (value === false || value === null || value === undefined)
+        node.removeAttributeNS(namespace, name);
+    else
+        node.setAttributeNS(namespace, name, value);
+}
+
+var htmlFieldCache = {
+    // special props
+    style: ['style', null, 3 /* Assign */],
+    ref: ['ref', null, 2 /* Ignore */],
+    fn: ['fn', null, 2 /* Ignore */],
+    // attr compat
+    class: ['className', null, 0 /* Property */],
+    for: ['htmlFor', null, 0 /* Property */],
+    "accept-charset": ['acceptCharset', null, 0 /* Property */],
+    "http-equiv": ['httpEquiv', null, 0 /* Property */],
+    // a few React oddities, mostly disagreeing about casing
+    onDoubleClick: ['ondblclick', null, 0 /* Property */],
+    spellCheck: ['spellcheck', null, 0 /* Property */],
+    allowFullScreen: ['allowFullscreen', null, 0 /* Property */],
+    autoCapitalize: ['autocapitalize', null, 0 /* Property */],
+    autoFocus: ['autofocus', null, 0 /* Property */],
+    autoPlay: ['autoplay', null, 0 /* Property */],
+    // other
+    // role is part of the ARIA spec but not caught by the aria- attr filter
+    role: ['role', null, 1 /* Attribute */]
+};
+var svgFieldCache = {
+    // special props
+    style: ['style', null, 3 /* Assign */],
+    ref: ['ref', null, 2 /* Ignore */],
+    fn: ['fn', null, 2 /* Ignore */],
+    // property compat
+    className: ['class', null, 1 /* Attribute */],
+    htmlFor: ['for', null, 1 /* Attribute */],
+    tabIndex: ['tabindex', null, 1 /* Attribute */],
+    // React compat
+    onDoubleClick: ['ondblclick', null, 0 /* Property */],
+    // attributes with eccentric casing - some SVG attrs are snake-cased, some camelCased
+    allowReorder: ['allowReorder', null, 1 /* Attribute */],
+    attributeName: ['attributeName', null, 1 /* Attribute */],
+    attributeType: ['attributeType', null, 1 /* Attribute */],
+    autoReverse: ['autoReverse', null, 1 /* Attribute */],
+    baseFrequency: ['baseFrequency', null, 1 /* Attribute */],
+    calcMode: ['calcMode', null, 1 /* Attribute */],
+    clipPathUnits: ['clipPathUnits', null, 1 /* Attribute */],
+    contentScriptType: ['contentScriptType', null, 1 /* Attribute */],
+    contentStyleType: ['contentStyleType', null, 1 /* Attribute */],
+    diffuseConstant: ['diffuseConstant', null, 1 /* Attribute */],
+    edgeMode: ['edgeMode', null, 1 /* Attribute */],
+    externalResourcesRequired: ['externalResourcesRequired', null, 1 /* Attribute */],
+    filterRes: ['filterRes', null, 1 /* Attribute */],
+    filterUnits: ['filterUnits', null, 1 /* Attribute */],
+    gradientTransform: ['gradientTransform', null, 1 /* Attribute */],
+    gradientUnits: ['gradientUnits', null, 1 /* Attribute */],
+    kernelMatrix: ['kernelMatrix', null, 1 /* Attribute */],
+    kernelUnitLength: ['kernelUnitLength', null, 1 /* Attribute */],
+    keyPoints: ['keyPoints', null, 1 /* Attribute */],
+    keySplines: ['keySplines', null, 1 /* Attribute */],
+    keyTimes: ['keyTimes', null, 1 /* Attribute */],
+    lengthAdjust: ['lengthAdjust', null, 1 /* Attribute */],
+    limitingConeAngle: ['limitingConeAngle', null, 1 /* Attribute */],
+    markerHeight: ['markerHeight', null, 1 /* Attribute */],
+    markerUnits: ['markerUnits', null, 1 /* Attribute */],
+    maskContentUnits: ['maskContentUnits', null, 1 /* Attribute */],
+    maskUnits: ['maskUnits', null, 1 /* Attribute */],
+    numOctaves: ['numOctaves', null, 1 /* Attribute */],
+    pathLength: ['pathLength', null, 1 /* Attribute */],
+    patternContentUnits: ['patternContentUnits', null, 1 /* Attribute */],
+    patternTransform: ['patternTransform', null, 1 /* Attribute */],
+    patternUnits: ['patternUnits', null, 1 /* Attribute */],
+    pointsAtX: ['pointsAtX', null, 1 /* Attribute */],
+    pointsAtY: ['pointsAtY', null, 1 /* Attribute */],
+    pointsAtZ: ['pointsAtZ', null, 1 /* Attribute */],
+    preserveAlpha: ['preserveAlpha', null, 1 /* Attribute */],
+    preserveAspectRatio: ['preserveAspectRatio', null, 1 /* Attribute */],
+    primitiveUnits: ['primitiveUnits', null, 1 /* Attribute */],
+    refX: ['refX', null, 1 /* Attribute */],
+    refY: ['refY', null, 1 /* Attribute */],
+    repeatCount: ['repeatCount', null, 1 /* Attribute */],
+    repeatDur: ['repeatDur', null, 1 /* Attribute */],
+    requiredExtensions: ['requiredExtensions', null, 1 /* Attribute */],
+    requiredFeatures: ['requiredFeatures', null, 1 /* Attribute */],
+    specularConstant: ['specularConstant', null, 1 /* Attribute */],
+    specularExponent: ['specularExponent', null, 1 /* Attribute */],
+    spreadMethod: ['spreadMethod', null, 1 /* Attribute */],
+    startOffset: ['startOffset', null, 1 /* Attribute */],
+    stdDeviation: ['stdDeviation', null, 1 /* Attribute */],
+    stitchTiles: ['stitchTiles', null, 1 /* Attribute */],
+    surfaceScale: ['surfaceScale', null, 1 /* Attribute */],
+    systemLanguage: ['systemLanguage', null, 1 /* Attribute */],
+    tableValues: ['tableValues', null, 1 /* Attribute */],
+    targetX: ['targetX', null, 1 /* Attribute */],
+    targetY: ['targetY', null, 1 /* Attribute */],
+    textLength: ['textLength', null, 1 /* Attribute */],
+    viewBox: ['viewBox', null, 1 /* Attribute */],
+    viewTarget: ['viewTarget', null, 1 /* Attribute */],
+    xChannelSelector: ['xChannelSelector', null, 1 /* Attribute */],
+    yChannelSelector: ['yChannelSelector', null, 1 /* Attribute */],
+    zoomAndPan: ['zoomAndPan', null, 1 /* Attribute */],
+};
+var attributeOnlyRx = /-/;
+var deepAttrRx = /^style-/;
+var isAttrOnlyField = function (field) { return attributeOnlyRx.test(field) && !deepAttrRx.test(field); };
+var propOnlyRx = /^(on|style)/;
+var isPropOnlyField = function (field) { return propOnlyRx.test(field); };
+var propPartRx = /[a-z][A-Z]/g;
+var getAttrName = function (field) { return field.replace(propPartRx, function (m) { return m[0] + '-' + m[1]; }).toLowerCase(); };
+var jsxEventPropRx = /^on[A-Z]/;
+var attrPartRx = /\-(?:[a-z]|$)/g;
+var getPropName = function (field) {
+    var prop = field.replace(attrPartRx, function (m) { return m.length === 1 ? '' : m[1].toUpperCase(); });
+    return jsxEventPropRx.test(prop) ? prop.toLowerCase() : prop;
+};
+var deepPropRx = /^(style)([A-Z])/;
+var buildPropData = function (prop) {
+    var m = deepPropRx.exec(prop);
+    return m ? [m[2].toLowerCase() + prop.substr(m[0].length), m[1], 0 /* Property */] : [prop, null, 0 /* Property */];
+};
+var attrNamespaces = {
+    xlink: "http://www.w3.org/1999/xlink",
+    xml: "http://www.w3.org/XML/1998/namespace",
+};
+var attrNamespaceRx = new RegExp("^(" + Object.keys(attrNamespaces).join('|') + ")-(.*)");
+var buildAttrData = function (attr) {
+    var m = attrNamespaceRx.exec(attr);
+    return m ? [m[2], attrNamespaces[m[1]], 1 /* Attribute */] : [attr, null, 1 /* Attribute */];
+};
+var getFieldData = function (field, svg) {
+    var cache = svg ? svgFieldCache : htmlFieldCache, cached = cache[field];
+    if (cached)
+        return cached;
+    var attr = svg && !isPropOnlyField(field)
+        || !svg && isAttrOnlyField(field), name = attr ? getAttrName(field) : getPropName(field);
+    if (name !== field && (cached = cache[name]))
+        return cached;
+    var data = attr ? buildAttrData(name) : buildPropData(name);
+    return cache[field] = data;
+};
+
+function assign(a, b) {
+    var props = Object.keys(b);
+    for (var i = 0, len = props.length; i < len; i++) {
+        var name = props[i];
+        a[name] = b[name];
+    }
+}
+function spread(node, obj, svg) {
+    var props = Object.keys(obj);
+    for (var i = 0, len = props.length; i < len; i++) {
+        var name = props[i];
+        setField(node, name, obj[name], svg);
+    }
+}
+function setField(node, field, value, svg) {
+    var _a = getFieldData(field, svg), name = _a[0], namespace = _a[1], flags = _a[2], type = flags & 3;
+    if (type === 0 /* Property */) {
+        if (namespace)
+            node = node[namespace];
+        node[name] = value;
+    }
+    else if (type === 1 /* Attribute */) {
+        if (namespace)
+            setAttributeNS(node, namespace, name, value);
+        else
+            setAttribute(node, name, value);
+    }
+    else if (type === 3 /* Assign */) {
+        if (value && typeof value === 'object')
+            assign(node.style, value);
+    }
+}
+
+exports.insert = insert;
+exports.content = content;
+exports.spread = spread;
+exports.assign = assign;
+exports.S = S;
+exports.createElement = createElement;
+exports.createSvgElement = createSvgElement;
+exports.createComment = createComment;
+exports.createTextNode = createTextNode;
+exports.setAttribute = setAttribute;
+exports.setAttributeNS = setAttributeNS;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+/*              ___                 ______
+               /  /\               /  ___/\
+        ______/  / / _______    __/  /___\/
+       /  ___   / / /  ___  \  /_   __/\
+      /  /\_/  / / /  /__/  /\ \/  /\_\/
+     /  / //  / / /  ______/ / /  / /
+    /  /_//  / / /  /______\/ /  / /
+    \_______/ /  \_______/\  /__/ /
+     \______\/    \______\/  \__*/
+
+//. # sanctuary-def
+//.
+//. sanctuary-def is a run-time type system for JavaScript. It facilitates
+//. the definition of curried JavaScript functions which are explicit about
+//. the number of arguments to which they may be applied and the types of
+//. those arguments.
+//.
+//. It is conventional to import the package as `$`:
+//.
+//. ```javascript
+//. const $ = require ('sanctuary-def');
+//. ```
+//.
+//. The next step is to define an environment. An environment is an array
+//. of [types][]. [`env`][] is an environment containing all the built-in
+//. JavaScript types. It may be used as the basis for environments which
+//. include custom types in addition to the built-in types:
+//.
+//. ```javascript
+//. //    Integer :: Type
+//. const Integer = '...';
+//.
+//. //    NonZeroInteger :: Type
+//. const NonZeroInteger = '...';
+//.
+//. //    env :: Array Type
+//. const env = $.env.concat ([Integer, NonZeroInteger]);
+//. ```
+//.
+//. Type constructors such as `List :: Type -> Type` cannot be included in
+//. an environment as they're not of the correct type. One could, though,
+//. use a type constructor to define a fixed number of concrete types:
+//.
+//. ```javascript
+//. //    env :: Array Type
+//. const env = $.env.concat ([
+//.   List ($.Number),                // :: Type
+//.   List ($.String),                // :: Type
+//.   List (List ($.Number)),         // :: Type
+//.   List (List ($.String)),         // :: Type
+//.   List (List (List ($.Number))),  // :: Type
+//.   List (List (List ($.String))),  // :: Type
+//. ]);
+//. ```
+//.
+//. Not only would this be tedious, but one could never enumerate all possible
+//. types as there are infinitely many. Instead, one should use [`Unknown`][]:
+//.
+//. ```javascript
+//. //    env :: Array Type
+//. const env = $.env.concat ([List ($.Unknown)]);
+//. ```
+//.
+//. The next step is to define a `def` function for the environment:
+//.
+//. ```javascript
+//. const def = $.create ({checkTypes: true, env});
+//. ```
+//.
+//. The `checkTypes` option determines whether type checking is enabled.
+//. This allows one to only pay the performance cost of run-time type checking
+//. during development. For example:
+//.
+//. ```javascript
+//. const def = $.create ({
+//.   checkTypes: process.env.NODE_ENV === 'development',
+//.   env,
+//. });
+//. ```
+//.
+//. `def` is a function for defining functions. For example:
+//.
+//. ```javascript
+//. //    add :: Number -> Number -> Number
+//. const add =
+//. def ('add')
+//.     ({})
+//.     ([$.Number, $.Number, $.Number])
+//.     (x => y => x + y);
+//. ```
+//.
+//. `[$.Number, $.Number, $.Number]` specifies that `add` takes two arguments
+//. of type `Number`, one at a time, and returns a value of type `Number`.
+//.
+//. Applying `add` to two arguments, one at a time, gives the expected result:
+//.
+//. ```javascript
+//. add (2) (2);
+//. // => 4
+//. ```
+//.
+//. Applying `add` to multiple arguments at once results in an exception being
+//. thrown:
+//.
+//. ```javascript
+//. add (2, 2, 2);
+//. // ! TypeError: ‘add’ applied to the wrong number of arguments
+//. //
+//. //   add :: Number -> Number -> Number
+//. //          ^^^^^^
+//. //            1
+//. //
+//. //   Expected one argument but received three arguments:
+//. //
+//. //     - 2
+//. //     - 2
+//. //     - 2
+//. ```
+//.
+//. Applying `add` to one argument produces a function awaiting the remaining
+//. argument. This is known as partial application. Partial application allows
+//. more specific functions to be defined in terms of more general ones:
+//.
+//. ```javascript
+//. //    inc :: Number -> Number
+//. const inc = add (1);
+//.
+//. inc (7);
+//. // => 8
+//. ```
+//.
+//. JavaScript's implicit type coercion often obfuscates the source of type
+//. errors. Consider the following function:
+//.
+//. ```javascript
+//. //    _add :: Number -> Number -> Number
+//. const _add = x => y => x + y;
+//. ```
+//.
+//. The type signature indicates that `_add` takes arguments of type `Number`,
+//. but this is not enforced. This allows type errors to be silently ignored:
+//.
+//. ```javascript
+//. _add ('2') ('2');
+//. // => '22'
+//. ```
+//.
+//. `add`, on the other hand, throws if applied to arguments of the wrong
+//. types:
+//.
+//. ```javascript
+//. add ('2') ('2');
+//. // ! TypeError: Invalid value
+//. //
+//. //   add :: Number -> Number -> Number
+//. //          ^^^^^^
+//. //            1
+//. //
+//. //   1)  "2" :: String
+//. //
+//. //   The value at position 1 is not a member of ‘Number’.
+//. ```
+//.
+//. Type checking is performed as arguments are provided (rather than once all
+//. arguments have been provided), so type errors are reported early:
+//.
+//. ```javascript
+//. add ('X');
+//. // ! TypeError: Invalid value
+//. //
+//. //   add :: Number -> Number -> Number
+//. //          ^^^^^^
+//. //            1
+//. //
+//. //   1)  "X" :: String
+//. //
+//. //   The value at position 1 is not a member of ‘Number’.
+//. ```
+
+(function(f) {
+
+  'use strict';
+
+  /* istanbul ignore else */
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = f (require ('sanctuary-either'),
+                        require ('sanctuary-show'),
+                        require ('sanctuary-type-classes'),
+                        require ('sanctuary-type-identifiers'));
+  } else if (typeof define === 'function' && define.amd != null) {
+    define (['sanctuary-either',
+             'sanctuary-show',
+             'sanctuary-type-classes',
+             'sanctuary-type-identifiers'],
+            f);
+  } else {
+    self.sanctuaryDef = f (self.sanctuaryEither,
+                           self.sanctuaryShow,
+                           self.sanctuaryTypeClasses,
+                           self.sanctuaryTypeIdentifiers);
+  }
+
+} (function(Either, show, Z, type) {
+
+  'use strict';
+
+  var MAX_SAFE_INTEGER = Math.pow (2, 53) - 1;
+  var MIN_SAFE_INTEGER = -MAX_SAFE_INTEGER;
+
+  var slice             = Array.prototype.slice;
+  var hasOwnProperty    = Object.prototype.hasOwnProperty;
+
+  //  Left :: a -> Either a b
+  var Left = Either.Left;
+
+  //  Right :: b -> Either a b
+  var Right = Either.Right;
+
+  //  K :: a -> b -> a
+  function K(x) { return function(y) { return x; }; }
+
+  //  W :: (a -> a -> b) -> a -> b
+  function W(f) { return function(x) { return f (x) (x); }; }
+
+  //  always0 :: a -> () -> a
+  function always0(x) { return function() { return x; }; }
+
+  //  always2 :: a -> (b, c) -> a
+  function always2(x) { return function(y, z) { return x; }; }
+
+  //  compose :: (b -> c, a -> b) -> (a -> c)
+  function compose(f, g) {
+    return function(x) {
+      return f (g (x));
+    };
+  }
+
+  //  id :: a -> a
+  function id(x) { return x; }
+
+  //  init :: Array a -> Array a
+  function init(xs) { return xs.slice (0, -1); }
+
+  //  isEmpty :: Array a -> Boolean
+  function isEmpty(xs) { return xs.length === 0; }
+
+  //  isPrefix :: Array a -> Array a -> Boolean
+  function isPrefix(candidate) {
+    return function(xs) {
+      if (candidate.length > xs.length) return false;
+      for (var idx = 0; idx < candidate.length; idx += 1) {
+        if (candidate[idx] !== xs[idx]) return false;
+      }
+      return true;
+    };
+  }
+
+  //  joinWith :: (String, Array String) -> String
+  function joinWith(separator, ss) {
+    return ss.join (separator);
+  }
+
+  //  last :: Array a -> a
+  function last(xs) { return xs[xs.length - 1]; }
+
+  //  memberOf :: Array a -> a -> Boolean
+  function memberOf(xs) {
+    return function(y) {
+      return xs.some (function(x) { return Z.equals (x, y); });
+    };
+  }
+
+  //  or :: (Array a, Array a) -> Array a
+  function or(xs, ys) { return isEmpty (xs) ? ys : xs; }
+
+  //  strRepeat :: (String, Integer) -> String
+  function strRepeat(s, times) {
+    return joinWith (s, Array (times + 1));
+  }
+
+  //  r :: Char -> String -> String
+  function r(c) {
+    return function(s) {
+      return strRepeat (c, s.length);
+    };
+  }
+
+  //  _ :: String -> String
+  var _ = r (' ');
+
+  //  sortedKeys :: Object -> Array String
+  function sortedKeys(o) {
+    return (Object.keys (o)).sort ();
+  }
+
+  //  stripOutermostParens :: String -> String
+  function stripOutermostParens(s) {
+    return s.slice ('('.length, -')'.length);
+  }
+
+  //  toMarkdownList :: (String, String, a -> String, Array a) -> String
+  function toMarkdownList(empty, s, f, xs) {
+    return isEmpty (xs) ?
+      empty :
+      Z.reduce (function(s, x) { return s + '  - ' + f (x) + '\n'; }, s, xs);
+  }
+
+  //  trimTrailingSpaces :: String -> String
+  function trimTrailingSpaces(s) {
+    return s.replace (/[ ]+$/gm, '');
+  }
+
+  //  unless :: (Boolean, (a -> a), a) -> a
+  function unless(bool, f, x) {
+    return bool ? x : f (x);
+  }
+
+  //  when :: (Boolean, (a -> a), a) -> a
+  function when(bool, f, x) {
+    return bool ? f (x) : x;
+  }
+
+  //  wrap :: String -> String -> String -> String
+  function wrap(prefix) {
+    return function(suffix) {
+      return function(s) {
+        return prefix + s + suffix;
+      };
+    };
+  }
+
+  //  parenthesize :: String -> String
+  var parenthesize = wrap ('(') (')');
+
+  //  q :: String -> String
+  var q = wrap ('\u2018') ('\u2019');
+
+  //  stripNamespace :: String -> String
+  function stripNamespace(s) { return s.slice (s.indexOf ('/') + 1); }
+
+  //  _Type :: ... -> Type
+  function _Type(
+    type,       // :: String
+    name,       // :: String
+    url,        // :: String
+    format,     // :: (String -> String, String -> String -> String) -> String
+    test,       // :: Any -> Boolean
+    keys,       // :: Array String
+    types       // :: StrMap { extractor :: a -> Array b, type :: Type }
+  ) {
+    this._test = test;
+    this.format = format;
+    this.keys = keys;
+    this.name = name;
+    this.type = type;
+    this.types = types;
+    this.url = url;
+  }
+
+  _Type['@@type'] = 'sanctuary-def/Type';
+
+  //  Type#fantasy-land/equals :: Type ~> Type -> Boolean
+  _Type.prototype['fantasy-land/equals'] = function(other) {
+    return (
+      Z.equals (this.type, other.type) &&
+      Z.equals (this.name, other.name) &&
+      Z.equals (this.url, other.url) &&
+      Z.equals (this.keys, other.keys) &&
+      this.keys.every (function(k) {
+        return Z.equals (this.types[k].type, other.types[k].type);
+      }, this)
+    );
+  };
+
+  _Type.prototype.validate = function(x) {
+    if (!(this._test (x))) return Left ({value: x, propPath: []});
+    for (var idx = 0; idx < this.keys.length; idx += 1) {
+      var k = this.keys[idx];
+      var t = this.types[k];
+      for (var idx2 = 0, ys = t.extractor (x); idx2 < ys.length; idx2 += 1) {
+        var result = t.type.validate (ys[idx2]);
+        if (result.isLeft) {
+          var value = result.value.value;
+          var propPath = Z.concat ([k], result.value.propPath);
+          return Left ({value: value, propPath: propPath});
+        }
+      }
+    }
+    return Right (x);
+  };
+
+  _Type.prototype['@@show'] = function() {
+    return this.format (id, K (id));
+  };
+
+  var BINARY        = 'BINARY';
+  var FUNCTION      = 'FUNCTION';
+  var INCONSISTENT  = 'INCONSISTENT';
+  var NO_ARGUMENTS  = 'NO_ARGUMENTS';
+  var NULLARY       = 'NULLARY';
+  var RECORD        = 'RECORD';
+  var UNARY         = 'UNARY';
+  var UNKNOWN       = 'UNKNOWN';
+  var VARIABLE      = 'VARIABLE';
+
+  //  Inconsistent :: Type
+  var Inconsistent =
+  new _Type (INCONSISTENT, '', '', always2 ('???'), K (false), [], {});
+
+  //  NoArguments :: Type
+  var NoArguments =
+  new _Type (NO_ARGUMENTS, '', '', always2 ('()'), K (true), [], {});
+
+  //  typeEq :: String -> a -> Boolean
+  function typeEq(name) {
+    return function(x) {
+      return type (x) === name;
+    };
+  }
+
+  //  typeofEq :: String -> a -> Boolean
+  function typeofEq(typeof_) {
+    return function(x) {
+      // eslint-disable-next-line valid-typeof
+      return typeof x === typeof_;
+    };
+  }
+
+  //  functionUrl :: String -> String
+  function functionUrl(name) {
+    var version = '0.17.1';  // updated programmatically
+    return 'https://github.com/sanctuary-js/sanctuary-def/tree/v' + version +
+           '#' + stripNamespace (name);
+  }
+
+  //  NullaryTypeWithUrl :: (String, Any -> Boolean) -> Type
+  function NullaryTypeWithUrl(name, test) {
+    return NullaryType (name) (functionUrl (name)) (test);
+  }
+
+  //  EnumTypeWithUrl :: (String, Array Any) -> Type
+  function EnumTypeWithUrl(name, members) {
+    return EnumType (name) (functionUrl (name)) (members);
+  }
+
+  //  UnaryTypeWithUrl ::
+  //    (String, Any -> Boolean, t a -> Array a) -> (Type -> Type)
+  function UnaryTypeWithUrl(name, test, _1) {
+    return UnaryType (name) (functionUrl (name)) (test) (_1);
+  }
+
+  //  BinaryTypeWithUrl ::
+  //    (String, Any -> Boolean, t a b -> Array a, t a b -> Array b) ->
+  //      ((Type, Type) -> Type)
+  function BinaryTypeWithUrl(name, test, _1, _2) {
+    return BinaryType (name) (functionUrl (name)) (test) (_1) (_2);
+  }
+
+  //. ### Types
+  //.
+  //. Conceptually, a type is a set of values. One can think of a value of
+  //. type `Type` as a function of type `Any -> Boolean` which tests values
+  //. for membership in the set (though this is an oversimplification).
+
+  //# Any :: Type
+  //.
+  //. Type comprising every JavaScript value.
+  var Any = NullaryTypeWithUrl ('sanctuary-def/Any', K (true));
+
+  //# AnyFunction :: Type
+  //.
+  //. Type comprising every Function value.
+  var AnyFunction = NullaryTypeWithUrl ('Function', typeofEq ('function'));
+
+  //# Arguments :: Type
+  //.
+  //. Type comprising every [`arguments`][arguments] object.
+  var Arguments = NullaryTypeWithUrl ('Arguments', typeEq ('Arguments'));
+
+  //# Array :: Type -> Type
+  //.
+  //. Constructor for homogeneous Array types.
+  var Array_ = UnaryTypeWithUrl ('Array', typeEq ('Array'), id);
+
+  //# Array0 :: Type
+  //.
+  //. Type whose sole member is `[]`.
+  var Array0 = NullaryTypeWithUrl (
+    'sanctuary-def/Array0',
+    function(x) { return typeEq ('Array') (x) && x.length === 0; }
+  );
+
+  //# Array1 :: Type -> Type
+  //.
+  //. Constructor for singleton Array types.
+  var Array1 = UnaryTypeWithUrl (
+    'sanctuary-def/Array1',
+    function(x) { return typeEq ('Array') (x) && x.length === 1; },
+    id
+  );
+
+  //# Array2 :: Type -> Type -> Type
+  //.
+  //. Constructor for heterogeneous Array types of length 2. `['foo', true]` is
+  //. a member of `Array2 String Boolean`.
+  var Array2 = BinaryTypeWithUrl (
+    'sanctuary-def/Array2',
+    function(x) { return typeEq ('Array') (x) && x.length === 2; },
+    function(array2) { return [array2[0]]; },
+    function(array2) { return [array2[1]]; }
+  );
+
+  //# Boolean :: Type
+  //.
+  //. Type comprising `true` and `false`.
+  var Boolean_ = NullaryTypeWithUrl ('Boolean', typeofEq ('boolean'));
+
+  //# Date :: Type
+  //.
+  //. Type comprising every Date value.
+  var Date_ = NullaryTypeWithUrl ('Date', typeEq ('Date'));
+
+  //# Error :: Type
+  //.
+  //. Type comprising every Error value, including values of more specific
+  //. constructors such as [`SyntaxError`][] and [`TypeError`][].
+  var Error_ = NullaryTypeWithUrl ('Error', typeEq ('Error'));
+
+  //# FiniteNumber :: Type
+  //.
+  //. Type comprising every [`ValidNumber`][] value except `Infinity` and
+  //. `-Infinity`.
+  var FiniteNumber = NullaryTypeWithUrl (
+    'sanctuary-def/FiniteNumber',
+    function(x) { return ValidNumber._test (x) && isFinite (x); }
+  );
+
+  //  augmentThunk :: NonEmpty (Array Type) -> NonEmpty (Array Type)
+  function augmentThunk(types) {
+    return types.length === 1 ? Z.concat ([NoArguments], types) : types;
+  }
+
+  //# Function :: NonEmpty (Array Type) -> Type
+  //.
+  //. Constructor for Function types.
+  //.
+  //. Examples:
+  //.
+  //.   - `$.Function ([$.Date, $.String])` represents the `Date -> String`
+  //.     type; and
+  //.   - `$.Function ([a, b, a])` represents the `(a, b) -> a` type.
+  function Function_(_types) {
+    var types = augmentThunk (_types);
+
+    function format(outer, inner) {
+      var xs = types.map (function(t, idx) {
+        return unless (t.type === RECORD || isEmpty (t.keys),
+                       stripOutermostParens,
+                       inner ('$' + show (idx + 1)) (show (t)));
+      });
+      var parenthesize = wrap (outer ('(')) (outer (')'));
+      return parenthesize (unless (types.length === 2,
+                                   parenthesize,
+                                   joinWith (outer (', '), init (xs))) +
+                           outer (' -> ') +
+                           last (xs));
+    }
+
+    var test = AnyFunction._test;
+
+    var $keys = [];
+    var $types = {};
+    types.forEach (function(t, idx) {
+      var k = '$' + show (idx + 1);
+      $keys.push (k);
+      $types[k] = {extractor: K ([]), type: t};
+    });
+
+    return new _Type (FUNCTION, '', '', format, test, $keys, $types);
+  }
+
+  //# GlobalRegExp :: Type
+  //.
+  //. Type comprising every [`RegExp`][] value whose `global` flag is `true`.
+  //.
+  //. See also [`NonGlobalRegExp`][].
+  var GlobalRegExp = NullaryTypeWithUrl (
+    'sanctuary-def/GlobalRegExp',
+    function(x) { return RegExp_._test (x) && x.global; }
+  );
+
+  //# Integer :: Type
+  //.
+  //. Type comprising every integer in the range
+  //. [[`Number.MIN_SAFE_INTEGER`][min] .. [`Number.MAX_SAFE_INTEGER`][max]].
+  var Integer = NullaryTypeWithUrl (
+    'sanctuary-def/Integer',
+    function(x) {
+      return ValidNumber._test (x) &&
+             Math.floor (x) === x &&
+             x >= MIN_SAFE_INTEGER &&
+             x <= MAX_SAFE_INTEGER;
+    }
+  );
+
+  //# NegativeFiniteNumber :: Type
+  //.
+  //. Type comprising every [`FiniteNumber`][] value less than zero.
+  var NegativeFiniteNumber = NullaryTypeWithUrl (
+    'sanctuary-def/NegativeFiniteNumber',
+    function(x) { return FiniteNumber._test (x) && x < 0; }
+  );
+
+  //# NegativeInteger :: Type
+  //.
+  //. Type comprising every [`Integer`][] value less than zero.
+  var NegativeInteger = NullaryTypeWithUrl (
+    'sanctuary-def/NegativeInteger',
+    function(x) { return Integer._test (x) && x < 0; }
+  );
+
+  //# NegativeNumber :: Type
+  //.
+  //. Type comprising every [`Number`][] value less than zero.
+  var NegativeNumber = NullaryTypeWithUrl (
+    'sanctuary-def/NegativeNumber',
+    function(x) { return Number_._test (x) && x < 0; }
+  );
+
+  //# NonEmpty :: Type -> Type
+  //.
+  //. Constructor for non-empty types. `$.NonEmpty ($.String)`, for example, is
+  //. the type comprising every [`String`][] value except `''`.
+  //.
+  //. The given type must satisfy the [Monoid][] and [Setoid][] specifications.
+  var NonEmpty = UnaryTypeWithUrl (
+    'sanctuary-def/NonEmpty',
+    function(x) {
+      return Z.Monoid.test (x) &&
+             Z.Setoid.test (x) &&
+             !(Z.equals (x, Z.empty (x.constructor)));
+    },
+    function(monoid) { return [monoid]; }
+  );
+
+  //# NonGlobalRegExp :: Type
+  //.
+  //. Type comprising every [`RegExp`][] value whose `global` flag is `false`.
+  //.
+  //. See also [`GlobalRegExp`][].
+  var NonGlobalRegExp = NullaryTypeWithUrl (
+    'sanctuary-def/NonGlobalRegExp',
+    function(x) { return RegExp_._test (x) && !x.global; }
+  );
+
+  //# NonNegativeInteger :: Type
+  //.
+  //. Type comprising every non-negative [`Integer`][] value (including `-0`).
+  //. Also known as the set of natural numbers under ISO 80000-2:2009.
+  var NonNegativeInteger = NullaryTypeWithUrl (
+    'sanctuary-def/NonNegativeInteger',
+    function(x) { return Integer._test (x) && x >= 0; }
+  );
+
+  //# NonZeroFiniteNumber :: Type
+  //.
+  //. Type comprising every [`FiniteNumber`][] value except `0` and `-0`.
+  var NonZeroFiniteNumber = NullaryTypeWithUrl (
+    'sanctuary-def/NonZeroFiniteNumber',
+    function(x) { return FiniteNumber._test (x) && x !== 0; }
+  );
+
+  //# NonZeroInteger :: Type
+  //.
+  //. Type comprising every [`Integer`][] value except `0` and `-0`.
+  var NonZeroInteger = NullaryTypeWithUrl (
+    'sanctuary-def/NonZeroInteger',
+    function(x) { return Integer._test (x) && x !== 0; }
+  );
+
+  //# NonZeroValidNumber :: Type
+  //.
+  //. Type comprising every [`ValidNumber`][] value except `0` and `-0`.
+  var NonZeroValidNumber = NullaryTypeWithUrl (
+    'sanctuary-def/NonZeroValidNumber',
+    function(x) { return ValidNumber._test (x) && x !== 0; }
+  );
+
+  //# Null :: Type
+  //.
+  //. Type whose sole member is `null`.
+  var Null = NullaryTypeWithUrl ('Null', typeEq ('Null'));
+
+  //# Nullable :: Type -> Type
+  //.
+  //. Constructor for types which include `null` as a member.
+  var Nullable = UnaryTypeWithUrl (
+    'sanctuary-def/Nullable',
+    K (true),
+    function(nullable) {
+      // eslint-disable-next-line eqeqeq
+      return nullable === null ? [] : [nullable];
+    }
+  );
+
+  //# Number :: Type
+  //.
+  //. Type comprising every primitive Number value (including `NaN`).
+  var Number_ = NullaryTypeWithUrl ('Number', typeofEq ('number'));
+
+  //# Object :: Type
+  //.
+  //. Type comprising every "plain" Object value. Specifically, values
+  //. created via:
+  //.
+  //.   - object literal syntax;
+  //.   - [`Object.create`][]; or
+  //.   - the `new` operator in conjunction with `Object` or a custom
+  //.     constructor function.
+  var Object_ = NullaryTypeWithUrl ('Object', typeEq ('Object'));
+
+  //# PositiveFiniteNumber :: Type
+  //.
+  //. Type comprising every [`FiniteNumber`][] value greater than zero.
+  var PositiveFiniteNumber = NullaryTypeWithUrl (
+    'sanctuary-def/PositiveFiniteNumber',
+    function(x) { return FiniteNumber._test (x) && x > 0; }
+  );
+
+  //# PositiveInteger :: Type
+  //.
+  //. Type comprising every [`Integer`][] value greater than zero.
+  var PositiveInteger = NullaryTypeWithUrl (
+    'sanctuary-def/PositiveInteger',
+    function(x) { return Integer._test (x) && x > 0; }
+  );
+
+  //# PositiveNumber :: Type
+  //.
+  //. Type comprising every [`Number`][] value greater than zero.
+  var PositiveNumber = NullaryTypeWithUrl (
+    'sanctuary-def/PositiveNumber',
+    function(x) { return Number_._test (x) && x > 0; }
+  );
+
+  //# RegExp :: Type
+  //.
+  //. Type comprising every RegExp value.
+  var RegExp_ = NullaryTypeWithUrl ('RegExp', typeEq ('RegExp'));
+
+  //# RegexFlags :: Type
+  //.
+  //. Type comprising the canonical RegExp flags:
+  //.
+  //.   - `''`
+  //.   - `'g'`
+  //.   - `'i'`
+  //.   - `'m'`
+  //.   - `'gi'`
+  //.   - `'gm'`
+  //.   - `'im'`
+  //.   - `'gim'`
+  var RegexFlags = EnumTypeWithUrl (
+    'sanctuary-def/RegexFlags',
+    ['', 'g', 'i', 'm', 'gi', 'gm', 'im', 'gim']
+  );
+
+  //# StrMap :: Type -> Type
+  //.
+  //. Constructor for homogeneous Object types.
+  //.
+  //. `{foo: 1, bar: 2, baz: 3}`, for example, is a member of `StrMap Number`;
+  //. `{foo: 1, bar: 2, baz: 'XXX'}` is not.
+  var StrMap = UnaryTypeWithUrl (
+    'sanctuary-def/StrMap',
+    Object_._test,
+    function(strMap) {
+      return Z.reduce (function(xs, x) { xs.push (x); return xs; },
+                       [],
+                       strMap);
+    }
+  );
+
+  //# String :: Type
+  //.
+  //. Type comprising every primitive String value.
+  var String_ = NullaryTypeWithUrl ('String', typeofEq ('string'));
+
+  //# Symbol :: Type
+  //.
+  //. Type comprising every Symbol value.
+  var Symbol_ = NullaryTypeWithUrl ('Symbol', typeofEq ('symbol'));
+
+  //# Type :: Type
+  //.
+  //. Type comprising every `Type` value.
+  var Type = NullaryTypeWithUrl ('Type', typeEq ('sanctuary-def/Type'));
+
+  //# TypeClass :: Type
+  //.
+  //. Type comprising every [`TypeClass`][] value.
+  var TypeClass = NullaryTypeWithUrl (
+    'TypeClass',
+    typeEq ('sanctuary-type-classes/TypeClass')
+  );
+
+  //# Undefined :: Type
+  //.
+  //. Type whose sole member is `undefined`.
+  var Undefined = NullaryTypeWithUrl ('Undefined', typeEq ('Undefined'));
+
+  //# Unknown :: Type
+  //.
+  //. Type used to represent missing type information. The type of `[]`,
+  //. for example, is `Array ???`.
+  //.
+  //. May be used with type constructors when defining environments. Given a
+  //. type constructor `List :: Type -> Type`, one could use `List ($.Unknown)`
+  //. to include an infinite number of types in an environment:
+  //.
+  //.   - `List Number`
+  //.   - `List String`
+  //.   - `List (List Number)`
+  //.   - `List (List String)`
+  //.   - `List (List (List Number))`
+  //.   - `List (List (List String))`
+  //.   - `...`
+  var Unknown =
+  new _Type (UNKNOWN, '', '', always2 ('Unknown'), K (true), [], {});
+
+  //# ValidDate :: Type
+  //.
+  //. Type comprising every [`Date`][] value except `new Date (NaN)`.
+  var ValidDate = NullaryTypeWithUrl (
+    'sanctuary-def/ValidDate',
+    function(x) { return Date_._test (x) && !isNaN (x.valueOf ()); }
+  );
+
+  //# ValidNumber :: Type
+  //.
+  //. Type comprising every [`Number`][] value except `NaN`.
+  var ValidNumber = NullaryTypeWithUrl (
+    'sanctuary-def/ValidNumber',
+    function(x) { return Number_._test (x) && !isNaN (x); }
+  );
+
+  //# env :: Array Type
+  //.
+  //. An array of [types][]:
+  //.
+  //.   - <code>[AnyFunction](#AnyFunction)</code>
+  //.   - <code>[Arguments](#Arguments)</code>
+  //.   - <code>[Array](#Array) ([Unknown](#Unknown))</code>
+  //.   - <code>[Boolean](#Boolean)</code>
+  //.   - <code>[Date](#Date)</code>
+  //.   - <code>[Error](#Error)</code>
+  //.   - <code>[Null](#Null)</code>
+  //.   - <code>[Number](#Number)</code>
+  //.   - <code>[Object](#Object)</code>
+  //.   - <code>[RegExp](#RegExp)</code>
+  //.   - <code>[StrMap](#StrMap) ([Unknown](#Unknown))</code>
+  //.   - <code>[String](#String)</code>
+  //.   - <code>[Symbol](#Symbol)</code>
+  //.   - <code>[Undefined](#Undefined)</code>
+  var env = [
+    AnyFunction,
+    Arguments,
+    Array_ (Unknown),
+    Boolean_,
+    Date_,
+    Error_,
+    Null,
+    Number_,
+    Object_,
+    RegExp_,
+    StrMap (Unknown),
+    String_,
+    Symbol_,
+    Undefined
+  ];
+
+  //  Unchecked :: String -> Type
+  function Unchecked(s) { return NullaryType (s) ('') (K (true)); }
+
+  //  production :: Boolean
+  var production =
+    typeof process !== 'undefined' &&
+    /* global process:false */
+    process != null &&
+    process.env != null &&
+    process.env.NODE_ENV === 'production';
+
+  var def = _create ({checkTypes: !production, env: env});
+
+  //  numbers :: Array String
+  var numbers = [
+    'zero',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine'
+  ];
+
+  //  numArgs :: Integer -> String
+  function numArgs(n) {
+    return (n < numbers.length ? numbers[n] : show (n)) + ' ' +
+           (n === 1 ? 'argument' : 'arguments');
+  }
+
+  //  expandUnknown :: ... -> Array Type
+  function expandUnknown(
+    env,            // :: Array Type
+    seen,           // :: Array Object
+    value,          // :: Any
+    r               // :: { extractor :: a -> Array b, type :: Type }
+  ) {
+    return r.type.type === UNKNOWN ?
+      _determineActualTypes (env, seen, r.extractor (value)) :
+      [r.type];
+  }
+
+  //  _determineActualTypes :: ... -> Array Type
+  function _determineActualTypes(
+    env,            // :: Array Type
+    seen,           // :: Array Object
+    values          // :: Array Any
+  ) {
+    function refine(types, value) {
+      var seen$;
+      if (typeof value === 'object' && value != null ||
+          typeof value === 'function') {
+        //  Abort if a circular reference is encountered; add the current
+        //  object to the array of seen objects otherwise.
+        if (seen.indexOf (value) >= 0) return [];
+        seen$ = Z.concat (seen, [value]);
+      } else {
+        seen$ = seen;
+      }
+      return Z.chain (function(t) {
+        return (
+          t.name === 'sanctuary-def/Nullable' || (t.validate (value)).isLeft ?
+            [] :
+          t.type === UNARY ?
+            Z.map (fromUnaryType (t),
+                   expandUnknown (env, seen$, value, t.types.$1)) :
+          t.type === BINARY ?
+            xprod (t,
+                   expandUnknown (env, seen$, value, t.types.$1),
+                   expandUnknown (env, seen$, value, t.types.$2)) :
+          // else
+            [t]
+        );
+      }, types);
+    }
+
+    return isEmpty (values) ?
+      [Unknown] :
+      or (Z.reduce (refine, env, values), [Inconsistent]);
+  }
+
+  //  isConsistent :: Type -> Boolean
+  function isConsistent(t) {
+    return t.type === UNARY   ? isConsistent (t.types.$1.type) :
+           t.type === BINARY  ? isConsistent (t.types.$1.type) &&
+                                isConsistent (t.types.$2.type) :
+           /* else */           t.type !== INCONSISTENT;
+  }
+
+  //  determineActualTypesStrict :: (Array Type, Array Any) -> Array Type
+  function determineActualTypesStrict(env, values) {
+    return Z.filter (isConsistent,
+                     _determineActualTypes (env, [], values));
+  }
+
+  //  determineActualTypesLoose :: (Array Type, Array Any) -> Array Type
+  function determineActualTypesLoose(env, values) {
+    return Z.reject (function(t) { return t.type === INCONSISTENT; },
+                     _determineActualTypes (env, [], values));
+  }
+
+  //  TypeInfo = { name :: String
+  //             , constraints :: StrMap (Array TypeClass)
+  //             , types :: NonEmpty (Array Type) }
+  //
+  //  TypeVarMap = StrMap { types :: Array Type
+  //                      , valuesByPath :: StrMap (Array Any) }
+  //
+  //  PropPath = Array (Number | String)
+
+  //  updateTypeVarMap :: ... -> TypeVarMap
+  function updateTypeVarMap(
+    env,            // :: Array Type
+    typeVarMap,     // :: TypeVarMap
+    typeVar,        // :: Type
+    index,          // :: Integer
+    propPath,       // :: PropPath
+    values          // :: Array Any
+  ) {
+    var $typeVarMap = {};
+    for (var typeVarName in typeVarMap) {
+      var entry = typeVarMap[typeVarName];
+      var $entry = {types: entry.types.slice (), valuesByPath: {}};
+      for (var k in entry.valuesByPath) {
+        $entry.valuesByPath[k] = entry.valuesByPath[k].slice ();
+      }
+      $typeVarMap[typeVarName] = $entry;
+    }
+    if (!(hasOwnProperty.call ($typeVarMap, typeVar.name))) {
+      $typeVarMap[typeVar.name] = {types: env.slice (), valuesByPath: {}};
+    }
+
+    var key = JSON.stringify (Z.concat ([index], propPath));
+    if (!(hasOwnProperty.call ($typeVarMap[typeVar.name].valuesByPath, key))) {
+      $typeVarMap[typeVar.name].valuesByPath[key] = [];
+    }
+
+    var isNullaryTypeVar = isEmpty (typeVar.keys);
+    var isValid = test (env);
+
+    function expandUnknownStrict(value, r) {
+      return Z.filter (isConsistent, expandUnknown (env, [], value, r));
+    }
+
+    values.forEach (function(value) {
+      $typeVarMap[typeVar.name].valuesByPath[key].push (value);
+      $typeVarMap[typeVar.name].types = Z.chain (function(t) {
+        return (
+          t.keys.length < typeVar.keys.length || !isValid (t) (value) ?
+            [] :
+          isNullaryTypeVar && t.type === UNARY ?
+            Z.map (fromUnaryType (t),
+                   expandUnknownStrict (value, t.types.$1)) :
+          isNullaryTypeVar && t.type === BINARY ?
+            xprod (t,
+                   expandUnknownStrict (value, t.types.$1),
+                   expandUnknownStrict (value, t.types.$2)) :
+          // else
+            [t]
+        );
+      }, $typeVarMap[typeVar.name].types);
+    });
+
+    return $typeVarMap;
+  }
+
+  //  underlineTypeVars :: (TypeInfo, StrMap (Array Any)) -> String
+  function underlineTypeVars(typeInfo, valuesByPath) {
+    //  Note: Sorting these keys lexicographically is not "correct", but it
+    //  does the right thing for indexes less than 10.
+    var paths = Z.map (JSON.parse, sortedKeys (valuesByPath));
+    return underline (
+      typeInfo,
+      K (K (_)),
+      function(index) {
+        return function(f) {
+          return function(t) {
+            return function(propPath) {
+              var indexedPropPath = Z.concat ([index], propPath);
+              return function(s) {
+                if (paths.some (isPrefix (indexedPropPath))) {
+                  var key = JSON.stringify (indexedPropPath);
+                  if (!(hasOwnProperty.call (valuesByPath, key))) return s;
+                  if (!(isEmpty (valuesByPath[key]))) return f (s);
+                }
+                return _ (s);
+              };
+            };
+          };
+        };
+      }
+    );
+  }
+
+  //  satisfactoryTypes :: ... -> Either (() -> Error)
+  //                                     { typeVarMap :: TypeVarMap
+  //                                     , types :: Array Type }
+  function satisfactoryTypes(
+    env,            // :: Array Type
+    typeInfo,       // :: TypeInfo
+    typeVarMap,     // :: TypeVarMap
+    expType,        // :: Type
+    index,          // :: Integer
+    propPath,       // :: PropPath
+    values          // :: Array Any
+  ) {
+    var recur = satisfactoryTypes;
+
+    for (var idx = 0; idx < values.length; idx += 1) {
+      var result = expType.validate (values[idx]);
+      if (result.isLeft) {
+        return Left (function() {
+          return invalidValue (env,
+                               typeInfo,
+                               index,
+                               Z.concat (propPath, result.value.propPath),
+                               result.value.value);
+        });
+      }
+    }
+
+    switch (expType.type) {
+
+      case VARIABLE:
+        var typeVarName = expType.name;
+        var constraints = typeInfo.constraints;
+        if (hasOwnProperty.call (constraints, typeVarName)) {
+          var typeClasses = constraints[typeVarName];
+          for (idx = 0; idx < values.length; idx += 1) {
+            for (var idx2 = 0; idx2 < typeClasses.length; idx2 += 1) {
+              if (!typeClasses[idx2].test (values[idx])) {
+                return Left (function() {
+                  return typeClassConstraintViolation (
+                    env,
+                    typeInfo,
+                    typeClasses[idx2],
+                    index,
+                    propPath,
+                    values[idx],
+                    typeVarMap
+                  );
+                });
+              }
+            }
+          }
+        }
+
+        var typeVarMap$ = updateTypeVarMap (env,
+                                            typeVarMap,
+                                            expType,
+                                            index,
+                                            propPath,
+                                            values);
+
+        var okTypes = typeVarMap$[typeVarName].types;
+        return isEmpty (okTypes) ?
+          Left (function() {
+            return typeVarConstraintViolation (
+              env,
+              typeInfo,
+              index,
+              propPath,
+              typeVarMap$[typeVarName].valuesByPath
+            );
+          }) :
+          Z.reduce (function(e, t) {
+            return Z.chain (function(r) {
+              //  The `a` in `Functor f => f a` corresponds to the `a`
+              //  in `Maybe a` but to the `b` in `Either a b`. A type
+              //  variable's $1 will correspond to either $1 or $2 of
+              //  the actual type depending on the actual type's arity.
+              var offset = t.keys.length - expType.keys.length;
+              return expType.keys.reduce (function(e, k, idx) {
+                var extractor = t.types[t.keys[offset + idx]].extractor;
+                return Z.reduce (function(e, x) {
+                  return Z.chain (function(r) {
+                    return recur (env,
+                                  typeInfo,
+                                  r.typeVarMap,
+                                  expType.types[k].type,
+                                  index,
+                                  Z.concat (propPath, [k]),
+                                  [x]);
+                  }, e);
+                }, e, Z.chain (extractor, values));
+              }, Right (r));
+            }, e);
+          }, Right ({typeVarMap: typeVarMap$, types: okTypes}), okTypes);
+
+      case UNARY:
+        return Z.map (
+          function(result) {
+            return {
+              typeVarMap: result.typeVarMap,
+              types: Z.map (fromUnaryType (expType),
+                            or (result.types, [expType.types.$1.type]))
+            };
+          },
+          recur (env,
+                 typeInfo,
+                 typeVarMap,
+                 expType.types.$1.type,
+                 index,
+                 Z.concat (propPath, ['$1']),
+                 Z.chain (expType.types.$1.extractor, values))
+        );
+
+      case BINARY:
+        return Z.chain (
+          function(result) {
+            var $1s = result.types;
+            return Z.map (
+              function(result) {
+                var $2s = result.types;
+                return {
+                  typeVarMap: result.typeVarMap,
+                  types: xprod (expType,
+                                or ($1s, [expType.types.$1.type]),
+                                or ($2s, [expType.types.$2.type]))
+                };
+              },
+              recur (env,
+                     typeInfo,
+                     result.typeVarMap,
+                     expType.types.$2.type,
+                     index,
+                     Z.concat (propPath, ['$2']),
+                     Z.chain (expType.types.$2.extractor, values))
+            );
+          },
+          recur (env,
+                 typeInfo,
+                 typeVarMap,
+                 expType.types.$1.type,
+                 index,
+                 Z.concat (propPath, ['$1']),
+                 Z.chain (expType.types.$1.extractor, values))
+        );
+
+      case RECORD:
+        return Z.reduce (function(e, k) {
+          return Z.chain (function(r) {
+            return recur (env,
+                          typeInfo,
+                          r.typeVarMap,
+                          expType.types[k].type,
+                          index,
+                          Z.concat (propPath, [k]),
+                          Z.chain (expType.types[k].extractor, values));
+          }, e);
+        }, Right ({typeVarMap: typeVarMap, types: [expType]}), expType.keys);
+
+      default:
+        return Right ({typeVarMap: typeVarMap, types: [expType]});
+    }
+  }
+
+  //# test :: Array Type -> Type -> a -> Boolean
+  //.
+  //. Takes an environment, a type, and any value. Returns `true` if the value
+  //. is a member of the type; `false` otherwise.
+  //.
+  //. The environment is only significant if the type contains
+  //. [type variables][].
+  //.
+  //. One may define a more restrictive type in terms of a more general one:
+  //.
+  //. ```javascript
+  //. //    NonNegativeInteger :: Type
+  //. const NonNegativeInteger = $.NullaryType
+  //.   ('my-package/NonNegativeInteger')
+  //.   ('http://example.com/my-package#NonNegativeInteger')
+  //.   (x => $.test ([]) ($.Integer) (x) && x >= 0);
+  //. ```
+  //.
+  //. Using types as predicates is useful in other contexts too. One could,
+  //. for example, define a [record type][] for each endpoint of a REST API
+  //. and validate the bodies of incoming POST requests against these types.
+  function test(env) {
+    return function(t) {
+      return function(x) {
+        var typeInfo = {name: 'name', constraints: {}, types: [t]};
+        return (satisfactoryTypes (env, typeInfo, {}, t, 0, [], [x])).isRight;
+      };
+    };
+  }
+
+  //. ### Type constructors
+  //.
+  //. sanctuary-def provides several functions for defining types.
+
+  //# NullaryType :: String -> String -> (Any -> Boolean) -> Type
+  //.
+  //. Type constructor for types with no type variables (such as [`Number`][]).
+  //.
+  //. To define a nullary type `t` one must provide:
+  //.
+  //.   - the name of `t` (exposed as `t.name`);
+  //.
+  //.   - the documentation URL of `t` (exposed as `t.url`); and
+  //.
+  //.   - a predicate which accepts any JavaScript value and returns `true` if
+  //.     (and only if) the value is a member of `t`.
+  //.
+  //. For example:
+  //.
+  //. ```javascript
+  //. //    Integer :: Type
+  //. const Integer = $.NullaryType
+  //.   ('my-package/Integer')
+  //.   ('http://example.com/my-package#Integer')
+  //.   (x => typeof x === 'number' &&
+  //.         Math.floor (x) === x &&
+  //.         x >= Number.MIN_SAFE_INTEGER &&
+  //.         x <= Number.MAX_SAFE_INTEGER);
+  //.
+  //. //    NonZeroInteger :: Type
+  //. const NonZeroInteger = $.NullaryType
+  //.   ('my-package/NonZeroInteger')
+  //.   ('http://example.com/my-package#NonZeroInteger')
+  //.   (x => $.test ([]) (Integer) (x) && x !== 0);
+  //.
+  //. //    rem :: Integer -> NonZeroInteger -> Integer
+  //. const rem =
+  //. def ('rem')
+  //.     ({})
+  //.     ([Integer, NonZeroInteger, Integer])
+  //.     (x => y => x % y);
+  //.
+  //. rem (42) (5);
+  //. // => 2
+  //.
+  //. rem (0.5);
+  //. // ! TypeError: Invalid value
+  //. //
+  //. //   rem :: Integer -> NonZeroInteger -> Integer
+  //. //          ^^^^^^^
+  //. //             1
+  //. //
+  //. //   1)  0.5 :: Number
+  //. //
+  //. //   The value at position 1 is not a member of ‘Integer’.
+  //.
+  //. rem (42) (0);
+  //. // ! TypeError: Invalid value
+  //. //
+  //. //   rem :: Integer -> NonZeroInteger -> Integer
+  //. //                     ^^^^^^^^^^^^^^
+  //. //                           1
+  //. //
+  //. //   1)  0 :: Number
+  //. //
+  //. //   The value at position 1 is not a member of ‘NonZeroInteger’.
+  //. ```
+  function NullaryType(name) {
+    function format(outer, inner) {
+      return outer (stripNamespace (name));
+    }
+    return function(url) {
+      return function(test) {
+        return new _Type (NULLARY, name, url, format, test, [], {});
+      };
+    };
+  }
+
+  var CheckedNullaryType =
+  def ('NullaryType')
+      ({})
+      ([String_, String_, Function_ ([Any, Boolean_]), Type])
+      (NullaryType);
+
+  //# UnaryType :: String -> String -> (Any -> Boolean) -> (t a -> Array a) -> Type -> Type
+  //.
+  //. Type constructor for types with one type variable (such as [`Array`][]).
+  //.
+  //. To define a unary type `t a` one must provide:
+  //.
+  //.   - the name of `t` (exposed as `t.name`);
+  //.
+  //.   - the documentation URL of `t` (exposed as `t.url`);
+  //.
+  //.   - a predicate which accepts any JavaScript value and returns `true`
+  //.     if (and only if) the value is a member of `t x` for some type `x`;
+  //.
+  //.   - a function which takes any value of type `t a` and returns an array
+  //.     of the values of type `a` contained in the `t` (exposed as
+  //.     `t.types.$1.extractor`); and
+  //.
+  //.   - the type of `a` (exposed as `t.types.$1.type`).
+  //.
+  //. For example:
+  //.
+  //. ```javascript
+  //. const show = require ('sanctuary-show');
+  //. const type = require ('sanctuary-type-identifiers');
+  //.
+  //. //    maybeTypeIdent :: String
+  //. const maybeTypeIdent = 'my-package/Maybe';
+  //.
+  //. //    Maybe :: Type -> Type
+  //. const Maybe = $.UnaryType
+  //.   (maybeTypeIdent)
+  //.   ('http://example.com/my-package#Maybe')
+  //.   (x => type (x) === maybeTypeIdent)
+  //.   (maybe => maybe.isJust ? [maybe.value] : []);
+  //.
+  //. //    MaybeTypeRep :: TypeRep Maybe
+  //. const MaybeTypeRep = {'@@type': maybeTypeIdent};
+  //.
+  //. //    Nothing :: Maybe a
+  //. const Nothing = {
+  //.   'constructor': MaybeTypeRep,
+  //.   'isJust': false,
+  //.   'isNothing': true,
+  //.   '@@show': () => 'Nothing',
+  //. };
+  //.
+  //. //    Just :: a -> Maybe a
+  //. const Just = x => ({
+  //.   'constructor': MaybeTypeRep,
+  //.   'isJust': true,
+  //.   'isNothing': false,
+  //.   '@@show': () => `Just (${show (x)})`,
+  //.   'value': x,
+  //. });
+  //.
+  //. //    fromMaybe :: a -> Maybe a -> a
+  //. const fromMaybe =
+  //. def ('fromMaybe')
+  //.     ({})
+  //.     ([a, Maybe (a), a])
+  //.     (x => m => m.isJust ? m.value : x);
+  //.
+  //. fromMaybe (0) (Just (42));
+  //. // => 42
+  //.
+  //. fromMaybe (0) (Nothing);
+  //. // => 0
+  //.
+  //. fromMaybe (0) (Just ('XXX'));
+  //. // ! TypeError: Type-variable constraint violation
+  //. //
+  //. //   fromMaybe :: a -> Maybe a -> a
+  //. //                ^          ^
+  //. //                1          2
+  //. //
+  //. //   1)  0 :: Number
+  //. //
+  //. //   2)  "XXX" :: String
+  //. //
+  //. //   Since there is no type of which all the above values are members, the type-variable constraint has been violated.
+  //. ```
+  function UnaryType(name) {
+    return function(url) {
+      return function(test) {
+        return function(_1) {
+          return function($1) {
+            function format(outer, inner) {
+              return outer ('(' + stripNamespace (name) + ' ') +
+                     inner ('$1') (show ($1)) +
+                     outer (')');
+            }
+            var types = {$1: {extractor: _1, type: $1}};
+            return new _Type (UNARY, name, url, format, test, ['$1'], types);
+          };
+        };
+      };
+    };
+  }
+
+  var CheckedUnaryType =
+  def ('UnaryType')
+      ({})
+      ([String_,
+        String_,
+        Function_ ([Any, Boolean_]),
+        Function_ ([Unchecked ('t a'), Array_ (Unchecked ('a'))]),
+        AnyFunction])
+      (function(name) {
+         return function(url) {
+           return function(test) {
+             return compose (def (stripNamespace (name)) ({}) ([Type, Type]),
+                             UnaryType (name) (url) (test));
+           };
+         };
+       });
+
+  //  fromUnaryType :: Type -> (Type -> Type)
+  function fromUnaryType(t) {
+    return UnaryType (t.name) (t.url) (t._test) (t.types.$1.extractor);
+  }
+
+  //# BinaryType :: String -> String -> (Any -> Boolean) -> (t a b -> Array a) -> (t a b -> Array b) -> Type -> Type -> Type
+  //.
+  //. Type constructor for types with two type variables (such as
+  //. [`Array2`][]).
+  //.
+  //. To define a binary type `t a b` one must provide:
+  //.
+  //.   - the name of `t` (exposed as `t.name`);
+  //.
+  //.   - the documentation URL of `t` (exposed as `t.url`);
+  //.
+  //.   - a predicate which accepts any JavaScript value and returns `true`
+  //.     if (and only if) the value is a member of `t x y` for some types
+  //.     `x` and `y`;
+  //.
+  //.   - a function which takes any value of type `t a b` and returns an array
+  //.     of the values of type `a` contained in the `t` (exposed as
+  //.     `t.types.$1.extractor`);
+  //.
+  //.   - a function which takes any value of type `t a b` and returns an array
+  //.     of the values of type `b` contained in the `t` (exposed as
+  //.     `t.types.$2.extractor`);
+  //.
+  //.   - the type of `a` (exposed as `t.types.$1.type`); and
+  //.
+  //.   - the type of `b` (exposed as `t.types.$2.type`).
+  //.
+  //. For example:
+  //.
+  //. ```javascript
+  //. const type = require ('sanctuary-type-identifiers');
+  //.
+  //. //    pairTypeIdent :: String
+  //. const pairTypeIdent = 'my-package/Pair';
+  //.
+  //. //    $Pair :: Type -> Type -> Type
+  //. const $Pair = $.BinaryType
+  //.   (pairTypeIdent)
+  //.   ('http://example.com/my-package#Pair')
+  //.   (x => type (x) === pairTypeIdent)
+  //.   (({fst}) => [fst])
+  //.   (({snd}) => [snd]);
+  //.
+  //. //    PairTypeRep :: TypeRep Pair
+  //. const PairTypeRep = {'@@type': pairTypeIdent};
+  //.
+  //. //    Pair :: a -> b -> Pair a b
+  //. const Pair =
+  //. def ('Pair')
+  //.     ({})
+  //.     ([a, b, $Pair (a) (b)])
+  //.     (fst => snd => ({
+  //.        'constructor': PairTypeRep,
+  //.        'fst': fst,
+  //.        'snd': snd,
+  //.        '@@show': () => `Pair (${show (fst)}) (${show (snd)})`,
+  //.      }));
+  //.
+  //. //    Rank :: Type
+  //. const Rank = $.NullaryType
+  //.   ('my-package/Rank')
+  //.   ('http://example.com/my-package#Rank')
+  //.   (x => typeof x === 'string' &&
+  //.         /^(A|2|3|4|5|6|7|8|9|10|J|Q|K)$/.test (x));
+  //.
+  //. //    Suit :: Type
+  //. const Suit = $.NullaryType
+  //.   ('my-package/Suit')
+  //.   ('http://example.com/my-package#Suit')
+  //.   (x => typeof x === 'string' &&
+  //.         /^[\u2660\u2663\u2665\u2666]$/.test (x));
+  //.
+  //. //    Card :: Type
+  //. const Card = $Pair (Rank) (Suit);
+  //.
+  //. //    showCard :: Card -> String
+  //. const showCard =
+  //. def ('showCard')
+  //.     ({})
+  //.     ([Card, $.String])
+  //.     (card => card.fst + card.snd);
+  //.
+  //. showCard (Pair ('A') ('♠'));
+  //. // => 'A♠'
+  //.
+  //. showCard (Pair ('X') ('♠'));
+  //. // ! TypeError: Invalid value
+  //. //
+  //. //   showCard :: Pair Rank Suit -> String
+  //. //                    ^^^^
+  //. //                     1
+  //. //
+  //. //   1)  "X" :: String
+  //. //
+  //. //   The value at position 1 is not a member of ‘Rank’.
+  //. ```
+  function BinaryType(name) {
+    return function(url) {
+      return function(test) {
+        return function(_1) {
+          return function(_2) {
+            return function($1) {
+              return function($2) {
+                function format(outer, inner) {
+                  return outer ('(' + stripNamespace (name) + ' ') +
+                         inner ('$1') (show ($1)) +
+                         outer (' ') +
+                         inner ('$2') (show ($2)) +
+                         outer (')');
+                }
+                return new _Type (BINARY,
+                                  name,
+                                  url,
+                                  format,
+                                  test,
+                                  ['$1', '$2'],
+                                  {$1: {extractor: _1, type: $1},
+                                   $2: {extractor: _2, type: $2}});
+              };
+            };
+          };
+        };
+      };
+    };
+  }
+
+  var CheckedBinaryType =
+  def ('BinaryType')
+      ({})
+      ([String_,
+        String_,
+        Function_ ([Any, Boolean_]),
+        Function_ ([Unchecked ('t a b'), Array_ (Unchecked ('a'))]),
+        Function_ ([Unchecked ('t a b'), Array_ (Unchecked ('b'))]),
+        AnyFunction])
+      (function(name) {
+         return function(url) {
+           return function(test) {
+             return function(_1) {
+               return function(_2) {
+                 return def (stripNamespace (name))
+                            ({})
+                            ([Type, Type, Type])
+                            (BinaryType (name) (url) (test) (_1) (_2));
+               };
+             };
+           };
+         };
+       });
+
+  //  xprod :: (Type, Array Type, Array Type) -> Array Type
+  function xprod(t, $1s, $2s) {
+    return Z.chain (
+      function(specialize) { return Z.map (specialize, $2s); },
+      Z.map (BinaryType (t.name)
+                        (t.url)
+                        (t._test)
+                        (t.types.$1.extractor)
+                        (t.types.$2.extractor),
+             $1s)
+    );
+  }
+
+  //# EnumType :: String -> String -> Array Any -> Type
+  //.
+  //. Type constructor for [enumerated types][] (such as [`RegexFlags`][]).
+  //.
+  //. To define an enumerated type `t` one must provide:
+  //.
+  //.   - the name of `t` (exposed as `t.name`);
+  //.
+  //.   - the documentation URL of `t` (exposed as `t.url`); and
+  //.
+  //.   - an array of distinct values.
+  //.
+  //. For example:
+  //.
+  //. ```javascript
+  //. //    Denomination :: Type
+  //. const Denomination = $.EnumType
+  //.   ('my-package/Denomination')
+  //.   ('http://example.com/my-package#Denomination')
+  //.   ([10, 20, 50, 100, 200]);
+  //. ```
+  function EnumType(name) {
+    return function(url) {
+      return compose (NullaryType (name) (url), memberOf);
+    };
+  }
+
+  var CheckedEnumType =
+  def ('EnumType')
+      ({})
+      ([String_, String_, Array_ (Any), Type])
+      (EnumType);
+
+  //# RecordType :: StrMap Type -> Type
+  //.
+  //. `RecordType` is used to construct record types. The type definition
+  //. specifies the name and type of each required field. A field is an
+  //. enumerable property (either an own property or an inherited property).
+  //.
+  //. To define a record type one must provide:
+  //.
+  //.   - an object mapping field name to type.
+  //.
+  //. For example:
+  //.
+  //. ```javascript
+  //. //    Point :: Type
+  //. const Point = $.RecordType ({x: $.FiniteNumber, y: $.FiniteNumber});
+  //.
+  //. //    dist :: Point -> Point -> FiniteNumber
+  //. const dist =
+  //. def ('dist')
+  //.     ({})
+  //.     ([Point, Point, $.FiniteNumber])
+  //.     (p => q => Math.sqrt (Math.pow (p.x - q.x, 2) +
+  //.                           Math.pow (p.y - q.y, 2)));
+  //.
+  //. dist ({x: 0, y: 0}) ({x: 3, y: 4});
+  //. // => 5
+  //.
+  //. dist ({x: 0, y: 0}) ({x: 3, y: 4, color: 'red'});
+  //. // => 5
+  //.
+  //. dist ({x: 0, y: 0}) ({x: NaN, y: NaN});
+  //. // ! TypeError: Invalid value
+  //. //
+  //. //   dist :: { x :: FiniteNumber, y :: FiniteNumber } -> { x :: FiniteNumber, y :: FiniteNumber } -> FiniteNumber
+  //. //                                                              ^^^^^^^^^^^^
+  //. //                                                                   1
+  //. //
+  //. //   1)  NaN :: Number
+  //. //
+  //. //   The value at position 1 is not a member of ‘FiniteNumber’.
+  //.
+  //. dist (0);
+  //. // ! TypeError: Invalid value
+  //. //
+  //. //   dist :: { x :: FiniteNumber, y :: FiniteNumber } -> { x :: FiniteNumber, y :: FiniteNumber } -> FiniteNumber
+  //. //           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //. //                              1
+  //. //
+  //. //   1)  0 :: Number
+  //. //
+  //. //   The value at position 1 is not a member of ‘{ x :: FiniteNumber, y :: FiniteNumber }’.
+  //. ```
+  function RecordType(fields) {
+    var keys = sortedKeys (fields);
+
+    function format(outer, inner) {
+      if (isEmpty (keys)) return outer ('{}');
+      var reprs = Z.map (function(k) {
+        var t = fields[k];
+        return outer (' ') +
+               outer (/^(?!\d)[$\w]+$/.test (k) ? k : show (k)) +
+               outer (' :: ') +
+               unless (t.type === RECORD || isEmpty (t.keys),
+                       stripOutermostParens,
+                       inner (k) (show (t)));
+      }, keys);
+      return wrap (outer ('{')) (outer (' }')) (joinWith (outer (','), reprs));
+    }
+
+    function test(x) {
+      var missing = {};
+      keys.forEach (function(k) { missing[k] = k; });
+      for (var k in x) delete missing[k];
+      return isEmpty (Object.keys (missing));
+    }
+
+    var $types = {};
+    keys.forEach (function(k) {
+      $types[k] = {extractor: function(x) { return [x[k]]; }, type: fields[k]};
+    });
+
+    return new _Type (RECORD, '', '', format, test, keys, $types);
+  }
+
+  var CheckedRecordType =
+  def ('RecordType') ({}) ([StrMap (Type), Type]) (RecordType);
+
+  //# TypeVariable :: String -> Type
+  //.
+  //. Polymorphism is powerful. Not being able to define a function for
+  //. all types would be very limiting indeed: one couldn't even define the
+  //. identity function!
+  //.
+  //. Before defining a polymorphic function one must define one or more type
+  //. variables:
+  //.
+  //. ```javascript
+  //. const a = $.TypeVariable ('a');
+  //. const b = $.TypeVariable ('b');
+  //.
+  //. //    id :: a -> a
+  //. const id = def ('id') ({}) ([a, a]) (x => x);
+  //.
+  //. id (42);
+  //. // => 42
+  //.
+  //. id (null);
+  //. // => null
+  //. ```
+  //.
+  //. The same type variable may be used in multiple positions, creating a
+  //. constraint:
+  //.
+  //. ```javascript
+  //. //    cmp :: a -> a -> Number
+  //. const cmp =
+  //. def ('cmp')
+  //.     ({})
+  //.     ([a, a, $.Number])
+  //.     (x => y => x < y ? -1 : x > y ? 1 : 0);
+  //.
+  //. cmp (42) (42);
+  //. // => 0
+  //.
+  //. cmp ('a') ('z');
+  //. // => -1
+  //.
+  //. cmp ('z') ('a');
+  //. // => 1
+  //.
+  //. cmp (0) ('1');
+  //. // ! TypeError: Type-variable constraint violation
+  //. //
+  //. //   cmp :: a -> a -> Number
+  //. //          ^    ^
+  //. //          1    2
+  //. //
+  //. //   1)  0 :: Number
+  //. //
+  //. //   2)  "1" :: String
+  //. //
+  //. //   Since there is no type of which all the above values are members, the type-variable constraint has been violated.
+  //. ```
+  function TypeVariable(name) {
+    return new _Type (VARIABLE, name, '', always2 (name), K (true), [], {});
+  }
+
+  var CheckedTypeVariable =
+  def ('TypeVariable') ({}) ([String_, Type]) (TypeVariable);
+
+  //# UnaryTypeVariable :: String -> Type -> Type
+  //.
+  //. Combines [`UnaryType`][] and [`TypeVariable`][].
+  //.
+  //. To define a unary type variable `t a` one must provide:
+  //.
+  //.   - a name (conventionally matching `^[a-z]$`); and
+  //.
+  //.   - the type of `a` (exposed as `t.types.$1.type`).
+  //.
+  //. Consider the type of a generalized `map`:
+  //.
+  //. ```haskell
+  //. map :: Functor f => (a -> b) -> f a -> f b
+  //. ```
+  //.
+  //. `f` is a unary type variable. With two (nullary) type variables, one
+  //. unary type variable, and one [type class][] it's possible to define a
+  //. fully polymorphic `map` function:
+  //.
+  //. ```javascript
+  //. const $ = require ('sanctuary-def');
+  //. const Z = require ('sanctuary-type-classes');
+  //.
+  //. const a = $.TypeVariable ('a');
+  //. const b = $.TypeVariable ('b');
+  //. const f = $.UnaryTypeVariable ('f');
+  //.
+  //. //    map :: Functor f => (a -> b) -> f a -> f b
+  //. const map =
+  //. def ('map')
+  //.     ({f: [Z.Functor]})
+  //.     ([$.Function ([a, b]), f (a), f (b)])
+  //.     (f => functor => Z.map (f, functor));
+  //. ```
+  //.
+  //. Whereas a regular type variable is fully resolved (`a` might become
+  //. `Array (Array String)`, for example), a unary type variable defers to
+  //. its type argument, which may itself be a type variable. The type argument
+  //. corresponds to the type argument of a unary type or the *second* type
+  //. argument of a binary type. The second type argument of `Map k v`, for
+  //. example, is `v`. One could replace `Functor => f` with `Map k` or with
+  //. `Map Integer`, but not with `Map`.
+  //.
+  //. This shallow inspection makes it possible to constrain a value's "outer"
+  //. and "inner" types independently.
+  function UnaryTypeVariable(name) {
+    return function($1) {
+      function format(outer, inner) {
+        return outer ('(' + name + ' ') +
+               inner ('$1') (show ($1)) +
+               outer (')');
+      }
+      var types = {$1: {extractor: K ([]), type: $1}};
+      return new _Type (VARIABLE, name, '', format, K (true), ['$1'], types);
+    };
+  }
+
+  var CheckedUnaryTypeVariable =
+  def ('UnaryTypeVariable')
+      ({})
+      ([String_, AnyFunction])
+      (function(name) {
+         return def (name) ({}) ([Type, Type]) (UnaryTypeVariable (name));
+       });
+
+  //# BinaryTypeVariable :: String -> Type -> Type -> Type
+  //.
+  //. Combines [`BinaryType`][] and [`TypeVariable`][].
+  //.
+  //. To define a binary type variable `t a b` one must provide:
+  //.
+  //.   - a name (conventionally matching `^[a-z]$`);
+  //.
+  //.   - the type of `a` (exposed as `t.types.$1.type`); and
+  //.
+  //.   - the type of `b` (exposed as `t.types.$2.type`).
+  //.
+  //. The more detailed explanation of [`UnaryTypeVariable`][] also applies to
+  //. `BinaryTypeVariable`.
+  function BinaryTypeVariable(name) {
+    return function($1) {
+      return function($2) {
+        function format(outer, inner) {
+          return outer ('(' + name + ' ') +
+                 inner ('$1') (show ($1)) +
+                 outer (' ') +
+                 inner ('$2') (show ($2)) +
+                 outer (')');
+        }
+        var keys = ['$1', '$2'];
+        var types = {$1: {extractor: K ([]), type: $1},
+                     $2: {extractor: K ([]), type: $2}};
+        return new _Type (VARIABLE, name, '', format, K (true), keys, types);
+      };
+    };
+  }
+
+  var CheckedBinaryTypeVariable =
+  def ('BinaryTypeVariable')
+      ({})
+      ([String_, AnyFunction])
+      (function(name) {
+         return def (name)
+                    ({})
+                    ([Type, Type, Type])
+                    (BinaryTypeVariable (name));
+       });
+
+  //# Thunk :: Type -> Type
+  //.
+  //. `$.Thunk (T)` is shorthand for `$.Function ([T])`, the type comprising
+  //. every nullary function (thunk) which returns a value of type `T`.
+  var Thunk =
+  def ('Thunk')
+      ({})
+      ([Type, Type])
+      (function(t) { return Function_ ([t]); });
+
+  //# Predicate :: Type -> Type
+  //.
+  //. `$.Predicate (T)` is shorthand for `$.Function ([T, $.Boolean])`, the
+  //. type comprising every predicate function which takes a value of type `T`.
+  var Predicate =
+  def ('Predicate')
+      ({})
+      ([Type, Type])
+      (function(t) { return Function_ ([t, Boolean_]); });
+
+  //. ### Type classes
+  //.
+  //. `concatS`, defined earlier, is a function which concatenates two strings.
+  //. This is overly restrictive, since other types support concatenation
+  //. (Array, for example).
+  //.
+  //. One could use a type variable to define a polymorphic "concat" function:
+  //.
+  //. ```javascript
+  //. //    _concat :: a -> a -> a
+  //. const _concat =
+  //. def ('_concat')
+  //.     ({})
+  //.     ([a, a, a])
+  //.     (x => y => x.concat (y));
+  //.
+  //. _concat ('fizz') ('buzz');
+  //. // => 'fizzbuzz'
+  //.
+  //. _concat ([1, 2]) ([3, 4]);
+  //. // => [1, 2, 3, 4]
+  //.
+  //. _concat ([1, 2]) ('buzz');
+  //. // ! TypeError: Type-variable constraint violation
+  //. //
+  //. //   _concat :: a -> a -> a
+  //. //              ^    ^
+  //. //              1    2
+  //. //
+  //. //   1)  [1, 2] :: Array Number
+  //. //
+  //. //   2)  "buzz" :: String
+  //. //
+  //. //   Since there is no type of which all the above values are members, the type-variable constraint has been violated.
+  //. ```
+  //.
+  //. The type of `_concat` is misleading: it suggests that it can operate on
+  //. any two values of *any* one type. In fact there's an implicit constraint,
+  //. since the type must support concatenation (in [mathematical][semigroup]
+  //. terms, the type must have a [semigroup][FL:Semigroup]). Violating this
+  //. implicit constraint results in a run-time error in the implementation:
+  //.
+  //. ```javascript
+  //. _concat (null) (null);
+  //. // ! TypeError: Cannot read property 'concat' of null
+  //. ```
+  //.
+  //. The solution is to constrain `a` by first defining a [`TypeClass`][]
+  //. value, then specifying the constraint in the definition of the "concat"
+  //. function:
+  //.
+  //. ```javascript
+  //. const Z = require ('sanctuary-type-classes');
+  //.
+  //. //    Semigroup :: TypeClass
+  //. const Semigroup = Z.TypeClass (
+  //.   'my-package/Semigroup',
+  //.   'http://example.com/my-package#Semigroup',
+  //.   [],
+  //.   x => x != null && typeof x.concat === 'function'
+  //. );
+  //.
+  //. //    concat :: Semigroup a => a -> a -> a
+  //. const concat =
+  //. def ('concat')
+  //.     ({a: [Semigroup]})
+  //.     ([a, a, a])
+  //.     (x => y => x.concat (y));
+  //.
+  //. concat ([1, 2]) ([3, 4]);
+  //. // => [1, 2, 3, 4]
+  //.
+  //. concat (null) (null);
+  //. // ! TypeError: Type-class constraint violation
+  //. //
+  //. //   concat :: Semigroup a => a -> a -> a
+  //. //             ^^^^^^^^^^^    ^
+  //. //                            1
+  //. //
+  //. //   1)  null :: Null
+  //. //
+  //. //   ‘concat’ requires ‘a’ to satisfy the Semigroup type-class constraint; the value at position 1 does not.
+  //. //
+  //. //   See http://example.com/my-package#Semigroup for information about the my-package/Semigroup type class.
+  //. ```
+  //.
+  //. Multiple constraints may be placed on a type variable by including
+  //. multiple `TypeClass` values in the array (e.g. `{a: [Foo, Bar, Baz]}`).
+
+  //  invalidArgumentsCount :: (TypeInfo, Integer, Integer, Array Any) -> Error
+  //
+  //  This function is used in `curry` when a function defined via `def`
+  //  is applied to too many arguments.
+  function invalidArgumentsCount(typeInfo, index, numArgsExpected, args) {
+    return new TypeError (trimTrailingSpaces (
+      q (typeInfo.name) + ' applied to the wrong number of arguments\n\n' +
+      underline (
+        typeInfo,
+        K (K (_)),
+        function(index_) {
+          return function(f) {
+            return K (K (index_ === index ? f : _));
+          };
+        }
+      ) + '\n' +
+      'Expected ' + numArgs (numArgsExpected) +
+      ' but received ' + numArgs (args.length) +
+      toMarkdownList ('.\n', ':\n\n', show, args)
+    ));
+  }
+
+  //  constraintsRepr :: ... -> String
+  function constraintsRepr(
+    constraints,    // :: StrMap (Array TypeClass)
+    outer,          // :: String -> String
+    inner           // :: String -> TypeClass -> String -> String
+  ) {
+    var $reprs = [];
+    (sortedKeys (constraints)).forEach (function(k) {
+      var f = inner (k);
+      constraints[k].forEach (function(typeClass) {
+        $reprs.push (
+          f (typeClass) (stripNamespace (typeClass.name) + ' ' + k)
+        );
+      });
+    });
+    return when ($reprs.length > 0,
+                 function(s) { return s + outer (' => '); },
+                 when ($reprs.length > 1,
+                       wrap (outer ('(')) (outer (')')),
+                       joinWith (outer (', '), $reprs)));
+  }
+
+  //  label :: String -> String -> String
+  function label(label) {
+    return function(s) {
+      var delta = s.length - label.length;
+      return strRepeat (' ', Math.floor (delta / 2)) + label +
+             strRepeat (' ', Math.ceil (delta / 2));
+    };
+  }
+
+  //  typeVarNames :: Type -> Array String
+  function typeVarNames(t) {
+    return Z.concat (
+      t.type === VARIABLE ? [t.name] : [],
+      Z.chain (function(k) { return typeVarNames (t.types[k].type); }, t.keys)
+    );
+  }
+
+  //  showTypeWith :: TypeInfo -> Type -> String
+  function showTypeWith(typeInfo) {
+    var names = Z.chain (typeVarNames, typeInfo.types);
+    return function(t) {
+      var code = 'a'.charCodeAt (0);
+      return unless (
+        t.type === FUNCTION || t.type === RECORD || isEmpty (t.keys),
+        stripOutermostParens,
+        (show (t)).replace (/\bUnknown\b/g, function() {
+          // eslint-disable-next-line no-plusplus
+          do var name = String.fromCharCode (code++);
+          while (names.indexOf (name) >= 0);
+          return name;
+        })
+      );
+    };
+  }
+
+  //  showTypeQuoted :: Type -> String
+  function showTypeQuoted(t) {
+    return q (unless (t.type === RECORD || isEmpty (t.keys),
+                      stripOutermostParens,
+                      show (t)));
+  }
+
+  //  showValuesAndTypes :: ... -> String
+  function showValuesAndTypes(
+    env,            // :: Array Type
+    typeInfo,       // :: TypeInfo
+    values,         // :: Array Any
+    pos             // :: Integer
+  ) {
+    var showType = showTypeWith (typeInfo);
+    return show (pos) + ')  ' + joinWith ('\n    ', Z.map (function(x) {
+      var types = determineActualTypesLoose (env, [x]);
+      return show (x) + ' :: ' + joinWith (', ', Z.map (showType, types));
+    }, values));
+  }
+
+  //  typeSignature :: TypeInfo -> String
+  function typeSignature(typeInfo) {
+    var reprs = Z.map (showTypeWith (typeInfo), typeInfo.types);
+    var arity = reprs.length - 1;
+    return typeInfo.name + ' :: ' +
+             constraintsRepr (typeInfo.constraints, id, K (K (id))) +
+             when (arity === 0,
+                   parenthesize,
+                   joinWith (' -> ', init (reprs))) +
+             ' -> ' + last (reprs);
+  }
+
+  //  _underline :: ... -> String
+  function _underline(
+    t,              // :: Type
+    propPath,       // :: PropPath
+    formatType3     // :: Type -> Array String -> String -> String
+  ) {
+    return unless (t.type === RECORD ||
+                     isEmpty (t.keys) ||
+                     t.type === FUNCTION && isEmpty (propPath) ||
+                     !isEmpty (propPath),
+                   stripOutermostParens,
+                   formatType3 (t) (propPath) (t.format (_, function(k) {
+                     return K (_underline (t.types[k].type,
+                                           Z.concat (propPath, [k]),
+                                           formatType3));
+                   })));
+  }
+
+  //  underline :: ... -> String
+  function underline(
+    typeInfo,               // :: TypeInfo
+    underlineConstraint,    // :: String -> TypeClass -> String -> String
+    formatType5
+    // :: Integer -> (String -> String) -> Type -> PropPath -> String -> String
+  ) {
+    var st = typeInfo.types.reduce (function(st, t, index) {
+      var formatType4 = formatType5 (index);
+      st.numbers.push (_underline (t, [], formatType4 (function(s) {
+        return label (show (st.counter += 1)) (s);
+      })));
+      st.carets.push (_underline (t, [], W (function(type) {
+        var repr = show (type);
+        var parenthesized = repr.slice (0, 1) + repr.slice (-1) === '()';
+        return formatType4 (function(s) {
+          return parenthesized && repr !== '()' && s.length === repr.length ?
+            _ ('(') + r ('^') (s.slice (1, -1)) + _ (')') :
+            r ('^') (s);
+        });
+      })));
+      return st;
+    }, {carets: [], numbers: [], counter: 0});
+
+    return typeSignature (typeInfo) + '\n' +
+           _ (typeInfo.name + ' :: ') +
+              constraintsRepr (typeInfo.constraints, _, underlineConstraint) +
+              joinWith (_ (' -> '), st.carets) + '\n' +
+           _ (typeInfo.name + ' :: ') +
+              constraintsRepr (typeInfo.constraints, _, K (K (_))) +
+              joinWith (_ (' -> '), st.numbers) + '\n';
+  }
+
+  //  resolvePropPath :: (Type, Array String) -> Type
+  function resolvePropPath(t, propPath) {
+    return Z.reduce (function(t, prop) { return t.types[prop].type; },
+                     t,
+                     propPath);
+  }
+
+  //  formatType6 ::
+  //    PropPath -> Integer -> (String -> String) ->
+  //      Type -> PropPath -> String -> String
+  function formatType6(indexedPropPath) {
+    return function(index_) {
+      return function(f) {
+        return function(t) {
+          return function(propPath_) {
+            var indexedPropPath_ = Z.concat ([index_], propPath_);
+            var p = isPrefix (indexedPropPath_) (indexedPropPath);
+            var q = isPrefix (indexedPropPath) (indexedPropPath_);
+            return p && q ? f : p ? id : _;
+          };
+        };
+      };
+    };
+  }
+
+  //  see :: (String, { name :: String, url :: String? }) -> String
+  function see(label, record) {
+    return record.url == null || record.url === '' ?
+           '' :
+           '\nSee ' + record.url +
+           ' for information about the ' + record.name + ' ' + label + '.\n';
+  }
+
+  //  typeClassConstraintViolation :: ... -> Error
+  function typeClassConstraintViolation(
+    env,            // :: Array Type
+    typeInfo,       // :: TypeInfo
+    typeClass,      // :: TypeClass
+    index,          // :: Integer
+    propPath,       // :: PropPath
+    value,          // :: Any
+    typeVarMap      // :: TypeVarMap
+  ) {
+    var expType = resolvePropPath (typeInfo.types[index], propPath);
+    return new TypeError (trimTrailingSpaces (
+      'Type-class constraint violation\n\n' +
+      underline (typeInfo,
+                 function(tvn) {
+                   return function(tc) {
+                     return (
+                       tvn === expType.name && tc.name === typeClass.name ?
+                         r ('^') :
+                         _
+                     );
+                   };
+                 },
+                 formatType6 (Z.concat ([index], propPath))) +
+      '\n' +
+      showValuesAndTypes (env, typeInfo, [value], 1) + '\n\n' +
+      q (typeInfo.name) + ' requires ' +
+      q (expType.name) + ' to satisfy the ' +
+      stripNamespace (typeClass.name) + ' type-class constraint; ' +
+      'the value at position 1 does not.\n' +
+      see ('type class', typeClass)
+    ));
+  }
+
+  //  typeVarConstraintViolation :: ... -> Error
+  function typeVarConstraintViolation(
+    env,            // :: Array Type
+    typeInfo,       // :: TypeInfo
+    index,          // :: Integer
+    propPath,       // :: PropPath
+    valuesByPath    // :: StrMap (Array Any)
+  ) {
+    //  If we apply an ‘a -> a -> a -> a’ function to Left ('x'), Right (1),
+    //  and Right (null) we'd like to avoid underlining the first argument
+    //  position, since Left ('x') is compatible with the other ‘a’ values.
+    var key = JSON.stringify (Z.concat ([index], propPath));
+    var values = valuesByPath[key];
+
+    //  Note: Sorting these keys lexicographically is not "correct", but it
+    //  does the right thing for indexes less than 10.
+    var keys = Z.filter (function(k) {
+      var values_ = valuesByPath[k];
+      return (
+        //  Keep X, the position at which the violation was observed.
+        k === key ||
+        //  Keep positions whose values are incompatible with the values at X.
+        isEmpty (determineActualTypesStrict (env, Z.concat (values, values_)))
+      );
+    }, sortedKeys (valuesByPath));
+
+    var underlinedTypeVars =
+    underlineTypeVars (typeInfo,
+                       Z.reduce (function($valuesByPath, k) {
+                         $valuesByPath[k] = valuesByPath[k];
+                         return $valuesByPath;
+                       }, {}, keys));
+
+    return new TypeError (trimTrailingSpaces (
+      values.length === 1 &&
+      isEmpty (determineActualTypesLoose (env, values)) ?
+        'Unrecognized value\n\n' +
+        underlinedTypeVars + '\n' +
+        '1)  ' + show (values[0]) + ' :: (no types)\n\n' +
+        toMarkdownList (
+          'The environment is empty! ' +
+          'Polymorphic functions require a non-empty environment.\n',
+          'The value at position 1 is not a member of any type in ' +
+          'the environment.\n\n' +
+          'The environment contains the following types:\n\n',
+          showTypeWith (typeInfo),
+          env
+        ) :
+      // else
+        'Type-variable constraint violation\n\n' +
+        underlinedTypeVars + '\n' +
+        (Z.reduce (function(st, k) {
+          var values = valuesByPath[k];
+          return isEmpty (values) ? st : {
+            idx: st.idx + 1,
+            s: st.s +
+               showValuesAndTypes (env, typeInfo, values, st.idx + 1) +
+               '\n\n'
+          };
+        }, {idx: 0, s: ''}, keys)).s +
+        'Since there is no type of which all the above values are ' +
+        'members, the type-variable constraint has been violated.\n'
+    ));
+  }
+
+  //  invalidValue :: ... -> Error
+  function invalidValue(
+    env,            // :: Array Type
+    typeInfo,       // :: TypeInfo
+    index,          // :: Integer
+    propPath,       // :: PropPath
+    value           // :: Any
+  ) {
+    var t = resolvePropPath (typeInfo.types[index], propPath);
+    return new TypeError (trimTrailingSpaces (
+      'Invalid value\n\n' +
+      underline (typeInfo,
+                 K (K (_)),
+                 formatType6 (Z.concat ([index], propPath))) +
+      '\n' +
+      showValuesAndTypes (env, typeInfo, [value], 1) + '\n\n' +
+      'The value at position 1 is not a member of ' +
+      showTypeQuoted (t) + '.\n' +
+      see ('type', t)
+    ));
+  }
+
+  //  invalidArgumentsLength :: ... -> Error
+  //
+  //  This function is used in `wrapFunctionCond` to ensure that higher-order
+  //  functions defined via `def` only ever apply a function argument to the
+  //  correct number of arguments.
+  function invalidArgumentsLength(
+    typeInfo,           // :: TypeInfo
+    index,              // :: Integer
+    numArgsExpected,    // :: Integer
+    args                // :: Array Any
+  ) {
+    return new TypeError (trimTrailingSpaces (
+      q (typeInfo.name) +
+      ' applied ' + showTypeQuoted (typeInfo.types[index]) +
+      ' to the wrong number of arguments\n\n' +
+      underline (
+        typeInfo,
+        K (K (_)),
+        function(index_) {
+          return function(f) {
+            return function(t) {
+              return function(propPath) {
+                return function(s) {
+                  return index_ === index ?
+                    t.format (_, function(k) { return k === '$1' ? f : _; }) :
+                    _ (s);
+                };
+              };
+            };
+          };
+        }
+      ) + '\n' +
+      'Expected ' + numArgs (numArgsExpected) +
+      ' but received ' + numArgs (args.length) +
+      toMarkdownList ('.\n', ':\n\n', show, args)
+    ));
+  }
+
+  //  assertRight :: Either (() -> Error) a -> a !
+  function assertRight(either) {
+    if (either.isLeft) throw either.value ();
+    return either.value;
+  }
+
+  //  withTypeChecking :: ... -> Function
+  function withTypeChecking(
+    env,            // :: Array Type
+    typeInfo,       // :: TypeInfo
+    impl            // :: Function
+  ) {
+    var n = typeInfo.types.length - 1;
+
+    //  wrapFunctionCond :: (TypeVarMap, Integer, a) -> a
+    function wrapFunctionCond(_typeVarMap, index, value) {
+      if (typeInfo.types[index].type !== FUNCTION) return value;
+
+      var expType = typeInfo.types[index];
+
+      //  checkValue :: (TypeVarMap, Integer, String, a) -> Either (() -> Error) TypeVarMap
+      function checkValue(typeVarMap, index, k, x) {
+        var propPath = [k];
+        var t = expType.types[k].type;
+        return (
+          t.type === VARIABLE ?
+            Z.chain (
+              function(typeVarMap) {
+                return isEmpty (typeVarMap[t.name].types) ?
+                  Left (function() {
+                    return typeVarConstraintViolation (
+                      env,
+                      typeInfo,
+                      index,
+                      propPath,
+                      typeVarMap[t.name].valuesByPath
+                    );
+                  }) :
+                  Right (typeVarMap);
+              },
+              Right (updateTypeVarMap (env,
+                                       typeVarMap,
+                                       t,
+                                       index,
+                                       propPath,
+                                       [x]))
+            ) :
+          // else
+            Z.map (
+              function(r) { return r.typeVarMap; },
+              satisfactoryTypes (env,
+                                 typeInfo,
+                                 typeVarMap,
+                                 t,
+                                 index,
+                                 propPath,
+                                 [x])
+            )
+        );
+      }
+
+      var isThunk = expType.types.$1.type.type === NO_ARGUMENTS;
+      var numArgsExpected = isThunk ? 0 : expType.keys.length - 1;
+      var typeVarMap = _typeVarMap;
+      return function(x) {
+        if (arguments.length !== numArgsExpected) {
+          throw invalidArgumentsLength (typeInfo,
+                                        index,
+                                        numArgsExpected,
+                                        slice.call (arguments));
+        }
+
+        var args = arguments;
+        typeVarMap = assertRight (
+          (init (expType.keys)).reduce (function(either, k, idx) {
+            var arg = args[idx];
+            return Z.chain (function(typeVarMap) {
+              return checkValue (typeVarMap, index, k, arg);
+            }, either);
+          }, Right (typeVarMap))
+        );
+
+        var output = value.apply (this, arguments);
+        var k = last (expType.keys);
+        typeVarMap = assertRight (checkValue (typeVarMap, index, k, output));
+        return output;
+      };
+    }
+
+    //  wrapNext :: (TypeVarMap, Array Any, Integer) -> (a -> b)
+    function wrapNext(_typeVarMap, _values, index) {
+      return function(x) {
+        var args = slice.call (arguments);
+        if (args.length !== 1) {
+          throw invalidArgumentsCount (typeInfo, index, 1, args);
+        }
+        var typeVarMap = (assertRight (
+          satisfactoryTypes (env,
+                             typeInfo,
+                             _typeVarMap,
+                             typeInfo.types[index],
+                             index,
+                             [],
+                             args)
+        )).typeVarMap;
+
+        var values = Z.concat (_values, args);
+        if (index + 1 === n) {
+          var value = values.reduce (function(f, x, idx) {
+            return f (wrapFunctionCond (typeVarMap, idx, x));
+          }, impl);
+          typeVarMap = (assertRight (
+            satisfactoryTypes (env,
+                               typeInfo,
+                               typeVarMap,
+                               typeInfo.types[n],
+                               n,
+                               [],
+                               [value])
+          )).typeVarMap;
+          return wrapFunctionCond (typeVarMap, n, value);
+        } else {
+          return wrapNext (typeVarMap, values, index + 1);
+        }
+      };
+    }
+
+    var wrapped = typeInfo.types[0].type === NO_ARGUMENTS ?
+      function() {
+        if (arguments.length !== 0) {
+          throw invalidArgumentsCount (typeInfo, 0, 0, slice.call (arguments));
+        }
+        var value = impl ();
+        var typeVarMap = assertRight (
+          satisfactoryTypes (env,
+                             typeInfo,
+                             {},
+                             typeInfo.types[n],
+                             n,
+                             [],
+                             [value])
+        ).typeVarMap;
+        return wrapFunctionCond (typeVarMap, n, value);
+      } :
+      wrapNext ({}, [], 0);
+
+    wrapped.inspect = wrapped.toString = always0 (typeSignature (typeInfo));
+
+    return wrapped;
+  }
+
+  function _create(opts) {
+    function def(name) {
+      return function(constraints) {
+        return function(expTypes) {
+          return function(impl) {
+            return opts.checkTypes ?
+              withTypeChecking (opts.env,
+                                {name: name,
+                                 constraints: constraints,
+                                 types: augmentThunk (expTypes)},
+                                impl) :
+              impl;
+          };
+        };
+      };
+    }
+    return def (def.name)
+               ({})
+               ([String_,
+                 StrMap (Array_ (TypeClass)),
+                 NonEmpty (Array_ (Type)),
+                 AnyFunction,
+                 AnyFunction])
+               (def);
+  }
+
+  var create =
+  def ('create')
+      ({})
+      ([RecordType ({checkTypes: Boolean_, env: Array_ (Any)}), AnyFunction])
+      (_create);
+
+  //  fromUncheckedUnaryType :: (Type -> Type) -> Type -> Type
+  function fromUncheckedUnaryType(typeConstructor) {
+    var t = typeConstructor (Unknown);
+    var _1 = t.types.$1.extractor;
+    return CheckedUnaryType (t.name) (t.url) (t._test) (_1);
+  }
+
+  //  fromUncheckedBinaryType :: (Type -> Type -> Type) -> Type -> Type -> Type
+  function fromUncheckedBinaryType(typeConstructor) {
+    var t = typeConstructor (Unknown) (Unknown);
+    var _1 = t.types.$1.extractor;
+    var _2 = t.types.$2.extractor;
+    return CheckedBinaryType (t.name) (t.url) (t._test) (_1) (_2);
+  }
+
+  return {
+    Any: Any,
+    AnyFunction: AnyFunction,
+    Arguments: Arguments,
+    Array: fromUncheckedUnaryType (Array_),
+    Array0: Array0,
+    Array1: fromUncheckedUnaryType (Array1),
+    Array2: fromUncheckedBinaryType (Array2),
+    Boolean: Boolean_,
+    Date: Date_,
+    Error: Error_,
+    FiniteNumber: FiniteNumber,
+    Function: def ('Function') ({}) ([Array_ (Type), Type]) (Function_),
+    GlobalRegExp: GlobalRegExp,
+    Integer: Integer,
+    NegativeFiniteNumber: NegativeFiniteNumber,
+    NegativeInteger: NegativeInteger,
+    NegativeNumber: NegativeNumber,
+    NonEmpty: NonEmpty,
+    NonGlobalRegExp: NonGlobalRegExp,
+    NonNegativeInteger: NonNegativeInteger,
+    NonZeroFiniteNumber: NonZeroFiniteNumber,
+    NonZeroInteger: NonZeroInteger,
+    NonZeroValidNumber: NonZeroValidNumber,
+    Null: Null,
+    Nullable: fromUncheckedUnaryType (Nullable),
+    Number: Number_,
+    Object: Object_,
+    PositiveFiniteNumber: PositiveFiniteNumber,
+    PositiveInteger: PositiveInteger,
+    PositiveNumber: PositiveNumber,
+    RegExp: RegExp_,
+    RegexFlags: RegexFlags,
+    StrMap: fromUncheckedUnaryType (StrMap),
+    String: String_,
+    Symbol: Symbol_,
+    Type: Type,
+    TypeClass: TypeClass,
+    Undefined: Undefined,
+    Unknown: Unknown,
+    ValidDate: ValidDate,
+    ValidNumber: ValidNumber,
+    env: env,
+    create: create,
+    test: def ('test') ({}) ([Array_ (Type), Type, Any, Boolean_]) (test),
+    NullaryType: CheckedNullaryType,
+    UnaryType: CheckedUnaryType,
+    BinaryType: CheckedBinaryType,
+    EnumType: CheckedEnumType,
+    RecordType: CheckedRecordType,
+    TypeVariable: CheckedTypeVariable,
+    UnaryTypeVariable: CheckedUnaryTypeVariable,
+    BinaryTypeVariable: CheckedBinaryTypeVariable,
+    Thunk: Thunk,
+    Predicate: Predicate
+  };
+
+}));
+
+//. [FL:Semigroup]:         https://github.com/fantasyland/fantasy-land#semigroup
+//. [Monoid]:               https://github.com/fantasyland/fantasy-land#monoid
+//. [Setoid]:               https://github.com/fantasyland/fantasy-land#setoid
+//. [`Array`]:              #Array
+//. [`Array2`]:             #Array2
+//. [`BinaryType`]:         #BinaryType
+//. [`Date`]:               #Date
+//. [`FiniteNumber`]:       #FiniteNumber
+//. [`GlobalRegExp`]:       #GlobalRegExp
+//. [`Integer`]:            #Integer
+//. [`NonGlobalRegExp`]:    #NonGlobalRegExp
+//. [`Number`]:             #Number
+//. [`Object.create`]:      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create
+//. [`RegExp`]:             #RegExp
+//. [`RegexFlags`]:         #RegexFlags
+//. [`String`]:             #String
+//. [`SyntaxError`]:        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError
+//. [`TypeClass`]:          https://github.com/sanctuary-js/sanctuary-type-classes#TypeClass
+//. [`TypeError`]:          https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError
+//. [`TypeVariable`]:       #TypeVariable
+//. [`UnaryType`]:          #UnaryType
+//. [`UnaryTypeVariable`]:  #UnaryTypeVariable
+//. [`Unknown`]:            #Unknown
+//. [`ValidNumber`]:        #ValidNumber
+//. [`env`]:                #env
+//. [arguments]:            https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
+//. [enumerated types]:     https://en.wikipedia.org/wiki/Enumerated_type
+//. [max]:                  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
+//. [min]:                  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_SAFE_INTEGER
+//. [record type]:          #RecordType
+//. [semigroup]:            https://en.wikipedia.org/wiki/Semigroup
+//. [type class]:           #type-classes
+//. [type variables]:       #TypeVariable
+//. [types]:                #types
 var Oo = window .Oo
 var oo = window .oo
 var R = window .R
