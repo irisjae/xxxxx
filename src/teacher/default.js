@@ -17,6 +17,13 @@ var post = window .post
 
 
 
+var latency = number
+var v = (...types) => defined
+
+
+var attempt = data ({ attempt: (guess) => defined })
+var performance = data ({ performance: (attempts = list (attempt)) => defined })
+var history = data ({ history: (performances = list (performance)) => defined })
 
 
 
@@ -32,7 +39,7 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 
 var consensus = data ({
-  consensus: (  ) => defined })
+  consensus: ( students = list (v (student, latency, history)), latency ) => defined })
 
 var state = data ({
 	ready: ( setup = setup, students = list (student) ) => defined,
