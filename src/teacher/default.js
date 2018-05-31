@@ -63,6 +63,6 @@ var get_room = _ => {;
 		if (x .length === 0) {
 			;the_state (L .set (setup_room, id, the_state ()))}
 		else {
-			;throw 'taken' }})
+			;throw new Error ('taken') }})
 	.catch (_ => {;get_room ()}) }
 ;get_room ()

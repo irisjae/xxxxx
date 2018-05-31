@@ -24,9 +24,12 @@ var maybe = window .maybe
 window .data = constructors => Oo (constructors,
   oo (R .mapObjIndexed ((fn, key) => {
     var args_slice = fn .toString() .match (/\((.*?)\)\s*=>/) [1]
-    var portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
-    return (...vals) => 
-      R .objOf (key, Z .fromPairs (R .zip (portions, vals)))})))
+    if (args_slice) {
+      var portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
+      return (...vals) => 
+        R .objOf (key, R .fromPairs (R .zip (portions, vals)))}
+    else
+      return R .objOf (key, {})})))
 
 
 
