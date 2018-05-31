@@ -40,14 +40,14 @@ var the_state = S .data (Z .Nothing)
 
 
 
-var the_ready = ['ready']
-var the_room = ['room']
-var ready_room = [ the_ready, the_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
+var state_setup = [L .choices ('ready', 'during'), 'setup']
+var setup_room = ['room']
+var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
 
 
 
 window .view = S .root (() => <div>
-	{ Oo (L .get (ready_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+	{ Oo (L .get (state_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
 </div>)
 
 
@@ -58,15 +58,15 @@ var get_room = _ => {;
 		oo (x => x * 100000000),
 		oo (x => Math .floor (x)))
 	
-  var presumed_state
+  var setup
   
 	fetch ('/log/' + id)
 	.then (x => x .json ())
 	.then (x => {;
 		if (x .length !== 0) {
 			;throw new Error ('taken') }})
-  .then (_ =>
-    presumed_state = )
+  .then (_ => {
+    ;setup = setup .setup ( id, default_questions, default_rules ) })
   .then (_ => fetch ('/log/' + id, {
     method: 'POST',
     headers: {
@@ -75,7 +75,6 @@ var get_room = _ => {;
     body: JSON .stringify ({ questions:  })
   }))
   .then (x => {
-			;the_state ())
-    })
+			;the_state (state .ready (setup, [])) })
 	.catch (_ => {;get_room ()}) }
 ;get_room ()
