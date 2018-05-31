@@ -6,5 +6,6 @@ find ~/static/ -type f | grep default\\. | while read f; do
 done
 
 find ~/static/ -type f | grep \\.js | while read f; do
-  node -e "var fs = require ('fs'); var compiler = require ('surplus/compiler'); compiler .compile (fs .readFileSync ('$f'), { sourcemap: 'append' });" | tee "$f"
+  echo "var fs = require ('fs'); var compiler = require ('surplus/compiler'); console .log (/*compiler .compile (*/fs .readFileSync ('$(readlink -f $f)') .toString ()/*, { sourcemap: 'append' })*/);"
+#  node -e "var fs = require ('fs'); var compiler = require ('surplus/compiler'); console .log (/*compiler .compile (*/fs .readFileSync ('$(readlink -c $f)') .toString ()/*, { sourcemap: 'append' })*/);" | tee "$f"
 done
