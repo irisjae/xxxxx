@@ -39,9 +39,9 @@ var the_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
 
 
 
-var the_setup = [L .prop ('setup'), L .valueOr (Z .Nothing)]
-var the_room = [L .prop ('room'), L .valueOr (Z .Nothing)]
-var setup_room = [the_setup, the_room]
+var the_setup = ['setup']
+var the_room = ['room']
+var setup_room = [the_setup, the_room, L .valueOr (Z .Nothing), L .reread (x => Z .Just (x))]
 
 
 
