@@ -7,6 +7,11 @@ var number = defined
 var list = a => defined
 var maybe = a => defined
 
+var data = constructors
+
+
+
+
 
 
 var fro = (from_nothing, from_just) => (maybe = maybe) => 
