@@ -7,7 +7,10 @@ var number = defined
 var list = a => defined
 var maybe = a => defined
 
-var data = constructors
+var data = constructors => Oo (constructors,
+  oo (Z .map (fn =>
+    (...vals) => 
+      Z .fromPairs (R .zip (fn , vals)))))
 
 
 
