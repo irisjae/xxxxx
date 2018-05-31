@@ -42,8 +42,10 @@ var the_state = S .data (Z .Nothing)
 
 var state_setup = [L .choices ('ready', 'during'), 'setup']
 var setup_room = ['room']
-var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
+var setup_questions = ['questions']
+var setup_rules = ['rules']
 
+var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
 
 
 window .view = S .root (() => <div>
@@ -58,23 +60,25 @@ var get_room = _ => {;
 		oo (x => x * 100000000),
 		oo (x => Math .floor (x)))
 	
-  var setup
+  var the_setup
   
 	fetch ('/log/' + id)
 	.then (x => x .json ())
 	.then (x => {;
 		if (x .length !== 0) {
 			;throw new Error ('taken') }})
-  .then (_ => {
-    ;setup = setup .setup ( id, default_questions, default_rules ) })
+  .then (_ => { ;the_setup = setup .setup ( id, default_questions, default_rules ) })
   .then (_ => fetch ('/log/' + id, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json' },
-    body: JSON .stringify ({ questions:  })
-  }))
+    body: JSON .stringify ({ questions: L .get (setup_questions, the_setup), rules: L .get (setup_rules, the_setup) }) }))
   .then (x => {
-			;the_state (state .ready (setup, [])) })
-	.catch (_ => {;get_room ()}) }
+    if (! x .ok) {
+      ;throw new Error ('cannot post')} })
+  .then (_ => { ;the_state (state .ready (the_setup, [])) })
+	.catch (x => {
+    ;console .error (x)
+    ;get_room ()}) }
 ;get_room ()
