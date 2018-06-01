@@ -59,15 +59,15 @@ var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
 var state_students = [L .choices ('ready', 'during'), 'students']
 
-var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
-var as_maybe = 
+var state_room = [ state_setup, setup_room ]
+var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
 
 S .root (() => {
  
   window .view =  <div>
-    { Oo (L .get (state_room, the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
-    { Oo (L .get (state_room, the_state ()), oo (R .map (x => x + ' student is here'))) }
+    { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+    { Oo (L .get ([state_room, as_maybe], the_state ()), oo (R .map (x => x + ' student is here'))) }
   </div>
 
   var get_room = time => {;
@@ -87,10 +87,24 @@ S .root (() => {
       ;get_room ()}) }
   ;get_room ()
   
+  var log_consensus = msgs =>
+    R .reduce ((sum, next) =>
+      !! (sum), [], msgs)
+  
   var the_consensus = S .data ()
   var get_log = time => {;
-    var id = 
-    fetch ('/log/' + id)
+    Oo (L .get ([state_room, as_maybe], the_state ()),
+      oo (Z .map (id => {;
+        fetch ('/log/' + id)
+        .then (x => x .json ())
+        .then (log_consensus)
+        .then (x => {;
+          the_state (L .set (state_students, x, the_state ()));})
+        .catch (x => {;
+          ;console .error (x)})
+        .then (x => {;
+          ;setTimeout (get_log, 1000)})})))
+    
   }
   
 })
