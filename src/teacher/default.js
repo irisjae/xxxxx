@@ -60,6 +60,7 @@ var setup_rules = ['setup', 'rules']
 var state_students = [L .choices ('ready', 'during'), 'students']
 
 var state_room = [ state_setup, setup_room, L .reread (x => Z .Just (x)), L .defaults (Z .Nothing) ]
+var as_maybe = 
 
 
 S .root (() => {
@@ -85,5 +86,11 @@ S .root (() => {
       ;console .error (x)
       ;get_room ()}) }
   ;get_room ()
+  
+  var the_consensus = S .data ()
+  var get_log = time => {;
+    var id = 
+    fetch ('/log/' + id)
+  }
   
 })
