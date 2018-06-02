@@ -52,9 +52,9 @@ var the_connecting = ['connecting']
 
 window .view = S .root (() => <div>
 	{ Oo (L .get (setup_room, the_state ()), oo (fro (
-    !! (L .isDefined (the_inert, the_io_state ()))
-    ? <input fn={ pipeline_room_input } />
-                ,
+    !! (L .isDefined (the_connecting, the_io_state ()))
+    ? 'Trying to connect...'
+    : <input fn={ pipeline_room_input } />,
     x => 'Connected to room ' + x))) }
 </div>)
 
@@ -67,17 +67,17 @@ var pipeline_room_input = input => {;
       ;get_room (value) }})} 
 
 
-var get_room = value => {;
-	var id = Oo (Math .random (),
-		oo (x => x * 100000000),
-		oo (x => Math .floor (x)))
-	
-	fetch ('/log/' + id)
-	.then (x => x .json ())
-	.then (x => {;
-		if (x .length === 0) {
-			;the_state (L .set (setup_room, id, the_state ()))}
-		else {
-			;throw new Error ('taken') }})
-	.catch (_ => {;get_room ()}) }
-;get_room ()
+var get_room = id => {;
+  ;the_io_state (io_state .conncting)
+	fetch ('/log/' + id) .then (x => x .json ())
+	.then (x => {; if (x .length === 0) { ;throw new Error ('empty') }})
+	.then (x => {; 
+    var consensus = log_consensus (x)
+    var questions = L .get (consensus_questions, consensus)
+    ;the_state (state .prepare (setup .setup (id, questions, default_rules)))
+    })
+	.catch (e => { ;console .error (e) })
+  .then (_ => {;the_io_state (io_state .inert)})} 
+
+var consensus_questions = ['questions'] 
+var log_consensus = x => x //stub
