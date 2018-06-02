@@ -32,10 +32,13 @@ var state = data ({
 	prepare: ( setup = maybe (setup) ) => defined,
 	during: ( stats, completed_questions = progress, setup = setup ) => defined,
 	done: () => defined })
-
+var io_state = data ({
+  inert: () => defined,
+  connecting: () => defined })
 
 
 var the_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
+var the_io_state = S .data (io_state .inert)
 
 
 
@@ -43,20 +46,28 @@ var the_setup = ['setup']
 var the_room = ['room', L .define (Z .Nothing), L .rewrite (x => Z .Just (x))]
 var setup_room = [the_setup, the_room]
 
+var the_inert = ['inert']
+var the_connecting = ['connecting']
 
 
 window .view = S .root (() => <div>
 	{ Oo (L .get (setup_room, the_state ()), oo (fro (
-    <input fn={ pipeline_room_input } />,
+    !! (L .isDefined (the_inert, the_io_state ()))
+    ? <input fn={ pipeline_room_input } />
+                ,
     x => 'Connected to room ' + x))) }
 </div>)
 
 
 var pipeline_room_input = input => {;
-} 
+  input .addEventListener ('keypress', e => {;
+    if (e .keyCode === 13) {
+      var value = input .value
+      ;input .value = ''
+      ;get_room (value) }})} 
 
 
-var get_room = _ => {;
+var get_room = value => {;
 	var id = Oo (Math .random (),
 		oo (x => x * 100000000),
 		oo (x => Math .floor (x)))
