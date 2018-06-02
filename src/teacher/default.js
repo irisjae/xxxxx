@@ -2,7 +2,7 @@ var Oo = window .Oo
 var oo = window .oo
 var R = window .R
 var L = window .L
-var S = window .S
+var T = window .T
 var Z = window .Z
 var data = window .data
 var fro = window .fro
@@ -51,8 +51,8 @@ var consensus = data ({
 
 
 
-var the_state = S .data (Z .Nothing)
-var the_consensus = S .data (Z .Nothing)
+var the_state = T .data (Z .Nothing)
+var the_consensus = T .data (Z .Nothing)
 
 
 var state_setup = [L .choices ('ready', 'during'), 'setup']
@@ -65,7 +65,7 @@ var state_room = [ state_setup, setup_room ]
 var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
 
-S .root (() => {
+T .root (() => {
  
   window .view =  <div>
     { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
@@ -92,7 +92,7 @@ S .root (() => {
   var log_consensus = msgs =>
     R .reduce (R .mergeDeepRight, {}, msgs)
   
-  /*var the_consensus = S .data ()
+  /*var the_consensus = T .data ()
   var get_log = time => {;
     Oo (L .get ([state_room, as_maybe], the_state ()),
       oo (Z .map (id => {;

@@ -25,7 +25,7 @@ window .Oo = Oo
 
 window .L = require ('partial.lenses')
 window .R = require ('ramda')
-window .S = require ('s-js')
+window .T = require ('s-js')
 window .Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
 window .Surplus = require ('surplus')
 
