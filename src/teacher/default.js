@@ -88,10 +88,9 @@ S .root (() => {
   ;get_room ()
   
   var log_consensus = msgs =>
-    R .reduce ((sum, next) =>
-      !! (sum), [], msgs)
+    R .reduce (R .mergeDeepRight, {}, msgs)
   
-  var the_consensus = S .data ()
+  /*var the_consensus = S .data ()
   var get_log = time => {;
     Oo (L .get ([state_room, as_maybe], the_state ()),
       oo (Z .map (id => {;
@@ -104,6 +103,6 @@ S .root (() => {
           ;console .error (x)})
         .then (x => {;
           ;setTimeout (get_log, 1000)})})))
-  }
+  }*/
   
 })
