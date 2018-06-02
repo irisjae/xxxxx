@@ -104,7 +104,6 @@ S .root (() => {
           ;console .error (x)})
         .then (x => {;
           ;setTimeout (get_log, 1000)})})))
-    
   }
   
 })

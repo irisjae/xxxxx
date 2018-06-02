@@ -46,10 +46,12 @@ var setup_room = [the_setup, the_room]
 
 
 window .view = S .root (() => <div>
-	{ Oo (L .get (setup_room, the_state ()), oo (fro ('hmmmm', x => 'Room: ' + x))) }
+	{ Oo (L .get (setup_room, the_state ()), oo (fro (
+    <input fn={  }>, x => 'Room: ' + x))) }
 </div>)
 
 
+var  
 
 
 var get_room = _ => {;
