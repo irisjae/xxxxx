@@ -47,11 +47,13 @@ var setup_room = [the_setup, the_room]
 
 window .view = S .root (() => <div>
 	{ Oo (L .get (setup_room, the_state ()), oo (fro (
-    <input fn={  }>, x => 'Room: ' + x))) }
+    <input fn={ pipeline_room_input } />,
+    x => 'Connected to room ' + x))) }
 </div>)
 
 
-var  
+var pipeline_room_input = input => {;
+} 
 
 
 var get_room = _ => {;
