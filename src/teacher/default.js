@@ -39,18 +39,20 @@ var default_rules = rules .rules (10, 10)
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
 
-var consensus = data ({
-  consensus: ( students = list (v (student, latency, history)), latency ) => defined })
-
 var state = data ({
 	ready: ( setup = setup, students = list (student) ) => defined,
 	during: ( setup = setup, students = list (student), completed_questions = progress ) => defined,
 	done: () => defined })
 
+var message = data ({
+  setup: ( questions = list (question), rules = rules ) => defined })
+var consensus = data ({
+  consensus: ( students = list (v (student, latency, history)), latency ) => defined })
+
 
 
 var the_state = S .data (Z .Nothing)
-
+var the_consensus = S .data (Z .Nothing)
 
 
 var state_setup = [L .choices ('ready', 'during'), 'setup']
@@ -79,7 +81,7 @@ S .root (() => {
 
     fetch ('/log/' + id) .then (x => x .json ())
     .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }})
-    .then (_ => fetch ('/log/' + id, post ({ questions: L .get (setup_questions, the_setup), rules: L .get (setup_rules, the_setup) })) .then (x => x .json ()))
+    .then (_ => fetch ('/log/' + id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) ))) .then (x => x .json ()))
     .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} })
     .then (_ => { ;the_state (state .ready (the_setup, [])) })
     .catch (x => {
