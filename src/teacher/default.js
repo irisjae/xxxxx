@@ -2,7 +2,7 @@ var Oo = window .Oo
 var oo = window .oo
 var R = window .R
 var L = window .L
-var T = window .T
+var S = window .S
 var Z = window .Z
 var data = window .data
 var fro = window .fro
@@ -14,6 +14,8 @@ var maybe = window .maybe
 var id = window .id
 var shuffle = window .shuffle
 var post = window .post
+var api = window .api
+var do_ = window .do_
 
 
 
@@ -51,8 +53,8 @@ var consensus = data ({
 
 
 
-var the_state = T .data (Z .Nothing)
-var the_consensus = T .data (Z .Nothing)
+var the_state = S .data (Z .Nothing)
+var the_consensus = S .data (Z .Nothing)
 
 
 var state_setup = [L .choices ('ready', 'during'), 'setup']
@@ -65,7 +67,7 @@ var state_room = [ state_setup, setup_room ]
 var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
 
-T .root (() => {
+S .root (() => {
  
   window .view =  <div>
     { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
@@ -79,20 +81,26 @@ T .root (() => {
 
     var the_setup = setup .setup ( id, default_questions, default_rules )
 
-    fetch ('/log/' + id) .then (x => x .json ())
-    .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }})
-    .then (_ => fetch ('/log/' + id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) ))) .then (x => x .json ()))
-    .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} })
-    .then (_ => { ;the_state (state .ready (the_setup, [])) })
-    .catch (x => {
-      ;console .error (x)
+    do_
+    .then (_ =>
+      api (id)
+      .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }}))
+    .then (_ =>
+      api (id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
+      .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} }))
+    .then (_ => {;
+      ;the_state (state .ready (the_setup, [])) })
+    .catch (e => {
+      ;console .error (e)
       ;get_room ()}) }
   ;get_room ()
   
   var log_consensus = msgs =>
     R .reduce (R .mergeDeepRight, {}, msgs)
   
-  /*var the_consensus = T .data ()
+  
+  
+  /*var the_consensus = S .data ()
   var get_log = time => {;
     Oo (L .get ([state_room, as_maybe], the_state ()),
       oo (Z .map (id => {;

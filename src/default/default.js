@@ -25,9 +25,12 @@ window .Oo = Oo
 
 window .L = require ('partial.lenses')
 window .R = require ('ramda')
-window .T = require ('s-js')
+window .S = require ('s-js')
 window .Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
 window .Surplus = require ('surplus')
+
+window .do_ = Promise .resolve ()
+
 
 var R = window .R
 var Z = window .Z
@@ -58,6 +61,10 @@ window .data = constructors => Oo (constructors,
 window .fro = (from_nothing, from_just) => (maybe = maybe) => 
   Z .reduce (_ => x => from_just (x), from_nothing, maybe)
 
+
+
+
+window .api = (room, x) => fetch ('/log/' + room, x) .then (x => x .json ())
 
 
 
