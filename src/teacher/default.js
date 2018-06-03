@@ -101,8 +101,15 @@ S .root (() => {
   
   var heartbeat = every (100)
   S (() => {
-    L .get ([state_room, as_maybe], the_state ())
-    heartbeat (})
+    L .get ([state_room, as_maybe], the_state ()) .map (room => {
+      ;heartbeat () 
+      do_
+      .then (_ =>
+        api (room))
+      .then (x => {;
+        ;the_consensus (x)})
+      .catch (e => {;
+        ;console .error (e)})})})
   
   /*var the_consensus = S .data ()
   var get_log = time => {;
