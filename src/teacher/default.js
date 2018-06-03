@@ -16,6 +16,7 @@ var shuffle = window .shuffle
 var post = window .post
 var api = window .api
 var do_ = window .do_
+var every = window .every
 
 
 
@@ -98,7 +99,10 @@ S .root (() => {
   var log_consensus = msgs =>
     R .reduce (R .mergeDeepRight, {}, msgs)
   
-  
+  var heartbeat = every (100)
+  S (() => {
+    L .get ([state_room, as_maybe], the_state ())
+    heartbeat (})
   
   /*var the_consensus = S .data ()
   var get_log = time => {;
