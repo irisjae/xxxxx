@@ -29,11 +29,14 @@ window .S = require ('s-js')
 window .Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
 window .Surplus = require ('surplus')
 
-window .do_ = Promise .resolve ()
 
 
+var S = window .S
 var R = window .R
 var Z = window .Z
+
+
+window .do_ = Promise .resolve ()
 
 var defined
 window .defined = defined
@@ -61,6 +64,13 @@ window .data = constructors => Oo (constructors,
 window .fro = (from_nothing, from_just) => (maybe = maybe) => 
   Z .reduce (_ => x => from_just (x), from_nothing, maybe)
 
+window .every = x => {
+  var every = S .data ()
+  var next = _ => {;
+    ;every (defined)
+    ;setTimeout (next, x)}
+  ;setTimeout (next, x)
+  return every}
 
 
 
