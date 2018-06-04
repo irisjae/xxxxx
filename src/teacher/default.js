@@ -107,7 +107,7 @@ S .root (() => {
       .then (_ =>
         api (room))
       .then (x => {;
-        ;the_consensus (x)})
+        ;the_consensus (log_consensus (x))})
       .catch (e => {;
         ;console .error (e)})})})
   
