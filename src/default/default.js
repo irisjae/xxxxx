@@ -62,7 +62,9 @@ window .data = constructors => Oo (constructors,
 
 
 window .fro = (from_nothing, from_just) => (maybe = maybe) => 
-  Z .reduce (_ => x => from_just (x), from_nothing, maybe)
+  !! (Z .isJust (maybe))
+  ? from_just (Z .fromMaybe_ (_ => {}, maybe))
+  : from_nothing
 
 window .every = x => {
   var every = S .data ()

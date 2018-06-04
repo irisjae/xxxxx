@@ -73,7 +73,7 @@ S .root (() => {
   window .view =  <div>
     { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
     { Oo (L .get ([state_students, as_maybe], the_state ()),
-      oo (fro ('', Z .map (x => <span>{x + ' student is here'}</span>)))) }
+      oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) }
   </div>
 
   var get_room = time => {;
