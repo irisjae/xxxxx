@@ -85,7 +85,7 @@ S .root (() => {
     do_
     .then (_ =>
       api (id)
-      .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') }}))
+      .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') } else retur}))
     .then (_ =>
       api (id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
       .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} }))
@@ -104,19 +104,15 @@ S .root (() => {
     L .get ([state_room, as_maybe], the_state ()) .map (room => {
       ;heartbeat () 
       do_
-      .then (_ =>
-        api (room))
-      .then (x => {;
-        ;the_consensus (log_consensus (x))})
-      .catch (e => {;
-        ;console .error (e)})})})
+      .then (_ => api (room))
+      .then (x => {;the_consensus (log_consensus (x))})
+      .catch (e => {;console .error (e)})})})
   
   /*var the_consensus = S .data ()
   var get_log = time => {;
     Oo (L .get ([state_room, as_maybe], the_state ()),
       oo (Z .map (id => {;
-        fetch ('/log/' + id)
-        .then (x => x .json ())
+        api (id)
         .then (log_consensus)
         .then (x => {;
           the_state (L .set (state_students, x, the_state ()));})

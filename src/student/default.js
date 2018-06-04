@@ -12,6 +12,8 @@ var string = window .string
 var list = window .list
 var maybe = window .maybe
 var id = window .id
+var go_ = window .go_
+var api = window .api
 
 
 
@@ -69,15 +71,18 @@ var pipeline_room_input = input => {;
 
 var get_room = id => {;
   ;the_io_state (io_state .conncting)
-	fetch ('/log/' + id) .then (x => x .json ())
-	.then (x => {; if (x .length === 0) { ;throw new Error ('empty') }})
+  go_ 
+	.then (_ =>
+    api (id)
+    .then (x => {; if (x .length === 0) { ;throw new Error ('empty') } else return x }) )
 	.then (x => {; 
     var consensus = log_consensus (x)
     var questions = L .get (consensus_questions, consensus)
-    ;the_state (state .prepare (setup .setup (id, questions, default_rules)))
-    })
+    ;the_state (state .prepare (setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
   .then (_ => {;the_io_state (io_state .inert)})} 
 
 var consensus_questions = ['questions'] 
-var log_consensus = x => x //stub
+
+var log_consensus = msgs =>
+  R .reduce (R .mergeDeepRight, {}, msgs)
