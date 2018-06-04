@@ -72,7 +72,8 @@ S .root (() => {
  
   window .view =  <div>
     { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
-    { Oo (L .get ([state_students, as_maybe], the_state ()), oo (R .map (x => x + ' student is here'))) }
+    { Oo (L .get ([state_students, as_maybe], the_state ()),
+      oo (fro ('', Z .map (x => <span>{x + ' student is here'}</span>)))) }
   </div>
 
   var get_room = time => {;
@@ -101,12 +102,12 @@ S .root (() => {
   
   var heartbeat = every (100)
   S (() => {
-    L .get ([state_room, as_maybe], the_state ()) .map (room => {
+    Oo (L .get ([state_room, as_maybe], the_state ()), oo (Z .map (room => {
       ;heartbeat () 
       do_
       .then (_ => api (room))
       .then (x => {;the_consensus (log_consensus (x))})
-      .catch (e => {;console .error (e)})})})
+      .catch (e => {;console .error (e)})})))})
   
   /*var the_consensus = S .data ()
   var get_log = time => {;
