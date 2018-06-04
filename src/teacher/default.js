@@ -72,7 +72,7 @@ S .root (() => {
  
   window .view =  <div>
     { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
-    { Oo (L .get ([state_room, as_maybe], the_state ()), oo (R .map (x => x + ' student is here'))) }
+    { Oo (L .get ([state_students, as_maybe], the_state ()), oo (R .map (x => x + ' student is here'))) }
   </div>
 
   var get_room = time => {;
@@ -85,15 +85,15 @@ S .root (() => {
     do_
     .then (_ =>
       api (id)
-      .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') } else retur}))
+      .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') } else return x }))
     .then (_ =>
       api (id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
-      .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} }))
-    .then (_ => {;
-      ;the_state (state .ready (the_setup, [])) })
+      .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} else return x }))
+    .then (_ => {;the_state (state .ready (the_setup, []))})
     .catch (e => {
       ;console .error (e)
       ;get_room ()}) }
+  
   ;get_room ()
   
   var log_consensus = msgs =>
