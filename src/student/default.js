@@ -74,15 +74,15 @@ var get_room = id => {;
 	.catch (e => { ;console .error (e) })
   .then (_ => {;the_io_state (io_state .inert)})} 
 
-var consensus_questions = ['questions'] 
+var consensus_questions = ['setup', 'questions'] 
 
 var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
 
 window .view = S .root (() => <div>
-	{ Oo (L .get (setup_room, the_state ()), oo (fro (
-    !! (L .isDefined (the_connecting, the_io_state ()))
+	{ !! (L .isDefined (the_connecting, the_io_state ()))
     ? 'Trying to connect...'
-    : <input fn={ pipeline_room_input } />,
-    x => 'Connected to room ' + x))) }
+    : Oo (L .get (setup_room, the_state ()), oo (fro (
+      <input fn={ pipeline_room_input } />,
+      x => 'Connected to room ' + x))) }
 </div>)
