@@ -12,7 +12,7 @@ var string = window .string
 var list = window .list
 var maybe = window .maybe
 var id = window .id
-var go_ = window .go_
+var do_ = window .do_
 var api = window .api
 
 
@@ -39,7 +39,7 @@ var io_state = data ({
   connecting: () => defined })
 
 
-var the_state = S .data (state .setup (Z .Nothing, [], [], default_rules))
+var the_state = S .data (state .prepare (Z .Nothing))
 var the_io_state = S .data (io_state .inert)
 
 
@@ -52,14 +52,6 @@ var the_inert = ['inert']
 var the_connecting = ['connecting']
 
 
-window .view = S .root (() => <div>
-	{ Oo (L .get (setup_room, the_state ()), oo (fro (
-    !! (L .isDefined (the_connecting, the_io_state ()))
-    ? 'Trying to connect...'
-    : <input fn={ pipeline_room_input } />,
-    x => 'Connected to room ' + x))) }
-</div>)
-
 
 var pipeline_room_input = input => {;
   input .addEventListener ('keypress', e => {;
@@ -71,7 +63,7 @@ var pipeline_room_input = input => {;
 
 var get_room = id => {;
   ;the_io_state (io_state .conncting)
-  go_ 
+  do_ 
 	.then (_ =>
     api (id)
     .then (x => {; if (x .length === 0) { ;throw new Error ('empty') } else return x }) )
@@ -86,3 +78,11 @@ var consensus_questions = ['questions']
 
 var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
+
+window .view = S .root (() => <div>
+	{ Oo (L .get (setup_room, the_state ()), oo (fro (
+    !! (L .isDefined (the_connecting, the_io_state ()))
+    ? 'Trying to connect...'
+    : <input fn={ pipeline_room_input } />,
+    x => 'Connected to room ' + x))) }
+</div>)
