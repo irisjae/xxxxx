@@ -44,7 +44,7 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 var state = data ({
 	ready: ( setup = setup, students = list (student) ) => defined,
-	during: ( setup = setup, students = list (student), completed_questions = progress ) => defined,
+	during: ( setup = setup, students = list (student), completed_questions = history ) => defined,
 	done: () => defined })
 
 var message = data ({
@@ -100,6 +100,7 @@ S .root (() => {
   var log_consensus = msgs =>
     R .reduce (R .mergeDeepRight, {}, msgs)
   
+/*
   var heartbeat = every (100)
   S (() => {
     Oo (L .get ([state_room, as_maybe], the_state ()), oo (Z .map (room => {
@@ -108,6 +109,7 @@ S .root (() => {
       .then (_ => api (room))
       .then (x => {;the_consensus (log_consensus (x))})
       .catch (e => {;console .error (e)})})))})
+*/
   
   /*var the_consensus = S .data ()
   var get_log = time => {;
