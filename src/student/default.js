@@ -31,7 +31,7 @@ var default_rules = rules .rules (10, 10)
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
 var state = data ({
-	prepare: ( setup = maybe (setup) ) => defined,
+	ready: ( setup = maybe (setup) ) => defined,
 	during: ( stats, completed_questions = progress, setup = setup ) => defined,
 	done: () => defined })
 var io_state = data ({
@@ -44,12 +44,18 @@ var the_io_state = S .data (io_state .inert)
 
 
 
-var the_setup = ['setup']
-var the_room = ['room', L .define (Z .Nothing), L .rewrite (x => Z .Just (x))]
-var setup_room = [the_setup, the_room]
 
-var the_inert = ['inert']
-var the_connecting = ['connecting']
+var state_setup = [L .choices ('ready', 'during'), 'setup']
+var setup_room = ['setup', 'room']
+var setup_questions = ['setup', 'questions']
+var setup_rules = ['setup', 'rules']
+var state_students = [L .choices ('ready', 'during'), 'students']
+
+var io_inert = ['inert']
+var io_connecting = ['connecting']
+
+var state_room = [ state_setup, setup_room ]
+var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
 
 
@@ -70,7 +76,7 @@ var get_room = id => {;
 	.then (x => {; 
     var consensus = log_consensus (x)
     var questions = L .get (consensus_questions, consensus)
-    ;the_state (state .prepare (setup .setup (id, questions, default_rules))) })
+    ;the_state (state .ready (setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
   .then (_ => {;the_io_state (io_state .inert)})} 
 
@@ -80,9 +86,9 @@ var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
 
 window .view = S .root (() => <div>
-	{ !! (L .isDefined (the_connecting, the_io_state ()))
+	{ !! (L .isDefined (io_connecting, the_io_state ()))
     ? 'Trying to connect...'
-    : Oo (L .get (setup_room, the_state ()), oo (fro (
+    : Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro (
       <input fn={ pipeline_room_input } />,
       x => 'Connected to room ' + x))) }
 </div>)
