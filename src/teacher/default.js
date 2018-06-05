@@ -43,9 +43,9 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 
 var state = data ({
-	ready: ( setup = setup, students = list (student) ) => defined,
-	during: ( setup = setup, students = list (student), completed_questions = history ) => defined,
-	done: ( setup = setup, students = list (student), completed_questions = history ) => defined })
+	ready: ( setup = setup ) => defined,
+	during: ( setup = setup, completed_questions = history ) => defined,
+	done: ( setup = setup, completed_questions = history ) => defined })
 
 var message = data ({
   setup: ( questions = list (question), rules = rules ) => defined })
