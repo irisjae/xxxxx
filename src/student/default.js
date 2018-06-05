@@ -39,7 +39,7 @@ var io_state = data ({
   connecting: () => defined })
 
 
-var the_state = S .data (state .prepare (Z .Nothing))
+var the_state = S .data (state .ready (Z .Nothing))
 var the_io_state = S .data (io_state .inert)
 
 
