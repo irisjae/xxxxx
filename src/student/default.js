@@ -62,7 +62,7 @@ var pipeline_room_input = input => {;
 
 
 var get_room = id => {;
-  ;the_io_state (io_state .conncting)
+  ;the_io_state (io_state .connecting)
   do_ 
 	.then (_ =>
     api (id)
