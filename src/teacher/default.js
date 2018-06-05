@@ -23,7 +23,6 @@ var every = window .every
 
 var student = id
 var question = string
-var progress = number
 var answer = question
 var latency = number
 var v = (...types) => defined
@@ -42,7 +41,7 @@ var default_rules = rules .rules (10, 10)
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
 
-var state = data ({
+var student_app = data ({
 	ready: ( setup = setup ) => defined,
 	during: ( setup = setup, completed_questions = history ) => defined,
 	done: ( setup = setup, completed_questions = history ) => defined })
@@ -54,7 +53,7 @@ var consensus = data ({
 
 
 
-var the_state = S .data (Z .Nothing)
+var app_state = S .data (Z .Nothing)
 var the_consensus = S .data (Z .Nothing)
 
 
@@ -71,8 +70,8 @@ var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 S .root (() => {
  
   window .view =  <div>
-    { Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
-    { Oo (L .get ([state_students, as_maybe], the_state ()),
+    { Oo (L .get ([state_room, as_maybe], app_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+    { Oo (L .get ([state_students, as_maybe], app_state ()),
       oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) }
   </div>
 
@@ -90,7 +89,7 @@ S .root (() => {
     .then (_ =>
       api (id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
       .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} else return x }))
-    .then (_ => {;the_state (state .ready (the_setup, []))})
+    .then (_ => {;app_state (student_app .ready (the_setup, []))})
     .catch (e => {
       ;console .error (e)
       ;get_room ()}) }
@@ -103,7 +102,7 @@ S .root (() => {
 /*
   var heartbeat = every (100)
   S (() => {
-    Oo (L .get ([state_room, as_maybe], the_state ()), oo (Z .map (room => {
+    Oo (L .get ([state_room, as_maybe], app_state ()), oo (Z .map (room => {
       ;heartbeat () 
       do_
       .then (_ => api (room))
@@ -113,12 +112,12 @@ S .root (() => {
   
   /*var the_consensus = S .data ()
   var get_log = time => {;
-    Oo (L .get ([state_room, as_maybe], the_state ()),
+    Oo (L .get ([state_room, as_maybe], app_state ()),
       oo (Z .map (id => {;
         api (id)
         .then (log_consensus)
         .then (x => {;
-          the_state (L .set (state_students, x, the_state ()));})
+          app_state (L .set (state_students, x, app_state ()));})
         .catch (x => {;
           ;console .error (x)})
         .then (x => {;
