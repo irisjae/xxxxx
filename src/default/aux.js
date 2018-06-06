@@ -31,12 +31,13 @@ var post = x => ({
 
 //--------------------TYPES--------------------
 
+var boolean = defined
 var number = defined
 var string = defined
 var list = a => defined
 var maybe = a => defined
-var id = string
 var nat = defined
+var id = string
 
 var student = id
 var question = string
@@ -48,7 +49,7 @@ var position = v (nat, nat)
 var attempt = v (answer, latency)
 
 
-var rendition = data ({ rendition: (attempts = list (v (answer, latency))) => defined })
+var rendition = data ({ rendition: (attempts = list (attempt)) => defined })
 
 var board = data ({ board: (answers = list (v (id, id, answer))) => defined})
 
@@ -134,9 +135,10 @@ var student_app_ready_to_during = app_state =>
     oo (fro (Z .Nothing, setup => Z .Just (
       student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [])))))
 
-//	ready: ( setup = maybe (setup) ) => defined,
-//	during: ( setup = setup, board = board, history = list (list (rendition)) ) => defined,
-
+var crossed_answers = app_state =>
+  !! (L .isDefined (app_during, app_state))
+  ? L .get (app_history, app_state)
+  : []
 
 
 
