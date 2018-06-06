@@ -54,13 +54,13 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 
 var teacher_app = data ({
-	ready: ( setup = setup ) => defined,
-	during: ( setup = setup, completed_questions = history ) => defined,
-	done: ( setup = setup, completed_questions = history ) => defined })
+	ready: ( setup = setup, students = list (student) ) => defined,
+	during: ( setup = setup, students = list (student), history = list (v (student, history)) ) => defined,
+	done: ( setup = setup, history = list (v (student, history)) ) => defined })
 var student_app = data ({
 	ready: ( setup = maybe (setup) ) => defined,
-	during: ( setup = setup, completed_questions = history ) => defined,
-	done: ( setup = setup, completed_questions = history ) => defined })
+	during: ( setup = setup, history = history ) => defined,
+	done: ( setup = setup, history = history ) => defined })
 var io = data ({
   inert: () => defined,
   connecting: () => defined })
@@ -83,23 +83,19 @@ var default_rules = rules .rules (10, 10)
 
 var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
-var state_room = [ state_setup, setup_room ]
-var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
-var state_ready = ['ready']
-var state_during = ['during']
-var state_done = ['done']
-var state_setup = [L .choices (state_ready, state_during), 'setup']
-var state_students = [L .choices (state_ready, state_during), 'students']
+var app_ready = ['ready']
+var app_during = ['during']
+var app_done = ['done']
+var app_setup = [L .choices (app_ready, app_during), 'setup']
+var app_students = [L .choices (app_ready, app_during), 'students']
 var setup_room = ['setup', 'room']
 var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
+var app_room = [ app_setup, setup_room ]
 
 var io_inert = ['inert']
 var io_connecting = ['connecting']
-
-var state_room = [ state_setup, setup_room ]
-
 
 var consensus_questions = ['setup', 'questions'] 
 
@@ -120,4 +116,11 @@ var log_consensus = msgs =>
 window .stuff = { ...window .stuff,
   number, string, list, maybe, id,
   shuffle,
-  api, post }
+  api, post,
+  student, question, answer, latency, v,
+  attempt, performance, history, rules, setup,
+  teacher_app, student_app, io, message, consensus, 
+  default_questions, default_rules,
+  as_maybe,
+  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room,  io_inert, io_connecting,  consensus_questions,
+  log_consensus }
