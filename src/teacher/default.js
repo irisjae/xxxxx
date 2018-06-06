@@ -20,39 +20,6 @@ var every = window .every
 
 
 
-
-var student = id
-var question = string
-var answer = question
-var latency = number
-var v = (...types) => defined
-
-
-
-var attempt = data ({ attempt: (guess = answer, time = latency) => defined })
-var performance = data ({ performance: (attempts = list (attempt)) => defined })
-var history = data ({ history: (performances = list (performance)) => defined })
-
-
-var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-var rules = data ({ rules: (time_limit = number, size = number) => defined })
-var default_rules = rules .rules (10, 10)
-
-var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
-
-
-var student_app = data ({
-	ready: ( setup = setup ) => defined,
-	during: ( setup = setup, completed_questions = history ) => defined,
-	done: ( setup = setup, completed_questions = history ) => defined })
-
-var message = data ({
-  setup: ( questions = list (question), rules = rules ) => defined })
-var consensus = data ({
-  consensus: ( students = list (v (student, latency, history)), latency ) => defined })
-
-
-
 var app_state = S .data (Z .Nothing)
 var the_consensus = S .data (Z .Nothing)
 
@@ -89,7 +56,7 @@ S .root (() => {
     .then (_ =>
       api (id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
       .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} else return x }))
-    .then (_ => {;app_state (student_app .ready (the_setup, []))})
+    .then (_ => {;app_state (teacher_app .ready (the_setup, []))})
     .catch (e => {
       ;console .error (e)
       ;get_room ()}) }
