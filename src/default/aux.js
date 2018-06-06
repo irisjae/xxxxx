@@ -94,6 +94,7 @@ var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
 var app_room = [ app_setup, setup_room ]
 var app_board = [ app_during, 'board' ]
+var app_history = [ app_during, 'history' ]
 
 var io_inert = ['inert']
 var io_connecting = ['connecting']
@@ -123,5 +124,9 @@ window .stuff = { ...window .stuff,
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
   as_maybe,
-  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room, app_board, io_inert, io_connecting, consensus_questions,
+  app_ready, app_during, app_done, app_setup,
+  app_students, app_room, app_board, app_history,
+  setup_room, setup_questions, setup_rules,
+  io_inert, io_connecting,
+  consensus_questions,
   log_consensus }

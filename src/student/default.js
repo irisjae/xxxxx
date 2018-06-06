@@ -8,9 +8,12 @@ var {
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
   as_maybe,
-  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room,  io_inert, io_connecting,  consensus_questions,
-  log_consensus
-} = window .stuff
+  app_ready, app_during, app_done, app_setup,
+  app_students, app_room, app_board, app_history,
+  setup_room, setup_questions, setup_rules,
+  io_inert, io_connecting,
+  consensus_questions,
+  log_consensus } = window .stuff
 
 
 
@@ -22,7 +25,7 @@ var io_state = S .data (io .inert)
 
 
 
-var board_view = 
+var board_view = board => history => <div> </div>
 
 
 var pipeline_room_input = input => {;
@@ -48,7 +51,9 @@ var get_room = id => {;
 
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))
-    ? board_view (L .get (app_board, app_state ()))
+    ? Oo (board_view,
+      xx (L .get (app_board, app_state ())),
+      xx (L .get (app_history, app_state ())))
     : !! (L .isDefined (app_during, app_state ()))
     ? !! (L .isDefined (io_connecting, io_state ()))
       ? 'Trying to connect...'
