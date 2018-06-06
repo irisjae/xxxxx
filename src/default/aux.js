@@ -35,7 +35,7 @@ var number = defined
 var string = defined
 var list = a => defined
 var maybe = a => defined
-var id =  .string
+var id = string
 
 var student = id
 var question = string
