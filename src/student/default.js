@@ -14,6 +14,7 @@ var maybe = window .maybe
 var id = window .id
 var do_ = window .do_
 var api = window .api
+var shuffle = window .shuffle
 
 
 
@@ -39,8 +40,9 @@ var io_state = data ({
   connecting: () => defined })
 
 
-var the_state = S .data (state .ready (Z .Nothing))
-var the_io_state = S .data (io_state .inert)
+//var the_state = S .data (state .ready (Z .Nothing))
+var the_state = S .data (state .ready (Z .Just (setup .setup ('test', shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), default_rules))))
+var io_state = S .data (io_state .inert)
 
 
 
@@ -68,7 +70,7 @@ var pipeline_room_input = input => {;
 
 
 var get_room = id => {;
-  ;the_io_state (io_state .connecting)
+  ;io_state (io_state .connecting)
   do_ 
 	.then (_ =>
     api (id)
@@ -78,7 +80,7 @@ var get_room = id => {;
     var questions = L .get (consensus_questions, consensus)
     ;the_state (state .ready (setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
-  .then (_ => {;the_io_state (io_state .inert)})} 
+  .then (_ => {;io_state (io_state .inert)})} 
 
 var consensus_questions = ['setup', 'questions'] 
 
@@ -86,7 +88,7 @@ var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
 
 window .view = S .root (() => <div>
-	{ !! (L .isDefined (io_connecting, the_io_state ()))
+	{ !! (L .isDefined (io_connecting, io_state ()))
     ? 'Trying to connect...'
     : Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro (
       <input fn={ pipeline_room_input } />,
