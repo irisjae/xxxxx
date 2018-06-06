@@ -6,7 +6,7 @@ var {
   post, api,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 
-  default_questions, default_rules,
+  default_questions, default_filler, default_rules,
   as_maybe,
   app_ready, app_during, app_done, app_setup,
   app_students, app_room, app_board, app_history,
@@ -22,7 +22,7 @@ var {
 var app_state = S .data (
   student_app .during (
     setup .setup ('test', default_questions, default_rules),
-    Oo (generate_board (),
+    Oo (generate_board, xx (3), xx (default_questions), xx (default_filler)),
     [] ))
 var io_state = S .data (io .inert)
 
