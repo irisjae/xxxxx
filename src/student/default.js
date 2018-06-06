@@ -13,18 +13,17 @@ var {
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
-  rule_size, 
-  log_consensus, generate_board } = window .stuff
+  rules_size,  
+  log_consensus, student_app_ready_to_during } = window .stuff
 
 
 
 
 //var app_state = S .data (state .ready (Z .Nothing))
 var app_state = S .data (
-  student_app .during (
-    setup .setup ('test', default_questions, default_rules),
-    Oo (generate_board, xx (L .get (rule_size, default_rules)), xx (default_questions)),
-    [] ))
+  student_app_ready_to_during (
+    student_app .ready (Z .Just (
+      setup .setup ('test', default_questions, default_rules)))))
 var io_state = S .data (io .inert)
 
 

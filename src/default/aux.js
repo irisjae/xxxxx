@@ -102,7 +102,8 @@ var io_connecting = ['connecting']
 
 var consensus_questions = ['setup', 'questions'] 
 
-var rule_size = ['rules', 'size']
+var rules_size = ['rules', 'size']
+var setup_size = [setup_rules, rules_size]
 
 
 
@@ -124,6 +125,13 @@ var generate_board = size => questions => {
       oo (R .map (column => [row, column, cell (row) (column)] ))))))}
 
 
+var student_app_ready_to_during = app_state =>
+  Oo (L .get (app_setup, app_state),
+    oo (fro (Z .Nothing, setup => Z .Just (
+      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [])))))
+
+//	ready: ( setup = maybe (setup) ) => defined,
+//	during: ( setup = setup, board = board, history = list (list (rendition)) ) => defined,
 
 
 
@@ -141,5 +149,5 @@ window .stuff = { ...window .stuff,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
-  rule_size, 
-  log_consensus, generate_board }
+  rules_size, 
+  log_consensus, student_app_ready_to_during }
