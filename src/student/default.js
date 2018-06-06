@@ -14,7 +14,7 @@ var {
   io_inert, io_connecting,
   consensus_questions,
   rules_size,  
-  log_consensus, student_app_ready_to_during } = window .stuff
+  log_consensus, student_app_ready_to_during, crossed_answers } = window .stuff
 
 
 
@@ -29,6 +29,8 @@ var io_state = S .data (io .inert)
 
 
 
+var crossed_answer
+var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <div>
   { Oo (board, oo (R .groupBy (x => x [0])), oo (R .values), oo (R .map (row =>
     <span>{ Oo (row, oo (R .groupBy (x => x [1])), oo (R .values), oo (R .map (cell =>

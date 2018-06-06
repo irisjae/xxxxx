@@ -142,9 +142,9 @@ var crossed_answers = app_state => {
       (Oo (L .get (app_history, app_state), oo (Z .map (Z .last))))
       (L .get (app_questions, app_state)),
     oo (Z .mapMaybe (pair =>
-      Oo (Z .fst (pair), oo (map_just (x => !! (Z .equals (Z .snd (pair)))
-        ? x
-        : Z .Nothing))))))
+      !! (Z .equals (Z .fst (pair), Z .Just (Z .snd (pair))))
+        ? Z .fst (pair)
+        : Z .Nothing)))
   : [] }
 
 
