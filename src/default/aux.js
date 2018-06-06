@@ -1,6 +1,6 @@
 var { xx, oo, Oo, L, R, S, Z, 
   do_, defined, data,
-  fro, every
+  fro, maybe_map, every
 } = window .stuff
 
 
@@ -99,6 +99,7 @@ var setup_room = ['setup', 'room']
 var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
 var app_room = [ app_setup, setup_room ]
+var app_questions = [ app_setup, setup_questions ]
 var app_board = [ app_during, 'board' ]
 var app_history = [ app_during, 'history' ]
 
@@ -135,10 +136,13 @@ var student_app_ready_to_during = app_state =>
     oo (fro (Z .Nothing, setup => Z .Just (
       student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [])))))
 
-var crossed_answers = app_state =>
+var crossed_answers = app_state => {
   !! (L .isDefined (app_during, app_state))
-  ? L .get (app_history, app_state)
-  : []
+  ? Oo (Z .zip
+      (Z .map (Z .last) (L .get (app_history, app_state)))
+      (L .get (app_questions, app_state))
+    oo (Z .mapMaybe (pair => maybe_map () (Z .fst (pair)))))
+  : [] }
 
 
 
