@@ -13,13 +13,17 @@ var {
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
-  log_consensus } = window .stuff
+  log_consensus, generate_board } = window .stuff
 
 
 
 
 //var app_state = S .data (state .ready (Z .Nothing))
-var app_state = S .data (student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules))))
+var app_state = S .data (
+  student_app .during (
+    setup .setup ('test', default_questions, default_rules),
+    Oo (generate_board (),
+    [] ))
 var io_state = S .data (io .inert)
 
 
@@ -27,8 +31,8 @@ var io_state = S .data (io .inert)
 
 var board_view = board => history => <div>
   { Oo (board, oo (R .groupBy (x => x [0])), oo (R .values), oo (R .map (row =>
-    <span>{ Oo (row, oo (R .groupBy (x => x [1])), oo (R .values), oo (R .map ( =>
-      <span>{}</span>))) }</span>))) } </div>
+    <span>{ Oo (row, oo (R .groupBy (x => x [1])), oo (R .values), oo (R .map (cell =>
+      <span>{ cell [2] }</span>))) }</span>))) } </div>
 
 
 var pipeline_room_input = input => {;

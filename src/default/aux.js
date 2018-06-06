@@ -111,6 +111,10 @@ var log_consensus = msgs =>
 
 
 
+var generate_board = size => answers => fillers =>
+  defined
+
+
 
 
 
@@ -129,4 +133,4 @@ window .stuff = { ...window .stuff,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
-  log_consensus }
+  log_consensus, generate_board }
