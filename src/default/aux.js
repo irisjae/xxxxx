@@ -115,10 +115,15 @@ var log_consensus = msgs =>
 var generate_board = size => answers => fillers => {
   
   //make cells
+  //only template
+  var cell = y => x =>
+    !! (x + y > 3)
+    ? answers [x * 3 + y]
+    : fillers [x * 3 + y]
   
   return Oo (R .range (1, size + 1),
     oo (R .map (row => Oo (R .range (1, size + 1),
-      oo (R .map (column => [row, column, cell] ))))))}
+      oo (R .map (column => [row, column, cell (row) (column)] ))))))}
 
 
 
