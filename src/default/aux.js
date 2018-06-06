@@ -44,8 +44,7 @@ var latency = number
 var v = (...types) => defined
 
 
-var attempt = data ({ attempt: (guess = answer, time = latency) => defined })
-var performance = data ({ performance: (attempts = list (attempt)) => defined })
+var moves = data ({ performance: (attempts = list (v (answer, latency))) => defined })
 var history = data ({ history: (performances = list (performance)) => defined })
 
 var rules = data ({ rules: (time_limit = number, size = number) => defined })
