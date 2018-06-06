@@ -35,7 +35,7 @@ var number = defined
 var string = defined
 var list = a => defined
 var maybe = a => defined
-var id = window .string
+var id =  .string
 
 var student = id
 var question = string
@@ -44,8 +44,9 @@ var latency = number
 var v = (...types) => defined
 
 
-var moves = data ({ performance: (attempts = list (v (answer, latency))) => defined })
-var history = data ({ history: (performances = list (performance)) => defined })
+var rendition = data ({ rendition: (attempts = list (v (answer, latency))) => defined })
+
+var board = data ({ board: (answers = list (v (id, id, answer))) => defined})
 
 var rules = data ({ rules: (time_limit = number, size = number) => defined })
 
@@ -54,12 +55,12 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 var teacher_app = data ({
 	ready: ( setup = setup, students = list (student) ) => defined,
-	during: ( setup = setup, students = list (student), history = list (v (student, history)) ) => defined,
-	done: ( setup = setup, history = list (v (student, history)) ) => defined })
+	during: ( setup = setup, students = list (v (student, board)), history = list (v (student, list (rendition))) ) => defined,
+	done: ( setup = setup, history = list (v (student, list (rendition))) ) => defined })
 var student_app = data ({
 	ready: ( setup = maybe (setup) ) => defined,
-	during: ( setup = setup, history = history ) => defined,
-	done: ( setup = setup, history = history ) => defined })
+	during: ( setup = setup, board = board, history = list (list (rendition)) ) => defined,
+	done: ( setup = setup, history = list (list (rendition)) ) => defined })
 var io = data ({
   inert: () => defined,
   connecting: () => defined })
