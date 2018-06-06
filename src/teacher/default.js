@@ -34,6 +34,11 @@ var state_room = [ state_setup, setup_room ]
 var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
 
+var {
+  Oo, xx, oo, R, L, S, Z
+} = window .stuff
+
+
 S .root (() => {
  
   window .view =  <div>

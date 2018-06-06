@@ -17,39 +17,22 @@ var Oo = function () {
 	else {
 		;throw 'Syntax Error; no oo or xx after focus Oo;' } }
 
-window .xx = xx
-window .oo = oo
-window .Oo = Oo
+
+
+var L = require ('partial.lenses')
+var R = require ('ramda')
+var S = require ('s-js')
+var Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
+var Surplus = require ('surplus')
 
 
 
-window .L = require ('partial.lenses')
-window .R = require ('ramda')
-window .S = require ('s-js')
-window .Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
-window .Surplus = require ('surplus')
 
+var do_ = Promise .resolve ()
 
-
-var S = window .S
-var R = window .R
-var Z = window .Z
-
-
-window .do_ = Promise .resolve ()
 
 var defined
-window .defined = defined
-
-window .number = defined
-window .string = defined
-window .list = a => defined
-window .maybe = a => defined
-window .id = window .string
-
-var maybe = window .maybe
-
-window .data = constructors => Oo (constructors,
+var data = constructors => Oo (constructors,
   oo (R .mapObjIndexed ((fn, key) => {
     var args_slice = fn .toString() .match (/\((.*?)\)\s*=>/) [1]
     if (args_slice) {
@@ -61,12 +44,14 @@ window .data = constructors => Oo (constructors,
 
 
 
-window .fro = (from_nothing, from_just) => (maybe = maybe) => 
+
+
+var fro = (from_nothing, from_just) => (maybe = maybe) => 
   !! (Z .isJust (maybe))
   ? from_just (Z .fromMaybe_ (_ => {}, maybe))
   : from_nothing
 
-window .every = x => {
+var every = x => {
   var every = S .data ()
   var next = _ => {;
     ;every (defined)
@@ -76,7 +61,9 @@ window .every = x => {
 
 
 
-window .api = (room, x) => fetch ('/log/' + room, x) .then (x => x .json ())
+
+
+var api = (room, x) => fetch ('/log/' + room, x) .then (x => x .json ())
 
 
 
@@ -99,6 +86,12 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 
 //--------------------TYPES--------------------
+
+var number = defined
+var string = defined
+var list = a => defined
+var maybe = a => defined
+var id = window .string
 
 var student = id
 var question = string
@@ -161,6 +154,23 @@ var state_room = [ state_setup, setup_room ]
 
 var consensus_questions = ['setup', 'questions'] 
 
+
+
+
+
+
 var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
 
+
+
+
+
+
+
+window .Surplus = Surplus
+window .stuff = { ...window .stuff,
+  xx, oo, Oo, L, R, S, Z, 
+  do_, defined, data,
+  number, string, list, maybe, id,
+  fro, api, every }
