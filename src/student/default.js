@@ -25,7 +25,10 @@ var io_state = S .data (io .inert)
 
 
 
-var board_view = board => history => <div> </div>
+var board_view = board => history => <div>
+  { Oo (board, oo (R .groupBy (x => x [0])), oo (R .values), oo (R .map (row =>
+    <span>{ Oo (row, oo (R .groupBy (x => x [1])), oo (R .values), oo (R .map ( =>
+      <span>{}</span>))) }</span>))) } </div>
 
 
 var pipeline_room_input = input => {;
@@ -52,8 +55,7 @@ var get_room = id => {;
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))
     ? Oo (board_view,
-      xx (L .get (app_board, app_state ())),
-      xx (L .get (app_history, app_state ())))
+      xx (L .get (app_board, app_state ())), xx (L .get (app_history, app_state ())))
     : !! (L .isDefined (app_during, app_state ()))
     ? !! (L .isDefined (io_connecting, io_state ()))
       ? 'Trying to connect...'
