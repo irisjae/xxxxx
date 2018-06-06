@@ -36,12 +36,16 @@ var string = defined
 var list = a => defined
 var maybe = a => defined
 var id = string
+var nat = defined
 
 var student = id
 var question = string
 var answer = question
 var latency = number
 var v = (...types) => defined
+var position = v (nat, nat)
+
+var attempt = v (answer, latency)
 
 
 var rendition = data ({ rendition: (attempts = list (v (answer, latency))) => defined })

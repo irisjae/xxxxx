@@ -58,7 +58,7 @@ var get_room = id => {;
 
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))
-    ? Oo (board_view,
+    ? Oo (board_view (L .get (app_board, app_state ())) (L .get (app_history, app_state ())),
       xx (L .get (app_board, app_state ())), xx (L .get (app_history, app_state ())))
     : !! (L .isDefined (app_during, app_state ()))
     ? !! (L .isDefined (io_connecting, io_state ()))
