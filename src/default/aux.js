@@ -76,8 +76,8 @@ var consensus = data ({
 
 
 var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
-var default_rules = rules .rules (10, 10)
+//var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
+var default_rules = rules .rules (10, 3)
 
 
 
@@ -102,6 +102,8 @@ var io_connecting = ['connecting']
 
 var consensus_questions = ['setup', 'questions'] 
 
+var rule_size = ['rules', 'size']
+
 
 
 
@@ -112,14 +114,10 @@ var log_consensus = msgs =>
 
 
 
-var generate_board = size => answers => fillers => {
-  
-  //make cells
-  //only template
+var generate_board = size => questions => {
+  var cells = shuffle (questions .slice (0, size * size))
   var cell = y => x =>
-    !! (x + y > 3)
-    ? answers [x * 3 + y]
-    : fillers [x * 3 + y]
+    cells [x * size + y]
   
   return Oo (R .range (1, size + 1),
     oo (R .map (row => Oo (R .range (1, size + 1),
@@ -137,11 +135,11 @@ window .stuff = { ...window .stuff,
   student, question, answer, latency, v,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 
-  default_questions, default_filler, default_rules,
-  default_q
+  default_questions, default_rules,
   app_ready, app_during, app_done, app_setup,
   app_students, app_room, app_board, app_history,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
+  rule_size, 
   log_consensus, generate_board }
