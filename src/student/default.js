@@ -50,11 +50,10 @@ var io_state = S .data (io_state .inert)
 var state_ready = ['ready']
 var state_during = ['during']
 var state_done = ['done']
-var state_setup = [L .choices ('ready', 'during'), 'setup']
+var state_setup = [L .choices (state_ready, state_during), 'setup']
 var setup_room = ['setup', 'room']
 var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
-var state_students = [L .choices ('ready', 'during'), 'students']
 
 var io_inert = ['inert']
 var io_connecting = ['connecting']
@@ -91,9 +90,14 @@ var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
 
 window .view = S .root (() => <div>
-	{ !! (L .isDefined (io_connecting, io_state ()))
-    ? 'Trying to connect...'
-    : Oo (L .get ([state_room, as_maybe], the_state ()), oo (fro (
-      <input fn={ pipeline_room_input } />,
-      x => 'Connected to room ' + x))) }
+	{ !! (L .isDefined (state_during, the_state ()))
+    ? defined
+    : !! (L .isDefined (state_during, the_state ()))
+    ? !! (L .isDefined (io_connecting, io_state ()))
+      ? 'Trying to connect...'
+      : Oo (L .get ([state_room, as_maybe], the_state ()),
+        oo (fro (
+          <input fn={ pipeline_room_input } />,
+          x => 'Connected to room ' + x)))
+    : defined}
 </div>)
