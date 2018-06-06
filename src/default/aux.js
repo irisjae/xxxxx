@@ -1,6 +1,6 @@
 var { xx, oo, Oo, L, R, S, Z, 
   do_, defined, data,
-  fro, maybe_map, every
+  fro, map_just, every
 } = window .stuff
 
 
@@ -141,7 +141,11 @@ var crossed_answers = app_state => {
   ? Oo (Z .zip
       (Z .map (Z .last) (L .get (app_history, app_state)))
       (L .get (app_questions, app_state)),
-    oo (Z .mapMaybe (pair => maybe_map (x => !! (Z .equals (Z .snd (pair))) ? x : Z .Nothing) (Z .fst (pair)))))
+    oo (Z .mapMaybe (pair =>
+      map_just (x =>
+        !! (Z .equals (Z .snd (pair)))
+        ? x
+                : Z .Nothing) (Z .fst (pair)))))
   : [] }
 
 
