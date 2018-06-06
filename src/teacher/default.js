@@ -8,7 +8,7 @@ var {
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
   as_maybe,
-  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room,  io_inert, io_connecting,  consensus_questions,
+  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room,  io_inert, io_connecting,  consensus_questions
 } = window .stuff
 
 var app_state = S .data (Z .Nothing)

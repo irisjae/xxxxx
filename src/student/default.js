@@ -1,20 +1,16 @@
-var Oo = window .Oo
-var oo = window .oo
-var R = window .R
-var L = window .L
-var S = window .S
-var Z = window .Z
-var data = window .data
-var fro = window .fro
-var defined = window .defined
-var number = window .number
-var string = window .string
-var list = window .list
-var maybe = window .maybe
-var id = window .id
-var do_ = window .do_
-var api = window .api
-var shuffle = window .shuffle
+var {
+  Oo, xx, oo, R, L, S, Z,
+  defined, data, do_,
+  number, string, list, maybe, id,
+  fro, shuffle, every,
+  post, api,
+  attempt, performance, history, rules, setup,
+  teacher_app, student_app, io, message, consensus, 
+  default_questions, default_rules,
+  as_maybe,
+  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room,  io_inert, io_connecting,  consensus_questions,
+  log_consensus
+} = window .stuff
 
 
 
@@ -22,6 +18,9 @@ var shuffle = window .shuffle
 //var app_state = S .data (state .ready (Z .Nothing))
 var app_state = S .data (student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules))))
 var io_state = S .data (io .inert)
+
+
+
 
 var pipeline_room_input = input => {;
   input .addEventListener ('keypress', e => {;
@@ -45,12 +44,12 @@ var get_room = id => {;
   .then (_ => {;io_state (io .inert)})} 
 
 window .view = S .root (() => <div>
-	{ !! (L .isDefined (state_during, app_state ()))
+	{ !! (L .isDefined (app_during, app_state ()))
     ? board ()
-    : !! (L .isDefined (state_during, app_state ()))
+    : !! (L .isDefined (app_during, app_state ()))
     ? !! (L .isDefined (io_connecting, io_state ()))
       ? 'Trying to connect...'
-      : Oo (L .get ([state_room, as_maybe], app_state ()),
+      : Oo (L .get ([app_room, as_maybe], app_state ()),
         oo (fro (
           <input fn={ pipeline_room_input } />,
           x => 'Connected to room ' + x)))
