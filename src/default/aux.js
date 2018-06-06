@@ -139,13 +139,12 @@ var student_app_ready_to_during = app_state =>
 var crossed_answers = app_state => {
   !! (L .isDefined (app_during, app_state))
   ? Oo (Z .zip
-      (Z .map (Z .last) (L .get (app_history, app_state)))
+      (Oo (L .get (app_history, app_state), oo (Z .map (Z .last))))
       (L .get (app_questions, app_state)),
     oo (Z .mapMaybe (pair =>
-      map_just (x =>
-        !! (Z .equals (Z .snd (pair)))
+      Oo (Z .fst (pair), oo (map_just (x => !! (Z .equals (Z .snd (pair)))
         ? x
-                : Z .Nothing) (Z .fst (pair)))))
+        : Z .Nothing))))))
   : [] }
 
 
@@ -164,4 +163,4 @@ window .stuff = { ...window .stuff,
   io_inert, io_connecting,
   consensus_questions,
   rules_size, 
-  log_consensus, student_app_ready_to_during }
+  log_consensus, student_app_ready_to_during, crossed_answers }
