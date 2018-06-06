@@ -22,6 +22,9 @@ var io_state = S .data (io .inert)
 
 
 
+var board_view = 
+
+
 var pipeline_room_input = input => {;
   input .addEventListener ('keypress', e => {;
     if (e .keyCode === 13) {
@@ -45,7 +48,7 @@ var get_room = id => {;
 
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))
-    ? board_view ()
+    ? board_view (L .get (app_board, app_state ()))
     : !! (L .isDefined (app_during, app_state ()))
     ? !! (L .isDefined (io_connecting, io_state ()))
       ? 'Trying to connect...'
