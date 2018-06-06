@@ -138,6 +138,15 @@ var default_rules = rules .rules (10, 10)
 var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 
 
+var state_setup = [L .choices ('ready', 'during'), 'setup']
+var setup_room = ['setup', 'room']
+var setup_questions = ['setup', 'questions']
+var setup_rules = ['setup', 'rules']
+var state_students = [L .choices ('ready', 'during'), 'students']
+
+var state_room = [ state_setup, setup_room ]
+var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
+
 var state_ready = ['ready']
 var state_during = ['during']
 var state_done = ['done']

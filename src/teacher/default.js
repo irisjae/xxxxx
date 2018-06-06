@@ -1,41 +1,14 @@
-var Oo = window .Oo
-var oo = window .oo
-var R = window .R
-var L = window .L
-var S = window .S
-var Z = window .Z
-var data = window .data
-var fro = window .fro
-var defined = window .defined
-var number = window .number
-var string = window .string
-var list = window .list
-var maybe = window .maybe
-var id = window .id
-var shuffle = window .shuffle
-var post = window .post
-var api = window .api
-var do_ = window .do_
-var every = window .every
-
-
-
 var app_state = S .data (Z .Nothing)
 var the_consensus = S .data (Z .Nothing)
 
 
-var state_setup = [L .choices ('ready', 'during'), 'setup']
-var setup_room = ['setup', 'room']
-var setup_questions = ['setup', 'questions']
-var setup_rules = ['setup', 'rules']
-var state_students = [L .choices ('ready', 'during'), 'students']
-
-var state_room = [ state_setup, setup_room ]
-var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
-
 
 var {
-  Oo, xx, oo, R, L, S, Z
+  Oo, xx, oo, R, L, S, Z,
+  defined, data, do_,
+  number, string, list, maybe, id,
+  fro, shuffle, every,
+  post, api
 } = window .stuff
 
 
