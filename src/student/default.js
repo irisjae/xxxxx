@@ -47,6 +47,9 @@ var io_state = S .data (io_state .inert)
 
 
 
+var state_ready = ['ready']
+var state_during = ['during']
+var state_done = ['done']
 var state_setup = [L .choices ('ready', 'during'), 'setup']
 var setup_room = ['setup', 'room']
 var setup_questions = ['setup', 'questions']
