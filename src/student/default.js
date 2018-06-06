@@ -4,7 +4,7 @@ var {
   number, string, list, maybe, id,
   fro, shuffle, every,
   post, api,
-  attempt, performance, history, rules, setup,
+  board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
   as_maybe,
@@ -45,7 +45,7 @@ var get_room = id => {;
 
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))
-    ? board ()
+    ? board_view ()
     : !! (L .isDefined (app_during, app_state ()))
     ? !! (L .isDefined (io_connecting, io_state ()))
       ? 'Trying to connect...'
