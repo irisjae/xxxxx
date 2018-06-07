@@ -111,6 +111,8 @@ var consensus_questions = ['setup', 'questions']
 var rules_size = ['rules', 'size']
 var setup_size = [setup_rules, rules_size]
 
+var cell_answer = [ 2 ]
+
 
 
 
@@ -162,5 +164,6 @@ window .stuff = { ...window .stuff,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
-  rules_size, 
+  rules_size, setup_size,
+  cell_answer, 
   log_consensus, student_app_ready_to_during, crossed_answers }
