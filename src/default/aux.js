@@ -141,14 +141,11 @@ var student_app_ready_to_during = app_state =>
     oo (fro (Z .Nothing, setup => Z .Just (
       student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])])))))
 
-var student_app_next_during = app_state =>
-  Oo (L .get ([app_during, as_maybe], app_state),
-    oo (map_just (_ => {
-      var size = L .get ([app_setup, setup_size], app_state)
-      !! (Z .size (L .get (app_history, app_state)) < size * size)
-        L .set ([app_history, L .append], rendition .rendition ([]), app_state)
-
-      })))
+var student_app_next_during = app_state => {
+  var size = L .get ([app_setup, setup_size], app_state)
+  return !! (Z .size (L .get (app_history, app_state)) < size * size)
+    ? L .set ([app_history, L .append], rendition .rendition ([]), app_state)
+    : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)) }
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_during, app_state))
@@ -186,4 +183,5 @@ window .stuff = { ...window .stuff,
   rules_size, setup_size,
   cell_answer, 
   log_consensus,
-  student_app_ready_to_during, crossed_answers, current_question }
+  student_app_ready_to_during, student_app_next_during,
+  crossed_answers, current_question }

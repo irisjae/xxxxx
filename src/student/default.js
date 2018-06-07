@@ -17,7 +17,8 @@ var {
   rules_size, setup_size,
   cell_answer, 
   log_consensus,
-  student_app_ready_to_during, crossed_answers, current_question } = window .stuff
+  student_app_ready_to_during, student_app_next_during,
+  crossed_answers, current_question } = window .stuff
 
 
 
@@ -117,7 +118,7 @@ var question_attempt = _x => {
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-        oo (L .set ([app_history, L .append], rendition .rendition ([]))),
+        oo (student_app_next_during),
         oo (_x => {;app_state (_x)}))}
     else {
       ;Oo (app_state (),
@@ -126,7 +127,7 @@ var question_attempt = _x => {
       ;clock .add ('fail', now) } } }
 
 var question_timesup = _ => {
-  ;app_state (L .set ([app_history, L .append], rendition .rendition ([]), app_state ()))}
+  ;app_state (student_app_next_during (app_state ()))}
 
 
 
