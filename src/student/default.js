@@ -30,13 +30,13 @@ var io_state = S .data (io .inert)
 
 
 var crossed = _x => <s>{ _x }</s>
-var board_view = board => history => <div>
-  { Oo (board, oo (R .groupBy (x => x [0])), oo (R .values), oo (R .map (row =>
-    <span>{ Oo (row, oo (R .groupBy (x => x [1])), oo (R .values), oo (R .map (cell =>
-      <span>{ Oo (cell [2],
-        oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ()))
+var board_view = board => history =>
+<div> { Oo (board, oo (R .map (row => 
+    <span> { Oo (row, oo (R .map (cell =>
+      <span> { Oo (cell [2],
+        oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
           ? crossed (_x)
-          : _x ))) }</span>))) }</span>))) } </div>
+          : _x )) } </span>))) } </span> ))) } </div>
 
 
 var pipeline_room_input = input => {;
