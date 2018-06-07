@@ -52,7 +52,7 @@ var fro = (from_nothing, from_just) => (maybe = maybe) =>
   !! (Z .isJust (maybe))
   ? from_just (Z .fromMaybe_ (_ => {}) (maybe))
   : from_nothing
-var maybe_map = fn => fro (Z .Nothing, fn)
+var map_just = fn => fro (Z .Nothing, fn)
 
 var every = x => {
   var every = S .data ()
@@ -91,4 +91,4 @@ window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
   do_, defined, data,
-  fro, maybe_map , every }
+  fro, map_just , every }
