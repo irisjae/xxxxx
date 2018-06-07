@@ -102,10 +102,13 @@ var get_room = id => {;
 
 var question_attempt = _x => {
   if (Z .equals (_x) (current_question (app_state ()))) {
-    }
+    Oo (app_state (),
+      oo (L .set ([app_history, L .last, L .append], rendition .rendition ())),
+      oo (_x => {;app_state (_x)}))}
   else {} }
 
-var question_timesup = _x => defined
+var question_timesup = _ => {
+  app_state (L .set ([app_history, L .append], [], app_state ()))}
 
 
 
