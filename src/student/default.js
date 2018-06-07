@@ -125,6 +125,9 @@ S (last_state => {
 S (_ => {
   if (L .isDefined (app_done, app_state ())) {
     ;clock .pause ()}})
+S (_ => {
+  Oo (attempts (),
+    oo (map_just (_x =>)))})
 
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
