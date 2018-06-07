@@ -104,13 +104,15 @@ var valid_attempt = _ => {
   if (Z .size (Z .fromMaybe ([]) (L .get ([app_history, L .last, rendition_attempts, as_maybe], app_state ()))) === 0)
     return true
   else {
-    var latency = latency_clock .time ()
+    var last_fail = clock .getLabelTime ('fail')
+    var latency = clock .time () - last_fail
     return latency > 3}}
 
 var question_attempt = _x => {
   if (valid_attempt ()) {
-    var latency = latency_clock .time ()
-    ;latency_clock .time (0)
+    var last_fail = clock .getLabelTime ('fail')
+    var now = clock .time ()
+    var latency = now - last_fail
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
@@ -119,7 +121,8 @@ var question_attempt = _x => {
     else {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-        oo (_x => {;app_state (_x)}))} } }
+        oo (_x => {;app_state (_x)}))
+      ;clock .addLabel ('fail', now) } } }
 
 var question_timesup = _ => {
   ;app_state (L .set ([app_history, L .append], rendition .rendition ([]), app_state ()))}
@@ -131,26 +134,21 @@ var question_timesup = _ => {
 
 var clock = new TimelineMax
 clock .add (question_timesup, 10)
-var latency_clock = new TimelineMax
-latency_clock .add (_ => {}, 10)
 
 S (_ => {
   if (L .isDefined (app_ready, app_state ())) {
-    ;clock .pause ()
-    ;latency_clock .pause ()} })
+    ;clock .pause () } })
 S (last_state => {
   if (L .isDefined (app_during, app_state ())) {
     if (! Z .equals (Z .size (Z .fromMaybe ([]) (L .get ([app_history, as_maybe], last_state)))) (Z .size (L .get (app_history, app_state ())))) {
       ;clock .time (0)
-      ;latency_clock .time (0)}
-    ;clock .play ()
-    ;latency_clock .play () }
+      ;clock .removeLabel ('fail')}
+    ;clock .play () }
   return app_state () }
   , app_state ())
 S (_ => {
   if (L .isDefined (app_done, app_state ())) {
-    ;clock .pause ()
-    ;latency_clock .pause ()}})
+    ;clock .pause () }})
 
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
