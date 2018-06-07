@@ -144,7 +144,7 @@ var student_app_ready_to_during = app_state =>
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_during, app_state))
   ? Oo (Z .zip
-      (Oo (L .get (app_history, app_state), oo (R .map (Z .last))))
+      (Oo (L .get (app_history, app_state), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))))
       (L .get (app_questions, app_state)),
     oo (Z .mapMaybe (pair =>
       !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))

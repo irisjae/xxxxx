@@ -114,7 +114,7 @@ var question_attempt = _x => {
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-        oo (L .set ([app_history, L .append], [rendition .rendition ([])])),
+        oo (L .set ([app_history, L .append], rendition .rendition ([]))),
         oo (_x => {;app_state (_x)}))}
     else {
       ;Oo (app_state (),
@@ -122,7 +122,7 @@ var question_attempt = _x => {
         oo (_x => {;app_state (_x)}))} } }
 
 var question_timesup = _ => {
-  ;app_state (L .set ([app_history, L .append], [], app_state ()))}
+  ;app_state (L .set ([app_history, L .append], rendition .rendition ([]), app_state ()))}
 
 
 
