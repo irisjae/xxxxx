@@ -29,6 +29,28 @@ var io_state = S .data (io .inert)
 
 
 
+var get_room = id => {;
+  ;io_state (io .connecting)
+  do_ 
+	.then (_ =>
+    api (id)
+    .then (x => {; if (x .length === 0) { ;throw new Error ('empty') } else return x }) )
+	.then (x => {; 
+    var consensus = log_consensus (x)
+    var questions = L .get (consensus_questions, consensus)
+    ;app_state (student_app .ready (setup .setup (id, questions, default_rules))) })
+	.catch (e => { ;console .error (e) })
+  .then (_ => {;io_state (io .inert)})} 
+
+var question_timesup = _ => defined
+
+var clock = new TimelineMax ({ paused: true, repeat: -1 })
+clock .duration (10)
+clock .add (question_timesup, 10)
+
+
+
+
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history =>
   <div> { Oo (board, oo (R .map (row => 
@@ -46,21 +68,6 @@ var pipeline_room_input = input => {;
       ;input .value = ''
       ;get_room (value) }})} 
 
-
-var get_room = id => {;
-  ;io_state (io .connecting)
-  do_ 
-	.then (_ =>
-    api (id)
-    .then (x => {; if (x .length === 0) { ;throw new Error ('empty') } else return x }) )
-	.then (x => {; 
-    var consensus = log_consensus (x)
-    var questions = L .get (consensus_questions, consensus)
-    ;app_state (student_app .ready (setup .setup (id, questions, default_rules))) })
-	.catch (e => { ;console .error (e) })
-  .then (_ => {;io_state (io .inert)})} 
-
-var clock = new TimelineMax ({ paused: true })
 
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))
