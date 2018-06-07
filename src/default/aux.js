@@ -1,4 +1,4 @@
-var { xx, oo, Oo, L, R, S, Z, 
+var { xx, oo, Oo, L, R, S, Z, memoize, 
   do_, defined, data,
   fro, map_just, every
 } = window .stuff
@@ -136,7 +136,7 @@ var student_app_ready_to_during = app_state =>
     oo (fro (Z .Nothing, setup => Z .Just (
       student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [])))))
 
-var crossed_answers = app_state => 
+var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_during, app_state))
   ? Oo (Z .zip
       (Oo (L .get (app_history, app_state), oo (Z .map (Z .last))))
@@ -145,7 +145,7 @@ var crossed_answers = app_state =>
       !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
         ? Z .fst (pair)
         : Z .Nothing)))
-  : []
+  : [])
 
 
 

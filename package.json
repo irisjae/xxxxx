@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "browserify": "^16.2.2",
+    "fast-memoize": "^2.4.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-compress": "^3.0.0",

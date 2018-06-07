@@ -2,7 +2,7 @@ var {
   Oo, xx, oo, R, L, S, Z, TimelineMax,
   defined, data, do_,
   number, string, list, maybe, id,
-  fro, shuffle, every,
+  fro, map_just, shuffle, every,
   post, api,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 
@@ -20,10 +20,7 @@ var {
 
 
 //var app_state = S .data (state .ready (Z .Nothing))
-var app_state = S .data (
-  fro (undefined, x => x) (student_app_ready_to_during (
-    student_app .ready (Z .Just (
-      setup .setup ('test', default_questions, default_rules))))))
+var app_state = S .data (student_app .ready (Z .Nothing))
 var io_state = S .data (io .inert)
 
 
@@ -48,6 +45,20 @@ var clock = new TimelineMax ({ paused: true, repeat: -1 })
 clock .duration (10)
 clock .add (question_timesup, 10)
 
+Oo (student_app_ready_to_during (
+    student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
+  oo (map_just (_x => {;app_state (_x)})))
+S (() => {
+  })
+
+
+
+
+
+
+
+
+
 
 
 
@@ -69,7 +80,7 @@ var pipeline_room_input = input => {;
       ;get_room (value) }})} 
 
 
-window .view = S .root (() => <div>
+window .view = <div>
 	{ !! (L .isDefined (app_during, app_state ()))
     ? board_view (L .get (app_board, app_state ())) (L .get (app_history, app_state ()))
     : !! (L .isDefined (app_ready, app_state ()))
@@ -80,4 +91,4 @@ window .view = S .root (() => <div>
           <input fn={ pipeline_room_input } />,
           x => 'Connected to room ' + x)))
     : defined}
-</div>)
+</div>
