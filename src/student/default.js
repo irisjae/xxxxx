@@ -36,13 +36,14 @@ var io_state = S .data (io .inert)
 
 
 var crossed = _x => <s>{ _x }</s>
-var board_view = board => history =>
-  <div> { Oo (board, oo (R .map (row => 
+var board_view = board => history => <div>
+  <ticker>{ 10 - tick_sampler () }</ticker>
+  <board> { Oo (board, oo (R .map (row => 
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
         ? <span>{ crossed (_x) }</span>
-        : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </div>
+        : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
 
 
 
@@ -134,6 +135,10 @@ var question_timesup = _ => {
 
 var clock = new TimelineMax
 clock .add (question_timesup, 10)
+Oo (R .range (0, 10 + 1),
+  oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
+
+var tick_sampler = S .data (Z .Nothing)
 
 S (_ => {
   if (L .isDefined (app_ready, app_state ())) {
