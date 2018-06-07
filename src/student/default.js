@@ -102,19 +102,21 @@ var get_room = id => {;
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)})} 
 
+var get_latency = now => {
+    var last_fail = clock .getLabelTime ('fail')
+    if (last_fail === -1) last_fail = 0
+    return now - last_fail }
+
 var valid_attempt = _ => {
   if (Z .size (Z .fromMaybe ([]) (L .get ([app_history, L .last, rendition_attempts, as_maybe], app_state ()))) === 0)
     return true
   else {
-    var last_fail = clock .getLabelTime ('fail')
-    var latency = clock .time () - last_fail
-    return latency > 3}}
+    return get_latency (clock .time ()) > 3}}
 
 var question_attempt = _x => {
   if (valid_attempt ()) {
-    var last_fail = clock .getLabelTime ('fail')
     var now = clock .time ()
-    var latency = now - last_fail
+    var latency = get_latency (now)
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
