@@ -21,9 +21,9 @@ var {
 
 //var app_state = S .data (state .ready (Z .Nothing))
 var app_state = S .data (
-  student_app_ready_to_during (
+  fro (undefined, x => x) (student_app_ready_to_during (
     student_app .ready (Z .Just (
-      setup .setup ('test', default_questions, default_rules)))))
+      setup .setup ('test', default_questions, default_rules))))))
 var io_state = S .data (io .inert)
 
 
