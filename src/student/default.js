@@ -15,7 +15,8 @@ var {
   consensus_questions,
   rules_size, setup_size,
   cell_answer, 
-  log_consensus, student_app_ready_to_during, crossed_answers } = window .stuff
+  log_consensus,
+  student_app_ready_to_during, crossed_answers, current_question } = window .stuff
 
 
 
@@ -118,7 +119,7 @@ S (_ => {
     ;clock .pause ()} })
 S (last_state => {
   if (L .isDefined (app_during, app_state ())) {
-    if (! Z .equals (L .get (app_history, last_state)) (L .get (app_history, app_state ()))) {
+    if (! Z .equals (Z .size (L .get (app_history, last_state))) (Z .size (L .get (app_history, app_state ())))) {
       ;clock .time (0)}
     ;clock .play ()} }
   , app_state ())
@@ -127,7 +128,10 @@ S (_ => {
     ;clock .pause ()}})
 S (_ => {
   Oo (attempts (),
-    oo (map_just (_x =>)))})
+    oo (map_just (_x => {
+      if (Z .equals (_x) (current_question (app_state ()))) {
+        }
+      else {} })))})
 
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),

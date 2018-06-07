@@ -93,6 +93,7 @@ var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
 var app_ready = ['ready']
 var app_during = ['during']
 var app_done = ['done']
+//TODO: accomodate maybe for app_ready
 var app_setup = [L .choices (app_ready, app_during), 'setup']
 var app_students = [L .choices (app_ready, app_during), 'students']
 var setup_room = ['setup', 'room']
@@ -136,7 +137,7 @@ var generate_board = size => questions => {
 var student_app_ready_to_during = app_state =>
   Oo (L .get (app_setup, app_state),
     oo (fro (Z .Nothing, setup => Z .Just (
-      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [])))))
+      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [[]])))))
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_during, app_state))
@@ -148,6 +149,11 @@ var crossed_answers = memoize (app_state =>
         ? Z .fst (pair)
         : Z .Nothing)))
   : [])
+
+var current_question = app_state =>
+  !! (L .isDefined (app_during, app_state))
+  ? L .get ([app_questions, Z .size (L .get (app_history, app_state)) - 1, as_maybe], app_state)
+  : Z .Nothing
 
 
 
@@ -166,4 +172,5 @@ window .stuff = { ...window .stuff,
   consensus_questions,
   rules_size, setup_size,
   cell_answer, 
-  log_consensus, student_app_ready_to_during, crossed_answers }
+  log_consensus,
+  student_app_ready_to_during, crossed_answers, current_question }
