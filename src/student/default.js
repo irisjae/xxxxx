@@ -41,7 +41,7 @@ var board_view = board => history =>
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
-        ? <span>crossed (_x)</span>
+        ? <span>{ crossed (_x) }</span>
         : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </div>
 
 
@@ -130,9 +130,9 @@ var question_timesup = _ => {
 
 
 var clock = new TimelineMax
-clock .duration (10)
 clock .add (question_timesup, 10)
 var latency_clock = new TimelineMax
+latency_clock .add (_ => {}, 10)
 
 S (_ => {
   if (L .isDefined (app_ready, app_state ())) {
