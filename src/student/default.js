@@ -24,6 +24,7 @@ var {
 var app_state = S .data (student_app .ready (Z .Nothing))
 var io_state = S .data (io .inert)
 
+var attempts = S .data (Z .Nothing)
 
 
 
@@ -41,11 +42,17 @@ var board_view = board => history =>
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
         ? <span>crossed (_x)</span>
-        : <span>_x ))))) } </div> ))) } </div>
+        : <span fn={ pipeline_cell_attempt (cell) }>_x</span> ))))) } </div> ))) } </div>
 
 
 
 
+var clicking = ['click']
+
+var pipeline_cell_attempt = cell => span => {;
+  ;clicking .forEach (click => {;
+    ;span .addEventListener (click, _ => {;
+      ;attempts (Z .Just (L .get (cell_answer, cell))) }) }) }
 
 var pipeline_room_input = input => {;
   input .addEventListener ('keypress', e => {;
