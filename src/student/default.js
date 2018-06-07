@@ -48,9 +48,18 @@ clock .add (question_timesup, 10)
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
   oo (map_just (_x => {;app_state (_x)})))
-S (() => {
-  })
 
+S (_ => {
+  if (L .isDefined (app_ready, app_state ())) {
+    ;clock .pause ()} })
+S (last_state => {
+  if (L .isDefined (app_during, app_state ())) {
+    if (! Z .equals (L .get (app_history, last_state)) (L .get (app_history, app_state ()))) {
+      ;clock .time (0)}
+    ;clock .play ()} }, app_state ())
+S (_ => {
+  if (L .isDefined (app_done, app_state ())) {
+    ;clock .pause ()}})
 
 
 
