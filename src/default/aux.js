@@ -124,7 +124,7 @@ var log_consensus = msgs =>
 var generate_board = size => questions => {
   var cells = shuffle (questions .slice (0, size * size))
   var cell = y => x =>
-    cells [x * size + y]
+    cells [(x - 1) * size + (y - 1)]
   
   return Oo (R .range (1, size + 1),
     oo (R .map (row => Oo (R .range (1, size + 1),
@@ -136,16 +136,16 @@ var student_app_ready_to_during = app_state =>
     oo (fro (Z .Nothing, setup => Z .Just (
       student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [])))))
 
-var crossed_answers = app_state => {
+var crossed_answers = app_state => 
   !! (L .isDefined (app_during, app_state))
   ? Oo (Z .zip
       (Oo (L .get (app_history, app_state), oo (Z .map (Z .last))))
       (L .get (app_questions, app_state)),
     oo (Z .mapMaybe (pair =>
-      !! (Z .equals (Z .fst (pair), Z .Just (Z .snd (pair))))
+      !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
         ? Z .fst (pair)
         : Z .Nothing)))
-  : [] }
+  : []
 
 
 

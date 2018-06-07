@@ -48,7 +48,7 @@ var data = constructors => Oo (constructors,
 
 var fro = (from_nothing, from_just) => (maybe = maybe) => 
   !! (Z .isJust (maybe))
-  ? from_just (Z .fromMaybe_ (_ => {}, maybe))
+  ? from_just (Z .fromMaybe_ (_ => {}) (maybe))
   : from_nothing
 var maybe_map = fn => fro (Z .Nothing, fn)
 
