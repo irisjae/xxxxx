@@ -64,7 +64,7 @@ var teacher_app = data ({
 	done: ( setup = setup, history = list (v (student, list (rendition))) ) => defined })
 var student_app = data ({
 	ready: ( setup = maybe (setup) ) => defined,
-	during: ( setup = setup, board = board, history = list (list (rendition)) ) => defined,
+	during: ( setup = setup, board = board, history = list (rendition) ) => defined,
 	done: ( setup = setup, history = list (list (rendition)) ) => defined })
 var io = data ({
   inert: () => defined,
@@ -109,6 +109,8 @@ var io_connecting = ['connecting']
 
 var consensus_questions = ['setup', 'questions'] 
 
+var rendition_attempts = ['rendition', 'attempts']
+    
 var rules_size = ['rules', 'size']
 var setup_size = [setup_rules, rules_size]
 
@@ -170,6 +172,7 @@ window .stuff = { ...window .stuff,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
+  rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
   log_consensus,

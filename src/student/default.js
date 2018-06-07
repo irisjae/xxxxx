@@ -13,6 +13,7 @@ var {
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
+  rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
   log_consensus,
@@ -101,11 +102,17 @@ var get_room = id => {;
   .then (_ => {;io_state (io .inert)})} 
 
 var question_attempt = _x => {
+  var latency = latency_clock .time ()
+  latency_clock .time (0)
   if (Z .equals (_x) (current_question (app_state ()))) {
     Oo (app_state (),
-      oo (L .set ([app_history, L .last, L .append], rendition .rendition ())),
+      oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
+      oo (L .set ([app_history, L .append], [])),
       oo (_x => {;app_state (_x)}))}
-  else {} }
+  else {
+    Oo (app_state (),
+      oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
+      oo (_x => {;app_state (_x)}))} }
 
 var question_timesup = _ => {
   app_state (L .set ([app_history, L .append], [], app_state ()))}
@@ -118,19 +125,24 @@ var question_timesup = _ => {
 var clock = new TimelineMax
 clock .duration (10)
 clock .add (question_timesup, 10)
+var latency_clock = new TimelineMax
 
 S (_ => {
   if (L .isDefined (app_ready, app_state ())) {
-    ;clock .pause ()} })
+    ;clock .pause ()
+    ;latency_clock .pause ()} })
 S (last_state => {
   if (L .isDefined (app_during, app_state ())) {
     if (! Z .equals (Z .size (L .get (app_history, last_state))) (Z .size (L .get (app_history, app_state ())))) {
-      ;clock .time (0)}
-    ;clock .play ()} }
+      ;clock .time (0)
+      ;latency_clock .time (0)}
+    ;clock .play ()
+    ;latency_clock .play ()} }
   , app_state ())
 S (_ => {
   if (L .isDefined (app_done, app_state ())) {
-    ;clock .pause ()}})
+    ;clock .pause ()
+    ;latency_clock .pause ()}})
 
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
