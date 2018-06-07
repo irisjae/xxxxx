@@ -139,12 +139,12 @@ var generate_board = size => questions => {
 var student_app_ready_to_during = app_state =>
   Oo (L .get (app_setup, app_state),
     oo (fro (Z .Nothing, setup => Z .Just (
-      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [[]])))))
+      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])])))))
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_during, app_state))
   ? Oo (Z .zip
-      (Oo (L .get (app_history, app_state), oo (Z .map (Z .last))))
+      (Oo (L .get (app_history, app_state), oo (R .map (Z .last))))
       (L .get (app_questions, app_state)),
     oo (Z .mapMaybe (pair =>
       !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))

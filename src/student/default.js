@@ -42,7 +42,7 @@ var board_view = board => history =>
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
         ? <span>crossed (_x)</span>
-        : <span fn={ pipeline_cell_attempt (cell) }>_x</span> ))))) } </div> ))) } </div>
+        : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </div>
 
 
 
@@ -101,7 +101,7 @@ var get_room = id => {;
   .then (_ => {;io_state (io .inert)})} 
 
 var valid_attempt = _ => {
-  if (Z .size (L .get ([app_history, L .last, rendition_attempts], app_state ())) === 0)
+  if (Z .size (Z .fromMaybe ([]) (L .get ([app_history, L .last, rendition_attempts, as_maybe], app_state ()))) === 0)
     return true
   else {
     var latency = latency_clock .time ()
@@ -111,10 +111,10 @@ var question_attempt = _x => {
   if (valid_attempt ()) {
     var latency = latency_clock .time ()
     ;latency_clock .time (0)
-    if (Z .equals (_x) (current_question (app_state ()))) {
+    if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-        oo (L .set ([app_history, L .append], [])),
+        oo (L .set ([app_history, L .append], [rendition .rendition ([])])),
         oo (_x => {;app_state (_x)}))}
     else {
       ;Oo (app_state (),
@@ -140,7 +140,7 @@ S (_ => {
     ;latency_clock .pause ()} })
 S (last_state => {
   if (L .isDefined (app_during, app_state ())) {
-    if (! Z .equals (Z .size (L .get (app_history, last_state))) (Z .size (L .get (app_history, app_state ())))) {
+    if (! Z .equals (Z .size (Z .fromMaybe ([]) (L .get ([app_history, as_maybe], last_state)))) (Z .size (L .get (app_history, app_state ())))) {
       ;clock .time (0)
       ;latency_clock .time (0)}
     ;clock .play ()
