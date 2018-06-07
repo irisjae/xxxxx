@@ -144,7 +144,8 @@ S (last_state => {
       ;clock .time (0)
       ;latency_clock .time (0)}
     ;clock .play ()
-    ;latency_clock .play ()} }
+    ;latency_clock .play () }
+  return app_state () }
   , app_state ())
 S (_ => {
   if (L .isDefined (app_done, app_state ())) {
