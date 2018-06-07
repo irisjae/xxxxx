@@ -101,21 +101,29 @@ var get_room = id => {;
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)})} 
 
-var question_attempt = _x => {
-  var latency = latency_clock .time ()
-  latency_clock .time (0)
-  if (Z .equals (_x) (current_question (app_state ()))) {
-    Oo (app_state (),
-      oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-      oo (L .set ([app_history, L .append], [])),
-      oo (_x => {;app_state (_x)}))}
+var valid_attempt = _ => {
+  if (Z .size (L .get ([app_history, L .last, rendition_attempts], app_state ())) === 0)
+    return true
   else {
-    Oo (app_state (),
-      oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-      oo (_x => {;app_state (_x)}))} }
+    var latency = latency_clock .time ()
+    return latency > 3}}
+
+var question_attempt = _x => {
+  if (valid_attempt ()) {
+    var latency = latency_clock .time ()
+    ;latency_clock .time (0)
+    if (Z .equals (_x) (current_question (app_state ()))) {
+      ;Oo (app_state (),
+        oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
+        oo (L .set ([app_history, L .append], [])),
+        oo (_x => {;app_state (_x)}))}
+    else {
+      ;Oo (app_state (),
+        oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
+        oo (_x => {;app_state (_x)}))} } }
 
 var question_timesup = _ => {
-  app_state (L .set ([app_history, L .append], [], app_state ()))}
+  ;app_state (L .set ([app_history, L .append], [], app_state ()))}
 
 
 
