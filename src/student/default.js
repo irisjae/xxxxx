@@ -22,7 +22,6 @@ var {
 
 
 
-//var app_state = S .data (state .ready (Z .Nothing))
 var app_state = S .data (student_app .ready (Z .Nothing))
 var io_state = S .data (io .inert)
 
