@@ -1,5 +1,5 @@
 var {
-  Oo, xx, oo, R, L, S, Z,
+  Oo, xx, oo, R, L, S, Z, TimelineMax,
   defined, data, do_,
   number, string, list, maybe, id,
   fro, shuffle, every,
@@ -59,6 +59,8 @@ var get_room = id => {;
     ;app_state (student_app .ready (setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)})} 
+
+var clock = new TimelineMax ({ paused: true })
 
 window .view = S .root (() => <div>
 	{ !! (L .isDefined (app_during, app_state ()))

@@ -24,6 +24,7 @@ var R = require ('ramda')
 var S = require ('s-js')
 var Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
 var Surplus = require ('surplus')
+var TimelineMax = window .TimelineMax
 
 
 
@@ -87,6 +88,6 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-  xx, oo, Oo, L, R, S, Z, 
+  xx, oo, Oo, L, R, S, Z, TimelineMax,
   do_, defined, data,
   fro, maybe_map , every }
