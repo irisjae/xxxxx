@@ -25,7 +25,6 @@ var {
 var app_state = S .data (student_app .ready (Z .Nothing))
 var io_state = S .data (io .inert)
 
-var attempts = S .data (Z .Nothing)
 
 
 
@@ -53,7 +52,7 @@ var clicking = ['click']
 var pipeline_cell_attempt = cell => span => {;
   ;clicking .forEach (click => {;
     ;span .addEventListener (click, _ => {;
-      ;attempts (Z .Just (L .get (cell_answer, cell))) }) }) }
+      ;question_attempt (L .get (cell_answer, cell)) }) }) }
 
 var pipeline_room_input = input => {;
   input .addEventListener ('keypress', e => {;
@@ -101,9 +100,12 @@ var get_room = id => {;
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)})} 
 
-var question_attempt = _x => defined
+var question_attempt = _x => {
+  if (Z .equals (_x) (current_question (app_state ()))) {
+    }
+  else {} }
 
-var question_timesup = _ => defined
+var question_timesup = _x => defined
 
 
 
@@ -126,12 +128,6 @@ S (last_state => {
 S (_ => {
   if (L .isDefined (app_done, app_state ())) {
     ;clock .pause ()}})
-S (_ => {
-  Oo (attempts (),
-    oo (map_just (_x => {
-      if (Z .equals (_x) (current_question (app_state ()))) {
-        }
-      else {} })))})
 
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
