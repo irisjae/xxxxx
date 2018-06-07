@@ -123,7 +123,7 @@ var question_attempt = _x => {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
         oo (_x => {;app_state (_x)}))
-      ;clock .addLabel ('fail', now) } } }
+      ;clock .add ('fail', now) } } }
 
 var question_timesup = _ => {
   ;app_state (L .set ([app_history, L .append], rendition .rendition ([]), app_state ()))}
@@ -146,8 +146,8 @@ S (_ => {
 S (last_state => {
   if (L .isDefined (app_during, app_state ())) {
     if (! Z .equals (Z .size (Z .fromMaybe ([]) (L .get ([app_history, as_maybe], last_state)))) (Z .size (L .get (app_history, app_state ())))) {
-      ;clock .time (0)
-      ;clock .removeLabel ('fail')}
+      ;clock .seek (0)
+      ;clock .remove ('fail')}
     ;clock .play () }
   return app_state () }
   , app_state ())
