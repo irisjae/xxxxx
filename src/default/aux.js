@@ -65,7 +65,7 @@ var teacher_app = data ({
 var student_app = data ({
 	ready: ( setup = maybe (setup) ) => defined,
 	during: ( setup = setup, board = board, history = list (rendition) ) => defined,
-	done: ( setup = setup, history = list (list (rendition)) ) => defined })
+	done: ( setup = setup, board = board, history = list (list (rendition)) ) => defined })
 var io = data ({
   inert: () => defined,
   connecting: () => defined })
@@ -140,6 +140,15 @@ var student_app_ready_to_during = app_state =>
   Oo (L .get (app_setup, app_state),
     oo (fro (Z .Nothing, setup => Z .Just (
       student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])])))))
+
+var student_app_next_during = app_state =>
+  Oo (L .get ([app_during, as_maybe], app_state),
+    oo (map_just (_ => {
+      var size = L .get ([app_setup, setup_size], app_state)
+      !! (Z .size (L .get (app_history, app_state)) < size * size)
+        L .set ([app_history, L .append], rendition .rendition ([]), app_state)
+
+      })))
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_during, app_state))
