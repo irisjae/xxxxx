@@ -38,6 +38,7 @@ var io_state = S .data (io .inert)
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <div>
+  { Oo (current_question (app_state ()), oo (map_just (_x => <question>{ _x }</question>))) }
   <ticker>{ 10 - tick_sampler () }</ticker>
   <board> { Oo (board, oo (R .map (row => 
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
