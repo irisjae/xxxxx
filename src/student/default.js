@@ -40,7 +40,7 @@ var clicking = ['click']
 var pipeline_cell_attempt = cell => span => {;
   ;clicking .forEach (click => {;
     ;span .addEventListener (click, _ => {;
-      ;question_attempt (L .get (cell_answer, cell)) }) }) }
+      ;attempt_question (L .get (cell_answer, cell)) }) }) }
 
 var pipeline_room_input = input => {;
   input .addEventListener ('keypress', e => {;
@@ -102,13 +102,14 @@ var connect_room = id => {;
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)})} 
 
-var valid_attempt = _ => {
-  if (Z .size (Z .fromMaybe ([]) (L .get ([app_history, L .last, rendition_attempts, as_maybe], app_state ()))) === 0)
-    return true
-  else {
-    return get_latency (clock .time ()) > 3}}
+var valid_attempt = _ => 
+  !! (where ((
+      last_rendition_attempts = Oo (app_state (), oo (L .get ([app_history, L .last, rendition_attempts, as_maybe])), oo (Z .fromMaybe ([])))) =>
+      Z .size (last_rendition_attempts) === 0))
+  ? true
+  : get_latency (clock .time ()) > 3
 
-var question_attempt = _x => {
+var attempt_question = _x => {
   if (valid_attempt ()) {
     var now = clock .time ()
     var latency = get_latency (now)

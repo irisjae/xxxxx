@@ -149,14 +149,15 @@ var student_app_next_during = app_state =>
     size = L .get ([app_setup, setup_size], app_state),
     history_size = Z .size (L .get (app_history, app_state))) =>
     !! (history_size < size * size)
-    ? L .set ([app_history, L .append], rendition .rendition ([]), app_state)
+    ? Oo (app_state,
+      oo (L .set ([app_history, L .append], rendition .rendition ([]))))
     : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)))
 
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_playing, app_state))
   ? Oo (Z .zip
-      (Oo (L .get (app_history, app_state), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))))
+      (Oo (app_state, oo (L .get (app_history)), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))))
       (L .get (app_questions, app_state)),
     oo (Z .mapMaybe (pair =>
       !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
