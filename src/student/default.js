@@ -37,13 +37,13 @@ var io_state = S .data (io .inert)
 
 var clicking = ['click']
 
-var pipeline_cell_attempt = cell => span => {;
+var pipeline_board_cell = cell => span => {;
   ;clicking .forEach (click => {;
     ;span .addEventListener (click, _ => {;
       ;attempt_question (L .get (cell_answer, cell)) }) }) }
 
 var pipeline_room_input = input => {;
-  input .addEventListener ('keypress', e => {;
+  ;input .addEventListener ('keypress', e => {;
     if (e .keyCode === 13) {
       var value = input .value
       ;input .value = ''
@@ -52,14 +52,14 @@ var pipeline_room_input = input => {;
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <div>
-  { Oo (current_question (app_state ()), oo (map_just (_x => <question>{ _x }</question>))) }
+  { Oo (app_state (), oo (current_question), oo (map_just (_x => <question>{ _x }</question>))) }
   <ticker>{ 10 - tick_sampler () }</ticker>
   <board> { Oo (board, oo (R .map (row => 
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
         ? <span>{ crossed (_x) }</span>
-        : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
+        : <span fn={ pipeline_board_cell (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
           
 var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
 
