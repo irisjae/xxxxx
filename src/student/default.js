@@ -47,7 +47,7 @@ var pipeline_room_input = input => {;
     if (e .keyCode === 13) {
       var value = input .value
       ;input .value = ''
-      ;get_room (value) }})} 
+      ;connect_room (value) }})} 
 
 
 var crossed = _x => <s>{ _x }</s>
@@ -61,7 +61,7 @@ var board_view = board => history => <div>
         ? <span>{ crossed (_x) }</span>
         : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
           
-var enter_room_view = <div> Enter a room code: <input fn={ pipeline_room_input } /> </div>
+var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
 
 window .view = <div>
 	{ !! (L .isDefined (app_during, app_state ()))
@@ -89,7 +89,7 @@ window .view = <div>
 
 
 
-var get_room = id => {;
+var connect_room = id => {;
   ;io_state (io .connecting)
   do_ 
 	.then (_ =>
