@@ -1,5 +1,5 @@
 var { xx, oo, Oo, L, R, S, Z, memoize, 
-  do_, defined, data,
+  where, do_, defined, data,
   fro, map_just, every
 } = window .stuff
 
@@ -126,26 +126,32 @@ var log_consensus = msgs =>
 
 
 
-var generate_board = size => questions => {
-  var cells = shuffle (questions .slice (0, size * size))
-  var cell = y => x =>
-    cells [(x - 1) * size + (y - 1)]
-  
-  return Oo (R .range (1, size + 1),
-    oo (R .map (row => Oo (R .range (1, size + 1),
-      oo (R .map (column => [row, column, cell (row) (column)] ))))))}
+var generate_board = size => questions =>
+  where ((
+    cells = shuffle (questions .slice (0, size * size)),
+    cell = y => x =>
+      cells [(x - 1) * size + (y - 1)]) =>
+    Oo (R .range (1, size + 1),
+      oo (R .map (row => Oo (R .range (1, size + 1),
+        oo (R .map (column => [row, column, cell (row) (column)] )))))))
+
+
 
 
 var student_app_ready_to_during = app_state =>
-  Oo (L .get (app_setup, app_state),
-    oo (fro (Z .Nothing, setup => Z .Just (
-      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])])))))
+  Oo (app_state,
+    oo (L .get (app_setup)),
+    oo (map_just (setup => Z .Just (
+      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) ))))
 
-var student_app_next_during = app_state => {
-  var size = L .get ([app_setup, setup_size], app_state)
-  return !! (Z .size (L .get (app_history, app_state)) < size * size)
+var student_app_next_during = app_state =>
+  where ((
+    size = L .get ([app_setup, setup_size], app_state),
+    history_size = Z .size (L .get (app_history, app_state))) =>
+    !! (history_size < size * size)
     ? L .set ([app_history, L .append], rendition .rendition ([]), app_state)
-    : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)) }
+    : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)))
+
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_playing, app_state))

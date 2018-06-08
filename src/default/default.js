@@ -59,14 +59,15 @@ var fro = (from_nothing, from_just) => (maybe = maybe) =>
 var map_just = fn => fro (Z .Nothing, fn)
 
 var every = x => where ((
-  
-  ) => every){
-  var every = S .data ()
-  var next = _ => {;
-    ;every (defined)
-    ;setTimeout (next, x)}
-  ;setTimeout (next, x)
-  return every}
+    every = S .data (),
+    next = _ => {;
+      ;every (defined)
+      ;setTimeout (next, x)},
+    _ = setTimeout (next, x)
+  ) =>
+  every)
+
+
 
 
 
