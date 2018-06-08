@@ -35,7 +35,7 @@ var boolean = defined
 var number = defined
 var string = defined
 var list = a => defined
-var map = a => b => list (v (a, b))
+var map = a => (...b) => list (v (a, ...b))
 var maybe = a => defined
 var nat = defined
 var id = string
@@ -51,18 +51,16 @@ var attempt = v (answer, latency)
 
 
 var rendition = data ({ rendition: (attempts = list (attempt)) => defined })
-
-var board = data ({ board: (answers = list (v (nat, nat, answer))) => defined})
+var board = data ({ board: (answers = map (v (nat, nat)) (answer)) => defined})
 
 var rules = data ({ rules: (time_limit = number, size = nat) => defined })
-
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
 
 var teacher_app = data ({
 	get_ready: ( setup = setup, students = list (student) ) => defined,
-	playing: ( setup = setup, students = map (student) (board, list (rendition))) ) => defined,
-	game_over: ( setup = setup, history = map (student, list (rendition)) ) => defined })
+	playing: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined,
+	game_over: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined })
 var student_app = data ({
 	get_ready: ( student = student, setup = maybe (setup) ) => defined,
 	playing: ( student = student, setup = setup, board = board, history = list (rendition) ) => defined,
@@ -89,21 +87,22 @@ var default_rules = rules .rules (10, 3)
 
 
 var as_maybe = [L .reread (x => Z .Just (x)), L .defaults (Z .Nothing)]
+var from_maybe = [L .reread (fro (undefined, x => x)), L .required (Z .Nothing)]
 
 
-var app_ready = ['ready']
-var app_during = ['during']
-var app_done = ['done']
+var app_get_ready = ['get_ready']
+var app_playing = ['playing']
+var app_game_over = ['game_over']
 //TODO: accomodate maybe for app_ready
-var app_setup = [L .choices (app_ready, app_during), 'setup']
-var app_students = [L .choices (app_ready, app_during), 'students']
+var app_setup = [L .choices ([ app_get_ready, from_maybe ], app_playing), 'setup']
+var app_students = [L .choices (app_get_ready, app_playing), 'students']
 var setup_room = ['setup', 'room']
 var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
-var app_board = [ app_during, 'board' ]
-var app_history = [ app_during, 'history' ]
+var app_board = [ app_playing, 'board' ]
+var app_history = [ app_playing, 'history' ]
 
 var io_inert = ['inert']
 var io_connecting = ['connecting']
@@ -149,7 +148,7 @@ var student_app_next_during = app_state => {
     : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)) }
 
 var crossed_answers = memoize (app_state => 
-  !! (L .isDefined (app_during, app_state))
+  !! (L .isDefined (app_playing, app_state))
   ? Oo (Z .zip
       (Oo (L .get (app_history, app_state), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))))
       (L .get (app_questions, app_state)),
@@ -160,7 +159,7 @@ var crossed_answers = memoize (app_state =>
   : [])
 
 var current_question = app_state =>
-  !! (L .isDefined (app_during, app_state))
+  !! (L .isDefined (app_playing, app_state))
   ? L .get ([app_questions, Z .size (L .get (app_history, app_state)) - 1, as_maybe], app_state)
   : Z .Nothing
 
@@ -175,8 +174,8 @@ window .stuff = { ...window .stuff,
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
   as_maybe,
-  app_ready, app_during, app_done, app_setup,
-  app_students, app_room, app_board, app_history,
+  app_get_ready, app_playing, app_game_over,
+  app_setup, app_students, app_room, app_board, app_history,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
