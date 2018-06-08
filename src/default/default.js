@@ -30,19 +30,23 @@ var TimelineMax = window .TimelineMax
 
 
 
+var where = x => x ()
 var do_ = Promise .resolve ()
 
 
 var defined
 var data = constructors => Oo (constructors,
-  oo (R .mapObjIndexed ((fn, key) => {
-    var args_slice = fn .toString() .match (/\((.*?)\)\s*=>/) [1]
-    if (args_slice) {
-      var portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
-      return (...vals) => 
-        R .objOf (key, R .fromPairs (R .zip (portions, vals)))}
-    else
-      return R .objOf (key, {})})))
+  oo (R .mapObjIndexed ((fn, key) => 
+    where ((
+      args_slice = fn .toString() .match (/\((.*?)\)\s*=>/) [1]
+    ) =>
+      !! (args_slice)
+      ? where ((
+        portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
+      ) =>
+        (...vals) => 
+        R .objOf (key, R .fromPairs (R .zip (portions, vals))))
+      : R .objOf (key, {}) ))))
 
 
 
@@ -54,7 +58,9 @@ var fro = (from_nothing, from_just) => (maybe = maybe) =>
   : from_nothing
 var map_just = fn => fro (Z .Nothing, fn)
 
-var every = x => {
+var every = x => where ((
+  
+  ) => every){
   var every = S .data ()
   var next = _ => {;
     ;every (defined)
@@ -90,5 +96,5 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
-  do_, defined, data,
+  where, do_, defined, data,
   fro, map_just , every }
