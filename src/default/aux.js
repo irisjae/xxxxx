@@ -35,6 +35,7 @@ var boolean = defined
 var number = defined
 var string = defined
 var list = a => defined
+var map = a => b => list (v (a, b))
 var maybe = a => defined
 var nat = defined
 var id = string
@@ -51,21 +52,21 @@ var attempt = v (answer, latency)
 
 var rendition = data ({ rendition: (attempts = list (attempt)) => defined })
 
-var board = data ({ board: (answers = list (v (id, id, answer))) => defined})
+var board = data ({ board: (answers = list (v (nat, nat, answer))) => defined})
 
-var rules = data ({ rules: (time_limit = number, size = number) => defined })
+var rules = data ({ rules: (time_limit = number, size = nat) => defined })
 
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
 
 
 var teacher_app = data ({
-	ready: ( setup = setup, students = list (student) ) => defined,
-	during: ( setup = setup, students = list (v (student, board)), history = list (v (student, list (rendition))) ) => defined,
-	done: ( setup = setup, history = list (v (student, list (rendition))) ) => defined })
+	prepare: ( setup = setup, students = list (student) ) => defined,
+	playing: ( setup = setup, students = list (v (student, board)), history = list (v (student, list (rendition))) ) => defined,
+	game_over: ( setup = setup, history = list (v (student, list (rendition))) ) => defined })
 var student_app = data ({
-	ready: ( setup = maybe (setup) ) => defined,
-	during: ( setup = setup, board = board, history = list (rendition) ) => defined,
-	done: ( setup = setup, board = board, history = list (list (rendition)) ) => defined })
+	prepare: ( student = student, setup = maybe (setup) ) => defined,
+	playing: ( student = student, setup = setup, board = board, history = list (rendition) ) => defined,
+	game_over: ( student = student, setup = setup, board = board, history = list (list (rendition)) ) => defined })
 var io = data ({
   inert: () => defined,
   connecting: () => defined })
