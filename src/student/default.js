@@ -159,6 +159,8 @@ S (_ => {
   if (L .isDefined (app_done, app_state ())) {
     ;clock .pause () }})
 
+/*
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
   oo (map_just (_x => {;app_state (_x)})))
+*/
