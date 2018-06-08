@@ -60,11 +60,11 @@ var setup = data ({ setup: ( room = room, questions = list (question), rules = r
 
 
 var teacher_app = data ({
-	prepare: ( setup = setup, students = list (student) ) => defined,
-	playing: ( setup = setup, students = map (student, board), history = list (v (student, list (rendition))) ) => defined,
+	get_ready: ( setup = setup, students = list (student) ) => defined,
+	playing: ( setup = setup, students = map (student) (board, list (rendition))) ) => defined,
 	game_over: ( setup = setup, history = map (student, list (rendition)) ) => defined })
 var student_app = data ({
-	prepare: ( student = student, setup = maybe (setup) ) => defined,
+	get_ready: ( student = student, setup = maybe (setup) ) => defined,
 	playing: ( student = student, setup = setup, board = board, history = list (rendition) ) => defined,
 	game_over: ( student = student, setup = setup, board = board, history = list (list (rendition)) ) => defined })
 var io = data ({
