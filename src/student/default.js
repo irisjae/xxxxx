@@ -102,11 +102,6 @@ var connect_room = id => {;
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)})} 
 
-var get_latency = now => {
-    var last_fail = clock .getLabelTime ('fail')
-    if (last_fail === -1) last_fail = 0
-    return now - last_fail }
-
 var valid_attempt = _ => {
   if (Z .size (Z .fromMaybe ([]) (L .get ([app_history, L .last, rendition_attempts, as_maybe], app_state ()))) === 0)
     return true
@@ -126,7 +121,7 @@ var question_attempt = _x => {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
         oo (_x => {;app_state (_x)}))
-      ;clock .add ('fail', now) } } }
+      ;clock .add ('next', now) } } }
 
 var question_timesup = _ => {
   ;app_state (student_app_next_during (app_state ()))}
@@ -142,6 +137,13 @@ Oo (R .range (0, 10 + 1),
   oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
 
 var tick_sampler = S .data (Z .Nothing)
+
+var get_latency = now => {
+    var start = clock .getLabelTime ('next')
+    if (start === -1) start = 0
+    return now - start }
+
+
 
 S (_ => {
   if (L .isDefined (app_ready, app_state ())) {
