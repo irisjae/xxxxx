@@ -124,7 +124,7 @@ var attempt_question = _x => {
         oo (_x => {;app_state (_x)}))
       ;clock .add ('next', now) } } }
 
-var question_timesup = _ => {
+var timesup_question = _ => {
   ;app_state (student_app_next_during (app_state ()))}
 
 
@@ -133,7 +133,7 @@ var question_timesup = _ => {
 
 
 var clock = new TimelineMax
-clock .add (question_timesup, 10)
+clock .add (timesup_question, 10)
 Oo (R .range (0, 10 + 1),
   oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
 

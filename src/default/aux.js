@@ -146,9 +146,9 @@ var student_app_ready_to_during = app_state =>
 
 var student_app_next_during = app_state =>
   where ((
-    size = L .get ([app_setup, setup_size], app_state),
+    board_size = L .get ([app_setup, setup_size], app_state),
     history_size = Z .size (L .get (app_history, app_state))) =>
-    !! (history_size < size * size)
+    !! (history_size < board_size * board_size)
     ? Oo (app_state,
       oo (L .set ([app_history, L .append], rendition .rendition ([]))))
     : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)))
@@ -156,18 +156,21 @@ var student_app_next_during = app_state =>
 
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_playing, app_state))
-  ? Oo (Z .zip
-      (Oo (app_state, oo (L .get (app_history)), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))))
-      (L .get (app_questions, app_state)),
-    oo (Z .mapMaybe (pair =>
-      !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
-        ? Z .fst (pair)
-        : Z .Nothing)))
+  ? where ((
+    final_attempts = Oo (app_state, oo (L .get (app_history)), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
+    actual_answers = L .get (app_questions, app_state)) =>
+    Oo (Z .zip (final_attempts) (actual_answers),
+      oo (Z .mapMaybe (pair =>
+        !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
+          ? Z .fst (pair)
+          : Z .Nothing))))
   : [])
 
 var current_question = app_state =>
   !! (L .isDefined (app_playing, app_state))
-  ? L .get ([app_questions, Z .size (L .get (app_history, app_state)) - 1, as_maybe], app_state)
+  ? where ((
+    current_question_index = Oo (app_state, oo (L .get (app_history)), oo (Z .size)) - 1) =>
+    Oo (app_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
 
