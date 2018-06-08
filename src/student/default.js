@@ -35,21 +35,6 @@ var io_state = S .data (io .inert)
 
 
 
-
-var crossed = _x => <s>{ _x }</s>
-var board_view = board => history => <div>
-  { Oo (current_question (app_state ()), oo (map_just (_x => <question>{ _x }</question>))) }
-  <ticker>{ 10 - tick_sampler () }</ticker>
-  <board> { Oo (board, oo (R .map (row => 
-    <div> { Oo (row, oo (R .map (cell => Oo (cell,
-      oo (L .get (cell_answer)),
-      oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
-        ? <span>{ crossed (_x) }</span>
-        : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
-
-
-
-
 var clicking = ['click']
 
 var pipeline_cell_attempt = cell => span => {;
@@ -64,6 +49,20 @@ var pipeline_room_input = input => {;
       ;input .value = ''
       ;get_room (value) }})} 
 
+
+var crossed = _x => <s>{ _x }</s>
+var board_view = board => history => <div>
+  { Oo (current_question (app_state ()), oo (map_just (_x => <question>{ _x }</question>))) }
+  <ticker>{ 10 - tick_sampler () }</ticker>
+  <board> { Oo (board, oo (R .map (row => 
+    <div> { Oo (row, oo (R .map (cell => Oo (cell,
+      oo (L .get (cell_answer)),
+      oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
+        ? <span>{ crossed (_x) }</span>
+        : <span fn={ pipeline_cell_attempt (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
+          
+var enter_room_view = <div> Enter a room code: <input fn={ pipeline_room_input } /> </div>
+
 window .view = <div>
 	{ !! (L .isDefined (app_during, app_state ()))
     ? board_view (L .get (app_board, app_state ())) (L .get (app_history, app_state ()))
@@ -72,7 +71,7 @@ window .view = <div>
       ? 'Trying to connect...'
       : Oo (L .get ([app_room, as_maybe], app_state ()),
         oo (fro (
-          <input fn={ pipeline_room_input } />,
+          enter_room_view,
           x => 'Connected to room ' + x)))
     : defined}
 </div>
