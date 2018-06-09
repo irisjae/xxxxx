@@ -104,8 +104,8 @@ var connect_room = id => {;
 
 var valid_attempt = _ => 
   !! (where ((
-      last_rendition_attempts = Oo (app_state (), oo (L .get ([app_history, L .last, rendition_attempts, as_maybe])), oo (Z .fromMaybe ([])))) =>
-      Z .size (last_rendition_attempts) === 0))
+      current_rendition_attempts = Oo (app_state (), oo (L .get ([app_history, L .last, rendition_attempts, as_maybe])), oo (Z .fromMaybe ([])))) =>
+      Z .size (current_rendition_attempts) === 0))
   ? true
   : get_latency (clock .time ()) > 3
 
