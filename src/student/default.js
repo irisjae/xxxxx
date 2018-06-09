@@ -67,13 +67,13 @@ window .view = <div>
 	{ !! (L .isDefined (app_during, app_state ()))
     ? board_view (L .get (app_board, app_state ())) (L .get (app_history, app_state ()))
     : !! (L .isDefined (app_ready, app_state ()))
-    ? !! (L .isDefined (io_connecting, io_state ()))
-      ? 'Trying to connect...'
-      : Oo (L .get ([app_room, as_maybe], app_state ()),
-        oo (fro (
-          enter_room_view,
-          x => 'Connected to room ' + x)))
-    : defined}
+      ? !! (L .isDefined (io_connecting, io_state ()))
+        ? 'Trying to connect...'
+        : Oo (L .get ([app_room, as_maybe], app_state ()),
+          oo (fro (
+            enter_room_view,
+            x => 'Connected to room ' + x)))
+    : undefined }
 </div>
 
 
