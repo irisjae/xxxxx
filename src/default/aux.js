@@ -96,16 +96,19 @@ var from_maybe = [L .reread (fro (undefined, x => x)), L .required (Z .Nothing)]
 var app_get_ready = ['get_ready']
 var app_playing = ['playing']
 var app_game_over = ['game_over']
+
+var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), L .choices (['student', from_maybe], 'student') ]
 var app_setup = [L .choices (app_get_ready, app_playing, app_game_over), L .choices ([ 'setup', from_maybe ], 'setup')]
-var app_student = [ L .choices (app_get_ready, app_playing), 'student' ]
-var app_students = [L .choices (app_get_ready, app_playing), 'students']
+var app_board = [ L .choices (app_playing, app_game_over), 'board' ]
+var app_history = [ L .choices (app_playing, app_game_over), 'history' ]
+
+var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
+
 var setup_room = ['setup', 'room']
 var setup_questions = ['setup', 'questions']
 var setup_rules = ['setup', 'rules']
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
-var app_board = [ app_playing, 'board' ]
-var app_history = [ app_playing, 'history' ]
 
 var io_inert = ['inert']
 var io_connecting = ['connecting']
@@ -188,7 +191,8 @@ window .stuff = { ...window .stuff,
   default_questions, default_rules,
   as_maybe,
   app_get_ready, app_playing, app_game_over,
-  app_setup, app_students, app_room, app_board, app_history,
+  app_setup, app_student, app_students, app_room,
+  app_board, app_history,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
