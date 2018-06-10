@@ -8,8 +8,8 @@ var {
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
   as_maybe,
-  app_ready, app_during, app_done, app_setup,
-  app_students, app_room, app_board, app_history,
+  app_get_ready, app_playing, app_game_over,
+  app_setup, app_students, app_room, app_board, app_history,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
   consensus_questions,
@@ -23,7 +23,7 @@ var {
 
 
 
-var app_state = S .data (student_app .ready (Z .Nothing))
+var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 var io_state = S .data (io .inert)
 
 
@@ -52,7 +52,7 @@ var pipeline_room_input = input => {;
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <div>
-  { Oo (app_state (), oo (current_question), oo (map_just (_x => <question>{ _x }</question>))) }
+  { Oo (app_state (), oo (current_question), oo (fro ('', _x => <question>{ _x }</question>))) }
   <ticker>{ 10 - tick_sampler () }</ticker>
   <board> { Oo (board, oo (R .map (row => 
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
@@ -64,16 +64,18 @@ var board_view = board => history => <div>
 var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
 
 window .view = <div>
-	{ !! (L .isDefined (app_during, app_state ()))
-    ? board_view (L .get (app_board, app_state ())) (L .get (app_history, app_state ()))
-    : !! (L .isDefined (app_ready, app_state ()))
+	{ where ((
+    x = app_state ()) =>
+    !! (L .isDefined (app_get_ready, x))
       ? !! (L .isDefined (io_connecting, io_state ()))
         ? 'Trying to connect...'
-        : Oo (L .get ([app_room, as_maybe], app_state ()),
+        : Oo (L .get ([app_room, as_maybe], x),
           oo (fro (
             enter_room_view,
-            x => 'Connected to room ' + x)))
-    : undefined }
+            _x => 'Connected to room ' + _x)))
+    : !! (L .isDefined (app_playing, x))
+      ? board_view (L .get (app_board, x)) (L .get (app_history, x))
+    : undefined) }
 </div>
 
 

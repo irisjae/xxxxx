@@ -43,7 +43,7 @@ var maybe = a => defined
 var nat = defined
 var id = string
 
-var student = id
+var student = v (id, string)
 var question = string
 var answer = question
 var latency = number
@@ -65,7 +65,7 @@ var teacher_app = data ({
 	playing: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined,
 	game_over: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined })
 var student_app = data ({
-	get_ready: ( student = student, setup = maybe (setup) ) => defined,
+	get_ready: ( student = maybe (student), setup = maybe (setup) ) => defined,
 	playing: ( student = student, setup = setup, board = board, history = list (rendition) ) => defined,
 	game_over: ( student = student, setup = setup, board = board, history = list (list (rendition)) ) => defined })
 var io = data ({
