@@ -65,25 +65,25 @@ var clean_rooms = _ => {
 			;rooms [id] .ref_time = new Date () .getTime ()
 			;rooms [id] .logs .push (_x) }})
 		.then (_ => ({ ok: true }))
+		.catch (_x => {{
+			{;console .error (_x)}
+			return ({ error: 'An unexpected error occured' }) }})
+		.then (_x => {{;ctx .body = _x}})
+	) .get ('/log/:room', (ctx, next) => 
+		go
+		.then (_ =>
+      where ((
+        id = ctx .params .room) =>
+        (rooms [id] || {}) .logs || [] ))
 		.catch (_x => {
-			;; console .error (_x)
+			{;console .error (_x)}
 			return { error: 'An unexpected error occured' } })
-		.then (x => { ;; ctx .body = x })
-	) .get ('/log/:room', (ctx, next) => {
-		return Promise .resolve ()
-		.then (_ => {
-			var id = ctx .params .room
-
-			return (rooms [id] || {}) .logs || [] })
-		.catch (x => {
-			{;console .error (x)}
-			return { error: 'An unexpected error occured' } })
-		.then (x => { ;ctx .body = x })
-	}) .get ('/peephole', (ctx, next) => {
-		return Promise .resolve ()
+		.then (x => {{ ;ctx .body = x }})
+	) .get ('/peephole', (ctx, next) => 
+		go
 		.then (_ => rooms)
-		.then (x => { ;; ctx .body = x })
-	}) .routes ())
+		.then (_x => {{;ctx .body = _x}})
+	) .routes ())
 	
 	.listen (port)}
 
