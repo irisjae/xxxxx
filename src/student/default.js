@@ -11,7 +11,6 @@ var {
   app_get_ready, app_playing, app_game_over,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
-  app_setup, app_students, app_room, app_bo
   io_inert, io_connecting,
   consensus_questions,
   rendition_attempts,
