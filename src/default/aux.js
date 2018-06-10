@@ -10,8 +10,11 @@ var shuffle = list => {
     ;array .push (list [i])}
   for (var i = array. length - 1; i > 0; i --) {
     var j = Math .floor (Math .random () * (i + 1))
-    ;[array[i], array[j]] = [array[j], array[i]] // eslint-disable-line no-param-reassign
-  }
+    var arr_i = array [i]
+    var arr_j = array [j]
+    ;array [i] = arr_j
+    ;array [j] = arr_i }
+  
   return array }
 
 
