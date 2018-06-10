@@ -16,7 +16,7 @@ var go = Promise .resolve ()
 
 var rooms = {}
 
-var clean_rooms = _ => {
+var clean_rooms = _ => {{
 	var cleaning_time = new Date () .getTime ()
 
 	for (var i in rooms) {
@@ -26,7 +26,7 @@ var clean_rooms = _ => {
 			;delete rooms [i] }}
 
 	;setTimeout (clean_rooms, 5 * 60 * 1000)
-}
+}}
 ;clean_rooms ()
 
 
@@ -53,37 +53,41 @@ var clean_rooms = _ => {
 	.use (require ('koa-bodyparser') ({ strict : false }))
 	.use (require ('koa-json') ())
 	.use (require ('koa-static') (static_path))
-	.use (require ('koa-router') () .post ('/log/:room', (ctx, next) => 
-		go
-		.then (_ => ctx .request .body)
-//.then(x=>{console.log (x);return x})
-		.then (_x => {{
-			var id = ctx .params .room
+	.use (require ('koa-router') ()
+    .post ('/room/:room', (ctx, next) => {{
+      return go
+      .then (_ => ctx .request .body)
+      .then (_x => {{
+        var id = ctx .params .room
 
-			if (! rooms [id]) {
-				;rooms [id] = { logs: [] } }
-			;rooms [id] .ref_time = new Date () .getTime ()
-			;rooms [id] .logs .push (_x) }})
-		.then (_ => ({ ok: true }))
-		.catch (_x => {{
-			{;console .error (_x)}
-			return ({ error: 'An unexpected error occured' }) }})
-		.then (_x => {{;ctx .body = _x}})
-	) .get ('/log/:room', (ctx, next) => 
-		go
-		.then (_ =>
-      where ((
-        id = ctx .params .room) =>
-        (rooms [id] || {}) .logs || [] ))
-		.catch (_x => {
-			{;console .error (_x)}
-			return { error: 'An unexpected error occured' } })
-		.then (x => {{ ;ctx .body = x }})
-	) .get ('/peephole', (ctx, next) => 
-		go
-		.then (_ => rooms)
-		.then (_x => {{;ctx .body = _x}})
-	) .routes ())
+        ;rooms [id] = { ... rooms [id], ... _x, ref_time: (new Date) .getTime () } }})
+        /*if (! rooms [id]) {
+          ;rooms [id] = { logs: [] } }
+        ;rooms [id] .ref_time = new Date () .getTime ()
+        ;rooms [id] .logs .push (_x) }})*/
+      .then (_ => ({ ok: true }))
+      .catch (_x => {{
+        {;console .error (_x)}
+        
+        return ({ error: 'An unexpected error occured' }) }})
+      .then (_x => {{;ctx .body = _x}})}})
+    .get ('/room/:room', (ctx, next) => {{
+      return go
+      .then (_ =>
+        where ((
+          id = ctx .params .room) =>
+          ({ ...rooms [id], ref_time: undefined }) ))
+          //(rooms [id] || {}) .logs || [] ))
+      .catch (_x => {
+        {;console .error (_x)}
+        
+        return ({ error: 'An unexpected error occured' }) })
+      .then (x => {{ ;ctx .body = x }})}})
+    .get ('/peephole', (ctx, next) => {{
+      return go
+      .then (_ => rooms)
+      .then (_x => {{;ctx .body = _x}})}})
+    .routes ())
 	
 	.listen (port)}
 
