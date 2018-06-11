@@ -31,7 +31,7 @@ var TimelineMax = window .TimelineMax
 
 
 var where = x => x ()
-var do_ = Promise .resolve ()
+var go = Promise .resolve ()
 
 
 var defined
@@ -97,5 +97,5 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
-  where, do_, defined, data,
+  where, go, defined, data,
   fro, map_just , every }

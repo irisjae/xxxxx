@@ -1,6 +1,6 @@
 var {
   Oo, xx, oo, R, L, S, Z, TimelineMax,
-  where, defined, data, do_,
+  where, defined, data, go,
   number, string, list, maybe, id,
   fro, map_just, shuffle, every,
   uuid, post, api,
@@ -107,7 +107,7 @@ var make_student = name => {{
 
 var connect_room = id => {{
   ;io_state (io .connecting)
-  do_ 
+  go 
 	.then (_ =>
     api (id)
     .then (x => {; if (x .length === 0) { ;throw new Error ('empty') } else return x }) )

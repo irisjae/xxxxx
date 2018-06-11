@@ -60,7 +60,7 @@ var attempt = v (answer, latency)
 
 
 var rendition = data ({ rendition: (attempts = list (attempt)) => defined })
-var board = data ({ board: (answers = map (v (nat, nat)) (answer)) => defined})
+var board = data ({ board: (answers = map (position) (answer)) => defined})
 
 var rules = data ({ rules: (time_limit = number, size = nat) => defined })
 var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
@@ -163,7 +163,10 @@ var student_app_next_during = app_state =>
     !! (history_size < board_size * board_size)
     ? Oo (app_state,
       oo (L .set ([app_history, L .append], rendition .rendition ([]))))
-    : student_app .done (L .get (app_setup, app_state), L .get (app_board, app_state), L .get (app_history, app_state)))
+    : where ((
+      x = app_state ) =>
+      student_app .game_over (L .get (app_student, x), L .get (app_setup, x), L .get (app_board, x), L .get (app_history, x))))
+         
 
 
 var crossed_answers = memoize (app_state => 
