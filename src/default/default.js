@@ -47,7 +47,14 @@ var data = constructors => Oo (constructors,
         (...vals) => 
         R .objOf (key, R .fromPairs (R .zip (portions, vals))))
       : R .objOf (key, {}) ))))
-
+var data_iso = data =>
+  where ((
+    read = where (
+      (records_list) =>
+      ),
+    write = list =>
+      data .apply (null, list) ) =>
+    L .iso (read) (write))
 
 
 
