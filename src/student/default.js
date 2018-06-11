@@ -3,7 +3,7 @@ var {
   where, defined, data, do_,
   number, string, list, maybe, id,
   fro, map_just, shuffle, every,
-  guid, post, api,
+  uuid, post, api,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
@@ -103,7 +103,7 @@ window .view = <div>
 
 
 var make_student = name => {{
-  ;app_state (student_app .get_ready (Z .Just ([ guid (), name ]), L .get (app_setup, app_state ()))) }}
+  ;app_state (student_app .get_ready (Z .Just ([ uuid (), name ]), L .get ([ app_setup, as_maybe ], app_state ()))) }}
 
 var connect_room = id => {{
   ;io_state (io .connecting)
@@ -114,7 +114,7 @@ var connect_room = id => {{
 	.then (x => {; 
     var consensus = log_consensus (x)
     var questions = L .get (consensus_questions, consensus)
-    ;app_state (student_app .ready (setup .setup (id, questions, default_rules))) })
+    ;app_state (student_app .get_ready (L .get ([ app_student, as_maybe ], app_state ()), setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)}) }} 
 
