@@ -42,16 +42,21 @@ var data = constructors => Oo (constructors,
     ) =>
       !! (args_slice)
       ? where ((
-        portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
-      ) =>
-        (...vals) => 
-        R .objOf (key, R .fromPairs (R .zip (portions, vals))))
+        portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1]),
+        base_constructor = (...vals) => 
+          R .objOf (key, R .fromPairs (R .zip (portions, vals)))) =>
+        R .tap (_x => {{
+          _x .__length = portions .length }}) (base_constructor) ) 
       : R .objOf (key, {}) ))))
 var data_iso = data =>
   where ((
-    read = where (
-      (records_list) =>
-      ),
+    read = where ((
+      instance_template = data .apply (null, R .range (1, data .__length + 1)),
+      inverted_object = R .invert (R .head (R .values (instance_template))),
+      
+      records_list = ) =>
+      instance =>
+        records_list .map (lens => L .get (lens) (instance) )),
     write = list =>
       data .apply (null, list) ) =>
     L .iso (read) (write))
