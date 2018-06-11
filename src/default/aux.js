@@ -150,13 +150,13 @@ var generate_board = size => questions =>
 
 
 
-var student_app_ready_to_during = app_state =>
+var student_app_get_ready_to_playing = app_state =>
   Oo (app_state,
     oo (L .get ([ app_setup, as_maybe ])),
     oo (map_just (setup => 
-      student_app .during (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
+      student_app .playing (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
 
-var student_app_next_during = app_state =>
+var student_app_next_playing = app_state =>
   where ((
     board_size = L .get ([app_setup, setup_size], app_state),
     history_size = Z .size (L .get (app_history, app_state))) =>
