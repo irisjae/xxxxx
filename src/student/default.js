@@ -37,10 +37,12 @@ var io_state = S .data (io .inert)
 
 var clicking = ['click']
 
-var pipeline_board_cell = cell => span => {;
-  ;clicking .forEach (click => {;
-    ;span .addEventListener (click, _ => {;
-      ;attempt_question (L .get (cell_answer, cell)) }) }) }
+var pipeline_room_input = input => {;
+  ;input .addEventListener ('keypress', e => {;
+    if (e .keyCode === 13) {
+      var value = input .value
+      ;input .value = ''
+      ;connect_room (value) }})} 
 
 var pipeline_room_input = input => {;
   ;input .addEventListener ('keypress', e => {;
@@ -49,6 +51,14 @@ var pipeline_room_input = input => {;
       ;input .value = ''
       ;connect_room (value) }})} 
 
+var pipeline_board_cell = cell => span => {;
+  ;clicking .forEach (click => {;
+    ;span .addEventListener (click, _ => {;
+      ;attempt_question (L .get (cell_answer, cell)) }) }) }
+
+var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
+          
+var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <div>
@@ -60,8 +70,6 @@ var board_view = board => history => <div>
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
         ? <span>{ crossed (_x) }</span>
         : <span fn={ pipeline_board_cell (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
-          
-var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
 
 window .view = <div>
 	{ where ((
@@ -73,6 +81,7 @@ window .view = <div>
           oo (fro (
             Oo (L .get ([app_student, as_maybe], x),
               oo (fro (
+                enter_student_view,
                 _x => enter_room_view)))),
             _x => 'Connected to room ' + _x))
     : !! (L .isDefined (app_playing, x))
@@ -151,10 +160,10 @@ var get_latency = now => {
 
 
 S (_ => {
-  if (L .isDefined (app_ready, app_state ())) {
+  if (L .isDefined (app_get_ready, app_state ())) {
     ;clock .pause () } })
 S (last_state => {
-  if (L .isDefined (app_during, app_state ())) {
+  if (L .isDefined (app_playing, app_state ())) {
     if (! Z .equals (Z .size (Z .fromMaybe ([]) (L .get ([app_history, as_maybe], last_state)))) (Z .size (L .get (app_history, app_state ())))) {
       ;clock .seek (0)
       ;clock .remove ('fail')}
@@ -162,7 +171,7 @@ S (last_state => {
   return app_state () }
   , app_state ())
 S (_ => {
-  if (L .isDefined (app_done, app_state ())) {
+  if (L .isDefined (app_game_over, app_state ())) {
     ;clock .pause () }})
 
 /*
