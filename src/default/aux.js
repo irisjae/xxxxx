@@ -1,5 +1,5 @@
 var { xx, oo, Oo, L, R, S, Z, memoize, 
-  where, do_, defined, data,
+  where, do_, defined, data, data_iso,
   fro, map_just, every
 } = window .stuff
 
@@ -163,9 +163,7 @@ var student_app_next_playing = app_state =>
     !! (history_size < board_size * board_size)
     ? Oo (app_state,
       oo (L .set ([app_history, L .append], rendition .rendition ([]))))
-    : where ((
-      x = app_state ) =>
-      student_app .game_over (L .get (app_student, x), L .get (app_setup, x), L .get (app_board, x), L .get (app_history, x))))
+    : L .set (data_iso (student_app .game_over)) (L .get (data_iso (student_app .playing)) (app_state)) (undefined))
          
 
 

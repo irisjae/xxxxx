@@ -110,5 +110,5 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
-  where, go, defined, data,
+  where, go, defined, data, data_iso,
   fro, map_just , every }
