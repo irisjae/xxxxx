@@ -53,7 +53,7 @@ var data_iso = data =>
     read = where ((
       instance_template = data .apply (null, R .range (1, data .__length + 1)),
       inverted_object = R .invert (R .head (R .values (instance_template))),
-      inversion_list = R .map (_x => _x [1]) (R .sort (R .toPairs (inverted_object))),
+      inversion_list = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_object))),
       disjoint_type = R .head (R .keys (instance_template)),
       records_list = ) =>
       instance =>
