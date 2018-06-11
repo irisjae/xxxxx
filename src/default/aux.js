@@ -20,6 +20,10 @@ var shuffle = list => {
 
 
 
+var guid = _ => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  })
 
 var api = (room, x) => fetch ('/log/' + room, x) .then (x => x .json ())
 var post = x => ({
@@ -184,7 +188,7 @@ var current_question = app_state =>
 window .stuff = { ...window .stuff,
   number, string, list, maybe, id,
   shuffle,
-  api, post,
+  guid, api, post,
   student, question, answer, latency, v,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 

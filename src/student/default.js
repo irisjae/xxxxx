@@ -3,7 +3,7 @@ var {
   where, defined, data, do_,
   number, string, list, maybe, id,
   fro, map_just, shuffle, every,
-  post, api,
+  guid, post, api,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, consensus, 
   default_questions, default_rules,
@@ -37,12 +37,12 @@ var io_state = S .data (io .inert)
 
 var clicking = ['click']
 
-var pipeline_room_input = input => {;
+var pipeline_student_input = input => {;
   ;input .addEventListener ('keypress', e => {;
     if (e .keyCode === 13) {
       var value = input .value
       ;input .value = ''
-      ;connect_room (value) }})} 
+      ;make_student (value) }})} 
 
 var pipeline_room_input = input => {;
   ;input .addEventListener ('keypress', e => {;
@@ -102,7 +102,10 @@ window .view = <div>
 
 
 
-var connect_room = id => {;
+var make_student = name => {{
+  ;app_state (student_app .get_ready (Z .Just ([ guid (), name ]), L .get (app_setup, app_state ()))) }}
+
+var connect_room = id => {{
   ;io_state (io .connecting)
   do_ 
 	.then (_ =>
@@ -113,7 +116,7 @@ var connect_room = id => {;
     var questions = L .get (consensus_questions, consensus)
     ;app_state (student_app .ready (setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
-  .then (_ => {;io_state (io .inert)})} 
+  .then (_ => {;io_state (io .inert)}) }} 
 
 var valid_attempt = _ => 
   !! (where ((
@@ -122,7 +125,7 @@ var valid_attempt = _ =>
   ? true
   : get_latency (clock .time ()) > 3
 
-var attempt_question = _x => {
+var attempt_question = _x => {{
   if (valid_attempt ()) {
     var now = clock .time ()
     var latency = get_latency (now)
@@ -135,10 +138,10 @@ var attempt_question = _x => {
       ;Oo (app_state (),
         oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
         oo (_x => {;app_state (_x)}))
-      ;clock .add ('next', now) } } }
+      ;clock .add ('next', now) } } }}
 
-var timesup_question = _ => {
-  ;app_state (student_app_next_during (app_state ()))}
+var timesup_question = _ => {{
+  ;app_state (student_app_next_during (app_state ())) }}
 
 
 
