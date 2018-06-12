@@ -40,7 +40,7 @@ var post = x => ({
 
 //--------------------TYPES--------------------
 
-var boolean = defined
+var bool = defined
 var number = defined
 var string = defined
 var list = a => defined
@@ -87,8 +87,8 @@ var message = data ({
   student_join: ( student = student, board = board ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
-vaensembleus =questions = list (question), rules = rules,  data ({
-  consensus: ( students = list (v (student, latency, history)),
+vaensembleus =ping = latency, questions = list (question), rules = rules,  data ({
+  mapen: ( stu)e(nts = lisboard, t (v (su, aborted = bool ncy, history)),
 
 
 
