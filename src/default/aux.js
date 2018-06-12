@@ -87,8 +87,7 @@ var message = data ({
   student_join: ( student = student, board = board ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
-vaensembleus =ping = latency, questions = list (question), rules = rules,  data ({
-  mapen: ( stu)e(nts = lisboard, t (v (su, aborted = bool ncy, history)),
+  ensemble: ( ping = latency, questions = list (question), rules = rules, students = map (student) (latency, board, history), aborted = bool ) => defined })
 
 
 
@@ -201,7 +200,7 @@ window .stuff = { ...window .stuff,
   uuid, api, post,
   student, question, answer, latency, v,
   board, rendition, rules, setup,
-  teacher_app, student_app, io, message, consensus, 
+  teacher_app, student_app, io, message, ensemble, 
   default_questions, default_rules,
   as_maybe,
   app_get_ready, app_playing, app_game_over,
@@ -214,5 +213,5 @@ window .stuff = { ...window .stuff,
   rules_size, setup_size,
   cell_answer, 
   log_consensus,
-  student_app_ready_to_during, student_app_next_during,
+  student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question }

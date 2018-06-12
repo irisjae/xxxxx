@@ -5,7 +5,7 @@ var {
   fro, map_just, shuffle, every,
   uuid, post, api,
   board, rendition, rules, setup,
-  teacher_app, student_app, io, message, consensus, 
+  teacher_app, student_app, io, message, ensemble, 
   default_questions, default_rules,
   as_maybe,
   app_get_ready, app_playing, app_game_over,
@@ -17,7 +17,7 @@ var {
   rules_size, setup_size,
   cell_answer, 
   log_consensus,
-  student_app_ready_to_during, student_app_next_during,
+  student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question } = window .stuff
 
 
