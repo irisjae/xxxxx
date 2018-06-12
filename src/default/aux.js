@@ -80,10 +80,14 @@ var io = data ({
 
 
 var message = data ({
-  setup: ( questions = list (question), rules = rules ) => defined,
-  student_update: (  ) => defined })
+  teacher_setup: ( questions = list (question), rules = rules ) => defined,
+  teacher_ping: ( latency = latency ) => defined,
+  teacher_abort: () => defined,
+  student_ping: ( student = student, latency = latency ) => defined,
+  student_join: ( student = student, board = board ) => defined,
+  student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
-vaensembleus = data ({
+vaensembleus =questions = list (question), rules = rules,  data ({
   consensus: ( students = list (v (student, latency, history)),
 
 
