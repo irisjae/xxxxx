@@ -139,8 +139,16 @@ var message_teacher_abort = ['teacher_abort']
 var message_student_ping = ['student_ping']
 var message_student_join = ['student_join']
 var message_student_update = ['student_update']
+
+var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
+var message_latency = [L .choices (message_teacher_ping, message_student_ping), 'latency']
+var message_board = [message_student_join, 'board']
+var message_history = [message_student_update, 'history']
   
 var ensemble_questions = ['ensemble', 'questions'] 
+var ensemble_student_pings = ['ensemble', 'student_pings'] 
+var ensemble_student_boards = ['ensemble', 'student_boards'] 
+var ensemble_student_histories = ['ensemble', 'student_histories'] 
 
 var rendition_attempts = ['rendition', 'attempts']
     
@@ -215,10 +223,11 @@ var encode_message = message =>
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
-  ? 
-  ? {}
+  ? L .set ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_latency) (message)) (undefined) 
   : !! L .isDefined (message_student_join) (message)
+  ? L .set ([ ensemble_student_boards, L .get (message_student) (message) ], L .get (message_board) (message)) (undefined) 
   : !! L .isDefined (message_student_update) (message)
+  ? L .set ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_history) (message)) (undefined) 
   : undefined
   
 
