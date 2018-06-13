@@ -88,7 +88,14 @@ var message = data ({
   student_join: ( student = student, board = board ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
-  ensemble: ( ping = latency, questions = list (question), rules = rules, students = map (student) (latency, board, history), aborted = bool ) => defined })
+  ensemble: (
+    ping = latency,
+    questions = list (question),
+    rules = rules,
+    student_pings = map (student) (latency),
+    student_boards = map (student) (board),
+    student_histories = map (student) (history),
+    aborted = bool ) => defined })
 
 
 
@@ -134,7 +141,6 @@ var message_student_join = ['student_join']
 var message_student_update = ['student_update']
   
 var ensemble_questions = ['ensemble', 'questions'] 
-var ensemble_students = ['ensemble', 'students'] 
 
 var rendition_attempts = ['rendition', 'attempts']
     
@@ -209,6 +215,8 @@ var encode_message = message =>
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
+  ? 
+  ? {}
   : !! L .isDefined (message_student_join) (message)
   : !! L .isDefined (message_student_update) (message)
   : undefined
