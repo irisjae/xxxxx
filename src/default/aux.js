@@ -126,6 +126,13 @@ var app_questions = [ app_setup, setup_questions ]
 var io_inert = ['inert']
 var io_connecting = ['connecting']
 
+var message_teacher_setup = ['teacher_setup']
+var message_teacher_ping = ['teacher_ping']
+var message_teacher_abort = ['teacher_abort']
+var message_student_ping = ['student_ping']
+var message_student_join = ['student_join']
+var message_student_update = ['student_update']
+  
 var ensemble_questions = ['questions'] 
 
 var rendition_attempts = ['rendition', 'attempts']
@@ -193,8 +200,29 @@ var current_question = app_state =>
     Oo (app_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
+var encode_message = message =>
+  !! L .isDefined (message_teacher_setup) (message)
+  ? message
+  : !! L .isDefined (message_teacher_ping) (message)
+  ? message
+  : !! L .isDefined (message_teacher_abort) (message)
+  ? { abort: true }
+  : !! L .isDefined (message_student_ping) (message)
+  : !! L .isDefined (message_student_join) (message)
+  : !! L .isDefined (message_student_update) (message)
+  : undefined
+  
 
 
+/*
+var message_teacher_setup = ['teacher_setup']
+var message_teacher_ping = ['teacher_ping']
+var message_teacher_abort = ['teacher_abort']
+var message_student_ping = ['student_ping']
+var message_student_join = ['student_join']
+var message_student_update = ['student_update']
+*/
+  
 window .stuff = { ...window .stuff,
   number, string, list, maybe, id,
   shuffle,
@@ -209,7 +237,7 @@ window .stuff = { ...window .stuff,
   app_board, app_history,
   setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
-  consensus_questions,
+  ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
