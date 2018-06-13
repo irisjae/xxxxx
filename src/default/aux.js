@@ -223,11 +223,11 @@ var encode_message = message =>
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
-  ? L .set ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_latency) (message)) (undefined) 
+  ? L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_latency))) (message)
   : !! L .isDefined (message_student_join) (message)
-  ? L .set ([ ensemble_student_boards, L .get (message_student) (message) ], L .get (message_board) (message)) (undefined) 
+  ? L .get (L .getInverse ([ ensemble_student_boards, L .get (message_student) (message) ], L .get (message_board))) (message)
   : !! L .isDefined (message_student_update) (message)
-  ? L .set ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_history) (message)) (undefined) 
+  ? L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_history))) (message)
   : undefined
   
 
