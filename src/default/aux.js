@@ -133,7 +133,8 @@ var message_student_ping = ['student_ping']
 var message_student_join = ['student_join']
 var message_student_update = ['student_update']
   
-var ensemble_questions = ['questions'] 
+var ensemble_questions = ['ensemble', 'questions'] 
+var ensemble_students = ['ensemble', 'students'] 
 
 var rendition_attempts = ['rendition', 'attempts']
     
