@@ -33,6 +33,8 @@ var TimelineMax = window .TimelineMax
 var where = x => x ()
 var go = Promise .resolve ()
 
+var WeakMap = window .WeakMap
+var data_lengths = new WeakMap
 
 var defined
 var data = constructors => Oo (constructors,
@@ -42,12 +44,13 @@ var data = constructors => Oo (constructors,
     ) =>
       !! (args_slice)
       ? where ((
-        portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1]),
-        base_constructor = (...vals) => 
-          R .objOf (key, R .fromPairs (R .zip (portions, vals)))) =>
-        R .tap (_x => {{
-          _x .__length = portions .length }}) (base_constructor) ) 
+        portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])) =>
+        Oo ((...vals) => 
+          R .objOf (key, R .fromPairs (R .zip (portions, vals))),
+        oo (R .tap (_x => {{
+          _x .__length = portions .length }}))) ) 
       : R .objOf (key, {}) ))))
+
 var data_iso = data =>
   where ((
     read = where ((
