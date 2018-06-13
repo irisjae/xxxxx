@@ -34,7 +34,8 @@ var where = x => x ()
 var go = Promise .resolve ()
 
 var WeakMap = window .WeakMap
-var data_lengths = new WeakMap
+var __data_length = new WeakMap
+var __data_lens = new WeakMap
 
 var defined
 var data = constructors => Oo (constructors,
@@ -46,11 +47,14 @@ var data = constructors => Oo (constructors,
       ? where ((
         portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])) =>
         Oo ((...vals) => 
-          R .objOf (key, R .fromPairs (R .zip (portions, vals))),
+          R .objOf (key) (R .fromPairs (R .zip (portions, vals))),
         oo (R .tap (_x => {{
-          _x .__length = portions .length }}))) ) 
-      : R .objOf (key, {}) ))))
+          ;__data_length .set (_x, portions .length)
+          ;__data_lens .set (_x, key) }}))) ) 
+      : R .objOf (key) ({}) ))))
 
+var data_lens = data =>
+  __data_lens .get (data)
 var data_iso = data =>
   where ((
     read = where ((
@@ -113,5 +117,6 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
-  where, go, defined, data, data_iso,
+  where, go, defined,
+  data, data_lens, data_iso,
   fro, map_just , every }

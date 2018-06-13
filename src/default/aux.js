@@ -1,5 +1,6 @@
 var { xx, oo, Oo, L, R, S, Z, memoize, 
-  where, do_, defined, data, data_iso,
+  where, do_, defined,
+  data, data_lens, data_iso,
   fro, map_just, every
 } = window .stuff
 
@@ -125,7 +126,7 @@ var app_questions = [ app_setup, setup_questions ]
 var io_inert = ['inert']
 var io_connecting = ['connecting']
 
-var consensus_questions = ['setup', 'questions'] 
+var ensemble_questions = ['questions'] 
 
 var rendition_attempts = ['rendition', 'attempts']
     
