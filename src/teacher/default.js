@@ -81,32 +81,10 @@ var get_room = id => {{
     ;console .error (e) }}) }}
 
 
-  
-/*
-  var heartbeat = every (100)
-  S (() => {
-    Oo (L .get ([app_room, as_maybe], app_state ()), oo (Z .map (room => {
-      ;heartbeat () 
-      do_
-      .then (_ => api (room))
-      .then (x => {;the_consensus (log_consensus (x))})
-      .catch (e => {;console .error (e)})})))})
-*/
-  
-  /*var the_consensus = S .data ()
-  var get_log = time => {;
-    Oo (L .get ([app_room, as_maybe], app_state ()),
-      oo (Z .map (id => {;
-        api (id)
-        .then (log_consensus)
-        .then (x => {;
-          app_state (L .set (app_students, x, app_state ()));})
-        .catch (x => {;
-          ;console .error (x)})
-        .then (x => {;
-          ;setTimeout (get_log, 1000)})})))
-  }*/
-  
+        
+        
+        
+        
         
         
         
@@ -119,8 +97,19 @@ Oo (R .range (0, 10 + 1),
 var tick_sampler = S .data (Z .Nothing)
   
 S (_ => {{
-  if (Z .is (Z .MaybeType (Z$ .Any)) (app_state ())
-    && L .isDefined (data_iso (io .inert)) (io_state ())) {
-    ;get_room (Oo (Math .random (),
-      oo (_x => _x * 100000000),
-      oo (_x => Math .floor (_x)))) .catch (_ => {}) } }})
+  if (Z .equals (Z .Nothing) (app_state ())) {
+    if (L .isDefined (data_iso (io .inert)) (io_state ())) {
+      ;get_room (Oo (Math .random (),
+        oo (_x => _x * 100000000),
+        oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
+
+S (_ => {{
+  Oo (app_state (), map_just (_state => {{
+    if (L .isDefined ()) {
+      if (heartbeat ()) {
+        go
+        .then (_ =>
+          api () )
+      } }
+  }}))
+}})
