@@ -45,11 +45,11 @@ S .root (() => {
     go
     .then (_ =>
       api (id)
-      .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') } else return x }))
+      .then (x => {; if (! R .equals (x) ({})) { ;throw new Error (id + ' taken') } else return x }))
     .then (_ =>
       api (id, post (message .teacher_setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
       .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} else return x }))
-    .then (_ => {;app_state (teacher_app .ready (the_setup, []))})
+    .then (_ => {;app_state (teacher_app .get_ready (the_setup, []))})
     .catch (e => {
       ;console .error (e)
       ;get_room ()}) }
