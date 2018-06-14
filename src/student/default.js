@@ -1,9 +1,12 @@
 var {
-  Oo, xx, oo, R, L, S, Z, TimelineMax,
-  where, defined, data, go,
+  xx, oo, Oo, L, R, S, Z, sanc, memoize, TimelineMax,
+  where, go, defined,
+  data, data_lens, data_iso,
+  fro, map_just, every, 
   number, string, list, maybe, id,
-  fro, map_just, shuffle, every,
-  uuid, post, api,
+  shuffle,
+  uuid, api, post,
+  student, question, answer, latency, v,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, ensemble, 
   default_questions, default_rules,
@@ -11,19 +14,20 @@ var {
   app_get_ready, app_playing, app_game_over,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
+  setup_room, setup_questions, setup_rules,
   io_inert, io_connecting,
-  consensus_questions,
+  ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
-  log_consensus,
   student_app_get_ready_to_playing, student_app_next_playing,
-  crossed_answers, current_question } = window .stuff
-
+  crossed_answers, current_question
+} = window .stuff
 
 
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
+var ensemble_state = S .data (Z .Nothing)
 var io_state = S .data (io .inert)
 
 
@@ -110,9 +114,9 @@ var connect_room = id => {{
   go 
 	.then (_ =>
     api (id)
-    .then (x => {; if (x .length === 0) { ;throw new Error ('empty') } else return x }) )
-	.then (x => {; 
-    var consensus = log_consensus (x)
+    .then (_x => {; if (_x .length === 0) { ;throw new Error ('empty') } else return _x }) )
+	.then (_x => {; 
+    var consensus = log_consensus (_x)
     var questions = L .get (consensus_questions, consensus)
     ;app_state (student_app .get_ready (L .get ([ app_student, as_maybe ], app_state ()), setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
