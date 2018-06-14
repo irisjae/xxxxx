@@ -234,13 +234,30 @@ var encode_message = message =>
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
-  ? Oo (message, oo (L .get (message_latency)), oo (L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ]))))
-  : !! L .isDefined (message_student_join) (message)
-  ? Oo (message, oo (L .get (L .getInverse ([ ensemble_student_boards, L .get (message_student) (message) ], L .get (message_board)))))
-  : !! L .isDefined (message_student_sync) (message)
-  ? Oo (message, oo (L .get (L .getInverse ([ ensemble_student_synchronizations, L .get (message_student) (message) ], L .get (message_synchronization)))))
+  ? Oo (message,
+      oo (L .get (message_latency)),
+      oo (where ((
+        student = L .get (message_student) (message)) =>
+        L .get (L .getInverse ([ ensemble_student_pings, student ])))))
+dent_join) (message)
+  ? Oo (message,
+   oo (L .get (message_board)),
+      oo (L .get (L .getInverse ([
+      oo (where ((
+        student = L .get (message_student) (message)) =>
+        L .get (L .getInverse ([ ensemble_student_boards, student ]))))) ? Oo (message,
+      oo (L .get (message_synchronization)),
+      oo (L .get (L .getInverse ([ ensemble_student_sy
+      oo (where ((
+        student = L .get (message_student) (message)) =>
+        L .get (L .getInverse ([ ensemble_student_boards, student ])))))nchronizations, L .get (message_student) (message) ]))))
   : !! L .isDefined (message_student_update) (message)
-  ? Oo (message, oo (L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_history)))))
+  ? Oo (message,
+      oo (L .get (message_history)),
+      oo (L .get (L .getInverse ([ ensemble_student_pi
+      oo (where ((
+        student = L .get (message_student) (message)) =>
+        L .get (L .getInverse ([ ensemble_student_boards, student ])))))ngs, L .get (message_student) (message) ]))))
   : undefined
   
 
