@@ -95,14 +95,15 @@ var fro = (from_nothing, from_just) => (maybe = maybe) =>
   : from_nothing
 var map_just = fn => fro (Z .Nothing, _x => Z .Just (fn (_x)))
 
-var every = x => where ((
+var every = _x => where ((
     every = S .data (),
     next = _ => {;
       ;every (defined)
-      ;setTimeout (next, x)},
-    _ = setTimeout (next, x)
+      ;setTimeout (next, _x)},
+    _ = setTimeout (next, _x)
   ) =>
   every)
+var delay = 
 
 
 
