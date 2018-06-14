@@ -57,18 +57,32 @@ var data_lens = data =>
   __data_lens .get (data)
 var data_iso = data =>
   where ((
-    read = where ((
-      instance_template = data .apply (null, R .range (1, data .__length + 1)),
-      inverted_template = R .invert (R .head (R .values (instance_template))),
-      inversion_list = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
-      constructor_prefix = R .head (R .keys (instance_template)),
-      records_list = inversion_list .map (_x => [constructor_prefix, _x])) =>
-      instance =>
-        records_list .map (lens => L .get (lens) (instance) )),
+    instance_template = data .apply (null, R .range (1, data .__length + 1)),
+    factors = Oo (instance_template, oo (R .values), oo (R .head), oo (R .keys)),
+    inverted_template = R .invert (R .head (R .values (instance_template))),
+    ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
+    constructor_prefix = R .head (R .keys (instance_template)),
+    lenses = ordered_factors .map (_x => [constructor_prefix, _x])) =>
+    read = data =>
+      L .get (L .pick ) (data),
     write = list =>
       data .apply (null, list) ) =>
     L .iso (read) (write))
-
+/*
+var data_iso = data =>
+  where ((
+    read = where ((
+      instance_template = data .apply (null, R .range (1, data .__length + 1)),
+      inverted_template = R .invert (R .head (R .values (instance_template))),
+      ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
+      constructor_prefix = R .head (R .keys (instance_template)),
+      lenses = ordered_factors .map (_x => [constructor_prefix, _x])) =>
+      instance =>
+        lenses .map (lens => L .get (lens) (instance) )),
+    write = list =>
+      data .apply (null, list) ) =>
+    L .iso (read) (write))
+*/
 
 
 
