@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, every, 
+  fro, map_just, every, delay,
   number, string, list, maybe, id,
   shuffle,
   uuid, api, post,
@@ -118,4 +118,7 @@ S (_ => {{
     ;get_room (Oo (Math .random (),
       oo (_x => _x * 100000000),
       oo (_x => Math .floor (_x)))) .catch (_ => {{
-       }}) } }})
+        var wait = delay (1000)
+        S (_ => {{
+          if (wait ()) {
+            ; } }}) }}) } }})

@@ -103,7 +103,12 @@ var every = _x => where ((
     _ = setTimeout (next, _x)
   ) =>
   every)
-var delay = 
+var delay = time => {{
+  var done = S .data (false)
+  ;setTimeout (_ => {{
+    ;done (true) }}
+  , time)
+  return done }}
 
 
 
@@ -137,4 +142,4 @@ window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, every }
+  fro, map_just, every, delay }
