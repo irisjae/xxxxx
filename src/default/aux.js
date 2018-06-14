@@ -250,29 +250,13 @@ dent_join) (message)
       oo (L .get (L .getInverse ([ ensemble_student_sy
       oo (where ((
         student = L .get (message_student) (message)) =>
-        L .get (L .getInverse ([ ensemble_student_boards, student ])))))nchronizations, L .get (message_student) (message) ]))))
-  : !! L .isDefined (message_student_update) (message)
-  ? Oo (message,
+        L .get (L .getInverse ([ ensemble_student_synchronizations, student ])))))n  ? Oo (message,
       oo (L .get (message_history)),
       oo (L .get (L .getInverse ([ ensemble_student_pi
       oo (where ((
         student = L .get (message_student) (message)) =>
-        L .get (L .getInverse ([ ensemble_student_boards, student ])))))ngs, L .get (message_student) (message) ]))))
-  : undefined
-  
-
-
-/*
-var message_teacher_setup = ['teacher_setup']
-var message_teacher_ping = ['teacher_ping']
-var message_teacher_abort = ['teacher_abort']
-var message_student_ping = ['student_ping']
-var message_student_join = ['student_join']
-var message_student_update = ['student_update']
-*/
-  
-window .stuff = { ...window .stuff,
-  number, string, list, maybe, id,
+        L .get (L .getInverse ([ ensemble_student_histories, student ])))))ncher_setup']
+var me, list, maybe, id,
   shuffle,
   uuid, api, post,
   student, question, answer, latency, v,
