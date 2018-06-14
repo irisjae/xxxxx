@@ -28,13 +28,12 @@ var app_state = S .data (Z .Nothing)
 var ensemble_state = S .data (Z .Nothing)
 
 
-window .view =  <div>
+window .view =  <teacher-app>
   { Oo (L .get ([app_room, as_maybe], app_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
   { Oo (L .get ([app_students, as_maybe], app_state ()),
-    oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) }
-</div>
+    oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) } </teacher-app>
 
-var get_room = _ => {;
+var get_room = id => {{
   var id = Oo (Math .random (),
     oo (_x => _x * 100000000),
     oo (_x => Math .floor (_x)))
@@ -44,14 +43,21 @@ var get_room = _ => {;
     go
     .then (_ =>
       api (id)
-      .then (x => {; if (! R .equals (x) ({})) { ;throw new Error (id + ' taken') } else return x }))
+      .then (x => {{
+        if (! R .equals (x) ({})) {
+          ;throw new Error (id + ' taken') }
+        else return x }}))
     .then (_ =>
       api (id, post (message .teacher_setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
-      .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} else return x }))
-    .then (_ => {;app_state (teacher_app .get_ready (the_setup, []))})
+      .then (x => {{
+        if (! x .ok) {
+          ;throw new Error ('cannot post to ' + id)}
+        else return x }}))
+    .then (_ => {{
+      ;app_state (teacher_app .get_ready (the_setup, [])) }})
     .catch (e => {
       ;console .error (e)
-      ;get_room ()}) }
+      ;get_room ()}) }}
   
   ;get_room ()
   
