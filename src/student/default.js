@@ -75,7 +75,7 @@ var board_view = board => history => <div>
         ? <span>{ crossed (_x) }</span>
         : <span fn={ pipeline_board_cell (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
 
-window .view = <div>
+window .view = <view>
 	{ where ((
     x = app_state ()) =>
     !! (L .isDefined (app_get_ready, x))
@@ -91,7 +91,7 @@ window .view = <div>
     : !! (L .isDefined (app_playing, x))
       ? board_view (L .get (app_board, x)) (L .get (app_history, x))
     : undefined) }
-</div>
+</view>
 
 
 
@@ -115,16 +115,20 @@ var connect_room = id => {{
 	.then (_ =>
     api (id)
     .then (_x => {; if (_x .length === 0) { ;throw new Error ('empty') } else return _x }) )
-	.then (_x => {; 
-    var consensus = log_consensus (_x)
-    var questions = L .get (consensus_questions, consensus)
-    ;app_state (student_app .get_ready (L .get ([ app_student, as_maybe ], app_state ()), setup .setup (id, questions, default_rules))) })
+	.then (_ensemble => {; 
+    var questions = L .get (ensemble_questions, _ensemble)
+    ;app_state (
+      student_app .get_ready (
+        L .get ([ app_student, as_maybe ], app_state ()),
+        setup .setup (id, questions, default_rules))) })
 	.catch (e => { ;console .error (e) })
   .then (_ => {;io_state (io .inert)}) }} 
 
 var valid_attempt = _ => 
   !! (where ((
-      current_rendition_attempts = Oo (app_state (), oo (L .get ([app_history, L .last, rendition_attempts, as_maybe])), oo (Z .fromMaybe ([])))) =>
+      current_rendition_attempts = Oo (app_state (),
+        oo (L .get ([app_history, L .last, rendition_attempts, as_maybe])),
+        oo (Z .fromMaybe ([])))) =>
       Z .size (current_rendition_attempts) === 0))
   ? true
   : get_latency (clock .time ()) > 3
@@ -135,17 +139,17 @@ var attempt_question = _x => {{
     var latency = get_latency (now)
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
-        oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
-        oo (student_app_next_during),
+        oo (L .set ([app_history, L .last, rendition_attempts, L .append]) ([_x, latency])),
+        oo (student_app_next_playing),
         oo (_x => {;app_state (_x)}))}
     else {
       ;Oo (app_state (),
-        oo (L .set ([app_history, L .last, rendition_attempts, L .append], [_x, latency])),
+        oo (L .set ([app_history, L .last, rendition_attempts, L .append]) ([_x, latency])),
         oo (_x => {;app_state (_x)}))
       ;clock .add ('next', now) } } }}
 
 var timesup_question = _ => {{
-  ;app_state (student_app_next_during (app_state ())) }}
+  ;app_state (student_app_next_playing (app_state ())) }}
 
 
 
