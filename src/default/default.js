@@ -57,19 +57,18 @@ var data_lens = data =>
   __data_lens .get (data)
 var data_iso = data =>
   where ((
-    instance_template = data .apply (null, R .range (1, data .__length + 1)),
-    factors = Oo (instance_template, oo (R .values), oo (R .head), oo (R .keys)),
+    instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
+    //factors = Oo (instance_template, oo (R .values), oo (R .head), oo (R .keys)),
     inverted_template = R .invert (R .head (R .values (instance_template))),
     ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
     constructor_prefix = R .head (R .keys (instance_template)),
-    lenses = ordered_factors .map (_x => [constructor_prefix, _x])) =>
     read = data =>
       L .get (constructor_prefix) (data),
     write = records =>
       where ((
-        records_list = ) =>
-        data .apply (null, records_list)) ) =>
-    L .iso (read) (write))
+        records_list = ordered_factors .map (_x => records [_x])) =>
+      data .apply (null, records_list)) ) =>
+  L .iso (read) (write))
 /*
 var data_iso = data =>
   where ((
