@@ -1,4 +1,4 @@
-var { xx, oo, Oo, L, R, S, Z, sanc, memoize, 
+var { xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, 
   where, do_, defined,
   data, data_lens, data_iso,
   fro, map_just, every
@@ -110,8 +110,7 @@ var default_rules = rules .rules (10, 3)
 
 
 var as_maybe = [L .reread (_x => Z .Just (_x)), L .defaults (Z .Nothing)]
-//L .reread (_x => !! ()), 
-var from_maybe = [L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
+var from_maybe = [L .reread (_x => !! (Z .is (Z .MaybeType (Z$ .Any))) (_x)), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
 
 
 var app_get_ready = ['get_ready']

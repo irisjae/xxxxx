@@ -23,6 +23,7 @@ var L = require ('partial.lenses')
 var R = require ('ramda')
 var S = require ('s-js')
 var sanc = require ('sanctuary')
+var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: true, env: sanc .env })
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
@@ -132,7 +133,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-  xx, oo, Oo, L, R, S, Z, sanc, memoize, TimelineMax,
+  xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
   fro, map_just, every }
