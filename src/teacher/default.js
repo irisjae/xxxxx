@@ -111,7 +111,10 @@ S (_ => {{
         var room = L .get (app_room) (_state)
         go
         .then (_ =>
-          api (room) )
+          api (room) .then (_x => {{
+            ;ensemble_state (Z .Just (_x))
+            ;setTimeout (_ => {{
+              ;heartbeat (true) }}, 300) }} ) )
       }
     } 
   }}))
