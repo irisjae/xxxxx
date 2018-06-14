@@ -112,10 +112,12 @@ var get_room = id => {{
         
         
 var clock = new TimelineMax
-clock .add (timesup_question, 10)
+//clock .add (timesup_question, 10)
 Oo (R .range (0, 10 + 1),
   oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
         
+var tick_sampler = S .data (Z .Nothing)
+  
 S (_ => {{
   if (Z .is (Z .MaybeType (Z$ .Any)) (app_state ())
     && L .isDefined (data_iso (io .inert)) (io_state ())) {
