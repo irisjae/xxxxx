@@ -103,7 +103,6 @@ S (_ => {{
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
-
 S (_ => {{
   Oo (app_state (), map_just (_state => {{
     if (L .isDefined (app_get_ready) (_state)) {
@@ -114,8 +113,5 @@ S (_ => {{
           api (room) .then (_x => {{
             ;ensemble_state (Z .Just (_x))
             ;setTimeout (_ => {{
-              ;heartbeat (true) }}, 300) }} ) )
-      }
-    } 
-  }}))
-}})
+              ;heartbeat (true) }}
+            , 300) }} ) ) } } }})) }})

@@ -43,6 +43,7 @@ var post = x => ({
 
 var bool = defined
 var number = defined
+var timestamp = number
 var string = defined
 var list = a => defined
 var map = a => (...b) => list (v (a, ...b))
@@ -92,6 +93,8 @@ var ensemble = data ({
     ping = latency,
     questions = list (question),
     rules = rules,
+    synchronization = timestamp,
+    student_synchronizations = map (student) (timestamp),
     student_pings = map (student) (latency),
     student_boards = map (student) (board),
     student_histories = map (student) (history),

@@ -113,8 +113,7 @@ var connect_room = id => {{
   ;io_state (io .connecting)
   go 
 	.then (_ =>
-    api (id)
-    .then (_x => {{
+    api (id) .then (_x => {{
       if (_x .length === 0) {
         ;throw new Error ('empty') }
       else return _x }}) )
