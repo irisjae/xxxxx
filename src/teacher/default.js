@@ -27,20 +27,19 @@ var {
 var app_state = S .data (Z .Nothing)
 var ensemble_state = S .data (Z .Nothing)
 
-S .root (() => {
- 
-  window .view =  <div>
-    { Oo (L .get ([app_room, as_maybe], app_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
-    { Oo (L .get ([app_students, as_maybe], app_state ()),
-      oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) }
-  </div>
 
-  var get_room = _ => {;
-    var id = Oo (Math .random (),
-      oo (_x => _x * 100000000),
-      oo (_x => Math .floor (_x)))
+window .view =  <div>
+  { Oo (L .get ([app_room, as_maybe], app_state ()), oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+  { Oo (L .get ([app_students, as_maybe], app_state ()),
+    oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) }
+</div>
 
-    var the_setup = setup .setup ( id, default_questions, default_rules )
+var get_room = _ => {;
+  var id = Oo (Math .random (),
+    oo (_x => _x * 100000000),
+    oo (_x => Math .floor (_x)))
+
+  var the_setup = setup .setup ( id, default_questions, default_rules )
 
     go
     .then (_ =>
@@ -84,4 +83,3 @@ S .root (() => {
           ;setTimeout (get_log, 1000)})})))
   }*/
   
-})
