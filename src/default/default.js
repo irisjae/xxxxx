@@ -132,7 +132,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-  xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
+  xx, oo, Oo, L, R, S, Z, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
   fro, map_just, every }
