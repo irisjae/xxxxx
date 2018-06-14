@@ -22,7 +22,8 @@ var Oo = function () {
 var L = require ('partial.lenses')
 var R = require ('ramda')
 var S = require ('s-js')
-var Z = require ('sanctuary') .create ({ checkTypes: true, env: require ('sanctuary') .env });
+var sanc = require ('sanctuary')
+var Z = sanc .create ({ checkTypes: true, env: sanc .env })
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
 var TimelineMax = window .TimelineMax
@@ -41,7 +42,7 @@ var defined
 var data = constructors => Oo (constructors,
   oo (R .mapObjIndexed ((fn, key) => 
     where ((
-      args_slice = fn .toString() .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
+      args_slice = fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
     ) =>
       !! (args_slice)
       ? where ((
