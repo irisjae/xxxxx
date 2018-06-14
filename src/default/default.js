@@ -119,4 +119,4 @@ window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just , every }
+  fro, map_just, every }

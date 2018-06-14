@@ -28,7 +28,7 @@ var uuid = _ =>
       v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
       v.toString(16) ))
 
-var api = (room, x) => fetch ('/log/' + room, x) .then (x => x .json ())
+var api = (room, x) => fetch ('/room/' + room, x) .then (x => x .json ())
 var post = x => ({
   method: 'POST',
   headers: {
@@ -162,8 +162,10 @@ var cell_answer = [ 2 ]
 
 
 
+/*
 var log_consensus = msgs =>
   R .reduce (R .mergeDeepRight, {}, msgs)
+*/
 
 
 
@@ -259,6 +261,5 @@ window .stuff = { ...window .stuff,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
-  log_consensus,
   student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question }

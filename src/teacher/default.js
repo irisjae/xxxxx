@@ -1,18 +1,31 @@
 var {
-  Oo, xx, oo, R, L, S, Z,
-  defined, data, do_,
+  xx, oo, Oo, L, R, S, Z, memoize, TimelineMax,
+  where, go, defined,
+  data, data_lens, data_iso,
+  fro, map_just, every, 
   number, string, list, maybe, id,
-  fro, shuffle, every,
-  post, api,
-  attempt, performance, history, rules, setup,
-  teacher_app, student_app, io, message, consensus, 
+  shuffle,
+  uuid, api, post,
+  student, question, answer, latency, v,
+  board, rendition, rules, setup,
+  teacher_app, student_app, io, message, ensemble, 
   default_questions, default_rules,
   as_maybe,
-  app_ready, app_during, app_done, app_setup, app_students, setup_room, setup_questions, setup_rules, app_room,  io_inert, io_connecting,  consensus_questions
+  app_get_ready, app_playing, app_game_over,
+  app_setup, app_student, app_students, app_room,
+  app_board, app_history,
+  setup_room, setup_questions, setup_rules,
+  io_inert, io_connecting,
+  ensemble_questions,
+  rendition_attempts,
+  rules_size, setup_size,
+  cell_answer, 
+  student_app_get_ready_to_playing, student_app_next_playing,
+  crossed_answers, current_question
 } = window .stuff
 
 var app_state = S .data (Z .Nothing)
-var the_consensus = S .data (Z .Nothing)
+var ensemble_state = S .data (Z .Nothing)
 
 S .root (() => {
  
@@ -22,14 +35,14 @@ S .root (() => {
       oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) }
   </div>
 
-  var get_room = time => {;
+  var get_room = _ => {;
     var id = Oo (Math .random (),
-      oo (x => x * 100000000),
-      oo (x => Math .floor (x)))
+      oo (_x => _x * 100000000),
+      oo (_x => Math .floor (_x)))
 
     var the_setup = setup .setup ( id, default_questions, default_rules )
 
-    do_
+    go
     .then (_ =>
       api (id)
       .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') } else return x }))
