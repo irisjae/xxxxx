@@ -34,35 +34,27 @@ window .view =  <teacher-app>
     oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) } </teacher-app>
 
 var get_room = id => {{
-  var id = Oo (Math .random (),
-    oo (_x => _x * 100000000),
-    oo (_x => Math .floor (_x)))
+  var _setup = setup .setup ( id, default_questions, default_rules )
 
-  var the_setup = setup .setup ( id, default_questions, default_rules )
+  go
+  .then (_ =>
+    api (id) .then (x => {{
+      if (! R .equals (x) ({})) {
+        ;throw new Error (id + ' taken') }
+      else return x }}))
+  .then (_ =>
+    api (id,
+      post (Lmessage .teacher_setup (L .get (setup_questions, _setup), L .get (setup_rules, _setup) ))) .then (x => {{
+      if (! x .ok) {
+        ;throw new Error ('cannot post to ' + id)}
+      else return x }}))
+  .then (_ => {{
+    ;app_state (teacher_app .get_ready (_setup, [])) }})
+  .catch (e => {
+    ;console .error (e)
+    ;get_room ()}) }}
 
-    go
-    .then (_ =>
-      api (id)
-      .then (x => {{
-        if (! R .equals (x) ({})) {
-          ;throw new Error (id + ' taken') }
-        else return x }}))
-    .then (_ =>
-      api (id, post (message .teacher_setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
-      .then (x => {{
-        if (! x .ok) {
-          ;throw new Error ('cannot post to ' + id)}
-        else return x }}))
-    .then (_ => {{
-      ;app_state (teacher_app .get_ready (the_setup, [])) }})
-    .catch (e => {
-      ;console .error (e)
-      ;get_room ()}) }}
-  
-  ;get_room ()
-  
-  var log_consensus = msgs =>
-    R .reduce (R .mergeDeepRight, {}, msgs)
+
   
 /*
   var heartbeat = every (100)
@@ -89,3 +81,8 @@ var get_room = id => {{
           ;setTimeout (get_log, 1000)})})))
   }*/
   
+S (_ => {{
+  if () {
+    ;get_room (Oo (Math .random (),
+      oo (_x => _x * 100000000),
+      oo (_x => Math .floor (_x)))) .catch (_ => {}) } }})
