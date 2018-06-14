@@ -65,7 +65,7 @@ var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter
 var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
 
 var crossed = _x => <s>{ _x }</s>
-var board_view = board => history => <div>
+var board_view = board => history => <board-etc>
   { Oo (app_state (), oo (current_question), oo (fro ('', _x => <question>{ _x }</question>))) }
   <ticker>{ 10 - tick_sampler () }</ticker>
   <board> { Oo (board, oo (R .map (row => 
@@ -73,9 +73,9 @@ var board_view = board => history => <div>
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
         ? <span>{ crossed (_x) }</span>
-        : <span fn={ pipeline_board_cell (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </div>
+        : <span fn={ pipeline_board_cell (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </board-etc>
 
-window .view = <view>
+window .view = <student-app>
 	{ where ((
     x = app_state ()) =>
     !! (L .isDefined (app_get_ready, x))
@@ -91,7 +91,7 @@ window .view = <view>
     : !! (L .isDefined (app_playing, x))
       ? board_view (L .get (app_board, x)) (L .get (app_history, x))
     : undefined) }
-</view>
+</student-app>
 
 
 
