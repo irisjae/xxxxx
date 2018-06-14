@@ -64,9 +64,11 @@ var data_iso = data =>
     constructor_prefix = R .head (R .keys (instance_template)),
     lenses = ordered_factors .map (_x => [constructor_prefix, _x])) =>
     read = data =>
-      L .get (L .pick ) (data),
-    write = list =>
-      data .apply (null, list) ) =>
+      L .get (constructor_prefix) (data),
+    write = records =>
+      where ((
+        records_list = ) =>
+        data .apply (null, records_list)) ) =>
     L .iso (read) (write))
 /*
 var data_iso = data =>
