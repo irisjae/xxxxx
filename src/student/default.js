@@ -114,15 +114,18 @@ var connect_room = id => {{
   go 
 	.then (_ =>
     api (id)
-    .then (_x => {; if (_x .length === 0) { ;throw new Error ('empty') } else return _x }) )
-	.then (_ensemble => {; 
+    .then (_x => {{
+      if (_x .length === 0) {
+        ;throw new Error ('empty') }
+      else return _x }}) )
+	.then (_ensemble => {{ 
     var questions = L .get (ensemble_questions, _ensemble)
     ;app_state (
       student_app .get_ready (
         L .get ([ app_student, as_maybe ], app_state ()),
-        setup .setup (id, questions, default_rules))) })
-	.catch (e => { ;console .error (e) })
-  .then (_ => {;io_state (io .inert)}) }} 
+        setup .setup (id, questions, default_rules))) }})
+	.catch (e => {{ ;console .error (e) }})
+  .then (_ => {{ ;io_state (io .inert) }}) }} 
 
 var valid_attempt = _ => 
   !! (where ((
@@ -170,20 +173,20 @@ var get_latency = now => {
 
 
 
-S (_ => {
+S (_ => {{
   if (L .isDefined (app_get_ready, app_state ())) {
-    ;clock .pause () } })
-S (last_state => {
+    ;clock .pause () } }})
+S (last_state => {{
   if (L .isDefined (app_playing, app_state ())) {
     if (! Z .equals (Z .size (Z .fromMaybe ([]) (L .get ([app_history, as_maybe], last_state)))) (Z .size (L .get (app_history, app_state ())))) {
       ;clock .seek (0)
       ;clock .remove ('fail')}
     ;clock .play () }
-  return app_state () }
+  return app_state () }}
   , app_state ())
-S (_ => {
+S (_ => {{
   if (L .isDefined (app_game_over, app_state ())) {
-    ;clock .pause () }})
+    ;clock .pause () } }})
 
 /*
 Oo (student_app_ready_to_during (
