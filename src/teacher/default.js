@@ -108,9 +108,10 @@ S (_ => {{
   Oo (app_state (), map_just (_state => {{
     if (L .isDefined (app_get_ready) (_state)) {
       if (heartbeat ()) {
+        var room = L .get (app_room) (_state)
         go
         .then (_ =>
-          api () )
+          api (room) )
       }
     } 
   }}))
