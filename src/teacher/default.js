@@ -47,7 +47,7 @@ S .root (() => {
       api (id)
       .then (x => {; if (x .length !== 0) { ;throw new Error (id + ' taken') } else return x }))
     .then (_ =>
-      api (id, post (message .setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
+      api (id, post (message .teacher_setup (L .get (setup_questions, the_setup), L .get (setup_rules, the_setup) )))
       .then (x => { if (! x .ok) { ;throw new Error ('cannot post to ' + id)} else return x }))
     .then (_ => {;app_state (teacher_app .ready (the_setup, []))})
     .catch (e => {

@@ -59,10 +59,10 @@ var data_iso = data =>
   where ((
     read = where ((
       instance_template = data .apply (null, R .range (1, data .__length + 1)),
-      inverted_object = R .invert (R .head (R .values (instance_template))),
-      inversion_list = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_object))),
-      disjoint_type = R .head (R .keys (instance_template)),
-      records_list = inversion_list .map (_x => [disjoint_type, _x])) =>
+      inverted_template = R .invert (R .head (R .values (instance_template))),
+      inversion_list = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
+      constructor_prefix = R .head (R .keys (instance_template)),
+      records_list = inversion_list .map (_x => [constructor_prefix, _x])) =>
       instance =>
         records_list .map (lens => L .get (lens) (instance) )),
     write = list =>
