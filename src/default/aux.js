@@ -108,9 +108,13 @@ var default_rules = rules .rules (10, 3)
 
 
 
+var to_maybe = _x =>
+  !! (Z .is (Z .MaybeType (Z$ .Any))) (_x)
+  ? _x
+  : Z .Nothing
 
 var as_maybe = [L .reread (_x => Z .Just (_x)), L .defaults (Z .Nothing)]
-var from_maybe = [L .reread (_x => !! (Z .is (Z .MaybeType (Z$ .Any))) (_x)), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
+var from_maybe = [L .reread (to_maybe), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
 
 
 var app_get_ready = ['get_ready']
