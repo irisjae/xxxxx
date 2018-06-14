@@ -88,6 +88,7 @@ var get_room = id => {{
         
         
         
+var heartbeat = S .data (false) 
         
 var clock = new TimelineMax
 //clock .add (timesup_question, 10)
@@ -105,11 +106,12 @@ S (_ => {{
 
 S (_ => {{
   Oo (app_state (), map_just (_state => {{
-    if (L .isDefined ()) {
+    if (L .isDefined (app_get_ready) (_state)) {
       if (heartbeat ()) {
         go
         .then (_ =>
           api () )
-      } }
+      }
+    } 
   }}))
 }})
