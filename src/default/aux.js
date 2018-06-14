@@ -84,11 +84,11 @@ var io = data ({
 var message = data ({
   teacher_setup: ( questions = list (question), rules = rules ) => defined,
   teacher_ping: ( latency = latency ) => defined,
-  teacher_sync: ( timestamp = timestamp ) => defined,
+  teacher_sync: ( synchroziation = timestamp ) => defined,
   teacher_abort: () => defined,
   student_ping: ( student = student, latency = latency ) => defined,
   student_join: ( student = student, board = board ) => defined,
-  student_sync: ( student = student, timestamp = timestamp ) => defined,
+  student_sync: ( student = student, synchronization = timestamp ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
   ensemble: (
@@ -144,19 +144,23 @@ var io_connecting = data_iso (io .connecting)
 
 var message_teacher_setup = data_iso (message .teacher_setup)
 var message_teacher_ping = data_iso (message .teacher_ping) 
+var message_teacher_sync = data_iso (message .teacher_sync) 
 var message_teacher_abort = data_iso (message .teacher_abort) 
 var message_student_ping = data_iso (message .student_ping) 
 var message_student_join = data_iso (message .student_join) 
+var message_student_sync = data_iso (message .student_sync) 
 var message_student_update = data_iso (message .student_update) 
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
 var message_latency = [L .choices (message_teacher_ping, message_student_ping), 'latency']
+var message_synchronization = [message_student_sync, 'synchronization']
 var message_board = [message_student_join, 'board']
 var message_history = [message_student_update, 'history']
   
 var ensemble_questions = [data_iso (ensemble .ensemble), 'questions'] 
 var ensemble_student_pings = [data_iso (ensemble .ensemble), 'student_pings'] 
 var ensemble_student_boards = [data_iso (ensemble .ensemble), 'student_boards'] 
+var ensemble_student_synchronizations = [data_iso (ensemble .ensemble), 'student_synchronizations'] 
 var ensemble_student_histories = [data_iso (ensemble .ensemble), 'student_histories'] 
 
 var rendition_attempts = [data_iso (rendition .rendition), 'attempts']
@@ -225,14 +229,18 @@ var encode_message = message =>
   ? message
   : !! L .isDefined (message_teacher_ping) (message)
   ? message
+  : !! L .isDefined (message_teacher_sync) (message)
+  ? message
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
-  ? L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_latency))) (message)
+  ? Oo (message, oo (L .get (message_latency)), oo (L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ]))))
   : !! L .isDefined (message_student_join) (message)
-  ? L .get (L .getInverse ([ ensemble_student_boards, L .get (message_student) (message) ], L .get (message_board))) (message)
+  ? Oo (message, oo (L .get (L .getInverse ([ ensemble_student_boards, L .get (message_student) (message) ], L .get (message_board)))))
+  : !! L .isDefined (message_student_sync) (message)
+  ? Oo (message, oo (L .get (L .getInverse ([ ensemble_student_synchronizations, L .get (message_student) (message) ], L .get (message_synchronization)))))
   : !! L .isDefined (message_student_update) (message)
-  ? L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_history))) (message)
+  ? Oo (message, oo (L .get (L .getInverse ([ ensemble_student_pings, L .get (message_student) (message) ], L .get (message_history)))))
   : undefined
   
 
