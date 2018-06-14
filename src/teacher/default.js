@@ -111,14 +111,14 @@ var get_room = id => {{
         
         
         
+var clock = new TimelineMax
+clock .add (timesup_question, 10)
+Oo (R .range (0, 10 + 1),
+  oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
         
 S (_ => {{
   if (Z .is (Z .MaybeType (Z$ .Any)) (app_state ())
     && L .isDefined (data_iso (io .inert)) (io_state ())) {
     ;get_room (Oo (Math .random (),
       oo (_x => _x * 100000000),
-      oo (_x => Math .floor (_x)))) .catch (_ => {{
-        var wait = delay (1000)
-        S (_ => {{
-          if (wait ()) {
-            ; } }}) }}) } }})
+      oo (_x => Math .floor (_x)))) .catch (_ => {}) } }})
