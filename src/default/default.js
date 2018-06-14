@@ -41,7 +41,7 @@ var defined
 var data = constructors => Oo (constructors,
   oo (R .mapObjIndexed ((fn, key) => 
     where ((
-      args_slice = fn .toString() .match (/\((.*?)\)\s*=>/) [1]
+      args_slice = fn .toString() .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
     ) =>
       !! (args_slice)
       ? where ((

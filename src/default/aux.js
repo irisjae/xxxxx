@@ -49,12 +49,12 @@ var map = a => (...b) => list (v (a, ...b))
 var maybe = a => defined
 var nat = defined
 var id = string
+var v = (...types) => defined
 
 var student = v (id, string)
 var question = string
 var answer = question
 var latency = number
-var v = (...types) => defined
 var position = v (nat, nat)
 
 var attempt = v (answer, latency)
