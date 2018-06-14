@@ -84,10 +84,11 @@ var io = data ({
 var message = data ({
   teacher_setup: ( questions = list (question), rules = rules ) => defined,
   teacher_ping: ( latency = latency ) => defined,
-  teacher_sync: (  ) => defined,
+  teacher_sync: ( timestamp = timestamp ) => defined,
   teacher_abort: () => defined,
   student_ping: ( student = student, latency = latency ) => defined,
   student_join: ( student = student, board = board ) => defined,
+  student_sync: ( student = student, timestamp = timestamp ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
   ensemble: (
