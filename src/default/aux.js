@@ -84,6 +84,7 @@ var io = data ({
 var message = data ({
   teacher_setup: ( questions = list (question), rules = rules ) => defined,
   teacher_ping: ( latency = latency ) => defined,
+  teacher_sync: (  ) => defined,
   teacher_abort: () => defined,
   student_ping: ( student = student, latency = latency ) => defined,
   student_join: ( student = student, board = board ) => defined,
@@ -167,12 +168,6 @@ var cell_answer = [ 2 ]
 
 
 
-
-
-/*
-var log_consensus = msgs =>
-  R .reduce (R .mergeDeepRight, {}, msgs)
-*/
 
 
 
