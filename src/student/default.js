@@ -82,13 +82,13 @@ window .view = <student-app>
       ? !! (L .isDefined (io_connecting, io_state ()))
         ? 'Trying to connect...'
         : Oo (x,
-          oo (L .get ([app_room, as_maybe], x),
+          oo (L .get ([app_room, as_maybe])),
           oo (fro (
             Oo (L .get ([app_student, as_maybe], x),
               oo (fro (
                 enter_student_view,
                 _x => enter_room_view))),
-            _x => 'Connected to room ' + _x))))
+            _x => 'Connected to room ' + _x)))
     : !! (L .isDefined (app_playing, x))
       ? board_view (L .get (app_board, x)) (L .get (app_history, x))
     : undefined) }
