@@ -235,30 +235,75 @@ var encode_message = message =>
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
   ? Oo (message,
-      oo (L .get (message_latency)),
-      oo (where ((
-        student = L .get (message_student) (message)) =>
-        L .get (L .getInverse ([ ensemble_student_pings, student ])))))
-dent_join) (message)
+    oo (L .get (message_latency)),
+    oo (where ((
+      student = L .get (message_student) (message)) =>
+      L .get (L .getInverse ([ ensemble_student_pings, student ])))))
+  : !! L .isDefined (message_student_join) (message)
   ? Oo (message,
-   oo (L .get (message_board)),
-      oo (L .get (L .getInverse ([
-      oo (where ((
-        student = L .get (message_student) (message)) =>
-        L .get (L .getInverse ([ ensemble_student_boards, student ]))))) ? Oo (message,
-      oo (L .get (message_synchronization)),
-      oo (L .get (L .getInverse ([ ensemble_student_sy
-      oo (where ((
-        student = L .get (message_student) (message)) =>
-        L .get (L .getInverse ([ ensemble_student_synchronizations, student ])))))n  ? Oo (message,
-      oo (L .get (message_history)),
-      oo (L .get (L .getInverse ([ ensemble_student_pi
-      oo (where ((
-        student = L .get (message_student) (message)) =>
-        L .get (L .getInverse ([ ensemble_student_histories, student ])))))ncher_setup']
-var me, list, maybe, id,
-  shuffle,
-  uuid, api, post,
+    oo (L .get (message_board)),
+    oo (where ((
+      student = L .get (message_student) (message)) =>
+      L .get (L .getInverse ([ ensemble_student_boards, student ])))))
+  : !! L .isDefined (message_student_sync) (message)
+  ? Oo (message,
+    oo (L .get (message_synchronization)),
+    oo (where ((
+      student = L .get (message_student) (message)) =>
+      L .get (L .getInverse ([ ensemble_student_synchronizations, student ])))))
+  : !! L .isDefined (message_student_update) (message)
+  ? Oo (message,
+    oo (L .get (message_history)),
+    oo (where ((
+      student = L .get (message_student) (message)) =>
+      L .get (L .getInverse ([ ensemble_student_histories, student ])))))
+  : undefined
+
+
+
+
+
+shuffle
+uuid
+
+api
+post
+
+
+
+student
+question
+answer
+latency
+position
+
+attempt
+
+
+rendition
+board
+
+rules
+setup
+
+
+teacher_app
+student_app
+io
+
+
+message
+ensemble
+
+
+
+
+
+
+window .stuff = { ...window .stuff,
+  bool, number, timestamp, string,
+  list, map, maybe, nat, id, v,
+  shuffle, uuid, api, post,
   student, question, answer, latency, v,
   board, rendition, rules, setup,
   teacher_app, student_app, io, message, ensemble, 

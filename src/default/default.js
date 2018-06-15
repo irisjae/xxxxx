@@ -91,7 +91,7 @@ var data_iso = data =>
 
 var fro = (from_nothing, from_just) => (maybe = maybe) => 
   !! (Z .isJust (maybe))
-  ? from_just (Z .fromMaybe_ (_ => {}) (maybe))
+  ? from_just (Z .unchecked .fromMaybe_ (_ => {}) (maybe))
   : from_nothing
 var map_just = fn => fro (Z .Nothing, _x => Z .Just (fn (_x)))
 
