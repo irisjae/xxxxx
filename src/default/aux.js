@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, from_just, maybe_all,
+  fro, map_just, from_just, maybe_recurse,
   every, delay 
 } = window .stuff
 
@@ -193,10 +193,11 @@ var generate_board = size => questions =>
 
 var student_app_get_ready_to_playing = app_state =>
   Oo (app_state,
-    oo (R .juxt (
-      [ L .get ([ app_student, as_maybe ]), L .get ([ app_setup, as_maybe ]) ])),
-    oo (maybe_all),
-    oo (map_just (([student, setup]) => 
+    oo (L .pick ({
+      student: L .get ([ app_student, as_maybe ]),
+      setup: L .get ([ app_setup, as_maybe ]) })),
+    oo (maybe_recurse),
+    oo (map_just (({student, setup}) => 
       student_app .playing (student, setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
 
 var student_app_next_playing = app_state =>
