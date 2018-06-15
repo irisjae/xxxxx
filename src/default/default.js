@@ -98,8 +98,8 @@ var fro = (nothing_val, just_val) => (maybe = maybe) =>
   : nothing_val
 var map_just = fn => fro (Z .Nothing, _x => Z .Just (fn (_x)))
 var maybe_all = list => where ((
-  maybe_head = Z .head (list),
-  maybe_tail = Z .tail (list)) =>
+  maybe_head = Z .unchecked .head (list),
+  maybe_tail = Z .unchecked .tail (list)) =>
   Oo (maybe_head, oo (fro (Z .Just ([]),
     plain_head => where ((
       plain_tail = from_just (maybe_tail),
@@ -107,7 +107,7 @@ var maybe_all = list => where ((
       Oo (plain_head, oo (fro (Z .Nothing,
         just_head => Oo (recursion, oo (fro (Z .Nothing,
           just_tail =>
-            Z .Just (Z .prepend (just_head) (just_tail)))))))))))))
+            Z .Just (Z .unchecked .prepend (just_head) (just_tail)))))))))))))
 
 
 var every = _x => where ((

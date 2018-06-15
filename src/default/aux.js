@@ -28,7 +28,7 @@ var uuid = _ =>
     where ((
       r = Math.random() * 16 | 0,
       v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
-      v.toString(16) ))
+    v.toString(16) ))
 
 var api = (room, x) => fetch ('/room/' + room, x) .then (x => x .json ())
 var post = x => ({
@@ -193,8 +193,9 @@ var generate_board = size => questions =>
 
 var student_app_get_ready_to_playing = app_state =>
   Oo (app_state,
-    oo (R .converge (maybe_all,
+    oo (R .juxt (
       [ L .get ([ app_student, as_maybe ]), L .get ([ app_setup, as_maybe ]) ])),
+    oo (maybe_all),
     oo (map_just (([student, setup]) => 
       student_app .playing (student, setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
 
@@ -212,20 +213,21 @@ var student_app_next_playing = app_state =>
 var crossed_answers = memoize (app_state => 
   !! (L .isDefined (app_playing) (app_state))
   ? where ((
-    final_attempts = Oo (app_state, oo (L .get (app_history)), oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
+    final_attempts = Oo (app_state, oo (L .get (app_history)),
+      oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
     actual_answers = Oo (app_state, L .get (app_questions))) =>
-    Oo (Z .zip (final_attempts) (actual_answers),
-      oo (Z .mapMaybe (pair =>
-        !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
-          ? Z .fst (pair)
-          : Z .Nothing))))
+  Oo (Z .zip (final_attempts) (actual_answers),
+    oo (Z .mapMaybe (pair =>
+      !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
+        ? Z .fst (pair)
+        : Z .Nothing))))
   : [])
 
 var current_question = app_state =>
-  !! (L .isDefined (app_playing) (app_state))
+  !! L .isDefined (app_playing) (app_state)
   ? where ((
     current_question_index = Oo (app_state, oo (L .get (app_history)), oo (Z .size)) - 1) =>
-    Oo (app_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
+  Oo (app_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
 var encode_message = message =>
