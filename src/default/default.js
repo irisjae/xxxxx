@@ -107,7 +107,7 @@ var maybe_all = list => where ((
       Oo (plain_head, oo (fro (Z .Nothing,
         just_head => Oo (recursion, oo (fro (Z .Nothing,
           just_tail =>
-            Z .Just (Z .append (just_head) (just_tail)))))))))))))
+            Z .Just (Z .prepend (just_head) (just_tail)))))))))))))
 
 
 var every = _x => where ((
@@ -157,4 +157,5 @@ window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, every, delay }
+  fro, map_just,
+  every, delay }
