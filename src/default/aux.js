@@ -117,8 +117,6 @@ var to_maybe = _x =>
   !! (Z .is (Z .MaybeType (Z$ .Any))) (_x)
   ? _x
   : Z .Nothing
-var maybe_all = _x =>
-  
 
 
 var as_maybe = [L .reread (_x => Z .Just (_x)), L .defaults (Z .Nothing)]

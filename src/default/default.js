@@ -90,12 +90,25 @@ var data_iso = data =>
 */
 
 
-
-var fro = (from_nothing, from_just) => (maybe = maybe) => 
+var from_just = _x =>
+  Z .unchecked .fromMaybe_ (_ => {}) (_x)
+var fro = (nothing_val, just_val) => (maybe = maybe) => 
   !! (Z .isJust (maybe))
-  ? from_just (Z .unchecked .fromMaybe_ (_ => {}) (maybe))
-  : from_nothing
+  ? just_val (from_just (maybe))
+  : nothing_val
 var map_just = fn => fro (Z .Nothing, _x => Z .Just (fn (_x)))
+var maybe_all = _x =>
+  where ((
+    head = Z .head (_x),
+    tail = Z .tail (_x)) =>
+    Oo (head,
+      oo (fro (
+        [],
+        map_just ()
+        Z .append
+          ()
+          (maybe_all (from_just (tail))))))
+
 
 var every = _x => where ((
     every = S .data (false),
