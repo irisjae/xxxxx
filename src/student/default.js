@@ -64,6 +64,22 @@ var pipeline_board_cell = cell => _dom => {;
 var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
           
 var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
+  
+var get_ready_view = <get-ready-etc>
+  { !! (L .isDefined (io_connecting, io_state ()))
+    ? 'Trying to connect...'
+    : Oo (app_state (),
+      oo (L .get (L .pick ({
+        room: [app_room, as_maybe],
+        student: [app_student, as_maybe] }))),
+      oo (({ room, student }) =>
+        !! Z .isNothing (student)
+        ? enter_student_view
+        : !! Z .isNothing (room)
+        ? enter_room_view
+        : where ((
+          { plain_room, plain_student } = maybe_all ({ room, student }) ) =>
+        'Connected to room ' + plain_room))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <board-etc>
@@ -78,18 +94,9 @@ var board_view = board => history => <board-etc>
 
 window .view = <student-app>
 	{ where ((
-    x = app_state ()) =>
+      x = app_state ()) =>
     !! (L .isDefined (app_get_ready, x))
-      ? !! (L .isDefined (io_connecting, io_state ()))
-        ? 'Trying to connect...'
-        : Oo (x,
-          oo (L .get ([app_room, as_maybe])),
-          oo (fro (
-            Oo (L .get ([app_student, as_maybe], x),
-              oo (fro (
-                enter_student_view,
-                _x => enter_room_view))),
-            _x => 'Connected to room ' + _x)))
+    ? get_ready_view
     : !! (L .isDefined (app_playing, x))
       ? board_view (L .get (app_board, x)) (L .get (app_history, x))
     : undefined) }
@@ -184,7 +191,9 @@ S (_ => {{
     ;clock .pause () } }})
 S (last_state => {{
   if (L .isDefined (app_playing, app_state ())) {
-    if (! Z .equals (Z .size (Z .fromMaybe ([]) (L .get ([app_history, as_maybe], last_state)))) (Z .size (L .get (app_history, app_state ())))) {
+    var last_history = Oo (last_state, oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
+    var history = Oo (app_state (), oo (L .get (app_history)))
+    if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
       ;clock .seek (0)
       ;clock .remove ('fail')}
     ;clock .play () }

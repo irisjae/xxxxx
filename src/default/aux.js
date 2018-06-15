@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, from_just, maybe_recurse,
+  fro, map_just, from_just, maybe_all,
   every, delay 
 } = window .stuff
 
@@ -136,9 +136,9 @@ var app_history = [ L .choices (app_playing, app_game_over), 'history' ]
 
 var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
 
-var setup_room = [data_iso (setup .setup), 'room']
-var setup_questions = [data_iso (setup .setup), 'questions']
-var setup_rules = [data_iso (setup .setup), 'rules']
+var setup_room = data_iso (setup .setup) .room
+var setup_questions = data_iso (setup .setup) .questions
+var setup_rules = data_iso (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
 
@@ -156,19 +156,19 @@ var message_student_update = data_iso (message .student_update)
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
 var message_latency = [L .choices (message_teacher_ping, message_student_ping), 'latency']
-var message_synchronization = [message_student_sync, 'synchronization']
-var message_board = [message_student_join, 'board']
-var message_history = [message_student_update, 'history']
+var message_synchronization = message_student_sync .synchronization
+var message_board = message_student_join .board
+var message_history = message_student_update .history
   
-var ensemble_questions = [data_iso (ensemble .ensemble), 'questions'] 
-var ensemble_student_pings = [data_iso (ensemble .ensemble), 'student_pings'] 
-var ensemble_student_boards = [data_iso (ensemble .ensemble), 'student_boards'] 
-var ensemble_student_synchronizations = [data_iso (ensemble .ensemble), 'student_synchronizations'] 
-var ensemble_student_histories = [data_iso (ensemble .ensemble), 'student_histories'] 
+var ensemble_questions = data_iso (ensemble .ensemble) .questions 
+var ensemble_student_pings = data_iso (ensemble .ensemble) .student_pings 
+var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards 
+var ensemble_student_synchronizations = data_iso (ensemble .ensemble) .student_synchronizations 
+var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
-var rendition_attempts = [data_iso (rendition .rendition), 'attempts']
+var rendition_attempts = data_iso (rendition .rendition) .attempts
     
-var rules_size = [data_iso (rules .rules), 'size']
+var rules_size = data_iso (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
 
 var cell_answer = [ 2 ]
@@ -191,44 +191,49 @@ var generate_board = size => questions =>
 
 
 
-var student_app_get_ready_to_playing = app_state =>
-  Oo (app_state,
-    oo (L .pick ({
+var student_app_get_ready_to_playing = _state =>
+  Oo (_state,
+    oo (L .get (L .pick ({
       student: L .get ([ app_student, as_maybe ]),
-      setup: L .get ([ app_setup, as_maybe ]) })),
-    oo (maybe_recurse),
+      setup: L .get ([ app_setup, as_maybe ]) }))),
+    oo (maybe_all),
     oo (map_just (({student, setup}) => 
       student_app .playing (student, setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
 
-var student_app_next_playing = app_state =>
+var student_app_next_playing = _state =>
   where ((
-    board_size = L .get ([app_setup, setup_size], app_state),
-    history_size = Z .size (L .get (app_history, app_state))) =>
+    board_size = Oo (_state, oo (L .get ([app_setup, setup_size]))),
+    history_size = Oo (_state, oo (L .get (app_history), oo (Z .size)))) =>
   !! (history_size < board_size * board_size)
-  ? Oo (app_state,
+  ? Oo (_state,
     oo (L .set ([app_history, L .append], rendition .rendition ([]))))
-  : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (app_state))
+  : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (_state))
          
 
 
-var crossed_answers = memoize (app_state => 
-  !! (L .isDefined (app_playing) (app_state))
+var crossed_answers = memoize (_state => 
+  !! (L .isDefined (app_playing) (_state))
   ? where ((
-    final_attempts = Oo (app_state, oo (L .get (app_history)),
-      oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
-    actual_answers = Oo (app_state, L .get (app_questions))) =>
-  Oo (Z .zip (final_attempts) (actual_answers),
-    oo (Z .mapMaybe (pair =>
-      !! (Z .equals (Z .fst (pair)) (Z .Just (Z .snd (pair))))
-        ? Z .fst (pair)
-        : Z .Nothing))))
+      final_attempts = Oo (_state, oo (L .get (app_history)),
+        oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
+      actual_answers = Oo (_state, oo (L .get (app_questions)))) =>
+    Oo (Z .zip (final_attempts) (actual_answers),
+      oo (Z .map (pair =>
+        where ((
+          maybe_attempt = Z .fst (pair),
+          maybe_answer = Z .Just (Z .snd (pair))) =>
+        !! (Z .equals (maybe_attempt) (maybe_answer))
+        ? maybe_attempt
+        : Z .Nothing))),
+      oo (Z .justs)))
   : [])
 
-var current_question = app_state =>
-  !! L .isDefined (app_playing) (app_state)
+var current_question = _state =>
+  !! L .isDefined (app_playing) (_state)
   ? where ((
-    current_question_index = Oo (app_state, oo (L .get (app_history)), oo (Z .size)) - 1) =>
-  Oo (app_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
+      history = Oo (_state, oo (L .get (app_history))),
+      current_question_index = Z .size (history) - 1) =>
+    Oo (_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
 var encode_message = message =>
@@ -244,25 +249,25 @@ var encode_message = message =>
   ? Oo (message,
     oo (L .get (message_latency)),
     oo (where ((
-      student = L .get (message_student) (message)) =>
+        student = L .get (message_student) (message)) =>
       L .get (L .getInverse ([ ensemble_student_pings, student ])))))
   : !! L .isDefined (message_student_join) (message)
   ? Oo (message,
     oo (L .get (message_board)),
     oo (where ((
-      student = L .get (message_student) (message)) =>
+        student = L .get (message_student) (message)) =>
       L .get (L .getInverse ([ ensemble_student_boards, student ])))))
   : !! L .isDefined (message_student_sync) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
     oo (where ((
-      student = L .get (message_student) (message)) =>
+        student = L .get (message_student) (message)) =>
       L .get (L .getInverse ([ ensemble_student_synchronizations, student ])))))
   : !! L .isDefined (message_student_update) (message)
   ? Oo (message,
     oo (L .get (message_history)),
     oo (where ((
-      student = L .get (message_student) (message)) =>
+        student = L .get (message_student) (message)) =>
       L .get (L .getInverse ([ ensemble_student_histories, student ])))))
   : undefined
 

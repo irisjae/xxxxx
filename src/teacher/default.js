@@ -106,7 +106,7 @@ S (_ => {{
         oo (_x => _x * 100000000),
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
 S (_ => {{
-  Oo (app_state (), map_just (_state => {{
+  Oo (app_state (), oo (map_just (_state => {{
     if (L .isDefined (app_get_ready) (_state)) {
       if (heartbeat ()) {
         var room = L .get (app_room) (_state)
@@ -116,4 +116,14 @@ S (_ => {{
             ;ensemble_state (Z .Just (_x))
             ;setTimeout (_ => {{
               ;heartbeat (true) }}
-            , 300) }} ) ) } } }})) }})
+            , 300) }} ) ) } } }}))) }})
+S (last_state => {{
+  Oo (app_state (), oo (map_just (_state => {{
+    if (L .isDefined (data_iso (app_playing)) (_state)) {
+      if (! L .isDefined (data_iso (app_playing)) (last_state)) {
+        
+      }
+    }
+  }})))
+  return app_state () }}
+, app_state ())

@@ -68,11 +68,14 @@ var data_iso = data =>
     constructor_prefix = R .head (R .keys (instance_template)),
     read = data =>
       L .get (constructor_prefix) (data),
-    write = records =>
+    write = record =>
       where ((
-        records_list = ordered_factors .map (_x => records [_x])) =>
-      data .apply (null, records_list)) ) =>
-  L .iso (read) (write))
+        records_list = ordered_factors .map (_x => record [_x])) =>
+      data .apply (null, records_list)),
+    lens = L .iso (read) (write),
+    _ = Oo (ordered_factors, oo (R .map (_x => {{
+      ;lens [_x] = [ lens, _x ] }})))) =>
+  lens)
 /*
 var data_iso = data =>
   where ((
@@ -96,7 +99,7 @@ var fro = (nothing_val, just_val) => (maybe = maybe) =>
   !! (Z .isJust (maybe))
   ? just_val (from_just (maybe))
   : nothing_val
-var map_just = fn => fro (Z .Nothing, _x => Z .Just (fn (_x)))
+var map_just = fn => fro (Z .Nothing, _x => Z .unchecked .Just (fn (_x)))
 var maybe_all_list = list => where ((
   maybe_head = Z .unchecked .head (list),
   maybe_tail = Z .unchecked .tail (list)) =>
@@ -107,12 +110,17 @@ var maybe_all_list = list => where ((
       Oo (plain_head, oo (fro (Z .Nothing,
         just_head => Oo (recursion, oo (fro (Z .Nothing,
           just_tail =>
-            Z .Just (Z .unchecked .prepend (just_head) (just_tail)))))))))))))
-var maybe_recurse = L .lazy (rec =>
-  L .cond (
-    [ R .is (Array), [L .elems, rec] ],
-    [ R .is (Object), [L .values, rec] ],
-    [ L .identity ]))
+            Z .unchecked .Just (Z .unchecked .prepend (just_head) (just_tail)))))))))))))
+var maybe_all = _x =>
+  !! Z .is (Z$ .Array (Z$ .Any)) (_x)
+  ? maybe_all_list (_x)
+  : !! Z .is (Z$ .Object) (_x)
+  ? Oo (_x, oo (R .toPairs),
+    oo (R .map (L .modify (L .first) (_x => Z .unchecked .Just (_x)))),
+    oo (R .map (maybe_all_list)),
+    oo (maybe_all_list),
+    oo (map_just (R .fromPairs)))
+  : undefined
 
 
 var every = _x => where ((
