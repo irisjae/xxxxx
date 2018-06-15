@@ -55,9 +55,9 @@ var pipeline_room_input = input => {;
       ;input .value = ''
       ;connect_room (value) }})} 
 
-var pipeline_board_cell = cell => span => {;
+var pipeline_board_cell = cell => _dom => {;
   ;clicking .forEach (click => {;
-    ;span .addEventListener (click, _ => {;
+    ;_dom .addEventListener (click, _ => {;
       ;attempt_question (L .get (cell_answer, cell)) }) }) }
 
 var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
@@ -72,8 +72,8 @@ var board_view = board => history => <board-etc>
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
       oo (L .get (cell_answer)),
       oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
-        ? <span>{ crossed (_x) }</span>
-        : <span fn={ pipeline_board_cell (cell) }>{ _x }</span> ))))) } </div> ))) } </board> </board-etc>
+        ? <cell>{ crossed (_x) }</cell>
+        : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> ))))) } </div> ))) } </board> </board-etc>
 
 window .view = <student-app>
 	{ where ((
@@ -81,7 +81,8 @@ window .view = <student-app>
     !! (L .isDefined (app_get_ready, x))
       ? !! (L .isDefined (io_connecting, io_state ()))
         ? 'Trying to connect...'
-        : Oo (L .get ([app_room, as_maybe], x),
+        : Oo (x,
+          oo (L .get ([app_room, as_maybe], x),
           oo (fro (
             Oo (L .get ([app_student, as_maybe], x),
               oo (fro (
@@ -152,6 +153,11 @@ var attempt_question = _x => {{
 
 var timesup_question = _ => {{
   ;app_state (student_app_next_playing (app_state ())) }}
+
+
+
+
+
 
 
 
