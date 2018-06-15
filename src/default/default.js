@@ -59,7 +59,9 @@ var data_lens = data =>
   __data_lens .get (data)
 var data_iso = data =>
   where ((
-    instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
+    instance_template = !! Z .is (Z$ .AnyFunction) (data)
+      ? data .apply (null, R .range (1, __data_length .get (data) + 1))
+      : data,
     //factors = Oo (instance_template, oo (R .values), oo (R .head), oo (R .keys)),
     inverted_template = R .invert (R .head (R .values (instance_template))),
     ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),

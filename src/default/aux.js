@@ -263,40 +263,6 @@ var encode_message = message =>
 
 
 
-shuffle
-uuid
-
-api
-post
-
-
-
-student
-question
-answer
-latency
-position
-
-attempt
-
-
-rendition
-board
-
-rules
-setup
-
-
-teacher_app
-student_app
-io
-
-
-message
-ensemble
-
-
-
 
 
 
@@ -304,8 +270,8 @@ window .stuff = { ...window .stuff,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
   shuffle, uuid, api, post,
-  student, question, answer, latency, v,
-  board, rendition, rules, setup,
+  student, question, answer, latency, position,
+  attempt, rendition, board, rules, setup,
   teacher_app, student_app, io, message, ensemble, 
   default_questions, default_rules,
   as_maybe,
