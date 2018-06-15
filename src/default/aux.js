@@ -1,7 +1,9 @@
-var { xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, 
-  where, do_, defined,
+var {
+  xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
+  where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, every
+  fro, map_just, from_just, maybe_all,
+  every, delay 
 } = window .stuff
 
 
@@ -182,27 +184,28 @@ var generate_board = size => questions =>
     cells = shuffle (questions .slice (0, size * size)),
     cell = y => x =>
       cells [(x - 1) * size + (y - 1)]) =>
-    Oo (R .range (1, size + 1),
-      oo (R .map (row => Oo (R .range (1, size + 1),
-        oo (R .map (column => [row, column, cell (row) (column)] )))))))
+  Oo (R .range (1, size + 1),
+    oo (R .map (row => Oo (R .range (1, size + 1),
+      oo (R .map (column => [row, column, cell (row) (column)] )))))))
 
 
 
 
 var student_app_get_ready_to_playing = app_state =>
   Oo (app_state,
-    oo (L .get ([ app_setup, as_maybe ])),
-    oo (map_just (setup => 
-      student_app .playing (setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
+    oo (R .converge (maybe_all,
+      [ L .get ([ app_student, as_maybe ]), L .get ([ app_setup, as_maybe ]) ])),
+    oo (map_just (([student, setup]) => 
+      student_app .playing (student, setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
 
 var student_app_next_playing = app_state =>
   where ((
     board_size = L .get ([app_setup, setup_size], app_state),
     history_size = Z .size (L .get (app_history, app_state))) =>
-    !! (history_size < board_size * board_size)
-    ? Oo (app_state,
-      oo (L .set ([app_history, L .append], rendition .rendition ([]))))
-    : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (app_state))
+  !! (history_size < board_size * board_size)
+  ? Oo (app_state,
+    oo (L .set ([app_history, L .append], rendition .rendition ([]))))
+  : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (app_state))
          
 
 

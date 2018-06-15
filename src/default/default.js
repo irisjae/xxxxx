@@ -157,5 +157,5 @@ window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just,
+  fro, map_just, from_just, maybe_all,
   every, delay }

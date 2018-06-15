@@ -2,12 +2,13 @@ var {
   xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, every, 
-  number, string, list, maybe, id,
-  shuffle,
-  uuid, api, post,
-  student, question, answer, latency, v,
-  board, rendition, rules, setup,
+  fro, map_just, from_just, maybe_all,
+  every, delay,
+  bool, number, timestamp, string,
+  list, map, maybe, nat, id, v,
+  shuffle, uuid, api, post,
+  student, question, answer, latency, position,
+  attempt, rendition, board, rules, setup,
   teacher_app, student_app, io, message, ensemble, 
   default_questions, default_rules,
   as_maybe,
@@ -21,7 +22,7 @@ var {
   rules_size, setup_size,
   cell_answer, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  crossed_answers, current_question
+  crossed_answers, current_question 
 } = window .stuff
 
 
