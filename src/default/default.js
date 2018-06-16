@@ -60,8 +60,9 @@ var data_lens = data =>
     lens = __data_lens .get (data)) =>  
   !! Z .is (Z$ .AnyFunction) (data)
   ? where ((
-      records = 
-      _ = Oo ()) =>
+      instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
+      records = R .keys (R .head (R .values (instance_template))),
+      _ = Oo (records, oo (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})))) =>
     lens)
   : lens)
 
