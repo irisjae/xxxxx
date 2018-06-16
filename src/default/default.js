@@ -56,7 +56,14 @@ var data = constructors => Oo (constructors,
       : R .objOf (key) ({}) ))))
 
 var data_lens = data =>
-  __data_lens .get (data)
+  where ((
+    lens = __data_lens .get (data)) =>  
+  !! Z .is (Z$ .AnyFunction) (data)
+  ? where ((
+    _ = ) =>
+    lens)
+  : lens)
+
 var data_iso = data =>
   where ((
     instance_template = !! Z .is (Z$ .AnyFunction) (data)
