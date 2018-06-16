@@ -52,8 +52,11 @@ var data = constructors => Oo (constructors,
           R .objOf (key) (R .fromPairs (R .zip (portions, vals))),
         oo (R .tap (_x => {{
           ;__data_length .set (_x, portions .length)
-          ;__data_lens .set (_x, key) }}))) ) 
-      : R .objOf (key) ({}) ))))
+          ;__data_lens .set (_x, [key]) }}))) ) 
+      : Oo (R .objOf (key) ({}),
+        oo (R .tap (_x => {{
+          ;__data_length .set (_x, 0)
+          ;__data_lens .set (_x, [key]) }}))) ))))
 
 var data_lens = data =>
   where ((
