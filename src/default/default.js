@@ -60,7 +60,8 @@ var data_lens = data =>
     lens = __data_lens .get (data)) =>  
   !! Z .is (Z$ .AnyFunction) (data)
   ? where ((
-    _ = ) =>
+      records = 
+      _ = Oo ()) =>
     lens)
   : lens)
 
