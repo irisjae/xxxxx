@@ -236,7 +236,7 @@ var current_question = _state =>
     Oo (_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
-var _message = message =>
+var message_encoding = message =>
   where ((
     student = L .get (message_student) (message)) =>
   !! L .isDefined (message_teacher_setup) (message)
@@ -265,7 +265,8 @@ var _message = message =>
     oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))))
   : undefined)
 
-var encode_messages = 
+var messages_encoding = list =>
+  R .reduce (R .mergeDeepRight, {}, list .map (message_encoding))
 
 
 
