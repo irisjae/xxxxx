@@ -90,7 +90,7 @@ var message = data ({
   teacher_abort: ( synchroziation = timestamp ) => defined,
   student_ping: ( student = student, latency = latency ) => defined,
   student_join: ( student = student, board = board ) => defined,
-  student_sync: ( student = student, synchronization = timestamp ) => defined,
+  student_start: ( student = student, synchronization = timestamp ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
   ensemble: (
@@ -99,7 +99,7 @@ var ensemble = data ({
     rules = rules,
     start = timestamp,
     abort = maybe (timestamp),
-    student_synchronizations = map (student) (timestamp),
+    student_starts = map (student) (timestamp),
     student_pings = map (student) (latency),
     student_boards = map (student) (board),
     student_histories = map (student) (history) ) => defined })
@@ -151,7 +151,7 @@ var message_teacher_start = data_iso (message .teacher_start)
 var message_teacher_abort = data_iso (message .teacher_abort) 
 var message_student_ping = data_iso (message .student_ping) 
 var message_student_join = data_iso (message .student_join) 
-var message_student_sync = data_iso (message .student_sync) 
+var message_student_start = data_iso (message .student_start) 
 var message_student_update = data_iso (message .student_update) 
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
