@@ -125,9 +125,9 @@ var as_maybe = [L .reread (_x => Z .Just (_x)), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
 
 
-var app_get_ready = L .choices (data_lens (teacher_app .get_ready), data_lens (student_app .get_ready))
-var app_playing = L .choices (data_lens (teacher_app .playing), data_lens (student_app .playing))
-var app_game_over = L .choices (data_lens (teacher_app .game_over), data_lens (student_app .game_over))
+var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
+var app_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
+var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
 var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), L .choices (['student', from_maybe], 'student') ]
 var app_setup = [L .choices (app_get_ready, app_playing, app_game_over), L .choices ([ 'setup', from_maybe ], 'setup')]
@@ -145,14 +145,14 @@ var app_questions = [ app_setup, setup_questions ]
 var io_inert = data_lens (io .inert)
 var io_connecting = data_lens (io .connecting)
 
-var message_teacher_setup = data_lens (message .teacher_setup)
-var message_teacher_ping = data_lens (message .teacher_ping) 
-var message_teacher_sync = data_lens (message .teacher_sync) 
-var message_teacher_abort = data_lens (message .teacher_abort) 
-var message_student_ping = data_lens (message .student_ping) 
-var message_student_join = data_lens (message .student_join) 
-var message_student_sync = data_lens (message .student_sync) 
-var message_student_update = data_lens (message .student_update) 
+var message_teacher_setup = data_iso (message .teacher_setup)
+var message_teacher_ping = data_iso (message .teacher_ping) 
+var message_teacher_sync = data_iso (message .teacher_sync) 
+var message_teacher_abort = data_iso (message .teacher_abort) 
+var message_student_ping = data_iso (message .student_ping) 
+var message_student_join = data_iso (message .student_join) 
+var message_student_sync = data_iso (message .student_sync) 
+var message_student_update = data_iso (message .student_update) 
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
 var message_latency = [L .choices (message_teacher_ping, message_student_ping), 'latency']
