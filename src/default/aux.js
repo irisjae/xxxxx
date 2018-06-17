@@ -156,14 +156,14 @@ var message_student_update = data_iso (message .student_update)
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
 var message_latency = [L .choices (message_teacher_ping, message_student_ping), 'latency']
-var message_synchronization = message_student_sync .synchronization
+var message_synchronization = message_student_start .synchronization
 var message_board = message_student_join .board
 var message_history = message_student_update .history
   
 var ensemble_questions = data_iso (ensemble .ensemble) .questions 
 var ensemble_student_pings = data_iso (ensemble .ensemble) .student_pings 
 var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards 
-var ensemble_student_synchronizations = data_iso (ensemble .ensemble) .student_synchronizations 
+var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
 var rendition_attempts = data_lens (rendition .rendition) .attempts
@@ -236,14 +236,14 @@ var current_question = _state =>
     Oo (_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
-var encode_message = message =>
+var _message = message =>
   where ((
     student = L .get (message_student) (message)) =>
   !! L .isDefined (message_teacher_setup) (message)
   ? message
   : !! L .isDefined (message_teacher_ping) (message)
   ? message
-  : !! L .isDefined (message_teacher_sync) (message)
+  : !! L .isDefined (message_teacher_start) (message)
   ? message
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
@@ -255,16 +255,17 @@ var encode_message = message =>
   ? Oo (message,
     oo (L .get (message_board)),
     oo (L .get (L .getInverse ([ ensemble_student_boards, student ]))))
-  : !! L .isDefined (message_student_sync) (message)
+  : !! L .isDefined (message_student_start) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
-    oo (L .get (L .getInverse ([ ensemble_student_synchronizations, student ]))))
+    oo (L .get (L .getInverse ([ ensemble_student_starts, student ]))))
   : !! L .isDefined (message_student_update) (message)
   ? Oo (message,
     oo (L .get (message_history)),
     oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))))
   : undefined)
 
+var encode_messages = 
 
 
 
