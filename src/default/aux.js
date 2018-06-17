@@ -237,6 +237,8 @@ var current_question = _state =>
   : Z .Nothing
 
 var encode_message = message =>
+  where ((
+    student = L .get (message_student) (message)) =>
   !! L .isDefined (message_teacher_setup) (message)
   ? message
   : !! L .isDefined (message_teacher_ping) (message)
@@ -248,29 +250,20 @@ var encode_message = message =>
   : !! L .isDefined (message_student_ping) (message)
   ? Oo (message,
     oo (L .get (message_latency)),
-    oo (where ((
-        student = L .get (message_student) (message)) =>
-      L .get (L .getInverse ([ ensemble_student_pings, student ])))))
+    oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))))
   : !! L .isDefined (message_student_join) (message)
   ? Oo (message,
     oo (L .get (message_board)),
-    oo (where ((
-        student = L .get (message_student) (message)) =>
-      L .get (L .getInverse ([ ensemble_student_boards, student ])))))
+    oo (L .get (L .getInverse ([ ensemble_student_boards, student ]))))
   : !! L .isDefined (message_student_sync) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
-    oo (where ((
-        student = L .get (message_student) (message)) =>
-      L .get (L .getInverse ([ ensemble_student_synchronizations, student ])))))
+    oo (L .get (L .getInverse ([ ensemble_student_synchronizations, student ]))))
   : !! L .isDefined (message_student_update) (message)
   ? Oo (message,
     oo (L .get (message_history)),
-    oo (where ((
-        student = L .get (message_student) (message)) =>
-      L .get (L .getInverse ([ ensemble_student_histories, student ])))))
-  : undefined
-
+    oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))))
+  : undefined)
 
 
 
