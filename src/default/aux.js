@@ -86,8 +86,8 @@ var io = data ({
 var message = data ({
   teacher_setup: ( questions = list (question), rules = rules ) => defined,
   teacher_ping: ( latency = latency ) => defined,
-  teacher_sync: ( synchroziation = timestamp ) => defined,
-  teacher_abort: () => defined,
+  teacher_start: ( synchroziation = timestamp ) => defined,
+  teacher_abort: ( synchroziation = timestamp ) => defined,
   student_ping: ( student = student, latency = latency ) => defined,
   student_join: ( student = student, board = board ) => defined,
   student_sync: ( student = student, synchronization = timestamp ) => defined,
@@ -97,12 +97,12 @@ var ensemble = data ({
     ping = latency,
     questions = list (question),
     rules = rules,
-    synchronization = timestamp,
+    start = timestamp,
+    abort = maybe (timestamp),
     student_synchronizations = map (student) (timestamp),
     student_pings = map (student) (latency),
     student_boards = map (student) (board),
-    student_histories = map (student) (history),
-    aborted = bool ) => defined })
+    student_histories = map (student) (history) ) => defined })
 
 
 
@@ -147,7 +147,7 @@ var io_connecting = data_lens (io .connecting)
 
 var message_teacher_setup = data_iso (message .teacher_setup)
 var message_teacher_ping = data_iso (message .teacher_ping) 
-var message_teacher_sync = data_iso (message .teacher_sync) 
+var message_teacher_start = data_iso (message .teacher_start) 
 var message_teacher_abort = data_iso (message .teacher_abort) 
 var message_student_ping = data_iso (message .student_ping) 
 var message_student_join = data_iso (message .student_join) 
