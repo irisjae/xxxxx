@@ -193,7 +193,8 @@ var timesup_question = _ => {{
 
 
 
-var heartbeat = S .data (true) 
+var reping_period = 3
+var heartbeat = S .data (reping_period) 
 
 var clock = new TimelineMax
 clock .add (timesup_question, 10)
@@ -237,11 +238,13 @@ S (_ => {{
 S (_ => {{
   Oo (app_state (), oo (_state => {{
     if (L .isDefined (app_room) (_state)) {
+      var phase = 
       if (heartbeat ()) {
         var room = L .get (app_room) (_state)
         go
         .then (_ =>
-          api (room) .then (_x => {{
+          (
+          api (room)) .then (_x => {{
             ;ensemble_state (_x)
             ;setTimeout (_ => {{
               ;heartbeat (true) }}
@@ -255,7 +258,7 @@ var connection = S (_ => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
-      return where ((
+      return connection [_room] () && where ((
         [mean, variance, n, timestamp] = connection [_room] () ) =>
       [timestamp, mean, Math .sqrt (variance)])  
     }} ))) }})
