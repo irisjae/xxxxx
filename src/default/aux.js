@@ -31,21 +31,30 @@ var uuid = _ =>
     v.toString(16) ))
 
 var _ping_cache = {}
+var _ping_listeners = {}
 var api = (room, _x) => {{
   var begin = performance .now ()
   return fetch ('/room/' + room, _x) .then (_x => {{
     var end = performance .now ()
     var sample = end - begin
     if (! _ping_cache [room]) {
-      _ping_cache [room] = [0, 0, 0]}
-    _ping_cache [room] = where ((
-        {mean, std, n} = L .pick ({}),
-        carry = (n - 1) / n ) =>
-      [
-        mean * carry + sample / n,
-        std
-      ])
+      ;_ping_cache [room] = [0, 0, 0]}
+    ;_ping_cache [room] = Oo (_ping_cache [room],
+      oo (L .get (L .pick ({
+        mean: 0,
+        sqr_mean: 1,
+        n: 2 }))),
+      oo (({mean, sqr_mean, n}) => where ((
+        carry = n / (n + 1) ) =>
+      [ mean * carry + sample / (n + 1)
+      , sqr_mean * carry + (sample * sample) / (n + 1)
+      , n + 1 ])))
+    ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
     return _x .json () }}) }}
+;api .listen_ping = fn => {{ 
+  if (! _ping_listeners [room]) {
+    ;_ping_listeners [room] = [] }
+  ;_ping_listeners [room] .push () }}
 var post = x => ({
   method: 'POST',
   headers: {
