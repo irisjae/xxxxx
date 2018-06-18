@@ -51,10 +51,10 @@ var api = (room, _x) => {{
       , n + 1 ])))
     ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
     return _x .json () }}) }}
-;api .listen_ping = fn => {{ 
+;api .listen_ping = room => fn => {{ 
   if (! _ping_listeners [room]) {
     ;_ping_listeners [room] = [] }
-  ;_ping_listeners [room] .push () }}
+  ;_ping_listeners [room] .push (fn) }}
 var post = x => ({
   method: 'POST',
   headers: {

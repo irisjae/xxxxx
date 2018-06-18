@@ -142,12 +142,12 @@ var connect_room = room => {{
         Oo (app_state (), L .get ([ app_student, as_maybe ])),
         Z .Just (setup .setup (room, questions, default_rules)))) }})
   .then (_ => {{
-    ;lookbehind_state (student_lookbehind .nothing) }})
+    ;lookbehind_state (student_lookbehind .nothing)
+    ;io_state () }})
 	.catch (e => {{
     ;lookbehind_state (student_lookbehind .bad_room (room))
-    ;console .error (e) }})
-  .then (_ => {{
-    ;io_state (io .inert) }}) }} 
+    ;io_state (io .inert)
+    ;console .error (e) }}) }} 
 
 var valid_attempt = _ => 
   !! (where ((
@@ -194,8 +194,8 @@ Oo (R .range (0, 10 + 1),
 var tick_sampler = S .data (Z .Nothing)
 
 var get_latency = now => {
-    var start = clock .getLabelTime ('next')
-    if (start === -1) start = 0
+    var start = Oo (clock .getLabelTime ('next'),
+      oo (_x => !! (_x === -1) ? 0 : _x))
     return now - start }
 
 
