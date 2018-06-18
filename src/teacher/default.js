@@ -73,7 +73,7 @@ var get_room = room => {{
       else return _x }}))
   .then (_ =>
     api (room,
-      post (L .get ([ L .getInverse (data_iso (setup .setup)), data_iso (message .teacher_setup) ]) (_setup))) .then (_x => {{
+      post (L .get ([ data_iso (setup .setup), L .getInverse (data_iso (message .teacher_setup)) ]) (_setup))) .then (_x => {{
       if (! _x .ok) {
         ;throw new Error ('cannot post to ' + room)}
       else return _x }}))
