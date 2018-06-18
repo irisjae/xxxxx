@@ -108,21 +108,17 @@ var data_iso = data =>
 
 var from_just = _x =>
   Z_ .fromMaybe_ (_ => {}) (_x)
-var fro = (nothing_val, just_val) => (maybe = maybe) => 
-  !! (Z .isJust (maybe))
-  ? just_val (from_just (maybe))
-  : nothing_val
-var map_just = fn => fro (Z .Nothing, _x => Z_ .Just (fn (_x)))
+var map_just = fn => Z_ .maybe (Z .Nothing) (_x => Z_ .Just (fn (_x)))
 var maybe_all_list = list => where ((
   maybe_head = Z_ .head (list),
   maybe_tail = Z_ .tail (list)) =>
-  Oo (maybe_head, oo (fro (Z .Just ([]),
-    plain_head => where ((
+  Oo (maybe_head, oo (Z_ .maybe (Z .Just ([]))
+    (plain_head => where ((
       plain_tail = from_just (maybe_tail),
       recursion = maybe_all_list (plain_tail)) =>
-      Oo (plain_head, oo (fro (Z .Nothing,
-        just_head => Oo (recursion, oo (fro (Z .Nothing,
-          just_tail =>
+      Oo (plain_head, oo (Z_ .maybe (Z .Nothing)
+        (just_head => Oo (recursion, oo (Z_ .maybe (Z .Nothing)
+          (just_tail =>
             Z_ .Just (Z_ .prepend (just_head) (just_tail)))))))))))))
 var maybe_all = _x =>
   !! Z .is (Z$ .Array (Z$ .Any)) (_x)
@@ -183,5 +179,5 @@ window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, from_just, maybe_all,
+  map_just, from_just, maybe_all,
   every, delay }
