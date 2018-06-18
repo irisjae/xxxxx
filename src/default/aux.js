@@ -65,56 +65,57 @@ var ping = v (timestamp, latency, latency)
 var attempt = v (answer, timeinterval)
 
 
-var rendition = data ({ rendition: (attempts = list (attempt)) => defined })
-var board = data ({ board: (answers = map (position) (answer)) => defined})
+var rendition = data ({ rendition: (attempts =~ list (attempt)) => defined })
+var board = data ({ board: (answers =~ map (position) (answer)) => defined})
 
-var rules = data ({ rules: (time_limit = number, size = nat) => defined })
-var setup = data ({ setup: ( room = room, questions = list (question), rules = rules ) => defined })
+var rules = data ({ rules: (time_limit =~ number, size =~ nat) => defined })
+var setup = data ({ setup: ( room =~ room, questions =~ list (question), rules =~ rules ) => defined })
 
 
 var teacher_app = data ({
-	get_ready: ( setup = setup, students = list (student) ) => defined,
-	playing: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined,
-	game_over: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined })
+	get_ready: ( setup =~ setup, students =~ list (student) ) => defined,
+	playing: ( setup =~ setup, students =~ map (student) (board, list (rendition)) ) => defined,
+	game_over: ( setup =~ setup, students =~ map (student) (board, list (rendition)) ) => defined })
 
 var teacher_lookbehind = data ({
   nothing: () => defined,
   bad_room: () => defined })
 
 var student_app = data ({
-	get_ready: ( student = maybe (student), setup = maybe (setup) ) => defined,
-	playing: ( student = student, setup = setup, board = board, history = list (rendition) ) => defined,
-	game_over: ( student = student, setup = setup, board = board, history = list (list (rendition)) ) => defined })
+	get_ready: ( student =~ maybe (student), setup =~ maybe (setup) ) => defined,
+	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ list (rendition) ) => defined,
+	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ list (list (rendition)) ) => defined })
 
 var student_lookbehind = data ({
   nothing: () => defined,
-  bad_room: (room = room) => defined })
+  bad_room: (room =~ room) => defined })
 
 var io = data ({
   inert: () => defined,
-  connecting: () => defined })
+  connecting: () => defined,
+  connected: (ping =~ ping, n =~ nat) => defined })
 
 
 var message = data ({
-  teacher_setup: ( questions = list (question), rules = rules ) => defined,
-  teacher_ping: ( ping = ping ) => defined,
-  teacher_start: ( synchroziation = timestamp ) => defined,
-  teacher_abort: ( synchroziation = timestamp ) => defined,
-  student_ping: ( student = student, ping = ping ) => defined,
-  student_join: ( student = student, board = board ) => defined,
-  student_start: ( student = student, synchronization = timestamp ) => defined,
-  student_update: ( student = student, history = list (rendition) ) => defined })
+  teacher_setup: ( questions =~ list (question), rules =~ rules ) => defined,
+  teacher_ping: ( ping =~ ping ) => defined,
+  teacher_start: ( synchroziation =~ timestamp ) => defined,
+  teacher_abort: ( synchroziation =~ timestamp ) => defined,
+  student_ping: ( student =~ student, ping =~ ping ) => defined,
+  student_join: ( student =~ student, board =~ board ) => defined,
+  student_start: ( student =~ student, synchronization =~ timestamp ) => defined,
+  student_update: ( student =~ student, history =~ list (rendition) ) => defined })
 var ensemble = data ({
   ensemble: (
-    ping = ping,
-    questions = list (question),
-    rules = rules,
-    start = timestamp,
-    abort = maybe (timestamp),
-    student_starts = map (student) (timestamp),
-    student_pings = map (student) (ping),
-    student_boards = map (student) (board),
-    student_histories = map (student) (history) ) => defined })
+    ping =~ ping,
+    questions =~ list (question),
+    rules =~ rules,
+    start =~ timestamp,
+    abort =~ maybe (timestamp),
+    student_starts =~ map (student) (timestamp),
+    student_pings =~ map (student) (ping),
+    student_boards =~ map (student) (board),
+    student_histories =~ map (student) (history) ) => defined })
 
 
 
