@@ -136,17 +136,17 @@ var connect_room = room => {{
         ;throw new Error ('empty') }
       else return _x }}) )
 	.then (_ensemble => {{ 
-    var questions = L .get (ensemble_questions, _ensemble)
+    var questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
+    var student = Oo (app_state (), L .get ([ app_student, as_maybe ]))
     ;app_state (
-      student_app .get_ready (
-        Oo (app_state (), L .get ([ app_student, as_maybe ])),
-        Z .Just (setup .setup (room, questions, default_rules))))
-    ;lookbehind_state (student_lookbehind .nothing)
-  }})
+      student_app .get_ready (student
+      , Z .Just (setup .setup (room, questions, default_rules))))
+    ;lookbehind_state (student_lookbehind .nothing) }})
 	.catch (e => {{
     ;lookbehind_state (student_lookbehind .bad_room (room))
-    ;io_state (io .inert)
-    ;console .error (e) }}) }} 
+    ;console .error (e) }})
+  .then (_ => {{
+    ;io_state (io .inert) }}) }} 
 
 var valid_attempt = _ => 
   !! (where ((
@@ -224,6 +224,13 @@ S (_ => {{
   if (L .isDefined (app_game_over, app_state ())) {
     ;clock .pause () } }})
 
+var connection = S (_ =>
+  Oo (app_state (),
+    oo (L .get (app_setup))
+    oo (map_just (_setup => where ((
+        room = Oo (_setup, oo (L .get (setup_room))),
+        room_pings = S .data ()) =>
+      )))))
 /*
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),

@@ -116,8 +116,7 @@ var student_lookbehind = data ({
 
 var io = data ({
   inert: () => defined,
-  connecting: () => defined,
-  connected: (ping =~ ping) => defined })
+  connecting: () => defined })
 
 
 var message = data ({
