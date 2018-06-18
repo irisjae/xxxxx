@@ -32,7 +32,7 @@ var {
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 var lookbehind_state = S .data (student_lookbehind .nothing)
-var ensemble_state = S .data (Z .Nothing)
+var ensemble_state = S .data (undefined)
 var io_state = S .data (io .inert)
 
 
@@ -233,22 +233,23 @@ S (_ => {{
         go
         .then (_ =>
           api (room) .then (_x => {{
-            ;ensemble_state (Z .Just (_x))
+            ;ensemble_state (_x)
             ;setTimeout (_ => {{
               ;heartbeat (true) }}
             , 300) }} ) ) } } }})) }})
 
 
-var room_pings = {}
 var connection = S (_ => {{
-  ;Oo (app_state (),
+  ;return Oo (app_state (),
     oo (L .get ([ app_room, as_maybe ])),
-    oo (map_just (_room => {{
-      if (! room_pings [_room]) {
-        room_pings [_room] }
-_ = api .listen_ping (room) (room_pings)
-      room_pings ()
-    }} ))) }}
+    oo (Z_ .maybe (undefined) (_room => {{
+      if (! connection [_room]) {
+        ;connection [_room] = S .data ()
+        ;api .listen_ping (_room) (connection [_room]) }
+      return where ((
+        [mean, variance] = connection [_room] () ) =>
+      [mean, Math .sqrt (variance)])  
+    }} ))) }})
 /*
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
