@@ -9,9 +9,11 @@ var {
   shuffle, uuid, api, post,
   student, question, answer, latency, position,
   attempt, rendition, board, rules, setup,
-  teacher_app, student_app, io, message, ensemble, 
+  teacher_app, teacher_lookbehind,
+  student_app, student_lookbehind,
+  io, message, ensemble, 
   default_questions, default_rules,
-  as_maybe,
+  as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
@@ -67,20 +69,20 @@ var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter
 var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
   
 var get_ready_view = <get-ready-etc>
-  { !! (L .isDefined (io_connecting, io_state ()))
-    ? 'Trying to connect...'
-    : Oo (app_state (),
-      oo (L .get (L .pick ({
-        room: [app_room, as_maybe],
-        student: [app_student, as_maybe] }))),
-      oo (({ room, student }) =>
-        !! Z .isNothing (student)
-        ? enter_student_view
-        : !! Z .isNothing (room)
-        ? enter_room_view
-        : where ((
-          { plain_room, plain_student } = maybe_all ({ room, student }) ) =>
-        'Connected to room ' + plain_room))) } </get-ready-etc>
+  { Oo (app_state (),
+    oo (L .get (L .pick ({
+      room: [app_room, as_maybe],
+      student: [app_student, as_maybe] }))),
+    oo (({ room, student }) =>
+      !! Z .isNothing (student)
+      ? enter_student_view
+      : !! Z .isNothing (room)
+        ? !! (L .isDefined (io_connecting, io_state ()))
+          ? 'Trying to connect...'
+          : enter_room_view
+      : where ((
+        { plain_room, plain_student } = maybe_all ({ room, student }) ) =>
+      'Connected to room ' + plain_room))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <board-etc>
@@ -133,8 +135,12 @@ var connect_room = room => {{
       student_app .get_ready (
         Oo (app_state (), L .get ([ app_student, as_maybe ])),
         Z .Just (setup .setup (room, questions, default_rules)))) }})
-	.catch (e => {{ ;console .error (e) }})
-  .then (_ => {{ ;io_state (io .inert) }}) }} 
+	.catch (e => {{
+    ;lookbehind_state (student_lookbehind .bad_room)
+    ;console .error (e) }})
+  .then (_ => {{
+    ;lookbehind_state (student_lookbehind .nothing)
+    ;io_state (io .inert) }}) }} 
 
 var valid_attempt = _ => 
   !! (where ((
@@ -185,6 +191,14 @@ var get_latency = now => {
     if (start === -1) start = 0
     return now - start }
 
+
+S (lookbehind_key => {{
+  if (lookbehind_key) {
+    ;clearTimeout (lookbehind_key)}
+  if (L .isDefined (data_iso (student_lookbehind .bad_room)) (lookbehind_state ())) {
+  ;return setTimeout (_ => {{
+     lookbehind_state (student_lookbehind .nothing)}}
+  , 3000) }}}, undefined)
 
 
 S (_ => {{
