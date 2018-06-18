@@ -58,8 +58,9 @@ var student = v (id, string)
 var question = string
 var answer = question
 var timeinterval = number
-var latency = v (timeinterval, timeinterval)
+var latency = timeinterval
 var position = v (nat, nat)
+var ping = v (timestamp, latency, latency)
 
 var attempt = v (answer, timeinterval)
 
@@ -96,22 +97,22 @@ var io = data ({
 
 var message = data ({
   teacher_setup: ( questions = list (question), rules = rules ) => defined,
-  teacher_ping: ( latency = latency ) => defined,
+  teacher_ping: ( ping = ping ) => defined,
   teacher_start: ( synchroziation = timestamp ) => defined,
   teacher_abort: ( synchroziation = timestamp ) => defined,
-  student_ping: ( student = student, latency = latency ) => defined,
+  student_ping: ( student = student, ping = ping ) => defined,
   student_join: ( student = student, board = board ) => defined,
   student_start: ( student = student, synchronization = timestamp ) => defined,
   student_update: ( student = student, history = list (rendition) ) => defined })
 var ensemble = data ({
   ensemble: (
-    ping = latency,
+    ping = ping,
     questions = list (question),
     rules = rules,
     start = timestamp,
     abort = maybe (timestamp),
     student_starts = map (student) (timestamp),
-    student_pings = map (student) (latency),
+    student_pings = map (student) (ping),
     student_boards = map (student) (board),
     student_histories = map (student) (history) ) => defined })
 
@@ -169,7 +170,7 @@ var message_student_start = data_iso (message .student_start)
 var message_student_update = data_iso (message .student_update) 
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
-var message_latency = [L .choices (message_teacher_ping, message_student_ping), 'latency']
+var message_ping = [L .choices (message_teacher_ping, message_student_ping), 'ping']
 var message_synchronization = message_student_start .synchronization
 var message_board = message_student_join .board
 var message_history = message_student_update .history
@@ -263,7 +264,7 @@ var message_encoding = message =>
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
   ? Oo (message,
-    oo (L .get (message_latency)),
+    oo (L .get (message_ping)),
     oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))))
   : !! L .isDefined (message_student_join) (message)
   ? Oo (message,
@@ -291,7 +292,7 @@ window .stuff = { ...window .stuff,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
   shuffle, uuid, api, post,
-  student, question, answer, latency, position,
+  student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
   teacher_app, teacher_lookbehind,
   student_app, student_lookbehind,
