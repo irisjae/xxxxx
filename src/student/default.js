@@ -239,13 +239,13 @@ S (_ => {{
             , 300) }} ) ) } } }})) }})
 
 
-var room_pings = S .data ()
-var connection = S (dispose =>
+var connection = S (_ =>
   Oo (app_state (),
-    oo (L .get (app_setup)),
+    oo (L .get ([ app_setup, as_maybe ])),
     oo (map_just (_setup => where ((
-        room = Oo (_setup, oo (L .get (setup_room))) ) =>
-      api .listen_ping (room) (_x => room_pings (_x)),
+        room = Oo (_setup, oo (L .get (setup_room))),
+        room_pings = S .data (),
+        _ = api .listen_ping (room) (room_pings) ) =>
       room_pings () )))))
 /*
 Oo (student_app_ready_to_during (
