@@ -28,6 +28,7 @@ var {
 
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
+var lookbehind_state = S .data (student_lookbehind .nothing)
 var ensemble_state = S .data (Z .Nothing)
 var io_state = S .data (io .inert)
 
@@ -118,20 +119,20 @@ window .view = <student-app>
 var make_student = name => {{
   ;app_state (student_app .get_ready (Z .Just ([ uuid (), name ]), L .get ([ app_setup, as_maybe ], app_state ()))) }}
 
-var connect_room = id => {{
+var connect_room = room => {{
   ;io_state (io .connecting)
   go 
 	.then (_ =>
-    api (id) .then (_x => {{
-      if (_x .length === 0) {
+    api (room) .then (_x => {{
+      if (Z .equals (_x) ({})) {
         ;throw new Error ('empty') }
       else return _x }}) )
 	.then (_ensemble => {{ 
     var questions = L .get (ensemble_questions, _ensemble)
     ;app_state (
       student_app .get_ready (
-        L .get ([ app_student, as_maybe ], app_state ()),
-        setup .setup (id, questions, default_rules))) }})
+        Oo (app_state (), L .get ([ app_student, as_maybe ])),
+        Z .Just (setup .setup (room, questions, default_rules)))) }})
 	.catch (e => {{ ;console .error (e) }})
   .then (_ => {{ ;io_state (io .inert) }}) }} 
 

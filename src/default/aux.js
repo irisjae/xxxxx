@@ -75,10 +75,20 @@ var teacher_app = data ({
 	get_ready: ( setup = setup, students = list (student) ) => defined,
 	playing: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined,
 	game_over: ( setup = setup, students = map (student) (board, list (rendition)) ) => defined })
+
+var student_lookbehind = data ({
+  nothing: () => defined,
+  bad_room: () => defined })
+
 var student_app = data ({
 	get_ready: ( student = maybe (student), setup = maybe (setup) ) => defined,
 	playing: ( student = student, setup = setup, board = board, history = list (rendition) ) => defined,
 	game_over: ( student = student, setup = setup, board = board, history = list (list (rendition)) ) => defined })
+
+var student_lookbehind = data ({
+  nothing: () => defined,
+  bad_room: () => defined })
+
 var io = data ({
   inert: () => defined,
   connecting: () => defined })
@@ -116,14 +126,14 @@ var default_rules = rules .rules (10, 3)
 
 
 
-var to_maybe = _x =>
+var to_maybe = default_fn => _x => 
   !! (Z .is (Z .MaybeType (Z$ .Any))) (_x)
   ? _x
-  : Z .Nothing
+  : default_fn (_x)
 
 
-var as_maybe = [L .reread (_x => Z .Just (_x)), L .defaults (Z .Nothing)]
-var from_maybe = [L .reread (to_maybe), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
+var as_maybe = [L .reread (to_maybe (_x => Z .Just (_x))), L .defaults (Z .Nothing)]
+var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
 
 
 var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
