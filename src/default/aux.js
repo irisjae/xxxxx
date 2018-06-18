@@ -292,19 +292,23 @@ var message_encoding = message =>
   : !! L .isDefined (message_student_ping) (message)
   ? Oo (message,
     oo (L .get (message_ping)),
-    oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))))
+    oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_student_join) (message)
   ? Oo (message,
     oo (L .get (message_board)),
-    oo (L .get (L .getInverse ([ ensemble_student_boards, student ]))))
+    oo (L .get (L .getInverse ([ ensemble_student_boards, student ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_student_start) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
-    oo (L .get (L .getInverse ([ ensemble_student_starts, student ]))))
+    oo (L .get (L .getInverse ([ ensemble_student_starts, student ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_student_update) (message)
   ? Oo (message,
     oo (L .get (message_history)),
-    oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))))
+    oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : undefined)
 
 var messages_encoding = list =>

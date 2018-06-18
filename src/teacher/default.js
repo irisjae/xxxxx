@@ -7,20 +7,24 @@ var {
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
   shuffle, uuid, api, post,
-  student, question, answer, latency, position,
+  student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
-  teacher_app, student_app, io, message, ensemble, 
+  teacher_app, teacher_lookbehind,
+  student_app, student_lookbehind,
+  io, message, ensemble, 
   default_questions, default_rules,
-  as_maybe,
+  as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
   setup_room, setup_questions, setup_rules,
+  lookbehind_bad_room, lookbehind_room,
   io_inert, io_connecting,
   ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
+  message_encoding, messages_encoding,
   student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question 
 } = window .stuff
@@ -65,7 +69,7 @@ window .view =  <teacher-app>
 var get_room = room => {{
   var _setup = setup .setup ( room, default_questions, default_rules )
 
-  return go
+  ;return go
   .then (_ =>
     api (room) .then (_x => {{
       if (! R .equals (_x) ({})) {
@@ -74,18 +78,16 @@ var get_room = room => {{
   .then (_ =>
     api (room,
       post (message_encoding (
-        Oo (_setup, oo (L .get ([ data_iso (setup .setup), L .getInverse (data_iso (message .teacher_setup)) ]))))))
-        
-    
-    
-    ) .then (_x => {{
+        where ((
+          {questions, rules} = Oo (_setup, oo (L .get (data_iso (setup .setup))))) =>
+        message .teacher_setup (questions, rules)) ))) .then (_x => {{
       if (! _x .ok) {
         ;throw new Error ('cannot post to ' + room)}
       else return _x }}))
   .then (_ => {{
     ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
-  .catch (e => {{
-    ;console .error (e) }}) }}
+  .catch (_e => {{
+    ;console .error (_e) }}) }}
 
 
         
