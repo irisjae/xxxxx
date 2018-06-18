@@ -24,6 +24,7 @@ var {
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
+  message_encoding, messages_encoding,
   student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question 
 } = window .stuff
@@ -128,25 +129,34 @@ var make_student = name => {{
   ;app_state (student_app .get_ready (Z .Just ([ uuid (), name ]), L .get ([ app_setup, as_maybe ], app_state ()))) }}
 
 var connect_room = room => {{
-  ;io_state (io .connecting)
-  go 
-	.then (_ =>
-    api (room) .then (_x => {{
-      if (Z .equals (_x) ({})) {
-        ;throw new Error ('empty') }
-      else return _x }}) )
-	.then (_ensemble => {{ 
-    var questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
-    var student = Oo (app_state (), oo (L .get ([ app_student, as_maybe ])))
-    ;app_state (
-      student_app .get_ready (student
-      , Z .Just (setup .setup (room, questions, default_rules))))
-    ;lookbehind_state (student_lookbehind .nothing) }})
-	.catch (e => {{
-    ;lookbehind_state (student_lookbehind .bad_room (room))
-    ;console .error (e) }})
-  .then (_ => {{
-    ;io_state (io .inert) }}) }} 
+  Oo (app_state (), oo (L .get (app_student)), oo (_student => {{
+    if (_student) {
+      ;io_state (io .connecting)
+      go 
+      .then (_ =>
+        api (room) .then (_x => {{
+          if (Z .equals (_x) ({})) {
+            ;throw new Error ('empty') }
+          else return _x }}) )
+      .then (_ =>
+        api (room, post (messages_encoding (
+          [ message .student_ping (_student, connection ())
+          , message .student_join (_student, ) ]))) .then (_x => {{
+          if (! _x .ok) {
+            ;throw new Error ('not ok') }
+          else return _x }}) )
+      .then (_ensemble => {{ 
+        var questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
+        var student = Oo (app_state (), oo (L .get ([ app_student, as_maybe ])))
+        ;app_state (
+          student_app .get_ready (student
+          , Z .Just (setup .setup (room, questions, default_rules))))
+        ;lookbehind_state (student_lookbehind .nothing) }})
+      .catch (e => {{
+        ;lookbehind_state (student_lookbehind .bad_room (room))
+        ;console .error (e) }})
+      .then (_ => {{
+        ;io_state (io .inert) }}) } }})) }} 
 
 var valid_attempt = _ => 
   !! (where ((
@@ -247,8 +257,8 @@ var connection = S (_ => {{
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
       return where ((
-        [mean, variance] = connection [_room] () ) =>
-      [mean, Math .sqrt (variance)])  
+        [mean, variance, n, timestamp] = connection [_room] () ) =>
+      [timestamp, mean, Math .sqrt (variance)])  
     }} ))) }})
 /*
 Oo (student_app_ready_to_during (
