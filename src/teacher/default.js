@@ -78,7 +78,7 @@ var get_room = room => {{
         ;throw new Error ('cannot post to ' + room)}
       else return _x }}))
   .then (_ => {{
-    ;app_state (teacher_app .get_ready (_setup, [])) }})
+    ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
   .catch (e => {{
     ;console .error (e) }}) }}
 
@@ -100,7 +100,7 @@ Oo (R .range (0, 10 + 1),
 var tick_sampler = S .data (Z .Nothing)
   
 S (_ => {{
-  if (Z .equals (Z .Nothing) (app_state ())) {
+  if (Z_ .equals (Z .Nothing) (app_state ())) {
     if (L .isDefined (data_iso (io .inert)) (io_state ())) {
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
