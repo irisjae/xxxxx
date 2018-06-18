@@ -139,9 +139,8 @@ var connect_room = room => {{
             ;throw new Error ('empty') }
           else return _x }}) )
       .then (_ =>
-        api (room, post (messages_encoding (
-          [ message .student_ping (_student, connection ())
-          , message .student_join (_student, ) ]))) .then (_x => {{
+        api (room, post (message_encoding (
+          message .student_ping (_student, connection ()) ))) .then (_x => {{
           if (! _x .ok) {
             ;throw new Error ('not ok') }
           else return _x }}) )

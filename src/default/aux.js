@@ -129,7 +129,7 @@ var message = data ({
   teacher_abort: ( synchroziation =~ timestamp ) => defined,
   student_ping: ( student =~ student, ping =~ ping ) => defined,
   student_start: ( student =~ student, synchronization =~ timestamp ) => defined,
-  student_board: ( student =~ student, board =~ board ) => defined,
+  student_join: ( student =~ student, board =~ board ) => defined,
   student_update: ( student =~ student, history =~ list (rendition) ) => defined })
 var ensemble = data ({
   ensemble: (
@@ -192,7 +192,7 @@ var message_teacher_ping = data_iso (message .teacher_ping)
 var message_teacher_start = data_iso (message .teacher_start) 
 var message_teacher_abort = data_iso (message .teacher_abort) 
 var message_student_ping = data_iso (message .student_ping) 
-var message_student_ = data_iso (message .student_join) 
+var message_student_join = data_iso (message .student_join) 
 var message_student_start = data_iso (message .student_start) 
 var message_student_update = data_iso (message .student_update) 
 
