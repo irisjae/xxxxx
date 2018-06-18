@@ -35,8 +35,16 @@ var api = (room, _x) => {{
   var begin = performance .now ()
   return fetch ('/room/' + room, _x) .then (_x => {{
     var end = performance .now ()
+    var sample = end - begin
     if (! _ping_cache [room]) {
-      }
+      _ping_cache [room] = [0, 0, 0]}
+    _ping_cache [room] = where ((
+        {mean, std, n} = L .pick ({}),
+        carry = (n - 1) / n ) =>
+      [
+        mean * carry + sample / n,
+        std
+      ])
     return _x .json () }}) }}
 var post = x => ({
   method: 'POST',
