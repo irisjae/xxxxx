@@ -119,8 +119,8 @@ S (_ => {{
             , 300) }} ) ) } } }}))) }})
 S (last_state => {{
   Oo (app_state (), oo (map_just (_state => {{
-    if (! L .isDefined (data_iso (app_playing)) (last_state)) {
-      if (L .isDefined (data_iso (app_playing)) (_state)) {
+    if (! L .isDefined (app_playing) (last_state)) {
+      if (L .isDefined (app_playing) (_state)) {
       }
     }
   }})))
