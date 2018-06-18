@@ -25,6 +25,7 @@ var S = require ('s-js')
 var sanc = require ('sanctuary')
 var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: true, env: sanc .env })
+var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
 var TimelineMax = window .TimelineMax
@@ -106,15 +107,15 @@ var data_iso = data =>
 
 
 var from_just = _x =>
-  Z .unchecked .fromMaybe_ (_ => {}) (_x)
+  Z_ .fromMaybe_ (_ => {}) (_x)
 var fro = (nothing_val, just_val) => (maybe = maybe) => 
   !! (Z .isJust (maybe))
   ? just_val (from_just (maybe))
   : nothing_val
-var map_just = fn => fro (Z .Nothing, _x => Z .unchecked .Just (fn (_x)))
+var map_just = fn => fro (Z .Nothing, _x => Z_ .Just (fn (_x)))
 var maybe_all_list = list => where ((
-  maybe_head = Z .unchecked .head (list),
-  maybe_tail = Z .unchecked .tail (list)) =>
+  maybe_head = Z_ .head (list),
+  maybe_tail = Z_ .tail (list)) =>
   Oo (maybe_head, oo (fro (Z .Just ([]),
     plain_head => where ((
       plain_tail = from_just (maybe_tail),
@@ -122,13 +123,13 @@ var maybe_all_list = list => where ((
       Oo (plain_head, oo (fro (Z .Nothing,
         just_head => Oo (recursion, oo (fro (Z .Nothing,
           just_tail =>
-            Z .unchecked .Just (Z .unchecked .prepend (just_head) (just_tail)))))))))))))
+            Z_ .Just (Z_ .prepend (just_head) (just_tail)))))))))))))
 var maybe_all = _x =>
   !! Z .is (Z$ .Array (Z$ .Any)) (_x)
   ? maybe_all_list (_x)
   : !! Z .is (Z$ .Object) (_x)
   ? Oo (_x, oo (R .toPairs),
-    oo (R .map (L .modify (L .first) (_x => Z .unchecked .Just (_x)))),
+    oo (R .map (L .modify (L .first) (_x => Z_ .Just (_x)))),
     oo (R .map (maybe_all_list)),
     oo (maybe_all_list),
     oo (map_just (R .fromPairs)))
@@ -179,7 +180,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-  xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
+  xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
   fro, map_just, from_just, maybe_all,
