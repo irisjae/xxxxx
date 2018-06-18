@@ -89,7 +89,8 @@ var get_ready_view = <get-ready-etc>
               : R .identity))
       : where ((
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
-      'Connected to room ' + plain_room))) } </get-ready-etc>
+      [ 'Connected to room ' + plain_room
+      , 'Waiting for game to start...' ]))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <board-etc>
@@ -151,9 +152,9 @@ var connect_room = room => {{
           student_app .get_ready (student
           , Z .Just (setup .setup (room, questions, default_rules))))
         ;lookbehind_state (student_lookbehind .nothing) }})
-      .catch (e => {{
+      .catch (_e => {{
         ;lookbehind_state (student_lookbehind .bad_room (room))
-        ;console .error (e) }})
+        ;console .error (_e) }})
       .then (_ => {{
         ;io_state (io .inert) }}) } }})) }} 
 
@@ -236,9 +237,9 @@ S (_ => {{
     ;clock .pause () } }})
 
 S (_ => {{
-  Oo (app_state (), oo (L .get (L .pick ({
-    student: [ app_student, as_maybe ],
-    room: [ app_room, as_maybe ] }))),
+  ;Oo (app_state (), oo (L .get (L .pick ({
+      student: [ app_student, as_maybe ],
+      room: [ app_room, as_maybe ] }))),
     oo (maybe_all),
     oo (map_just (({ student, room }) => {{
       var phase = heartbeat ()
@@ -253,7 +254,12 @@ S (_ => {{
         ;ensemble_state (_x)
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
-        , 300) }} ) }}))) }})
+        , 300) }})
+      .catch (_e => {{
+        ;console .error (_e)
+        ;setTimeout (_ => {{
+          ;heartbeat (phase) }}
+        , 300) }}) }}))) }})
 
 
 var connection = S (_ => {{
