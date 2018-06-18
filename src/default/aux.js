@@ -31,11 +31,13 @@ var uuid = _ =>
     v.toString(16) ))
 
 var _ping_cache = {}
-var api = (room, x) => {{
+var api = (room, _x) => {{
   var begin = performance .now ()
-  var end
-  return fetch ('/room/' + room, x) .then (_x => {{
-    x .json () ) }}
+  return fetch ('/room/' + room, _x) .then (_x => {{
+    var end = performance .now ()
+    if (! _ping_cache [room]) {
+      }
+    return _x .json () }}) }}
 var post = x => ({
   method: 'POST',
   headers: {
