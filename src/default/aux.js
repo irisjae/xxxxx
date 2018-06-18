@@ -153,6 +153,7 @@ var setup_rules = data_lens (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
 
+var lookbehind_bad_room = data_iso (student_lookbehind .bad_room)
 var lookbehind_room = data_lens (student_lookbehind .bad_room) .room
 
 var io_inert = data_iso (io .inert)
@@ -301,7 +302,8 @@ window .stuff = { ...window .stuff,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
   setup_room, setup_questions, setup_rules,
-  lookbehind_room, io_inert, io_connecting,
+  lookbehind_bad_room, lookbehind_room,
+  io_inert, io_connecting,
   ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,

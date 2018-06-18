@@ -18,8 +18,9 @@ var {
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
   setup_room, setup_questions, setup_rules,
-  lookbehind_room, io_inert, io_connecting,
-  io_inert, io_connec
+  lookbehind_bad_room, lookbehind_room,
+  io_inert, io_connecting,
+  ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
@@ -79,7 +80,12 @@ var get_ready_view = <get-ready-etc>
       : !! Z .isNothing (room)
         ? !! (L .isDefined (io_connecting, io_state ()))
           ? 'Trying to connect...'
-          : enter_room_view
+          : Oo ([enter_room_view],
+            oo (!! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
+              ? where ((
+                  bad_room = Oo (lookbehind_state (), L .get (lookbehind_room))) =>
+                Z .prepend (<warning>{bad_room} is not a valid room</warning>))
+              : R .identity))
       : where ((
         { plain_room, plain_student } = maybe_all ({ room, student }) ) =>
       'Connected to room ' + plain_room))) } </get-ready-etc>
