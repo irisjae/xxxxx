@@ -236,19 +236,24 @@ S (_ => {{
     ;clock .pause () } }})
 
 S (_ => {{
-  Oo (app_state (), oo (_state => {{
-    if (L .isDefined (app_room) (_state)) {
-      var phase = 
-      if (heartbeat ()) {
-        var room = L .get (app_room) (_state)
-        go
-        .then (_ =>
-          (
-          api (room)) .then (_x => {{
-            ;ensemble_state (_x)
-            ;setTimeout (_ => {{
-              ;heartbeat (true) }}
-            , 300) }} ) ) } } }})) }})
+  Oo (app_state (), oo (L .get (L .pick ({
+    student: [ app_student, as_maybe ],
+    room: [ app_room, as_maybe ] }))),
+    oo (maybe_all),
+    oo (map_just (({ student, room }) => {{
+      var phase = heartbeat ()
+      var critical = phase === 1
+      go
+      .then (_ =>
+        api (room, !! critical
+          ? post (message_encoding (
+            message .student_ping (student, connection ())))
+          : {}) )
+      .then (_x => {{
+        ;ensemble_state (_x)
+        ;setTimeout (_ => {{
+          ;heartbeat (!! critical ? reping_period : phase - 1) }}
+        , 300) }} ) }}))) }})
 
 
 var connection = S (_ => {{
