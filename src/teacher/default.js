@@ -65,7 +65,7 @@ window .view =  <teacher-app>
 var get_room = room => {{
   var _setup = setup .setup ( room, default_questions, default_rules )
 
-  go
+  return go
   .then (_ =>
     api (room) .then (_x => {{
       if (! R .equals (_x) ({})) {
