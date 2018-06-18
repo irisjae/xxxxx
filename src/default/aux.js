@@ -57,10 +57,11 @@ var v = (...types) => defined
 var student = v (id, string)
 var question = string
 var answer = question
-var latency = number
+var timeinterval = number
+var latency = v (timeinterval, timeinterval)
 var position = v (nat, nat)
 
-var attempt = v (answer, latency)
+var attempt = v (answer, timeinterval)
 
 
 var rendition = data ({ rendition: (attempts = list (attempt)) => defined })

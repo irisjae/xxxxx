@@ -84,7 +84,7 @@ var get_ready_view = <get-ready-etc>
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <board-etc>
   { Oo (app_state (), oo (current_question), oo (fro ('', _x => <question>{ _x }</question>))) }
-  <ticker>{ 10 - tick_sampler () }</ticker>
+  <ticker>{ Oo (tick_sampler (), fro ('', t => 10 - t)) }</ticker>
   <board> { Oo (board, oo (R .map (row => 
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
       oo (L .get (cell_answer)),
@@ -175,7 +175,7 @@ var timesup_question = _ => {{
 var clock = new TimelineMax
 clock .add (timesup_question, 10)
 Oo (R .range (0, 10 + 1),
-  oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
+  oo (R .forEach (t => clock .add (_ => {;tick_sampler (Z .just (t))}, t))))
 
 var tick_sampler = S .data (Z .Nothing)
 
