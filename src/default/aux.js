@@ -87,7 +87,7 @@ var student_app = data ({
 
 var student_lookbehind = data ({
   nothing: () => defined,
-  bad_room: () => defined })
+  bad_room: (room = room) => defined })
 
 var io = data ({
   inert: () => defined,
@@ -153,8 +153,10 @@ var setup_rules = data_lens (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
 
-var io_inert = data_lens (io .inert)
-var io_connecting = data_lens (io .connecting)
+var lookbehind_room = data_lens (student_lookbehind .bad_room) .room
+
+var io_inert = data_iso (io .inert)
+var io_connecting = data_iso (io .connecting)
 
 var message_teacher_setup = data_iso (message .teacher_setup)
 var message_teacher_ping = data_iso (message .teacher_ping) 
@@ -299,7 +301,7 @@ window .stuff = { ...window .stuff,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
   setup_room, setup_questions, setup_rules,
-  io_inert, io_connecting,
+  lookbehind_room, io_inert, io_connecting,
   ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,

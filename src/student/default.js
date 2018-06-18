@@ -18,8 +18,8 @@ var {
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
   setup_room, setup_questions, setup_rules,
-  io_inert, io_connecting,
-  ensemble_questions,
+  lookbehind_room, io_inert, io_connecting,
+  io_inert, io_connec
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
