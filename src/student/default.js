@@ -226,7 +226,7 @@ S (_ => {{
     ;clock .pause () } }})
 
 S (_ => {{
-  Oo (app_state (), oo (map_just (_state => {{
+  Oo (app_state (), oo (_state => {{
     if (L .isDefined (app_room) (_state)) {
       if (heartbeat ()) {
         var room = L .get (app_room) (_state)
@@ -236,7 +236,8 @@ S (_ => {{
             ;ensemble_state (Z .Just (_x))
             ;setTimeout (_ => {{
               ;heartbeat (true) }}
-            , 300) }} ) ) } } }}))) }})
+            , 300) }} ) ) } } }})) }})
+
 
 var connection = S (_ =>
   Oo (app_state (),
@@ -244,7 +245,7 @@ var connection = S (_ =>
     oo (map_just (_setup => where ((
         room = Oo (_setup, oo (L .get (setup_room))),
         room_pings = S .data (),
-        _ = api .listen_ping (room) (room_pings) ) =>
+        _ = api .listen_ping (room) (_x => room_pings (_x)) ) =>
       room_pings () )))))
 /*
 Oo (student_app_ready_to_during (
