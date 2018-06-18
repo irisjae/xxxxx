@@ -87,7 +87,7 @@ var get_ready_view = <get-ready-etc>
                 Z .prepend (<warning>{bad_room} is not a valid room</warning>))
               : R .identity))
       : where ((
-        { plain_room, plain_student } = maybe_all ({ room, student }) ) =>
+        { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
       'Connected to room ' + plain_room))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
@@ -184,6 +184,7 @@ var timesup_question = _ => {{
 
 
 
+var heartbeat = S .data (true) 
 
 var clock = new TimelineMax
 clock .add (timesup_question, 10)
@@ -223,6 +224,19 @@ S (last_state => {{
 S (_ => {{
   if (L .isDefined (app_game_over, app_state ())) {
     ;clock .pause () } }})
+
+S (_ => {{
+  Oo (app_state (), oo (map_just (_state => {{
+    if (L .isDefined (app_room) (_state)) {
+      if (heartbeat ()) {
+        var room = L .get (app_room) (_state)
+        go
+        .then (_ =>
+          api (room) .then (_x => {{
+            ;ensemble_state (Z .Just (_x))
+            ;setTimeout (_ => {{
+              ;heartbeat (true) }}
+            , 300) }} ) ) } } }}))) }})
 
 var connection = S (_ =>
   Oo (app_state (),

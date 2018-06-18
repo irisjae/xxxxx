@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, from_just, maybe_all,
+  map_just, from_just, maybe_all,
   every, delay 
 } = window .stuff
 
@@ -160,7 +160,7 @@ var to_maybe = default_fn => _x =>
 
 
 var as_maybe = [L .reread (to_maybe (_x => Z .Just (_x))), L .defaults (Z .Nothing)]
-var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (fro (undefined, _x => _x)), L .required (Z .Nothing)]
+var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
 
 var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
