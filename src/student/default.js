@@ -1,5 +1,5 @@
 var {
-  xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
+  xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
   map_just, from_just, maybe_all,
@@ -92,8 +92,8 @@ var get_ready_view = <get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <board-etc>
-  { Oo (app_state (), oo (current_question), oo (Z .unchecked .maybe ('') (_x => <question>{ _x }</question>))) }
-  <ticker>{ Oo (tick_sampler .unchecked .maybe ('') (t => 10 - t)) }</ticker>
+  { Oo (app_state (), oo (current_question), oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) }
+  <ticker>{ Oo (tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
   <board> { Oo (board, oo (R .map (row => 
     <div> { Oo (row, oo (R .map (cell => Oo (cell,
       oo (L .get (cell_answer)),

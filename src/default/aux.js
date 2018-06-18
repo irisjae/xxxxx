@@ -30,7 +30,12 @@ var uuid = _ =>
       v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
     v.toString(16) ))
 
-var api = (room, x) => fetch ('/room/' + room, x) .then (x => x .json ())
+var _ping_cache = {}
+var api = (room, x) => {{
+  var begin = performance .now ()
+  var end
+  return fetch ('/room/' + room, x) .then (_x => {{
+    x .json () ) }}
 var post = x => ({
   method: 'POST',
   headers: {
@@ -93,7 +98,7 @@ var student_lookbehind = data ({
 var io = data ({
   inert: () => defined,
   connecting: () => defined,
-  connected: (ping =~ ping, n =~ nat) => defined })
+  connected: (ping =~ ping) => defined })
 
 
 var message = data ({

@@ -1,8 +1,8 @@
 var {
-  xx, oo, Oo, L, R, S, Z, Z$, sanc, memoize, TimelineMax,
+  xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso,
-  fro, map_just, from_just, maybe_all,
+  map_just, from_just, maybe_all,
   every, delay,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
@@ -44,9 +44,9 @@ var io_state = S .data (io .inert)
 
 window .view =  <teacher-app>
   { Oo (L .get ([app_room, as_maybe], app_state ()),
-    oo (fro ('Generating Code.....', x => 'Room: ' + x))) }
+    oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x))) }
   { Oo (L .get ([app_students, as_maybe], app_state ()),
-    oo (fro ('', R .map (x => <span>{x + ' student is here'}</span>)))) } </teacher-app>
+    oo (Z_ .maybe ('') (R .map (_x => <span>{_x + ' student is here'}</span>)))) } </teacher-app>
 
                          
                          
@@ -62,21 +62,21 @@ window .view =  <teacher-app>
                          
                          
                          
-var get_room = id => {{
-  var _setup = setup .setup ( id, default_questions, default_rules )
+var get_room = room => {{
+  var _setup = setup .setup ( room, default_questions, default_rules )
 
   go
   .then (_ =>
-    api (id) .then (x => {{
-      if (! R .equals (x) ({})) {
-        ;throw new Error (id + ' taken') }
-      else return x }}))
+    api (room) .then (_x => {{
+      if (! R .equals (_x) ({})) {
+        ;throw new Error (room + ' taken') }
+      else return _x }}))
   .then (_ =>
-    api (id,
-      post (L .get ([ L .getInverse (data_iso (setup .setup)), data_iso (message .teacher_setup) ]) (_setup))) .then (x => {{
-      if (! x .ok) {
-        ;throw new Error ('cannot post to ' + id)}
-      else return x }}))
+    api (room,
+      post (L .get ([ L .getInverse (data_iso (setup .setup)), data_iso (message .teacher_setup) ]) (_setup))) .then (_x => {{
+      if (! _x .ok) {
+        ;throw new Error ('cannot post to ' + room)}
+      else return _x }}))
   .then (_ => {{
     ;app_state (teacher_app .get_ready (_setup, [])) }})
   .catch (e => {{
