@@ -140,10 +140,9 @@ var connect_room = room => {{
     ;app_state (
       student_app .get_ready (
         Oo (app_state (), L .get ([ app_student, as_maybe ])),
-        Z .Just (setup .setup (room, questions, default_rules)))) }})
-  .then (_ => {{
+        Z .Just (setup .setup (room, questions, default_rules))))
     ;lookbehind_state (student_lookbehind .nothing)
-    ;io_state () }})
+  }})
 	.catch (e => {{
     ;lookbehind_state (student_lookbehind .bad_room (room))
     ;io_state (io .inert)
