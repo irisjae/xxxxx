@@ -54,7 +54,9 @@ var api = (room, _x) => {{
 ;api .listen_ping = room => fn => {{ 
   if (! _ping_listeners [room]) {
     ;_ping_listeners [room] = [] }
-  ;_ping_listeners [room] .push (fn) }}
+  ;_ping_listeners [room] .push (fn)
+  if (_ping_cache [room]) {
+    ;fn (_ping_cache [room]) } }}
 var post = x => ({
   method: 'POST',
   headers: {

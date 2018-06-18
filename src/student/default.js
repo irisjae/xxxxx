@@ -226,11 +226,12 @@ S (_ => {{
 
 var connection = S (_ =>
   Oo (app_state (),
-    oo (L .get (app_setup))
+    oo (L .get (app_setup)),
     oo (map_just (_setup => where ((
         room = Oo (_setup, oo (L .get (setup_room))),
-        room_pings = S .data ()) =>
-      )))))
+        room_pings = S .data (),
+        _ = api .listen_ping (room) (room_pings) ) =>
+      room_pings () )))))
 /*
 Oo (student_app_ready_to_during (
     student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
