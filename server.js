@@ -17,7 +17,7 @@ var go = Promise .resolve ()
 var rooms = {}
 
 var clean_rooms = _ => {{
-	var cleaning_time = new Date () .getTime ()
+	var cleaning_time = (new Date) .getTime ()
 
 	for (var i in rooms) {
 		var ref_time = (rooms [i] || {}) .ref_time || 0

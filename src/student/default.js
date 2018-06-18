@@ -137,7 +137,7 @@ var connect_room = room => {{
       else return _x }}) )
 	.then (_ensemble => {{ 
     var questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
-    var student = Oo (app_state (), L .get ([ app_student, as_maybe ]))
+    var student = Oo (app_state (), oo (L .get ([ app_student, as_maybe ])))
     ;app_state (
       student_app .get_ready (student
       , Z .Just (setup .setup (room, questions, default_rules))))
