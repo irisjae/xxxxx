@@ -83,7 +83,7 @@ var get_ready_view = <get-ready-etc>
           : Oo ([enter_room_view],
             oo (!! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
               ? where ((
-                  bad_room = Oo (lookbehind_state (), L .get (lookbehind_room))) =>
+                  bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
                 Z .prepend (<warning>{bad_room} is not a valid room</warning>))
               : R .identity))
       : where ((
@@ -141,11 +141,12 @@ var connect_room = room => {{
       student_app .get_ready (
         Oo (app_state (), L .get ([ app_student, as_maybe ])),
         Z .Just (setup .setup (room, questions, default_rules)))) }})
+  .then (_ => {{
+    ;lookbehind_state (student_lookbehind .nothing) }})
 	.catch (e => {{
-    ;lookbehind_state (student_lookbehind .bad_room)
+    ;lookbehind_state (student_lookbehind .bad_room (room))
     ;console .error (e) }})
   .then (_ => {{
-    ;lookbehind_state (student_lookbehind .nothing)
     ;io_state (io .inert) }}) }} 
 
 var valid_attempt = _ => 
@@ -203,8 +204,8 @@ S (lookbehind_key => {{
     ;clearTimeout (lookbehind_key)}
   if (L .isDefined (data_iso (student_lookbehind .bad_room)) (lookbehind_state ())) {
   ;return setTimeout (_ => {{
-     lookbehind_state (student_lookbehind .nothing)}}
-  , 3000) }}}, undefined)
+     ;lookbehind_state (student_lookbehind .nothing)}}
+  , 1500) }}}, undefined)
 
 
 S (_ => {{
