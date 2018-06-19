@@ -216,11 +216,15 @@ var setup_size = [setup_rules, rules_size]
 var cell_answer = [ 2 ]
 
 var map_students =
-  [ R .reread (map => Oo (map,
+  [ L .reread (map => Oo (map,
     oo (R .toPairs), oo (Z_ .map (pair => where ((
         id = R .head (pair),
-        inner_pair = R .hea d) =>
-      [] ) )))) ]
+        inner_pair = R .head (R .toPairs (R .last (pair))),
+        name = R .head (inner_pair),
+        val = R .last (inner_pair) ) =>
+      [[id, name], val] ) ))))
+  , L .elems
+  , L .first ]
 
 
 
@@ -323,6 +327,9 @@ var messages_encoding = list =>
 var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
   ? Oo (ensemble, oo (L .get ([ ensemble_student_pings, map_students ])))
+  : !! (kind === 'playing') || (kind === 'game_over')
+  ? Oo (ensemble, oo (L .get ([ ensemble_student_pings, map_students ])))
+  : undefined
 
 
 
