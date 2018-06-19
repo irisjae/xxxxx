@@ -32,7 +32,7 @@ var {
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  app_crossed_answers, app_current_question 
+  app_current_question, app_crossed_answers, app_bingoes
 } = window .stuff
 
 
@@ -101,25 +101,28 @@ var get_ready_view = <get-ready-etc>
       .map (_x => <div>{ _x }</div>)))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
-var board_view = board => crossed_answers =>
-  <board-etc>
-    { where ((
-        board = Oo (app_state (), oo (L .get (app_board))),
-        current_question = Oo (app_state (), oo (app_current_question)),
-        crossed_answers = Oo (app_state (), oo (app_crossed_answers)),
-        game_tick = game_tick_sampler () ) => 
-      [ Oo (current_question,
-        oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
-      , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
-      , <board> { Oo (board, oo (Z_ .map (row => 
-        <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
-          oo (L .get (cell_answer)),
-          oo (_x => !! (Z .elem (_x) (crossed_answers))
-            ? <cell>{ crossed (_x) }</cell>
-            : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
-        } </div> ))) } </board> ]) } </board-etc>
-            
-            
+var bold_crossed = _x => <s><b>{ _x }</b></s>
+var board_view = <board-etc>
+  { where ((
+      board = Oo (app_state (), oo (L .get (app_board))),
+      current_question = Oo (app_state (), oo (app_current_question)),
+      crossed_answers = Oo (app_state (), oo (app_crossed_answers)),
+      bingoes = Oo (app_state (), oo (app_crossed_answers)),
+      game_tick = game_tick_sampler () ) => 
+    [ Oo (current_question,
+      oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
+    , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
+    , <board> { Oo (board, oo (Z_ .map (row => 
+      <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
+        oo (L .get (cell_answer)),
+        oo (_x => !! (R .any (Z .elem (_x)) (bingoes))
+          ? <cell>{ bold_crossed (_x) }</cell>
+          : !! (Z .elem (_x) (crossed_answers))
+          ? <cell>{ crossed (_x) }</cell>
+          : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
+      } </div> ))) } </board> ]) } </board-etc>
+
+
 
 window .view = <student-app>
 	{ !! (L .isDefined (app_get_ready) (app_state ()))

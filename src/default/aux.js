@@ -334,7 +334,7 @@ var app_current_question = _app =>
     Oo (_app, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
-var app_crossed_answers = memoize (_app => 
+var app_crossed_answers = _app => 
   !! (L .isDefined (app_playing) (_app))
   ? where ((
       final_attempts = Oo (_app, oo (L .get (app_history)),
@@ -349,7 +349,7 @@ var app_crossed_answers = memoize (_app =>
         ? maybe_attempt
         : Z .Nothing))),
       oo (Z .justs)))
-  : [])
+  : []
 
 var app_bingoes = _app =>
   where ((
@@ -361,7 +361,7 @@ var app_bingoes = _app =>
       _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) )),
     oo (Z .map (_pattern =>
       !! (Oo (_pattern,
-        oo (Z .allPass (_answer => Z .elem (_answer) (_crossed_answers)))))
+        oo (R .all (_answer => Z .elem (_answer) (_crossed_answers)))))
       ? Z .Just (_pattern)
       : Z .Nothing)),
     oo (Z .justs)) )
@@ -479,4 +479,4 @@ window .stuff = { ...window .stuff,
   assemble_students, schedule_start,
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  app_crossed_answers, app_current_question }
+  app_current_question, app_crossed_answers, app_bingoes }
