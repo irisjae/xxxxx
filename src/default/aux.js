@@ -271,8 +271,8 @@ var generate_board = size => questions =>
     cells = shuffle (questions .slice (0, size * size)),
     cell = y => x =>
       cells [(x - 1) * size + (y - 1)]) =>
-  Oo (R .range (1, size + 1),
-    oo (R .map (row => Oo (R .range (1, size + 1),
+  Oo (Z .range (1) (size + 1),
+    oo (R .map (row => Oo (Z .range (1) (size + 1),
       oo (R .map (column => [row, column, cell (row) (column)] )))))))
 
 
@@ -310,6 +310,14 @@ var student_app_next_playing = _app =>
     oo (L .get (L .getInverse (data_iso (student_app .game_over))))) )
          
 
+var size_patterns = size =>
+...
+/*[
+    [[0, 0], [0, 1], [0, 2]]
+  , [[0, 0], [0, 1], [0, 2]]
+  ]
+*/
+
 
 var app_current_question = _app =>
   !! L .isDefined (app_playing) (_app)
@@ -338,10 +346,18 @@ var app_crossed_answers = memoize (_app =>
 
 var app_bingoes = _app =>
   where ((
-    _board = Oo (app, oo (L .get (app_board))),
-    _crossed_answers = Oo (app, oo (app_crossed_answers)),
-    pattern_crossed = _pattern => Z_ .allPass (Z_ .map (_cell => _board => Z_ .elem (L .get (_cell) (_board)) (_crossed_answers)) (_pattern)) ) =>
-  [])
+    _size = Oo (_app, oo (L .get ([ app_setup, setup_size ]))),
+    _board = Oo (_app, oo (L .get (app_board))),
+    _crossed_answers = Oo (_app, oo (app_crossed_answers)) ) =>
+  Oo (size_patterns,
+    oo (Z .map (_pattern =>
+      _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) )),
+    oo (Z .map (_pattern =>
+      !! (Oo (_pattern,
+        oo (Z .allPass (_answer => Z .elem (_answer) (_crossed_answers)))
+      ? Z .Just (_pattern)
+      : Z .Nothing)),
+    oo (Z .justs)))
 
 
 var history_stepped = old => curr =>
