@@ -229,24 +229,33 @@ var map_students =
 
 
 
-var projection_zip = key_projection => val_projection => a => b =>
+var projection_zip =
+  where ((
+    zipped_projection_init = list => mates =>
+      !! (Z_ .size (list) === 0 || Z_ .size (mates) === 0)
+      ? []
+      : where ((
+          list_head = R .head (list),
+          mates_head = R .head (mates),
+          list_head_key = list_head [0],
+          mates_head_key = mates_head [0],
+          list_head_value = list_head [1],
+          mates_head_value = mates_head [1] ) =>
+        !! (Z_ .equals (list_head_key) (mates_head_key))
+        ? [ list_head_key, [ list_head_value, mates_head_value ] ]
+        : zipped_projection_init (list) (R .tail (mates)) ) ) =>
+        )
+    key_projection => val_projection => a => b =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
     pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
     a_projection = Oo (R .head (a), oo (pair_projection)),
     b_projection = Oo (R .head (b), oo (pair_projection)),
-    a_head_key = a_projection [0],
-    b_head_key = b_projection [0],
-    a_head_value = a_projection [1],
-    b_head_value = b_projection [1] ) =>
-  !! (Z_ .equals (a_head_key) (b_head_key))
-  ? Z_ .prepend
-    ([ a_head_key, [ a_head_value, b_head_value ] ])
-    (projection_zip (key_projection) (val_projection) (R .tail (a)) (R .tail (b)))
-  : Z_ .concat
-    (projection_zip (key_projection) (val_projection) (a) (R .tail (b)))
-    (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)))
+ ) =>
+  Z_ .concat
+    (zipped_projection_init)
+    (projection_zip (key_projection) (val_projection) (R .tail (a)) (R .tail (b))) )
 
 
 
