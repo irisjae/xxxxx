@@ -91,7 +91,7 @@ var get_ready_view = <get-ready-etc>
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
       [ 'Connected to room ' + plain_room
       , 'Waiting for game to start...' ]
-      .map (_x => <message>{ _x }</message>)))) } </get-ready-etc>
+      .map (_x => <div>{ _x }</div>)))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => history => <board-etc>

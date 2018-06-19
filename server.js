@@ -1,3 +1,5 @@
+var R = require ('ramda')
+
 var debug = true
 
 var hostname = 'glitch' || 'localhost'
@@ -60,7 +62,7 @@ var clean_rooms = _ => {{
       .then (_x => {{
         var id = ctx .params .room
 
-        ;rooms [id] = { ... rooms [id], ... _x, ref_time: (new Date) .getTime () } }})
+        ;rooms [id] = { ... R .mergeDeepRight (rooms [id]) (_x), ref_time: (new Date) .getTime () } }})
         /*if (! rooms [id]) {
           ;rooms [id] = { logs: [] } }
         ;rooms [id] .ref_time = new Date () .getTime ()
@@ -75,13 +77,13 @@ var clean_rooms = _ => {{
       return go
       .then (_ =>
         where ((
-          id = ctx .params .room) =>
-          ({ ...rooms [id], ref_time: undefined }) ))
+          id = ctx .params .room) => (
+        { ...rooms [id], ref_time: undefined } )))
           //(rooms [id] || {}) .logs || [] ))
-      .catch (_x => {
+      .catch (_x => {{
         {;console .error (_x)}
         
-        return ({ error: 'An unexpected error occured' }) })
+        return { error: 'An unexpected error occured' } }})
       .then (x => {{ ;ctx .body = x }})}})
     .get ('/peephole', (ctx, next) => {{
       return go

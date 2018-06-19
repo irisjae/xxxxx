@@ -55,7 +55,7 @@ window .view =  <teacher-app>
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
     oo (Z_ .maybe ('') (_x => Oo (_x,
       oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <message>{_x + ' student is here'}</message>)))))) } </teacher-app>
+      oo (Z_ .map (_x => <div>{_x + ' student is here'}</div>)))))) } </teacher-app>
 
                          
                          
