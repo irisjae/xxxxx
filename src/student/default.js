@@ -246,10 +246,10 @@ S (_ => {{
       var critical = phase === 1
       go
       .then (_ =>
-        !! critical
+        !! critical && S .sample (connection)
         ? api (room, 
             post (message_encoding (
-              message .student_ping (student, connection ()))))
+              message .student_ping (student, S .sample (connection)))))
         : api (room)
           .then (_x => {{
             ;ensemble_state (
