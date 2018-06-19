@@ -134,7 +134,7 @@ var connect_room = room => {{
   Oo (app_state (), oo (L .get (app_student)), oo (_student => {{
     if (_student) {
       ;io_state (io .connecting)
-      go 
+      ;return go 
       .then (_ =>
         api (room) .then (_x => {{
           if (Z .equals (_x) ({})) {
@@ -213,11 +213,11 @@ var get_latency = now => {
 
 S (lookbehind_key => {{
   if (lookbehind_key) {
-    ;clearTimeout (lookbehind_key)}
+    ;clearTimeout (lookbehind_key) }
   if (L .isDefined (data_iso (student_lookbehind .bad_room)) (lookbehind_state ())) {
-  ;return setTimeout (_ => {{
-     ;lookbehind_state (student_lookbehind .nothing)}}
-  , 1500) }}}, undefined)
+    ;return setTimeout (_ => {{
+       ;lookbehind_state (student_lookbehind .nothing) }}
+    , 1500) }}})
 
 
 S (_ => {{
@@ -248,7 +248,7 @@ S (_ => {{
       go
       .then (_ =>
         !! critical && S .sample (connection)
-        ? api (room, 
+        ? io_state ()api (room, 
             post (message_encoding (
               message .student_ping (student, S .sample (connection)))))
         : api (room)
@@ -277,8 +277,3 @@ var connection = S (_ => {{
         [mean, variance, n, timestamp] = connection [_room] () ) =>
       [timestamp, mean, Math .sqrt (variance)])  
     }} ))) }})
-/*
-Oo (student_app_ready_to_during (
-    student_app .ready (Z .Just (setup .setup ('test', default_questions, default_rules)))),
-  oo (map_just (_x => {;app_state (_x)})))
-*/

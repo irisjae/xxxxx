@@ -119,7 +119,9 @@ var student_lookbehind = data ({
 
 var io = data ({
   inert: () => defined,
-  connecting: () => defined })
+  connecting: () => defined,
+  messaging: () => defined,
+  heartbeat: () => defined })
 
 
 var message = data ({

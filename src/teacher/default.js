@@ -74,6 +74,7 @@ window .view =  <teacher-app>
 var get_room = room => {{
   var _setup = setup .setup ( room, default_questions, default_rules )
 
+  ;io_state (io .connecting)
   ;return go
   .then (_ =>
     api (room) .then (_x => {{
@@ -92,8 +93,13 @@ var get_room = room => {{
   .then (_ => {{
     ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
   .catch (_e => {{
-    ;console .error (_e) }}) }}
+    ;console .error (_e) }})
+  .then (_ => {{
+    ;io_state (io .inert) }}) }}
 
+var timesup_question = _ => {{
+  //;app_state (student_app_next_playing (app_state ()))
+}}
 
         
         
@@ -107,7 +113,7 @@ var reping_period = 3
 var heartbeat = S .data (reping_period) 
 var hear
 var clock = new TimelineMax
-//clock .add (timesup_question, 10)
+;clock .add (timesup_question, 10)
 Oo (R .range (0, 10 + 1),
   oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
         
