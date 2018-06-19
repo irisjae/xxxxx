@@ -209,7 +209,8 @@ S (last_ensemble => {{
             var start = L .get (ensemble_start) (_ensemble)
             var now = (new Date) .getTime ()
             if (start > now) {
-              } } } } }})))
+              ;app_state (
+                teacher_app .playing (Oo (_app, oo ), [])) } } } } }})))
   return ensemble_state () }}
   , ensemble_state ())
    
