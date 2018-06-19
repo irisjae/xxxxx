@@ -30,7 +30,7 @@ var {
   cell_answer, student_name,
   history_stepped,
   message_encoding, messages_encoding,
-  assemble_students, 
+  assemble_students, schedule_start,
   student_app_get_ready_to_playing, student_app_next_playing,
   app_crossed_answers, current_question 
 } = window .stuff
@@ -124,15 +124,14 @@ var start_playing = _ => {{
       .then (_ =>
         (io_state (io .messaging), api (_room,
           post (message_encoding (
-            message .teacher_start (schedule_) .then (_x => {{
+            message .teacher_start (schedule_start (ensemble_state ())))))) .then (_x => {{
           if (! _x .ok) {
             ;throw new Error ('cannot post to ' + _room)}
           else return _x }}))
       .catch (_e => {{
         ;console .error (_e) }})
       .then (_ => {{
-        ;io_state (io .inert) }})
-    }} )) }}
+        ;io_state (io .inert) }}) }} )) }}
   
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))

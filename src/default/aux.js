@@ -380,6 +380,12 @@ var assemble_students = kind => ensemble =>
     projection_zip (R .head) (R .last) (boards) (histories))
   : undefined
 
+var schedule_start = _ensemble =>
+  where ((
+    teacher_ping = Oo (_ensemble, oo (L .get (i)))
+    pings = Z .prepend () ,
+    confidence_interval = Z .reduce (Z .max) (0) (pings) ) =>
+  (new Date) .getTime () + confidence_interval)
 
 
 
@@ -411,6 +417,6 @@ window .stuff = { ...window .stuff,
   cell_answer, student_name,
   history_stepped,
   message_encoding, messages_encoding,
-  assemble_students, 
+  assemble_students, schedule_start,
   student_app_get_ready_to_playing, student_app_next_playing,
   app_crossed_answers, current_question }
