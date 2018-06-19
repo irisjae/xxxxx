@@ -117,7 +117,7 @@ var get_room = _room => {{
 
 var start_playing = _ => {{
   Oo (app_state (), oo (L .get (from_maybe)), oo (L .get (L .pick ({
-    _setup: app_setup,
+    _ensemble: app_setup,
     _room: app_room }))),
     oo (({ _setup, _room }) => {{
       ;go
