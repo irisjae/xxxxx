@@ -177,7 +177,7 @@ S (_ => {{
 S (last_app => {{
   Oo (app_state (), oo (map_just (_app => {{
     if (! L .isDefined (app_playing) (last_app)) {
-      if (L .isDefined (app_playing) (_)) {
+      if (L .isDefined (app_playing) (_app)) {
       }
     }
   }})))
@@ -197,20 +197,19 @@ S (_ => {{
         ;app_state (Z .Just (
           Oo (_app,
             oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
-S (_ => {{
+S (last_ensemble => {{
   ;Oo (maybe_all ({
+      last_ensemble: last_ensemble,
       _app: S .sample (app_state),
       _ensemble: ensemble_state () }),
-    oo (map_just (({ _app, _ensemble }) => {{
+    oo (map_just (({ last_ensemble, _app, _ensemble }) => {{
       if (L .isDefined (app_get_ready) (_app)) {
-      }
-      var _app_kind = Oo (app, oo (data_kind))
-      var _app_students = Oo (app, oo (L .get (app_students)))
-      var _ensemble_students = Oo (ensemble, oo (assemble_students (_app_kind)))
-      if (! Z_ .equals (_ensemble_students) (_app_students)) {
-        ;app_state (Z .Just (
-          Oo (app,
-            oo (L .set ([app_students]) (_ensemble_students))))) } }})))
+        if (! L .get (ensemble_start) (last_ensemble)) {
+          if (L .get (ensemble_start) (_ensemble)) {
+            var start = L .get (ensemble_start) (_ensemble)
+            var now = (new Date) .getTime ()
+            if (start > now) {
+              } } } } }})))
   return ensemble_state () }}
   , ensemble_state ())
    

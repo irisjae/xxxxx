@@ -246,14 +246,14 @@ S (_ => {{
     , 1500)
     ;S .cleanup (_ => {{
       ;clearTimeout (forget) }}) } }})
-S (last_state => {{
-  if (! L .isDefined (app_room) (last_state)) {
+S (last_app => {{
+  if (! L .isDefined (app_room) (last_app)) {
     if (L .isDefined (app_room) (app_state ())) {
       ;lookbehind_state (student_lookbehind .nothing) } }
   return app_state () }}
   , app_state ())
-S (last_state => {{
-  var last_history = Oo (last_state, oo (L .get ([app_history]))) || []
+S (last_app => {{
+  var last_history = Oo (last_app, oo (L .get ([app_history]))) || []
   var history = Oo (app_state (), oo (L .get ([app_history])))
   if (L .isDefined (app_playing) (app_state ())) {
     if (history_stepped (last_history) (history)) {
