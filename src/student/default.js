@@ -246,12 +246,15 @@ S (_ => {{
       var critical = phase === 1
       go
       .then (_ =>
-        api (room, !! critical
-          ? post (message_encoding (
-            message .student_ping (student, connection ())))
-          : {}) )
-      .then (_x => {{
-        ;ensemble_state (_x)
+        !! critical
+        ? api (room, 
+            post (message_encoding (
+              message .student_ping (student, connection ()))))
+        : api (room)
+          .then (_x => {{
+            ;ensemble_state (L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }}) )
+
+      .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
         , 300) }})
