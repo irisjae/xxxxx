@@ -166,17 +166,6 @@ var connect_room = _room => {{
     .then (_ => {{
       ;io_state (io .inert) }}) }}))) }} 
 
-/*
-var valid_attempt = _ => 
-  !! (where ((
-      current_rendition_attempts = Oo (app_state (),
-        oo (L .get ([app_history, L .last, rendition_attempts, as_maybe])),
-        oo (Z .fromMaybe ([])))) =>
-      Z .size (current_rendition_attempts) === 0))
-  ? true
-  : get_latency (clock .time ()) > 3
-*/
-
 var attempt_question = _answer => {{
   Oo (app_state (), oo (current_question), oo (map_just (_question => {{
     if (! L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
@@ -207,21 +196,34 @@ var timesup_question = _ => {{
 
 
 
-var reping_period = 3
-var heartbeat = S .data (reping_period) 
-
-var clock = new TimelineMax
-clock .add (timesup_question, 10)
-Oo (R .range (0, 10 + 1),
-  oo (R .forEach (t => clock .add (_ => {;tick_sampler (Z .just (t))}, t))))
-
-var tick_sampler = S .data (Z .Nothing)
-
 var lookbehind_latency = _ => {
     var now = clock .time ()
     var start = Oo (clock .getLabelTime ('next'),
       oo (_x => !! (_x === -1) ? 0 : _x))
     return now - start }
+
+
+var clock = new TimelineMax
+var tick_sampler = S .data (Z .Nothing)
+;clock .add (timesup_question, 10)
+;Oo (R .range (0, 10 + 1),
+  oo (R .forEach (t => clock .add (_ => {{ ;tick_sampler (Z .Just (t)) }}, t))))
+
+
+var reping_period = 3
+var heartbeat = S .data (reping_period) 
+
+var connection = S (_ => {{
+  ;return Oo (app_state (),
+    oo (L .get ([ app_room, as_maybe ])),
+    oo (Z_ .maybe (undefined) (_room => {{
+      if (! connection [_room]) {
+        ;connection [_room] = S .data ()
+        ;api .listen_ping (_room) (connection [_room]) }
+      return connection [_room] () && where ((
+        [mean, variance, n, timestamp] = connection [_room] () ) =>
+      [timestamp, mean, Math .sqrt (variance)]) }} ))) }})
+
 
 
 S (_ => {{
@@ -261,6 +263,7 @@ S (_ => {{
   if (L .isDefined (app_game_over) (app_state ())) {
     ;clock .pause () } }})
 
+
 S (_ => {{
   ;Oo (app_state (), oo (L .get (L .pick ({
       student: [ app_student, as_maybe ],
@@ -290,16 +293,3 @@ S (_ => {{
         , 300) }})
       .then (_ => {{
         ;io_state (io .inert) }}) }}))) }})
-
-
-var connection = S (_ => {{
-  ;return Oo (app_state (),
-    oo (L .get ([ app_room, as_maybe ])),
-    oo (Z_ .maybe (undefined) (_room => {{
-      if (! connection [_room]) {
-        ;connection [_room] = S .data ()
-        ;api .listen_ping (_room) (connection [_room]) }
-      return connection [_room] () && where ((
-        [mean, variance, n, timestamp] = connection [_room] () ) =>
-      [timestamp, mean, Math .sqrt (variance)])  
-    }} ))) }})

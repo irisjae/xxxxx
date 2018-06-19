@@ -107,20 +107,33 @@ var timesup_question = _ => {{
         
         
         
+        
+var clock = new TimelineMax
+var tick_sampler = S .data (Z .Nothing)
+;clock .add (timesup_question, 10)
+;Oo (R .range (0, 10 + 1),
+  oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
 
+   
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
-var hear
-var clock = new TimelineMax
-;clock .add (timesup_question, 10)
-Oo (R .range (0, 10 + 1),
-  oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
-        
-var tick_sampler = S .data (Z .Nothing)
   
+var connection = S (_ => {{
+  ;return Oo (app_state (), oo (L .get ([ from_maybe ])),
+    oo (L .get ([ app_room, as_maybe ])),
+    oo (Z_ .maybe (undefined) (_room => {{
+      if (! connection [_room]) {
+        ;connection [_room] = S .data ()
+        ;api .listen_ping (_room) (connection [_room]) }
+      return connection [_room] () && where ((
+        [mean, variance, n, timestamp] = connection [_room] () ) =>
+      [timestamp, mean, Math .sqrt (variance)]) }} ))) }}) 
+
+
+
 S (_ => {{
   if (! L .isDefined ([from_maybe]) (app_state ())) {
-    if (L .isDefined (data_iso (io .inert)) (io_state ())) {
+    if (L .isDefined (io_inert) (io_state ())) {
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
@@ -132,11 +145,22 @@ S (last_state => {{
     }
   }})))
   return app_state () }}
-, app_state ())
+  , app_state ())
    
    
+S (_ => {{
+  ;Oo (maybe_all ({
+      app: S .sample (app_state),
+      ensemble: ensemble_state () }),
+    oo (map_just (({ app, ensemble }) => {{
+      var _app_kind = Oo (app, oo (data_kind))
+      var _app_students = Oo (app, oo (L .get (app_students)))
+      var _ensemble_students = Oo (ensemble, oo (assemble_students (_app_kind)))
+      if (! Z_ .equals (_ensemble_students) (_app_students)) {
+        ;app_state (Z .Just (
+          Oo (app, oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
    
-
+   
 S (_ => {{
   ;Oo (app_state (), oo (L .get ([ from_maybe ])), oo (L .get (L .pick ({
       room: [ app_room, as_maybe ] }))),
@@ -152,7 +176,7 @@ S (_ => {{
         : (io_state (io .heartbeat), api (room)
           .then (_x => {{
             ;ensemble_state (Z .Just (
-              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})) )
+              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})))
       .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
@@ -165,28 +189,3 @@ S (_ => {{
       .then (_ => {{
         ;io_state (io .inert) }}) }}))) }})
    
-S (_ => {{
-  ;Oo (maybe_all ({
-      app: S .sample (app_state),
-      ensemble: ensemble_state () }),
-    oo (map_just (({ app, ensemble }) => {{
-      var _app_kind = Oo (app, oo (data_kind))
-      var _app_students = Oo (app, oo (L .get (app_students)))
-      var _ensemble_students = Oo (ensemble, oo (assemble_students (_app_kind)))
-      if (! Z_ .equals (_ensemble_students) (_app_students)) {
-        ;app_state (Z .Just (
-          Oo (app, oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
-   
- 
-
-var connection = S (_ => {{
-  ;return Oo (app_state (), oo (L .get ([ from_maybe ])),
-    oo (L .get ([ app_room, as_maybe ])),
-    oo (Z_ .maybe (undefined) (_room => {{
-      if (! connection [_room]) {
-        ;connection [_room] = S .data ()
-        ;api .listen_ping (_room) (connection [_room]) }
-      return connection [_room] () && where ((
-        [mean, variance, n, timestamp] = connection [_room] () ) =>
-      [timestamp, mean, Math .sqrt (variance)])  
-    }} ))) }})
