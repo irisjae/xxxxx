@@ -52,7 +52,7 @@ window .view =  <teacher-app>
     oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x))) }
   { Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
-    oo (Z_ .maybe ('') (Z_jk_ .map (_x => <span>{_x + ' student is here'}</span>)))) } </teacher-app>
+    oo (Z_ .maybe ('') (Z_ .map (_x => <span>{_x + ' student is here'}</span>)))) } </teacher-app>
 
                          
                          
@@ -135,3 +135,19 @@ S (last_state => {{
   }})))
   return app_state () }}
 , app_state ())
+   
+   
+S (_ => {{
+  Oo (maybe_all ({
+    app: S .sample (app_state),
+    ensemble: ensemble_state () }),
+  oo (map_just (({ app, ensemble }) => {{
+    var app_students = Oo (app, oo (L .get (app_students)))
+    var ensemble_students = Oo (app, oo (L .get (app_students)))
+    if (! Z .equals (ensemble_students) (app_students)) {
+      ;app_state (
+        Oo (app, oo (L .set ([app_students]) (ensemble_students))))}
+  }})))
+ 
+  
+}})
