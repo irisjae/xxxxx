@@ -71,7 +71,13 @@ var pipeline_board_cell = cell => _dom => {;
 
 var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
           
-var enter_room_view = <input fn={ pipeline_room_input } placeholder="Enter a room code" />
+var enter_room_view = <room-input-etc>i
+  { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
+    ? where ((
+        bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
+      Z .prepend (<warning>{bad_room} is not a valid room</warning>))
+    : [] }
+  <input fn={ pipeline_room_input } placeholder="Enter a room code" /> </room-input-etc>
   
 var get_ready_view = <get-ready-etc>
   { Oo (app_state (),
@@ -84,12 +90,7 @@ var get_ready_view = <get-ready-etc>
       : !! Z .isNothing (room)
         ? !! (L .isDefined (io_connecting, io_state ()))
           ? 'Trying to connect...'
-          : Oo ([enter_room_view],
-            oo (!! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
-              ? where ((
-                  bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
-                Z .prepend (<warning>{bad_room} is not a valid room</warning>))
-              : R .identity))
+          : enter_room_view
       : where ((
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
       [ 'Connected to room ' + plain_room
@@ -218,7 +219,13 @@ var get_latency = now => {
 S (lookbehind_key => {{
   if (lookbehind_key) {
     ;clearTimeout (lookbehind_key) }
-  if (L .isDefined (data_iso (student_lookbehind .bad_room)) (lookbehind_state ())) {
+  if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
+    ;return setTimeout (_ => {{
+       ;lookbehind_state (student_lookbehind .nothing) }}
+    , 1500) }}})
+S (_ => {{
+  if (L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
+    //setup attempt
     ;return setTimeout (_ => {{
        ;lookbehind_state (student_lookbehind .nothing) }}
     , 1500) }}})
