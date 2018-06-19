@@ -243,7 +243,9 @@ var cell_answer = [ 2 ]
 
 var student_name = [ 1 ]
 
-var map_students =
+var ping_mean = [ 1 ]
+
+var students_mapping = 
   [ L .reread (map => Oo (map,
     oo (R .toPairs), oo (Z_ .map (pair => where ((
         id = R .head (pair),
@@ -251,8 +253,9 @@ var map_students =
         name = R .head (inner_pair),
         val = R .last (inner_pair) ) =>
       [[id, name], val] ) ))))
-  , L .elems
-  , L .first ]
+  , L .elems ]
+var map_students = [ students_mapping, L .first ]
+var mapping_students = [ students_mapping, L .last ]
 
 
 
@@ -383,8 +386,8 @@ var assemble_students = kind => ensemble =>
 var schedule_start = _ensemble =>
   where ((
     teacher_ping = Oo (_ensemble, oo (L .get (ensemble_ping))),
-    student_pings = ,
-    pings = Z .prepend () ,
+    student_pings = Oo (_ensemble, oo (L .collect ([ ensemble_student_pings, mapping_students ]))),
+    pings = Oo (Z .prepend (teacher_ping) (student_pings), oo (Z .map (L .get (ping_mean)))),
     confidence_interval = Z .reduce (Z .max) (0) (pings) ) =>
   (new Date) .getTime () + confidence_interval)
 
