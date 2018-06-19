@@ -163,8 +163,8 @@ S (_ => {{
     oo (map_just (({ app, ensemble }) => {{
       var _app_kind = Oo (app, oo (data_kind))
       var _app_students = Oo (app, oo (L .get (app_students)))
-      var _ensemble_students = Oo (app, oo (assemble_students (_app_kind)))
-      if (! Z .equals (_ensemble_students) (_app_students)) {
+      var _ensemble_students = Oo (ensemble, oo (assemble_students (_app_kind)))
+      if (! Z_ .equals (_ensemble_students) (_app_students)) {
         ;app_state (Z .Just (
           Oo (app, oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
    

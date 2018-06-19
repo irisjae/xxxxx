@@ -105,7 +105,7 @@ var data_iso = data =>
     L .iso (read) (write))
 */
 var data_kind = data =>
-  Z .head (Z_ .keys (data))
+  R .head (Z_ .keys (data))
 
 
 var from_just = _x =>
