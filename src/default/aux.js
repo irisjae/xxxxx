@@ -230,9 +230,18 @@ var map_students =
 
 
 var projection_zip = key_projection => val_projection => a => b =>
-  where ((
-    a_projection = Oo (a, oo (Z_ .map ()))) =>
-  )
+  !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
+  ? []
+  : where ((
+    a_projection = Oo (a, oo (Z_ .map (_x => [L .get (key_projection) (_x), L .get (val_projection) (_x)]))),
+    b_projection = Oo (b, oo (Z_ .map (_x => [L .get (key_projection) (_x), L .get (val_projection) (_x)]))),
+    a_head_key = R .head (a_projection) [0],
+    b_head_key = R .head (b_projection) [0],
+    a_head_value = R .head (a_projection) [1],
+    b_head_value = R .head (b_projection) [0] ) =>
+  !! (Z_ .equals (a_head_key) (b_head_key))
+  ? [ a_head_key, [ a_head_value, b_head_value ] ]
+  : )
 
 
 
