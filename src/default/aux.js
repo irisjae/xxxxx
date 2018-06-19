@@ -276,14 +276,27 @@ var generate_board = size => questions =>
       oo (R .map (column => [row, column, cell (row) (column)] )))))))
 
 
-var student_app_get_ready_to_playing = _state =>
-  Oo (_state,
+var teacher_app_get_ready_to_playing = _app =>
+  Oo (_app,
+    oo (L .get (L .pick ({
+      setup: L .get ([ app_setup, as_maybe ]) }))),
+    oo (maybe_all),
+    oo (map_just (({ setup }) => 
+      teacher_app .playing (setup, []) ) ))
+
+var student_app_get_ready_to_playing = _app =>
+  Oo (_app,
     oo (L .get (L .pick ({
       student: L .get ([ app_student, as_maybe ]),
       setup: L .get ([ app_setup, as_maybe ]) }))),
     oo (maybe_all),
     oo (map_just (({student, setup}) => 
-      student_app .playing (student, setup, generate_board (L .get (setup_size, setup)) (L .get (setup_questions, setup)), [rendition .rendition ([])]) )))
+      where ((
+        _size = L .get (setup_size) (setup),
+        _questions = L .get (setup_questions) (setup),
+        fresh_history = [rendition .rendition ([])] ) =>
+      student_app .playing
+        (student, setup, generate_board (_size) (_questions), fresh_history)) )))
 
 var student_app_next_playing = _state =>
   where ((
@@ -422,5 +435,6 @@ window .stuff = { ...window .stuff,
   history_stepped,
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
+  teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
   app_crossed_answers, current_question }

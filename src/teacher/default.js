@@ -31,6 +31,7 @@ var {
   history_stepped,
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
+  teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
   app_crossed_answers, current_question 
 } = window .stuff
@@ -208,8 +209,8 @@ S (last_ensemble => {{
         if (L .get (ensemble_start) (_ensemble)) {
           var start = L .get (ensemble_start) (_ensemble)
           var now = (new Date) .getTime ()
-          var _setup = Oo (_app, oo (L .get (app_setup)))
-          var playing_app = teacher_app .playing (_setup, [])
+          
+          var playing_app = teacher_app_get_ready_to_playing (_app)
           if (start > now) {
             ;app_state (playing_app) }
           else {

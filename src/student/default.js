@@ -299,14 +299,7 @@ S (last_ensemble => {{
           var start = L .get (ensemble_start) (_ensemble)
           var now = (new Date) .getTime ()
           
-          var _student = Oo (_app, oo (L .get (app_student)))
-          var _setup = Oo (_app, oo (L .get (app_setup)))
-          var _size = Oo (_setup, oo (L .get (setup_size)))
-          var _questions = Oo (_setup, oo (L .get (setup_questions)))
-          var _board = generate_board (_size) (_questions)
-          var _history = []
-          var playing_app = student_app .playing
-            (_student, _setup, _board, _history)
+          var playing_app = student_app_get_ready_to_playing (_app)
           if (start > now) {
             ;app_state (playing_app) }
           else {
