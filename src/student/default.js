@@ -325,8 +325,12 @@ S (_ => {{
       go
       .then (_ =>
         !! critical && S .sample (connection)
-        ? (io_state (io .messaging), api (room,  post (message_encoding (
-            message .student_ping (student, S .sample (connection))))))
+        ? (io_state (io .messaging), api (room, 
+          post (messages_encoding (
+            Z_ .concat
+              ([ message .student_ping (student, S .sample (connection)) ])
+              (Oo (app_state (), oo (L .get ([ playing, as_maybe ])),
+               )) ))))
         : (io_state (io .heartbeat), api (room)
           .then (_x => {{
             ;ensemble_state (
