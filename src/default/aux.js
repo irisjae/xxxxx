@@ -220,7 +220,7 @@ var message_student_update = data_iso (message .student_update)
 
 var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
 var message_ping = [L .choices (message_teacher_ping, message_student_ping), 'ping']
-var message_synchronization = message_student_start .synchronization
+var message_synchronization = L .choices (message_teacher_start, message_teacher_abort, message_student_start .synchronization)
 var message_board = message_student_join .board
 var message_history = message_student_update .history
   

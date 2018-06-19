@@ -174,10 +174,10 @@ S (_ => {{
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
-S (last_state => {{
-  Oo (app_state (), oo (map_just (_state => {{
-    if (! L .isDefined (app_playing) (last_state)) {
-      if (L .isDefined (app_playing) (_state)) {
+S (last_app => {{
+  Oo (app_state (), oo (map_just (_app => {{
+    if (! L .isDefined (app_playing) (last_app)) {
+      if (L .isDefined (app_playing) (_)) {
       }
     }
   }})))
@@ -187,16 +187,32 @@ S (last_state => {{
    
 S (_ => {{
   ;Oo (maybe_all ({
-      app: S .sample (app_state),
-      ensemble: ensemble_state () }),
-    oo (map_just (({ app, ensemble }) => {{
+      _app: S .sample (app_state),
+      _ensemble: ensemble_state () }),
+    oo (map_just (({ _app, _ensemble }) => {{
+      var _app_kind = Oo (_app, oo (data_kind))
+      var _app_students = Oo (_app, oo (L .get (app_students)))
+      var _ensemble_students = Oo (_ensemble, oo (assemble_students (_app_kind)))
+      if (! Z_ .equals (_ensemble_students) (_app_students)) {
+        ;app_state (Z .Just (
+          Oo (_app,
+            oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
+S (_ => {{
+  ;Oo (maybe_all ({
+      _app: S .sample (app_state),
+      _ensemble: ensemble_state () }),
+    oo (map_just (({ _app, _ensemble }) => {{
+      if (L .isDefined (app_get_ready) (_app)) {
+      }
       var _app_kind = Oo (app, oo (data_kind))
       var _app_students = Oo (app, oo (L .get (app_students)))
       var _ensemble_students = Oo (ensemble, oo (assemble_students (_app_kind)))
       if (! Z_ .equals (_ensemble_students) (_app_students)) {
         ;app_state (Z .Just (
           Oo (app,
-            oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
+            oo (L .set ([app_students]) (_ensemble_students))))) } }})))
+  return ensemble_state () }}
+  , ensemble_state ())
    
    
 S (_ => {{
