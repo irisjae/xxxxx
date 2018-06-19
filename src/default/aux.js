@@ -215,6 +215,12 @@ var setup_size = [setup_rules, rules_size]
 
 var cell_answer = [ 2 ]
 
+var map_students =
+  [ R .reread (map => Oo (map,
+    oo (R .toPairs), oo (Z_ .map (pair => where ((
+        id = R .head (pair),
+        inner_pair = R .hea d) =>
+      [] ) )))) ]
 
 
 
@@ -316,7 +322,7 @@ var messages_encoding = list =>
 
 var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
-  ? 
+  ? Oo (ensemble, oo (L .get ([ ensemble_student_pings, map_students ])))
 
 
 

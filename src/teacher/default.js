@@ -123,7 +123,8 @@ S (_ => {{
         go
         .then (_ =>
           api (room) .then (_x => {{
-            ;ensemble_state (Z .Just (_x))
+            ;ensemble_state (Z .Just (
+              Oo (_x, oo (L .get (L .getInverse (data_iso (ensemble .ensemble)))))))
             ;setTimeout (_ => {{
               ;heartbeat (true) }}
             , 300) }} ) ) } } }}))) }})
