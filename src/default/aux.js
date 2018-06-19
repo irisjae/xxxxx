@@ -219,6 +219,8 @@ var setup_size = [setup_rules, rules_size]
 
 var cell_answer = [ 2 ]
 
+var student_name = [ 1 ]
+
 var map_students =
   [ L .reread (map => Oo (map,
     oo (R .toPairs), oo (Z_ .map (pair => where ((
@@ -400,7 +402,7 @@ window .stuff = { ...window .stuff,
   ensemble_student_pings, ensemble_student_boards, ensemble_student_starts, ensemble_student_histories,
   rendition_attempts,
   rules_size, setup_size,
-  cell_answer, 
+  cell_answer, student_name,
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,

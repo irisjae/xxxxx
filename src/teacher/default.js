@@ -23,7 +23,7 @@ var {
   ensemble_questions,
   rendition_attempts,
   rules_size, setup_size,
-  cell_answer, 
+  cell_answer, student_name,
   message_encoding, messages_encoding,
   assemble_students,
   student_app_get_ready_to_playing, student_app_next_playing,
@@ -53,7 +53,9 @@ window .view =  <teacher-app>
     oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x))) }
   { Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
-    oo (Z_ .maybe ('') (Z_ .map (_x => <span>{_x + ' student is here'}</span>)))) } </teacher-app>
+    oo (Z_ .maybe ('') (_x => Oo (_x,
+      oo (Z_ .map (L .get (student_name))), 
+      oo (Z_ .map (_x => <message>{_x + ' student is here'}</message>)))))) } </teacher-app>
 
                          
                          
