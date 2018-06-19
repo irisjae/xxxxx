@@ -311,6 +311,14 @@ var student_app_next_playing = _app =>
          
 
 
+var app_current_question = _app =>
+  !! L .isDefined (app_playing) (_app)
+  ? where ((
+      history = Oo (_app, oo (L .get (app_history))),
+      current_question_index = Z .size (history) - 1) =>
+    Oo (_app, oo (L .get ([app_questions, current_question_index, as_maybe]))))
+  : Z .Nothing
+
 var app_crossed_answers = memoize (_app => 
   !! (L .isDefined (app_playing) (_app))
   ? where ((
@@ -328,13 +336,13 @@ var app_crossed_answers = memoize (_app =>
       oo (Z .justs)))
   : [])
 
-var app_current_question = _app =>
-  !! L .isDefined (app_playing) (_app)
-  ? where ((
-      history = Oo (_app, oo (L .get (app_history))),
-      current_question_index = Z .size (history) - 1) =>
-    Oo (_app, oo (L .get ([app_questions, current_question_index, as_maybe]))))
-  : Z .Nothing
+var app_bingoes = _app =>
+  where ((
+    _board = Oo (app, oo (L .get (app_board))),
+    _crossed_answers = Oo (app, oo (app_crossed_answers)),
+    pattern_crossed = _pattern => Z_ .allPass (Z_ .map (_cell => _board => Z_ .elem (L .get (_cell) (_board)) (_crossed_answers)) (_pattern)) ) =>
+  [])
+
 
 var history_stepped = old => curr =>
   Z .size (curr) > Z .size (old)
