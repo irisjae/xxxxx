@@ -116,22 +116,22 @@ var get_room = _room => {{
     ;io_state (io .inert) }}) }}
 
 var start_playing = _ => {{
-  Oo (app_state (), oo (L .get (from_maybe)), oo (L .get (L .pick ({
-    _ensemble: app_setup,
-    _room: app_room }))),
-    oo (({ _setup, _room }) => {{
+  Oo (maybe_all ({
+    _ensemble: Oo (ensemble_state (), oo (L .get ([ as_maybe ]))),
+    _room: Oo (app_state (), oo (L .get ([ from_maybe, app_room, as_maybe ]))) }),
+    oo (map_just (({ _ensemble, _room }) => {{
       ;go
       .then (_ =>
         (io_state (io .messaging), api (_room,
           post (message_encoding (
-            message .teacher_start (schedule_start (ensemble_state ())))))) .then (_x => {{
+            message .teacher_start (schedule_start (_ensemble)))))) .then (_x => {{
           if (! _x .ok) {
             ;throw new Error ('cannot post to ' + _room)}
           else return _x }}))
       .catch (_e => {{
         ;console .error (_e) }})
       .then (_ => {{
-        ;io_state (io .inert) }}) }} )) }}
+        ;io_state (io .inert) }}) }} ))) }}
   
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
