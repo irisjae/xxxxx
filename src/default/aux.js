@@ -319,17 +319,11 @@ var size_patterns = size =>
       Oo (range, oo (Z .map (_x => [_x, _y] )))))),
     diagonal_patterns = [
       Oo (range, oo (Z .map (_x => [_x, _x])))
-    , Oo (range, oo (Z .map (_x => [_x, _x]))) ] ) =>
+    , Oo (range, oo (Z .map (_x => [_x, (size - 1) - _x]))) ] ) =>
   Z .reduce (Z .concat) ([]) ([
       vertical_patterns
     , horizontal_patterns
     , diagonal_patterns ]) )
-...
-/*[
-    [[0, 0], [0, 1], [0, 2]]
-  , [[0, 0], [0, 1], [0, 2]]
-  ]
-*/
 
 
 var app_current_question = _app =>
@@ -362,15 +356,15 @@ var app_bingoes = _app =>
     _size = Oo (_app, oo (L .get ([ app_setup, setup_size ]))),
     _board = Oo (_app, oo (L .get (app_board))),
     _crossed_answers = Oo (_app, oo (app_crossed_answers)) ) =>
-  Oo (size_patterns,
+  Oo (size_patterns (_size),
     oo (Z .map (_pattern =>
       _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) )),
     oo (Z .map (_pattern =>
       !! (Oo (_pattern,
-        oo (Z .allPass (_answer => Z .elem (_answer) (_crossed_answers)))
+        oo (Z .allPass (_answer => Z .elem (_answer) (_crossed_answers)))))
       ? Z .Just (_pattern)
       : Z .Nothing)),
-    oo (Z .justs)))
+    oo (Z .justs)) )
 
 
 var history_stepped = old => curr =>
