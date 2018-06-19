@@ -159,8 +159,7 @@ var connect_room = _room => {{
       ;app_state (
         student_app .get_ready (
           _student
-          , Z .Just (setup .setup (_room, _questions, default_rules))))
-      ;lookbehind_state (student_lookbehind .nothing) }})
+          , Z .Just (setup .setup (_room, _questions, default_rules)))) }})
     .catch (_e => {{
       ;lookbehind_state (student_lookbehind .bad_room (_room))
       ;console .error (_e) }})
@@ -180,18 +179,20 @@ var valid_attempt = _ =>
 
 var attempt_question = _x => {{
   if (L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
-    var now = clock .time ()
-    var latency = get_latency (now)
+    var latency = get_latency ()
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
       ;Oo (app_state (),
-        oo (L .set ([app_history, L .last, rendition_attempts, L .append]) ([_x, latency])),
+        oo (L .set
+          ([app_history, L .last, rendition_attempts, L .append])
+          ([_x, latency])),
         oo (student_app_next_playing),
-        oo (_x => {;app_state (_x)}))}
+        oo (_x => {{ ;app_state (_x) }})) }
     else {
       ;Oo (app_state (),
-        oo (L .set ([app_history, L .last, rendition_attempts, L .append]) ([_x, latency])),
-        oo (_x => {;app_state (_x)}))
-      ;clock .add ('next', now) } } }}
+        oo (L .set
+          ([app_history, L .last, rendition_attempts, L .append])
+          ([_x, latency])),
+        oo (_x => {{ ;app_state (_x) }})) } } }}
 
 var timesup_question = _ => {{
   ;app_state (student_app_next_playing (app_state ())) }}
@@ -215,23 +216,30 @@ Oo (R .range (0, 10 + 1),
 
 var tick_sampler = S .data (Z .Nothing)
 
-var get_latency = now => {
+var get_latency = _ => {
+    var now = clock .time ()
     var start = Oo (clock .getLabelTime ('next'),
       oo (_x => !! (_x === -1) ? 0 : _x))
     return now - start }
 
 
-S (lookbehind_key => {{
-  if (lookbehind_key) {
-    ;clearTimeout (lookbehind_key) }
+S (_ => {{
   if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
-    ;return setTimeout (_ => {{
+    ;var forget = setTimeout (_ => {{
        ;lookbehind_state (student_lookbehind .nothing) }}
-    , 1500) }}})
+    , 1500)
+    ;S .cleanup (_ => {{
+      ;clearTimeout (forget) }}) } }})
+S (last_state => {{
+  if (! L .isDefined (app_room) (last_state)) {
+    if (L .isDefined (app_room) (app_state ())) {
+      ;lookbehind_state (student_lookbehind .nothing) } }
+  return app_state () }}
+, app_state ())
 S (_ => {{
   if (L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
     //setup attempt
-    ;return setTimeout (_ => {{
+    ;setTimeout (_ => {{
        ;lookbehind_state (student_lookbehind .nothing) }}
     , 1500) }}})
 
