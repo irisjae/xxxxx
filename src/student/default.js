@@ -64,10 +64,10 @@ var pipeline_room_input = input => {{
       ;input .value = ''
       ;connect_room (value) } }}) }} 
 
-var pipeline_board_cell = cell => _dom => {;
-  ;clicking .forEach (click => {;
-    ;_dom .addEventListener (click, _ => {;
-      ;attempt_question (L .get (cell_answer, cell)) }) }) }
+var pipeline_board_cell = cell => _dom => {{
+  ;clicking .forEach (click => {{
+    ;_dom .addEventListener (click, _ => {{
+      ;attempt_question (L .get (cell_answer, cell)) }}) }}) }}
 
 var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
           
@@ -99,19 +99,21 @@ var get_ready_view = <get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var board_view = board => crossed_answers =>
-  where ((
-    board = Oo (app_state (), oo (L .get (app_board))),
-    current_question = Oo (app_state (), oo (current_question)),
-    crossed_answers = Oo (app_state (), oo (L .get (app_history)), oo (app_crossed_answers))) => 
   <board-etc>
-    { Oo (current_question), oo (Z_ .maybe ('') (_x => <question>{ _x }</question>)) }
-    <ticker>{ Oo (tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
-    <board> { Oo (board, oo (Z_ .map (row => 
-      <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
-        oo (L .get (cell_answer)),
-        oo (_x => !! (Z .elem (_x) (crossed_answers))
-          ? <cell>{ crossed (_x) }</cell>
-          : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> ))))) } </div> ))) } </board> </board-etc> )
+    { where ((
+        board = Oo (app_state (), oo (L .get (app_board))),
+        current_question = Oo (app_state (), oo (current_question)),
+        crossed_answers = Oo (app_state (), oo (app_crossed_answers))) => 
+      [ Oo (current_question),
+        oo (Z_ .maybe ('') (_x => <question>{ _x }</question>)) 
+      , <ticker>{ Oo (tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
+      , <board> { Oo (board, oo (Z_ .map (row => 
+        <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
+          oo (L .get (cell_answer)),
+          oo (_x => !! (Z .elem (_x) (crossed_answers))
+            ? <cell>{ crossed (_x) }</cell>
+            : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
+        } </div> ))) } </board> ]) } </board-etc>
             
             
 
@@ -138,33 +140,32 @@ window .view = <student-app>
 var make_student = name => {{
   ;app_state (student_app .get_ready (Z .Just ([ uuid (), name ]), L .get ([ app_setup, as_maybe ], app_state ()))) }}
 
-var connect_room = room => {{
-  Oo (app_state (), oo (L .get (app_student)), oo (_student => {{
-    if (_student) {
-      ;return go 
-      .then (_ =>
-        (io_state (io .connecting), api (room) .then (_x => {{
-          if (Z .equals (_x) ({})) {
-            ;throw new Error ('empty') }
-          else return _x }})) )
-      .then (_ =>
-        api (room, post (message_encoding (
-          message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
-          if (! _x .ok) {
-            ;throw new Error ('not ok') }
-          else return _x }}) )
-      .then (_ensemble => {{ 
-        var questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
-        var student = Oo (app_state (), oo (L .get ([ app_student, as_maybe ])))
-        ;app_state (
-          student_app .get_ready (student
-          , Z .Just (setup .setup (room, questions, default_rules))))
-        ;lookbehind_state (student_lookbehind .nothing) }})
-      .catch (_e => {{
-        ;lookbehind_state (student_lookbehind .bad_room (room))
-        ;console .error (_e) }})
-      .then (_ => {{
-        ;io_state (io .inert) }}) } }})) }} 
+var connect_room = _room => {{
+  ;Oo (app_state (), oo (L .get ([ app_student, as_maybe ])), oo (map_just (_student => {{
+    ;return go 
+    .then (_ =>
+      (io_state (io .connecting), api (_room) .then (_x => {{
+        if (Z .equals (_x) ({})) {
+          ;throw new Error ('empty') }
+        else return _x }})) )
+    .then (_ =>
+      api (_room, post (message_encoding (
+        message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
+        if (! _x .ok) {
+          ;throw new Error ('not ok') }
+        else return _x }}) )
+    .then (_ensemble => {{ 
+      var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
+      ;app_state (
+        student_app .get_ready (
+          _student
+          , Z .Just (setup .setup (_room, _questions, default_rules))))
+      ;lookbehind_state (student_lookbehind .nothing) }})
+    .catch (_e => {{
+      ;lookbehind_state (student_lookbehind .bad_room (_room))
+      ;console .error (_e) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }}))) }} 
 
 /*
 var valid_attempt = _ => 
@@ -244,7 +245,7 @@ S (last_state => {{
     var history = Oo (app_state (), oo (L .get (app_history)))
     if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
       ;clock .seek (0)
-      ;clock .remove ('fail')}
+      ;clock .remove ('next')}
     ;clock .play () }
   return app_state () }}
   , app_state ())
