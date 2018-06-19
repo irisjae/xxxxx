@@ -82,7 +82,7 @@ var enter_room_view = <room-input-etc>
     : [] }
   <input fn={ pipeline_room_input } placeholder="Enter a room code" /> </room-input-etc>
   
-var get_ready_view = <get-ready-etc>
+var get_ready_view = _ => <get-ready-etc>
   { Oo (app_state (),
     oo (L .get (L .pick ({
       room: [app_room, as_maybe],
@@ -102,12 +102,12 @@ var get_ready_view = <get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var bold_crossed = _x => <s><b>{ _x }</b></s>
-var board_view = <board-etc>
+var board_view = _ => <board-etc>
   { where ((
       board = Oo (app_state (), oo (L .get (app_board))),
       current_question = Oo (app_state (), oo (app_current_question)),
       crossed_answers = Oo (app_state (), oo (app_crossed_answers)),
-      bingoes = Oo (app_state (), oo (app_crossed_answers)),
+      bingoes = Oo (app_state (), oo (app_bingoes)),
       game_tick = game_tick_sampler () ) => 
     [ Oo (current_question,
       oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
