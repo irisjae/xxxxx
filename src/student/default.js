@@ -287,6 +287,36 @@ S (_ => {{
     ;game_clock .pause () } }})
 
 
+S (last_ensemble => {{
+  ;Oo ({
+    last_ensemble: last_ensemble,
+    _app: S .sample (app_state),
+    _ensemble: ensemble_state () },
+  oo (({ last_ensemble, _app, _ensemble }) => {{
+    if (L .isDefined (app_get_ready) (_app)) {
+      if (! L .get (ensemble_start) (last_ensemble)) {
+        if (L .get (ensemble_start) (_ensemble)) {
+          var start = L .get (ensemble_start) (_ensemble)
+          var now = (new Date) .getTime ()
+          
+          var _student = Oo (_app, oo (L .get (app_student)))
+          var _setup = Oo (_app, oo (L .get (app_setup)))
+          var _size = Oo (_setup, oo (L .get (setup_size)))
+          var _questions = Oo (_setup, oo (L .get (setup_questions)))
+          var _board = generate_board (_size) (_questions)
+          var _history = []
+          var playing_app = student_app .playing
+            (_student, _setup, _board, _history)
+          if (start > now) {
+            ;app_state (playing_app) }
+          else {
+            ;setTimeout (_ => {{
+              ;app_state (playing_app) }}
+            , start - now) } } } } }}))
+  return ensemble_state () }}
+  , ensemble_state ())
+
+
 S (_ => {{
   ;Oo (app_state (), oo (L .get (L .pick ({
       student: [ app_student, as_maybe ],

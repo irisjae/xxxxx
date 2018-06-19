@@ -199,18 +199,23 @@ S (_ => {{
             oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
 S (last_ensemble => {{
   ;Oo (maybe_all ({
-      last_ensemble: last_ensemble,
-      _app: S .sample (app_state),
-      _ensemble: ensemble_state () }),
-    oo (map_just (({ last_ensemble, _app, _ensemble }) => {{
-      if (L .isDefined (app_get_ready) (_app)) {
-        if (! L .get (ensemble_start) (last_ensemble)) {
-          if (L .get (ensemble_start) (_ensemble)) {
-            var start = L .get (ensemble_start) (_ensemble)
-            var now = (new Date) .getTime ()
-            if (start > now) {
-              ;app_state (
-                teacher_app .playing (Oo (_app, oo ), [])) } } } } }})))
+    last_ensemble: last_ensemble,
+    _app: S .sample (app_state),
+    _ensemble: ensemble_state () }),
+  oo (map_just (({ last_ensemble, _app, _ensemble }) => {{
+    if (L .isDefined (app_get_ready) (_app)) {
+      if (! L .get (ensemble_start) (last_ensemble)) {
+        if (L .get (ensemble_start) (_ensemble)) {
+          var start = L .get (ensemble_start) (_ensemble)
+          var now = (new Date) .getTime ()
+          var _setup = Oo (_app, oo (L .get (app_setup)))
+          var playing_app = teacher_app .playing (_setup, [])
+          if (start > now) {
+            ;app_state (playing_app) }
+          else {
+            ;setTimeout (_ => {{
+              ;app_state (playing_app) }}
+            , start - now) } } } } }})))
   return ensemble_state () }}
   , ensemble_state ())
    
