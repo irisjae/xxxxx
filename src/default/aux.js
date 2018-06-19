@@ -319,16 +319,24 @@ var message_encoding = message =>
   where ((
     student = L .get (message_student) (message)) =>
   !! L .isDefined (message_teacher_setup) (message)
-  ? message
+  ? Oo (message,
+    oo (L .get (message_teacher_setup)),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_teacher_ping) (message)
-  ? message
+  ? Oo (message,
+    oo (L .get (message_ping)),
+    oo (L .get (L .getInverse ([ ensemble_ping ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_teacher_start) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
-    oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))),
+    oo (L .get (L .getInverse ([ ensemble_start ]))),
     oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_teacher_abort) (message)
-  ? { abort: true }
+  ? Oo (message,
+    oo (L .get (message_synchronization)),
+    oo (L .get (L .getInverse ([ ensemble_abort ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_student_ping) (message)
   ? Oo (message,
     oo (L .get (message_ping)),
