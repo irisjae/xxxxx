@@ -47,10 +47,12 @@ var io_state = S .data (io .inert)
 
 
 window .view =  <teacher-app>
-  { Oo (L .get ([app_room, as_maybe], app_state ()),
+  { Oo (app_state (),
+    oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
     oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x))) }
-  { Oo (L .get ([app_students, as_maybe], app_state ()),
-    oo (Z_ .maybe ('') (R .map (_x => <span>{_x + ' student is here'}</span>)))) } </teacher-app>
+  { Oo (app_state (),
+    oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
+    oo (Z_ .maybe ('') (Z_jk_ .map (_x => <span>{_x + ' student is here'}</span>)))) } </teacher-app>
 
                          
                          
@@ -64,7 +66,7 @@ window .view =  <teacher-app>
                          
                          
                          
-          pp               
+                         
                          
 var get_room = room => {{
   var _setup = setup .setup ( room, default_questions, default_rules )
@@ -107,7 +109,7 @@ Oo (R .range (0, 10 + 1),
 var tick_sampler = S .data (Z .Nothing)
   
 S (_ => {{
-  if (Z_ .equals (Z .Nothing) (app_state ())) {
+  if (L .isDefined ([from_maybe]) (app_state ())) {
     if (L .isDefined (data_iso (io .inert)) (io_state ())) {
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
