@@ -7,7 +7,7 @@ var {
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
   shuffle, uuid, api, post,
-  student, question, answer, latency, position,
+  student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
   teacher_app, teacher_lookbehind,
   student_app, student_lookbehind,
@@ -15,16 +15,19 @@ var {
   default_questions, default_rules,
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
+  setup_room, setup_questions, setup_rules,
+  lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
+  io_inert, io_connecting,
+  ensemble_questions, ensemble_rules, ensemble_ping, ensemble_start, ensemble_abort,
+  ensemble_student_pings, ensemble_student_boards, ensemble_student_starts, ensemble_student_histories,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
-  setup_room, setup_questions, setup_rules,
-  lookbehind_bad_room, lookbehind_room,
-  io_inert, io_connecting,
-  ensemble_questions,
+  lookbehind_room,
   rendition_attempts,
   rules_size, setup_size,
-  cell_answer, 
+  cell_answer, student_name,
   message_encoding, messages_encoding,
+  assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question 
 } = window .stuff
@@ -158,6 +161,7 @@ var connect_room = room => {{
       .then (_ => {{
         ;io_state (io .inert) }}) } }})) }} 
 
+/*
 var valid_attempt = _ => 
   !! (where ((
       current_rendition_attempts = Oo (app_state (),
@@ -166,9 +170,10 @@ var valid_attempt = _ =>
       Z .size (current_rendition_attempts) === 0))
   ? true
   : get_latency (clock .time ()) > 3
+*/
 
 var attempt_question = _x => {{
-  if (valid_attempt ()) {
+  if (L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
     var now = clock .time ()
     var latency = get_latency (now)
     if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {

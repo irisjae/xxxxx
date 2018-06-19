@@ -115,7 +115,8 @@ var student_app = data ({
 
 var student_lookbehind = data ({
   nothing: () => defined,
-  bad_room: (room =~ room) => defined })
+  bad_room: (room =~ room) => defined,
+  bad_attempt: () => defined })
 
 var io = data ({
   inert: () => defined,
@@ -183,7 +184,10 @@ var setup_rules = data_lens (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
 
+var lookbehind_bad_attempt = data_iso (student_lookbehind .bad_attempt)
 var lookbehind_bad_room = data_iso (student_lookbehind .bad_room)
+var lookbehind_nothing = data_iso (student_lookbehind .nothing)
+
 var lookbehind_room = data_lens (student_lookbehind .bad_room) .room
 
 var io_inert = data_iso (io .inert)
@@ -395,13 +399,14 @@ window .stuff = { ...window .stuff,
   default_questions, default_rules,
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
-  app_setup, app_student, app_students, app_room,
-  app_board, app_history,
   setup_room, setup_questions, setup_rules,
-  lookbehind_bad_room, lookbehind_room,
+  lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
   io_inert, io_connecting,
   ensemble_questions, ensemble_rules, ensemble_ping, ensemble_start, ensemble_abort,
   ensemble_student_pings, ensemble_student_boards, ensemble_student_starts, ensemble_student_histories,
+  app_setup, app_student, app_students, app_room,
+  app_board, app_history,
+  lookbehind_room,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
