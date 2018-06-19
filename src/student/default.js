@@ -177,22 +177,23 @@ var valid_attempt = _ =>
   : get_latency (clock .time ()) > 3
 */
 
-var attempt_question = _x => {{
-  if (L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
-    var latency = get_latency ()
-    if (Z .equals (Z .Just (_x)) (current_question (app_state ()))) {
-      ;Oo (app_state (),
-        oo (L .set
-          ([app_history, L .last, rendition_attempts, L .append])
-          ([_x, latency])),
-        oo (student_app_next_playing),
-        oo (_x => {{ ;app_state (_x) }})) }
-    else {
-      ;Oo (app_state (),
-        oo (L .set
-          ([app_history, L .last, rendition_attempts, L .append])
-          ([_x, latency])),
-        oo (_x => {{ ;app_state (_x) }})) } } }}
+var attempt_question = _answer => {{
+  Oo (app_state (), oo (current_question), oo (map_just (_question => {{
+    if (! L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
+      var latency = lookbehind_latency ()
+      if (Z .equals (_answer) (_question)) {
+        ;Oo (app_state (),
+          oo (L .set
+            ([app_history, L .last, rendition_attempts, L .append])
+            ([_answer, latency])),
+          oo (student_app_next_playing),
+          oo (_x => {{ ;app_state (_x) }})) }
+      else {
+        ;Oo (app_state (),
+          oo (L .set
+            ([app_history, L .last, rendition_attempts, L .append])
+            ([_answer, latency])),
+          oo (_x => {{ ;app_state (_x) }})) } } }}))) }}
 
 var timesup_question = _ => {{
   ;app_state (student_app_next_playing (app_state ())) }}
@@ -216,7 +217,7 @@ Oo (R .range (0, 10 + 1),
 
 var tick_sampler = S .data (Z .Nothing)
 
-var get_latency = _ => {
+var lookbehind_latency = _ => {
     var now = clock .time ()
     var start = Oo (clock .getLabelTime ('next'),
       oo (_x => !! (_x === -1) ? 0 : _x))
