@@ -16,15 +16,15 @@ var {
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   setup_room, setup_questions, setup_rules,
-  lookbehind_attempting, lookbehind_bad_room, lookbehind_nothing,
-  io_inert, io_connecting,
+  lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
+  lookbehind_attempting, l
   ensemble_questions, ensemble_rules,
   ensemble_ping, ensemble_start, ensemble_abort,
   ensemble_student_pings, ensemble_student_starts,
   ensemble_student_boards, ensemble_student_histories,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
-  lookbehind_room,
+  lookbehind_room, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
@@ -185,7 +185,7 @@ var connect_room = _room => {{
 
 var attempt_question = _answer => {{
   Oo (app_state (), oo (current_question), oo (map_just (_question => {{
-    if (! L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
+    if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
       var latency = lookbehind_latency ()
       if (Z .equals (_answer) (_question)) {
         ;Oo (app_state (),
@@ -199,7 +199,8 @@ var attempt_question = _answer => {{
           oo (L .set
             ([app_history, L .last, rendition_attempts, L .append])
             ([_answer, latency])),
-          oo (_x => {{ ;app_state (_x) }})) } } }}))) }}
+          oo (_x => {{ ;app_state (_x) }}))
+        ;lookbehind_state (student_lookbehind .attempting (game_clock .time (), true)) } } }}))) }}
 
 var timesup_question = _ => {{
   ;app_state (student_app_next_playing (app_state ())) }}
@@ -241,7 +242,7 @@ var connection = S (_ => {{
 S (_ => {{
   if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
     ;var forget = setTimeout (_ => {{
-       ;lookbehind_state (student_lookbehind .nothing) }}
+      ;lookbehind_state (student_lookbehind .nothing) }}
     , 1500)
     ;S .cleanup (_ => {{
       ;clearTimeout (forget) }}) } }})
@@ -260,10 +261,10 @@ S (last_state => {{
   return app_state () }}
   , app_state ())
 S (_ => {{
-  if (L .isDefined (lookbehind_attempting) (lookbehind_state ())) {
-    //setup attempt
-    ;setTimeout (_ => {{
-       ;lookbehind_state (student_lookbehind .nothing) }}
+  if (L .get (lookbehind_blocked) (lookbehind_state ())) {
+    ;var forget = setTimeout (_ => {{
+      var +
+      ;lookbehind_state (student_lookbehind .nothing) }}
     , 1500) }}})
 
 
