@@ -2,6 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
+  projection_zip,
   map_just, from_just, maybe_all,
   every, delay 
 } = window .stuff
@@ -26,12 +27,15 @@ var shuffle = list => {
 var uuid = _ =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
     where ((
-      r = Math.random() * 16 | 0,
+      r = Math .random () * 16 | 0,
       v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
-    v.toString(16) ))
+    v .toString (16) ))
+
+
 
 var _ping_cache = {}
 var _ping_listeners = {}
+
 var api = (room, _x) => {{
   var begin = performance .now ()
   return fetch ('/room/' + room, _x) .then (_x => {{
@@ -58,6 +62,9 @@ var api = (room, _x) => {{
   ;_ping_listeners [room] .push (fn)
   if (_ping_cache [room]) {
     ;fn (_ping_cache [room]) } }}
+
+
+
 var post = x => ({
   method: 'POST',
   headers: {
@@ -104,19 +111,19 @@ var teacher_app = data ({
 	playing: ( setup =~ setup, students =~ map (student) (board, list (rendition)) ) => defined,
 	game_over: ( setup =~ setup, students =~ map (student) (board, list (rendition)) ) => defined })
 
-var teacher_lookbehind = data ({
-  nothing: () => defined,
-  bad_room: () => defined })
-
 var student_app = data ({
 	get_ready: ( student =~ maybe (student), setup =~ maybe (setup) ) => defined,
 	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ list (rendition) ) => defined,
 	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ list (list (rendition)) ) => defined })
 
+var teacher_lookbehind = data ({
+  nothing: () => defined,
+  bad_room: () => defined })
+
 var student_lookbehind = data ({
   nothing: () => defined,
   bad_room: (room =~ room) => defined,
-  attempting_from: (latency =~ latency) => defined })
+  attempting: (since =~ latency, block =~ bool) => defined })
 
 var io = data ({
   inert: () => defined,
@@ -148,6 +155,7 @@ var ensemble = data ({
 
 
 
+//--------------------DEFAULTS--------------------
 
 
 
@@ -161,6 +169,12 @@ var to_maybe = default_fn => _x =>
   !! (Z .is (Z .MaybeType (Z$ .Any))) (_x)
   ? _x
   : default_fn (_x)
+
+
+
+
+//--------------------LENSES--------------------
+
 
 
 var as_maybe = [L .reread (to_maybe (_x => Z .Just (_x))), L .defaults (Z .Nothing)]
@@ -184,7 +198,7 @@ var setup_rules = data_lens (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
 
-var lookbehind_bad_attempt = data_iso (student_lookbehind .bad_attempt)
+var lookbehind_attempting = data_iso (student_lookbehind .attempting)
 var lookbehind_bad_room = data_iso (student_lookbehind .bad_room)
 var lookbehind_nothing = data_iso (student_lookbehind .nothing)
 
@@ -241,6 +255,8 @@ var map_students =
 
 
 
+//--------------------TRANSFORMATIONS--------------------
+
 
 
 
@@ -253,8 +269,6 @@ var generate_board = size => questions =>
   Oo (R .range (1, size + 1),
     oo (R .map (row => Oo (R .range (1, size + 1),
       oo (R .map (column => [row, column, cell (row) (column)] )))))))
-
-
 
 
 var student_app_get_ready_to_playing = _state =>
@@ -370,14 +384,14 @@ window .stuff = { ...window .stuff,
   shuffle, uuid, api, post,
   student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
-  teacher_app, teacher_lookbehind,
-  student_app, student_lookbehind,
+  teacher_app, student_app,
+  teacher_lookbehind, student_lookbehind,
   io, message, ensemble, 
   default_questions, default_rules,
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   setup_room, setup_questions, setup_rules,
-  lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
+  lookbehind_attempting, lookbehind_bad_room, lookbehind_nothing,
   io_inert, io_connecting,
   ensemble_questions, ensemble_rules,
   ensemble_ping, ensemble_start, ensemble_abort,

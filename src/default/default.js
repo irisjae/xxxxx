@@ -1,8 +1,17 @@
+var L = require ('partial.lenses')
+var R = require ('ramda')
+var S = require ('s-js')
+var sanc = require ('sanctuary')
+var Z$ = require ('sanctuary-def')
+var Z = sanc .create ({ checkTypes: true, env: sanc .env })
+var Z_ = Z .unchecked
+var Surplus = require ('surplus')
+var memoize = require ('fast-memoize')
+var TimelineMax = window .TimelineMax
 var xx = function (x) {
 	return { xx: x } }
 var oo = function (x) {
 	return { oo: x } }
-
 var Oo = function () {
 	if ('oo' in arguments [1]) {
 		var answer = arguments [0]
@@ -19,28 +28,39 @@ var Oo = function () {
 
 
 
-var L = require ('partial.lenses')
-var R = require ('ramda')
-var S = require ('s-js')
-var sanc = require ('sanctuary')
-var Z$ = require ('sanctuary-def')
-var Z = sanc .create ({ checkTypes: true, env: sanc .env })
-var Z_ = Z .unchecked
-var Surplus = require ('surplus')
-var memoize = require ('fast-memoize')
-var TimelineMax = window .TimelineMax
 
 
 
 
+
+
+
+
+
+
+
+
+var defined
 var where = x => x ()
 var go = Promise .resolve ()
 
-var WeakMap = window .WeakMap
-var __data_length = new WeakMap
-var __data_lens = new WeakMap
 
-var defined
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var data = constructors => Oo (constructors,
   oo (R .mapObjIndexed ((fn, key) => 
     where ((
@@ -107,7 +127,62 @@ var data_iso = data =>
 var data_kind = data =>
   R .head (Z_ .keys (data))
 
+var WeakMap = window .WeakMap
+var __data_length = new WeakMap
+var __data_lens = new WeakMap
 
+
+
+
+
+
+
+
+
+
+
+
+
+var projection_zip =
+  where ((
+    zip_init = list => mates =>
+      !! (Z_ .size (list) === 0 || Z_ .size (mates) === 0)
+      ? []
+      : where ((
+          list_head = R .head (list),
+          mates_head = R .head (mates),
+          list_head_key = list_head [0],
+          mates_head_key = mates_head [0],
+          list_head_value = list_head [1],
+          mates_head_value = mates_head [1] ) =>
+        !! (Z_ .equals (list_head_key) (mates_head_key))
+        ? [[ list_head_key, [ list_head_value, mates_head_value ] ]]
+        : zip_init (list) (R .tail (mates)) ) ) =>
+  key_projection => val_projection => a => b =>
+    !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
+    ? []
+    : where ((
+      pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
+      a_projection = Oo (a, oo (Z_ .map (pair_projection))),
+      b_projection = Oo (b, oo (Z_ .map (pair_projection))),
+   ) =>
+    Z_ .concat
+      (zip_init (a_projection) (b_projection))
+      (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) ) )
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 var from_just = _x =>
   Z_ .fromMaybe_ (_ => {}) (_x)
 var map_just = fn => Z_ .maybe (Z .Nothing) (_x => Z_ .Just (fn (_x)))
@@ -140,6 +215,11 @@ var as_list = template =>
     (_x => template .map (lens => L .get (lens) (_x)))
     (_x => ({ px: _x [0], py: _x [1], vx :_x [2], vy: _x [3] }))
 */
+
+
+
+
+
 
 
 
@@ -192,5 +272,6 @@ window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
+  projection_zip, 
   map_just, from_just, maybe_all,
   every, delay }

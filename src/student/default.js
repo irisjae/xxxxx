@@ -16,7 +16,7 @@ var {
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   setup_room, setup_questions, setup_rules,
-  lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
+  lookbehind_attempting, lookbehind_bad_room, lookbehind_nothing,
   io_inert, io_connecting,
   ensemble_questions, ensemble_rules,
   ensemble_ping, ensemble_start, ensemble_abort,
@@ -251,7 +251,7 @@ S (last_state => {{
   return app_state () }}
   , app_state ())
 S (_ => {{
-  if (L .isDefined (lookbehind_bad_attempt) (lookbehind_state ())) {
+  if (L .isDefined (lookbehind_attempting) (lookbehind_state ())) {
     //setup attempt
     ;setTimeout (_ => {{
        ;lookbehind_state (student_lookbehind .nothing) }}
