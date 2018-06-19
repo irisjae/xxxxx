@@ -159,12 +159,17 @@ var make_student = _name => {{
 
 var connect_room = _room => {{
   ;Oo (app_state (), oo (L .get ([ app_student, as_maybe ])), oo (map_just (_student => {{
+    var _setup
     ;return go 
     .then (_ =>
-      (io_state (io .connecting), api (_room) .then (_x => {{
-        if (Z .equals (_x) ({})) {
+      (io_state (io .connecting), api (_room) .then (_ensemble => {{
+        if (Z .equals (_ensemble) ({})) {
           ;throw new Error ('empty') }
-        else return _x }})) )
+        else {
+          var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
+          var _rules = Oo (_ensemble, oo (L .get (ensemble_rules)))
+          ;_setup = setup .setup (_room, _questions, default_rules)
+          return _ense } }})) )
     .then (_ =>
       api (_room, post (message_encoding (
         message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
@@ -172,11 +177,8 @@ var connect_room = _room => {{
           ;throw new Error ('not ok') }
         else return _x }}) )
     .then (_ensemble => {{ 
-      var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
       ;app_state (
-        student_app .get_ready (
-          Z .Just (_student)
-          , Z .Just (setup .setup (_room, _questions, default_rules)))) }})
+        student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
     .catch (_e => {{
       ;lookbehind_state (student_lookbehind .bad_room (_room))
       ;console .error (_e) }})
@@ -321,9 +323,8 @@ S (_ => {{
       go
       .then (_ =>
         !! critical && S .sample (connection)
-        ? (io_state (io .messaging), api (room, 
-            post (message_encoding (
-              message .student_ping (student, S .sample (connection))))))
+        ? (io_state (io .messaging), api (room,  post (message_encoding (
+            message .student_ping (student, S .sample (connection))))))
         : (io_state (io .heartbeat), api (room)
           .then (_x => {{
             ;ensemble_state (
