@@ -141,11 +141,13 @@ window .view = <student-app>
 
 
 
+/*
 var lookbehind_latency = _ => {
     var now = game_clock .time ()
     var start = Oo (game_clock .getLabelTime ('next'),
       oo (_x => !! (_x === -1) ? 0 : _x))
     return now - start }
+*/
        
        
        
@@ -190,7 +192,7 @@ var connect_room = _room => {{
 var attempt_question = _answer => {{
   Oo (app_state (), oo (app_current_question), oo (map_just (_question => {{
     if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
-      var latency = lookbehind_latency ()
+      var latency = game_clock .time () //lookbehind_latency ()
       if (Z .equals (_answer) (_question)) {
         ;Oo (app_state (),
           oo (L .set
