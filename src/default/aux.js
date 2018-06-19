@@ -382,7 +382,8 @@ var assemble_students = kind => ensemble =>
 
 var schedule_start = _ensemble =>
   where ((
-    teacher_ping = Oo (_ensemble, oo (L .get (i)))
+    teacher_ping = Oo (_ensemble, oo (L .get (ensemble_ping))),
+    student_pings = ,
     pings = Z .prepend () ,
     confidence_interval = Z .reduce (Z .max) (0) (pings) ) =>
   (new Date) .getTime () + confidence_interval)
