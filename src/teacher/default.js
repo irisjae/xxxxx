@@ -2,8 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
-  data, data_lens, data_is``
-  ma
+  map_just, from_just, maybe_all,
   every, delay,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
@@ -17,18 +16,19 @@ var {
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   setup_room, setup_questions, setup_rules,
-  lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
+  lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
   io_inert, io_connecting,
   ensemble_questions, ensemble_rules,
   ensemble_ping, ensemble_start, ensemble_abort,
   ensemble_student_pings, ensemble_student_starts,
   ensemble_student_boards, ensemble_student_histories,
-  ensemble_questions, ensemble_rules, ensemble_pi
+  app_setup, app_student, app_students, app_room,
   app_board, app_history,
-  lookbehind_room,
+  lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
+  history_stepped,
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
@@ -163,7 +163,8 @@ S (_ => {{
       var _ensemble_students = Oo (ensemble, oo (assemble_students (_app_kind)))
       if (! Z_ .equals (_ensemble_students) (_app_students)) {
         ;app_state (Z .Just (
-          Oo (app, oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
+          Oo (app,
+            oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
    
    
 S (_ => {{
@@ -193,4 +194,3 @@ S (_ => {{
         , 300) }})
       .then (_ => {{
         ;io_state (io .inert) }}) }}))) }})
-   

@@ -17,14 +17,14 @@ var {
   app_get_ready, app_playing, app_game_over,
   setup_room, setup_questions, setup_rules,
   lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
-  lookbehind_attempting, l
+  io_inert, io_connecting,
   ensemble_questions, ensemble_rules,
   ensemble_ping, ensemble_start, ensemble_abort,
   ensemble_student_pings, ensemble_student_starts,
   ensemble_student_boards, ensemble_student_histories,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
-  lookbehind_room, lookbehind_blocked,
+  lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
@@ -74,7 +74,7 @@ var pipeline_board_cell = cell => _dom => {{
 
 var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
           
-var enter_room_view = <room-input-etc>i
+var enter_room_view = <room-input-etc>
   { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
     ? where ((
         bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
@@ -263,9 +263,11 @@ S (last_state => {{
 S (_ => {{
   if (L .get (lookbehind_blocked) (lookbehind_state ())) {
     ;var forget = setTimeout (_ => {{
-      var +
-      ;lookbehind_state (student_lookbehind .nothing) }}
-    , 1500) }}})
+      var _since = Oo (lookbehind_state (), L .get (lookbehind_since))
+      ;lookbehind_state (student_lookbehind .attempting (_since, false)) }}
+    , 1500)
+    ;S .cleanup (_ => {{
+      ;clearTimeout (forget) }}) } }})
 
 
 S (_ => {{
