@@ -2,7 +2,8 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
-  map_just, from_just, maybe_all,
+  data, data_lens, data_is``
+  ma
   every, delay,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
@@ -15,19 +16,23 @@ var {
   default_questions, default_rules,
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
-  app_setup, app_student, app_students, app_room,
-  app_board, app_history,
   setup_room, setup_questions, setup_rules,
-  lookbehind_bad_room, lookbehind_room,
+  lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
   io_inert, io_connecting,
-  ensemble_questions,
+  ensemble_questions, ensemble_rules,
+  ensemble_ping, ensemble_start, ensemble_abort,
+  ensemble_student_pings, ensemble_student_starts,
+  ensemble_student_boards, ensemble_student_histories,
+  ensemble_questions, ensemble_rules, ensemble_pi
+  app_board, app_history,
+  lookbehind_room,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
   message_encoding, messages_encoding,
-  assemble_students,
+  assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  crossed_answers, current_question 
+  app_crossed_answers, current_question 
 } = window .stuff
 
 
@@ -48,14 +53,14 @@ var io_state = S .data (io .inert)
 
 
 window .view =  <teacher-app>
-  { Oo (app_state (),
-    oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
-    oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x))) }
-  { Oo (app_state (),
-    oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
-    oo (Z_ .maybe ('') (_x => Oo (_x,
-      oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <div>{_x + ' student is here'}</div>)))))) } </teacher-app>
+  { [ Oo (app_state (),
+      oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
+      oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x)))
+    , Oo (app_state (),
+      oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
+      oo (Z_ .maybe ([]) (_x => Oo (_x,
+        oo (Z_ .map (L .get (student_name))), 
+        oo (Z_ .map (_x => <div>{_x + ' student is here'}</div>)))))) ] } </teacher-app>
 
                          
                          
@@ -71,23 +76,23 @@ window .view =  <teacher-app>
                          
                          
                          
-var get_room = room => {{
-  var _setup = setup .setup ( room, default_questions, default_rules )
+var get_room = _room => {{
+  var _setup = setup .setup ( _room, default_questions, default_rules )
 
   ;return go
   .then (_ =>
-    (io_state (io .connecting), api (room) .then (_x => {{
+    (io_state (io .connecting), api (_room) .then (_x => {{
       if (! R .equals (_x) ({})) {
-        ;throw new Error (room + ' taken') }
+        ;throw new Error (_room + ' taken') }
       else return _x }})))
   .then (_ =>
-    api (room,
+    api (_room,
       post (message_encoding (
         where ((
           {questions, rules} = Oo (_setup, oo (L .get (data_iso (setup .setup))))) =>
         message .teacher_setup (questions, rules)) ))) .then (_x => {{
       if (! _x .ok) {
-        ;throw new Error ('cannot post to ' + room)}
+        ;throw new Error ('cannot post to ' + _room)}
       else return _x }}))
   .then (_ => {{
     ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
@@ -108,11 +113,11 @@ var timesup_question = _ => {{
         
         
         
-var clock = new TimelineMax
-var tick_sampler = S .data (Z .Nothing)
-;clock .add (timesup_question, 10)
+var game_clock = new TimelineMax
+var game_tick_sampler = S .data (Z .Nothing)
+;game_clock .add (timesup_question, 10)
 ;Oo (R .range (0, 10 + 1),
-  oo (R .forEach (t => clock .add (_ => {;tick_sampler (t)}, t))))
+  oo (R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t))))
 
    
 var reping_period = 3

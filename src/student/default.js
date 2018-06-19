@@ -1,7 +1,7 @@
 var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
-  data, data_lens, data_iso,
+  data, data_lens, data_iso, data_kind,
   map_just, from_just, maybe_all,
   every, delay,
   bool, number, timestamp, string,
@@ -18,8 +18,10 @@ var {
   setup_room, setup_questions, setup_rules,
   lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
   io_inert, io_connecting,
-  ensemble_questions, ensemble_rules, ensemble_ping, ensemble_start, ensemble_abort,
-  ensemble_student_pings, ensemble_student_boards, ensemble_student_starts, ensemble_student_histories,
+  ensemble_questions, ensemble_rules,
+  ensemble_ping, ensemble_start, ensemble_abort,
+  ensemble_student_pings, ensemble_student_starts,
+  ensemble_student_boards, ensemble_student_histories,
   app_setup, app_student, app_students, app_room,
   app_board, app_history,
   lookbehind_room,
@@ -106,7 +108,7 @@ var board_view = board => crossed_answers =>
         crossed_answers = Oo (app_state (), oo (app_crossed_answers))) => 
       [ Oo (current_question),
         oo (Z_ .maybe ('') (_x => <question>{ _x }</question>)) 
-      , <ticker>{ Oo (tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
+      , <ticker>{ Oo (game_tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { Oo (board, oo (Z_ .map (row => 
         <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
           oo (L .get (cell_answer)),
@@ -137,8 +139,22 @@ window .view = <student-app>
 
 
 
-var make_student = name => {{
-  ;app_state (student_app .get_ready (Z .Just ([ uuid (), name ]), L .get ([ app_setup, as_maybe ], app_state ()))) }}
+var lookbehind_latency = _ => {
+    var now = game_clock .time ()
+    var start = Oo (game_clock .getLabelTime ('next'),
+      oo (_x => !! (_x === -1) ? 0 : _x))
+    return now - start }
+       
+       
+       
+       
+       
+var make_student = _name => {{
+  var _setup = Oo (app_state (), oo (L .get ([ app_setup, as_maybe ])))
+  ;app_state (
+    student_app .get_ready (
+      Z .Just ([ uuid (), _name ])
+      ,_setup )) }}
 
 var connect_room = _room => {{
   ;Oo (app_state (), oo (L .get ([ app_student, as_maybe ])), oo (map_just (_student => {{
@@ -196,18 +212,13 @@ var timesup_question = _ => {{
 
 
 
-var lookbehind_latency = _ => {
-    var now = clock .time ()
-    var start = Oo (clock .getLabelTime ('next'),
-      oo (_x => !! (_x === -1) ? 0 : _x))
-    return now - start }
 
 
-var clock = new TimelineMax
-var tick_sampler = S .data (Z .Nothing)
-;clock .add (timesup_question, 10)
+var game_clock = new TimelineMax
+var game_tick_sampler = S .data (Z .Nothing)
+;game_clock .add (timesup_question, 10)
 ;Oo (R .range (0, 10 + 1),
-  oo (R .forEach (t => clock .add (_ => {{ ;tick_sampler (Z .Just (t)) }}, t))))
+  oo (R .forEach (t => game_clock .add (_ => {{ ;game_tick_sampler (Z .Just (t)) }}, t))))
 
 
 var reping_period = 3
@@ -249,19 +260,19 @@ S (_ => {{
 
 S (_ => {{
   if (L .isDefined (app_get_ready) (app_state ())) {
-    ;clock .pause () } }})
+    ;game_clock .pause () } }})
 S (last_state => {{
   if (L .isDefined (app_playing) (app_state ())) {
     var last_history = Oo (last_state, oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
     var history = Oo (app_state (), oo (L .get (app_history)))
     if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
-      ;clock .seek (0) }
-    ;clock .play () }
+      ;game_clock .seek (0) }
+    ;game_clock .play () }
   return app_state () }}
   , app_state ())
 S (_ => {{
   if (L .isDefined (app_game_over) (app_state ())) {
-    ;clock .pause () } }})
+    ;game_clock .pause () } }})
 
 
 S (_ => {{

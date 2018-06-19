@@ -241,32 +241,7 @@ var map_students =
 
 
 
-var projection_zip =
-  where ((
-    zip_init = list => mates =>
-      !! (Z_ .size (list) === 0 || Z_ .size (mates) === 0)
-      ? []
-      : where ((
-          list_head = R .head (list),
-          mates_head = R .head (mates),
-          list_head_key = list_head [0],
-          mates_head_key = mates_head [0],
-          list_head_value = list_head [1],
-          mates_head_value = mates_head [1] ) =>
-        !! (Z_ .equals (list_head_key) (mates_head_key))
-        ? [[ list_head_key, [ list_head_value, mates_head_value ] ]]
-        : zip_init (list) (R .tail (mates)) ) ) =>
-  key_projection => val_projection => a => b =>
-    !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
-    ? []
-    : where ((
-      pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
-      a_projection = Oo (a, oo (Z_ .map (pair_projection))),
-      b_projection = Oo (b, oo (Z_ .map (pair_projection))),
-   ) =>
-    Z_ .concat
-      (zip_init (a_projection) (b_projection))
-      (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) ) )
+
 
 
 
@@ -378,8 +353,10 @@ var assemble_students = kind => ensemble =>
   ? Oo (ensemble, oo (L .collect ([ ensemble_student_pings, map_students ])))
   : !! (kind === 'playing') || (kind === 'game_over')
   ? where ((
-      boards = Oo (ensemble, oo (L .collect ([ ensemble_student_boards, map_students ]))),
-      histories = Oo (ensemble, oo (L .collect ([ ensemble_student_histories, map_students ]))) ) =>
+      boards = Oo (ensemble,
+        oo (L .collect ([ ensemble_student_boards, map_students ]))),
+      histories = Oo (ensemble,
+        oo (L .collect ([ ensemble_student_histories, map_students ]))) ) =>
     projection_zip (R .head) (R .last) (boards) (histories))
   : undefined
 
@@ -402,9 +379,11 @@ window .stuff = { ...window .stuff,
   setup_room, setup_questions, setup_rules,
   lookbehind_bad_attempt, lookbehind_bad_room, lookbehind_nothing,
   io_inert, io_connecting,
-  ensemble_questions, ensemble_rules, ensemble_ping, ensemble_start, ensemble_abort,
-  ensemble_student_pings, ensemble_student_boards, ensemble_student_starts, ensemble_student_histories,
-  app_setup, app_student, app_students, app_room,
+  ensemble_questions, ensemble_rules,
+  ensemble_ping, ensemble_start, ensemble_abort,
+  ensemble_student_pings, ensemble_student_starts,
+  ensemble_student_boards, ensemble_student_histories,
+  ensemble_questions, ensemble_rules, ensemble_pi
   app_board, app_history,
   lookbehind_room,
   rendition_attempts,
