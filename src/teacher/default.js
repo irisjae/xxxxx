@@ -144,8 +144,8 @@ S (_ => {{
             message .teacher_ping (connection ()))))
         : api (room)
           .then (_x => {{
-            ;ensemble_state (
-              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }}) )
+            ;ensemble_state (Z .Just (
+              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }}) )
       .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
@@ -161,12 +161,12 @@ S (_ => {{
       app: S .sample (app_state),
       ensemble: ensemble_state () }),
     oo (map_just (({ app, ensemble }) => {{
-      var app_kind = Oo (app, oo (data_kind))
-      var app_students = Oo (app, oo (L .get (app_students)))
-      var ensemble_students = Oo (app, oo (assemble_students (app_kind)))
-      if (! Z .equals (ensemble_students) (app_students)) {
+      var _app_kind = Oo (app, oo (data_kind))
+      var _app_students = Oo (app, oo (L .get (app_students)))
+      var _ensemble_students = Oo (app, oo (assemble_students (_app_kind)))
+      if (! Z .equals (_ensemble_students) (_app_students)) {
         ;app_state (Z .Just (
-          Oo (app, oo (L .set ([app_students]) (ensemble_students))))) } }}))) }})
+          Oo (app, oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
    
  
 

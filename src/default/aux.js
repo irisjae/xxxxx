@@ -324,8 +324,7 @@ var message_encoding = message =>
     student = L .get (message_student) (message)) =>
   !! L .isDefined (message_teacher_setup) (message)
   ? Oo (message,
-    oo (L .get (message_teacher_setup)),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (message_teacher_setup)))
   : !! L .isDefined (message_teacher_ping) (message)
   ? Oo (message,
     oo (L .get (message_ping)),
