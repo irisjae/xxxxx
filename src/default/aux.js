@@ -203,6 +203,10 @@ var message_board = message_student_join .board
 var message_history = message_student_update .history
   
 var ensemble_questions = data_iso (ensemble .ensemble) .questions 
+var ensemble_rules = data_iso (ensemble .ensemble) .rules 
+var ensemble_ping = data_iso (ensemble .ensemble) .ping 
+var ensemble_start = data_iso (ensemble .ensemble) .start 
+var ensemble_abort = data_iso (ensemble .ensemble) .abort 
 var ensemble_student_pings = data_iso (ensemble .ensemble) .student_pings 
 var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards 
 var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
@@ -393,7 +397,8 @@ window .stuff = { ...window .stuff,
   setup_room, setup_questions, setup_rules,
   lookbehind_bad_room, lookbehind_room,
   io_inert, io_connecting,
-  ensemble_questions,
+  ensemble_questions, ensemble_rules, ensemble_ping, ensemble_start, ensemble_abort,
+  ensemble_student_pings, ensemble_student_boards, ensemble_student_starts, ensemble_student_histories,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, 
