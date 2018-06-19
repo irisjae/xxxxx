@@ -74,13 +74,12 @@ window .view =  <teacher-app>
 var get_room = room => {{
   var _setup = setup .setup ( room, default_questions, default_rules )
 
-  ;io_state (io .connecting)
   ;return go
   .then (_ =>
-    api (room) .then (_x => {{
+    (io_state (io .connecting), api (room) .then (_x => {{
       if (! R .equals (_x) ({})) {
         ;throw new Error (room + ' taken') }
-      else return _x }}))
+      else return _x }})))
   .then (_ =>
     api (room,
       post (message_encoding (

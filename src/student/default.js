@@ -133,13 +133,12 @@ var make_student = name => {{
 var connect_room = room => {{
   Oo (app_state (), oo (L .get (app_student)), oo (_student => {{
     if (_student) {
-      ;io_state (io .connecting)
       ;return go 
       .then (_ =>
-        api (room) .then (_x => {{
+        (io_state (io .connecting), api (room) .then (_x => {{
           if (Z .equals (_x) ({})) {
             ;throw new Error ('empty') }
-          else return _x }}) )
+          else return _x }})) )
       .then (_ =>
         api (room, post (message_encoding (
           message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
