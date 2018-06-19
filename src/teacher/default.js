@@ -116,29 +116,23 @@ var get_room = _room => {{
     ;io_state (io .inert) }}) }}
 
 var start_playing = _ => {{
-  Oo (app_state (), oo (L .get (from_maybe)),
-    oo (L .get ())
-  ;go
-  .then (_ =>
-    (io_state (io .connecting), api (_room) .then (_x => {{
-      if (! R .equals (_x) ({})) {
-        ;throw new Error (_room + ' taken') }
-      else return _x }})))
-  .then (_ =>
-    api (_room,
-      post (message_encoding (
-        where ((
-          {questions, rules} = Oo (_setup, oo (L .get (data_iso (setup .setup))))) =>
-        message .teacher_setup (questions, rules)) ))) .then (_x => {{
-      if (! _x .ok) {
-        ;throw new Error ('cannot post to ' + _room)}
-      else return _x }}))
-  .then (_ => {{
-    ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
-  .catch (_e => {{
-    ;console .error (_e) }})
-  .then (_ => {{
-    ;io_state (io .inert) }}) }}
+  Oo (app_state (), oo (L .get (from_maybe)), oo (L .get (L .pick ({
+    _setup: app_setup,
+    _room: app_room }))),
+    oo (({ _setup, _room }) => {{
+      ;go
+      .then (_ =>
+        (io_state (io .messaging), api (_room,
+          post (message_encoding (
+            message .teacher_start (schedule_) .then (_x => {{
+          if (! _x .ok) {
+            ;throw new Error ('cannot post to ' + _room)}
+          else return _x }}))
+      .catch (_e => {{
+        ;console .error (_e) }})
+      .then (_ => {{
+        ;io_state (io .inert) }})
+    }} )) }}
   
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
