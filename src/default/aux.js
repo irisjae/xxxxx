@@ -311,6 +311,19 @@ var student_app_next_playing = _app =>
          
 
 var size_patterns = size =>
+  where ((
+    range = Z .range (0) (size),
+    vertical_patterns = Oo (range, oo (Z .map (_x =>
+      Oo (range, oo (Z .map (_y => [_x, _y] )))))),
+    horizontal_patterns = Oo (range, oo (Z .map (_y =>
+      Oo (range, oo (Z .map (_x => [_x, _y] )))))),
+    diagonal_patterns = [
+      Oo (range, oo (Z .map (_x => [_x, _x])))
+    , Oo (range, oo (Z .map (_x => [_x, _x]))) ] ) =>
+  Z .reduce (Z .concat) ([]) ([
+      vertical_patterns
+    , horizontal_patterns
+    , diagonal_patterns ]) )
 ...
 /*[
     [[0, 0], [0, 1], [0, 2]]
