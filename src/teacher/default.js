@@ -131,7 +131,7 @@ S (last_state => {{
    
 
 S (_ => {{
-  ;Oo (app_state (), oo (L .get (L .pick ({
+  ;Oo (app_state (), oo (L .get ([ from_maybe ])), oo (L .get (L .pick ({
       room: [ app_room, as_maybe ] }))),
     oo (maybe_all),
     oo (map_just (({ room }) => {{
@@ -165,8 +165,8 @@ S (_ => {{
       var app_students = Oo (app, oo (L .get (app_students)))
       var ensemble_students = Oo (app, oo (assemble_students (app_kind)))
       if (! Z .equals (ensemble_students) (app_students)) {
-        ;app_state (
-          Oo (app, oo (L .set ([app_students]) (ensemble_students)))) } }}))) }})
+        ;app_state (Z .Just (
+          Oo (app, oo (L .set ([app_students]) (ensemble_students))))) } }}))) }})
    
  
 

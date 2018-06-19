@@ -323,7 +323,10 @@ var message_encoding = message =>
   : !! L .isDefined (message_teacher_ping) (message)
   ? message
   : !! L .isDefined (message_teacher_start) (message)
-  ? message
+  ? Oo (message,
+    oo (L .get (message_synchronization)),
+    oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))),
+    oo (L .get (data_iso (ensemble .ensemble))))
   : !! L .isDefined (message_teacher_abort) (message)
   ? { abort: true }
   : !! L .isDefined (message_student_ping) (message)
