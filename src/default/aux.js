@@ -304,8 +304,10 @@ var student_app_next_playing = _app =>
     history_size = Oo (_app, oo (L .get (app_history), oo (Z .size)))) =>
   !! (history_size < board_size * board_size)
   ? Oo (_app,
-    oo (L .set ([app_history, L .append], rendition .rendition ([]))))
-  : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (_app))
+    oo (L .set ([app_history, L .append]) (rendition .rendition ([]))))
+  : Oo (_app,
+    oo (L .get (data_iso (student_app .playing))),
+    oo (L .get (L .getInverse (data_iso (student_app .game_over))))) )
          
 
 
