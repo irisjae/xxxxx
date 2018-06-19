@@ -177,7 +177,7 @@ var to_maybe = default_fn => _x =>
 
 
 
-var as_maybe = [L .reread (to_maybe (_x => Z .Just (_x))), L .defaults (Z .Nothing)]
+var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
 
@@ -218,7 +218,7 @@ var message_student_join = data_iso (message .student_join)
 var message_student_start = data_iso (message .student_start) 
 var message_student_update = data_iso (message .student_update) 
 
-var message_student = [L .choices (message_student_ping, message_student_join, message_student_update), 'student']
+var message_student = [L .choices (message_student_ping, message_student_join, message_student_start, message_student_update), 'student']
 var message_ping = [L .choices (message_teacher_ping, message_student_ping), 'ping']
 var message_synchronization = L .choices (message_teacher_start, message_teacher_abort, message_student_start .synchronization)
 var message_board = message_student_join .board
@@ -342,7 +342,7 @@ var history_stepped = old => curr =>
 
 var message_encoding = message =>
   where ((
-    student = L .get (message_student) (message)) =>
+    student = Oo (message, oo (L .get (message_student))) ) =>
   !! L .isDefined (message_teacher_setup) (message)
   ? Oo (message,
     oo (L .get (message_teacher_setup)))
