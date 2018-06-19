@@ -267,9 +267,9 @@ S (last_app => {{
 S (_ => {{
   if (L .get (lookbehind_blocked) (lookbehind_state ())) {
     ;var forget = setTimeout (_ => {{
-      var _since = Oo (lookbehind_state (), L .get (lookbehind_since))
+      var _since = Oo (lookbehind_state (), oo (L .get (lookbehind_since)))
       ;lookbehind_state (student_lookbehind .attempting (_since, false)) }}
-    , 1500)
+    , 3000)
     ;S .cleanup (_ => {{
       ;clearTimeout (forget) }}) } }})
 

@@ -188,9 +188,7 @@ var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (stu
 var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), L .choices (['student', from_maybe], 'student') ]
 var app_setup = [L .choices (app_get_ready, app_playing, app_game_over), L .choices ([ 'setup', from_maybe ], 'setup')]
 var app_board = [ L .choices (app_playing, app_game_over), 'board' ]
-var app_history = L .choices (
-  data_lens (student_app .playing) .history,
-  app_game_over)
+var app_history = L .choices ( data_lens (student_app .playing) .history, data_lens (student_app .game_over) .history )
 
 var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
 
