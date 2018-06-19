@@ -326,15 +326,15 @@ var size_patterns = memoize (size =>
     , diagonal_patterns ]) ))
 
 
-var app_current_question = memoize (_app =>
+var app_current_question = _app =>
   !! L .isDefined (app_playing) (_app)
   ? where ((
       history = Oo (_app, oo (L .get (app_history))),
       current_question_index = Z .size (history) - 1) =>
     Oo (_app, oo (L .get ([app_questions, current_question_index, as_maybe]))))
-  : Z .Nothing)
+  : Z .Nothing
 
-var app_crossed_answers = memoize (_app => 
+var app_crossed_answers = _app => 
   !! (L .isDefined (app_playing) (_app))
   ? where ((
       final_attempts = Oo (_app, oo (L .get (app_history)),
@@ -349,9 +349,9 @@ var app_crossed_answers = memoize (_app =>
         ? maybe_attempt
         : Z .Nothing))),
       oo (Z .justs)))
-  : [])
+  : []
 
-var app_bingoes = memoize (_app =>
+var app_bingoes = _app =>
   where ((
     _size = Oo (_app, oo (L .get ([ app_setup, setup_size ]))),
     _board = Oo (_app, oo (L .get (app_board))),
@@ -364,7 +364,7 @@ var app_bingoes = memoize (_app =>
         oo (R .all (_answer => Z_ .elem (_answer) (_crossed_answers)))))
       ? Z .Just (_pattern)
       : Z .Nothing)),
-    oo (Z .justs)) ))
+    oo (Z .justs)) )
 
 
 var history_stepped = old => curr =>
