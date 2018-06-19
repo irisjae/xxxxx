@@ -250,6 +250,16 @@ S (last_state => {{
       ;lookbehind_state (student_lookbehind .nothing) } }
   return app_state () }}
   , app_state ())
+S (last_state => {{
+  if (L .isDefined (app_playing) (app_state ())) {
+    var last_history = Oo (last_state,
+      oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
+    var history = Oo (app_state (),
+      oo (L .get ([app_history])))
+    if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
+      ;lookbehind_state (0, false) } }
+  return app_state () }}
+  , app_state ())
 S (_ => {{
   if (L .isDefined (lookbehind_attempting) (lookbehind_state ())) {
     //setup attempt
@@ -263,8 +273,10 @@ S (_ => {{
     ;game_clock .pause () } }})
 S (last_state => {{
   if (L .isDefined (app_playing) (app_state ())) {
-    var last_history = Oo (last_state, oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
-    var history = Oo (app_state (), oo (L .get (app_history)))
+    var last_history = Oo (last_state,
+      oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
+    var history = Oo (app_state (),
+      oo (L .get ([app_history])))
     if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
       ;game_clock .seek (0) }
     ;game_clock .play () }
