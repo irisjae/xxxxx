@@ -53,7 +53,7 @@ var clicking = ['click']
 var pipeline_play = _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
-      ;}}) }}) }}
+      ;start_playing () }}) }}) }}
 
 var get_ready_view = <get-ready-etc> {
   [ Oo (app_state (),
@@ -63,17 +63,18 @@ var get_ready_view = <get-ready-etc> {
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
     oo (Z_ .maybe ([]) (_x => Oo (_x,
       oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <div>{_x + ' student is here'}</div>)),
-      oo (Z_ .append (<play fn={ pipeline_play }>play</play>)))))) ] } </get-ready-etc>
+      oo (Z_ .map (_x => <div>{_x + ' student is here'}</div>))))),
+    oo (_x => !! (Z .size (_x) === 0)
+      ? _x
+      : Z_ .append (<div fn={ pipeline_play }>play</div>) (_x))) ] }
+  </get-ready-etc>
 
 
 window .view =  <teacher-app>
-  { !! (Z .equals (Z .Nothing) (app_state)
+  { !! (Z .equals (Z .Nothing) (app_state ())
     || L .isDefined (app_get_ready) (from_just (app_state ())))
     ? get_ready_view
-    : undefined
-  
-   } </teacher-app>
+    : undefined } </teacher-app>
 
                          
                          
@@ -114,6 +115,9 @@ var get_room = _room => {{
   .then (_ => {{
     ;io_state (io .inert) }}) }}
 
+var start_playing = _ => {{
+  }}
+  
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
 }}
