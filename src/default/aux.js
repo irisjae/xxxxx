@@ -116,7 +116,7 @@ var student_app = data ({
 var student_lookbehind = data ({
   nothing: () => defined,
   bad_room: (room =~ room) => defined,
-  attempts_from: (latency =~ latency) => defined })
+  attempting_from: (latency =~ latency) => defined })
 
 var io = data ({
   inert: () => defined,
