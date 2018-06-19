@@ -316,7 +316,8 @@ var current_question = _state =>
     Oo (_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
-
+var history_stepped = old => curr =>
+  Z .size (curr) > Z .size (old)
 
 
 var message_encoding = message =>
@@ -406,6 +407,7 @@ window .stuff = { ...window .stuff,
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
+  history_stepped,
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,

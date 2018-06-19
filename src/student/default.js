@@ -28,6 +28,7 @@ var {
   rendition_attempts,
   rules_size, setup_size,
   cell_answer, student_name,
+  history_stepped,
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
@@ -251,12 +252,10 @@ S (last_state => {{
   return app_state () }}
   , app_state ())
 S (last_state => {{
+  var last_history = Oo (last_state, oo (L .get ([app_history]))) || []
+  var history = Oo (app_state (), oo (L .get ([app_history])))
   if (L .isDefined (app_playing) (app_state ())) {
-    var last_history = Oo (last_state,
-      oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
-    var history = Oo (app_state (),
-      oo (L .get ([app_history])))
-    if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
+    if (history_stepped (last_history) (history)) {
       ;lookbehind_state (0, false) } }
   return app_state () }}
   , app_state ())
@@ -272,11 +271,9 @@ S (_ => {{
   if (L .isDefined (app_get_ready) (app_state ())) {
     ;game_clock .pause () } }})
 S (last_state => {{
+  var last_history = Oo (last_state, oo (L .get ([app_history]))) || []
+  var history = Oo (app_state (), oo (L .get ([app_history])))
   if (L .isDefined (app_playing) (app_state ())) {
-    var last_history = Oo (last_state,
-      oo (L .get ([app_history, as_maybe])), oo (Z .fromMaybe ([])))
-    var history = Oo (app_state (),
-      oo (L .get ([app_history])))
     if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
       ;game_clock .seek (0) }
     ;game_clock .play () }
