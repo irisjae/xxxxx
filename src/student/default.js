@@ -32,7 +32,7 @@ var {
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  app_crossed_answers, current_question 
+  app_crossed_answers, app_current_question 
 } = window .stuff
 
 
@@ -105,10 +105,10 @@ var board_view = board => crossed_answers =>
   <board-etc>
     { where ((
         board = Oo (app_state (), oo (L .get (app_board))),
-        current_question = Oo (app_state (), oo (current_question)),
+        current_question = Oo (app_state (), oo (app_current_question)),
         crossed_answers = Oo (app_state (), oo (app_crossed_answers))) => 
-      [ Oo (current_question),
-        oo (Z_ .maybe ('') (_x => <question>{ _x }</question>)) 
+      [ Oo (current_question,
+        oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
       , <ticker>{ Oo (game_tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { Oo (board, oo (Z_ .map (row => 
         <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
@@ -162,21 +162,22 @@ var connect_room = _room => {{
     var _setup
     ;return go 
     .then (_ =>
-      (io_state (io .connecting), api (_room) .then (_ensemble => {{
-        if (Z .equals (_ensemble) ({})) {
+      (io_state (io .connecting), api (_room) .then (_x => {{
+        if (Z .equals (_x) ({})) {
           ;throw new Error ('empty') }
         else {
+          var _ensemble = L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)
           var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
           var _rules = Oo (_ensemble, oo (L .get (ensemble_rules)))
           ;_setup = setup .setup (_room, _questions, default_rules)
-          return _ense } }})) )
+          return _x } }})) )
     .then (_ =>
       api (_room, post (message_encoding (
         message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
         if (! _x .ok) {
           ;throw new Error ('not ok') }
         else return _x }}) )
-    .then (_ensemble => {{ 
+    .then (_ => {{ 
       ;app_state (
         student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
     .catch (_e => {{

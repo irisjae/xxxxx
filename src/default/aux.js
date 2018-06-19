@@ -290,7 +290,7 @@ var student_app_get_ready_to_playing = _app =>
       student: L .get ([ app_student, as_maybe ]),
       setup: L .get ([ app_setup, as_maybe ]) }))),
     oo (maybe_all),
-    oo (map_just (({student, setup}) => 
+    oo (Z_ .maybe (undefined) (({student, setup}) => 
       where ((
         _size = L .get (setup_size) (setup),
         _questions = L .get (setup_questions) (setup),
@@ -298,23 +298,23 @@ var student_app_get_ready_to_playing = _app =>
       student_app .playing
         (student, setup, generate_board (_size) (_questions), fresh_history)) )))
 
-var student_app_next_playing = _state =>
+var student_app_next_playing = _app =>
   where ((
-    board_size = Oo (_state, oo (L .get ([app_setup, setup_size]))),
-    history_size = Oo (_state, oo (L .get (app_history), oo (Z .size)))) =>
+    board_size = Oo (_app, oo (L .get ([app_setup, setup_size]))),
+    history_size = Oo (_app, oo (L .get (app_history), oo (Z .size)))) =>
   !! (history_size < board_size * board_size)
-  ? Oo (_state,
+  ? Oo (_app,
     oo (L .set ([app_history, L .append], rendition .rendition ([]))))
-  : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (_state))
+  : L .get ([data_iso (student_app .playing), L .inverse (data_iso (student_app .game_over))]) (_app))
          
 
 
-var app_crossed_answers = memoize (_state => 
-  !! (L .isDefined (app_playing) (_state))
+var app_crossed_answers = memoize (_app => 
+  !! (L .isDefined (app_playing) (_app))
   ? where ((
-      final_attempts = Oo (_state, oo (L .get (app_history)),
+      final_attempts = Oo (_app, oo (L .get (app_history)),
         oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
-      actual_answers = Oo (_state, oo (L .get (app_questions)))) =>
+      actual_answers = Oo (_app, oo (L .get (app_questions)))) =>
     Oo (Z .zip (final_attempts) (actual_answers),
       oo (Z .map (pair =>
         where ((
@@ -326,12 +326,12 @@ var app_crossed_answers = memoize (_state =>
       oo (Z .justs)))
   : [])
 
-var current_question = _state =>
-  !! L .isDefined (app_playing) (_state)
+var app_current_question = _app =>
+  !! L .isDefined (app_playing) (_app)
   ? where ((
-      history = Oo (_state, oo (L .get (app_history))),
+      history = Oo (_app, oo (L .get (app_history))),
       current_question_index = Z .size (history) - 1) =>
-    Oo (_state, oo (L .get ([app_questions, current_question_index, as_maybe]))))
+    Oo (_app, oo (L .get ([app_questions, current_question_index, as_maybe]))))
   : Z .Nothing
 
 var history_stepped = old => curr =>
@@ -437,4 +437,4 @@ window .stuff = { ...window .stuff,
   assemble_students, schedule_start,
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  app_crossed_answers, current_question }
+  app_crossed_answers, app_current_question }
