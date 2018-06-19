@@ -314,6 +314,9 @@ var message_encoding = message =>
 var messages_encoding = list =>
   R .reduce (R .mergeDeepRight, {}, list .map (message_encoding))
 
+var assemble_students = kind => ensemble =>
+  !! (kind === 'get_ready')
+  ? 
 
 
 
@@ -341,5 +344,6 @@ window .stuff = { ...window .stuff,
   rules_size, setup_size,
   cell_answer, 
   message_encoding, messages_encoding,
+  assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question }

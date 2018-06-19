@@ -25,6 +25,7 @@ var {
   rules_size, setup_size,
   cell_answer, 
   message_encoding, messages_encoding,
+  assemble_students,
   student_app_get_ready_to_playing, student_app_next_playing,
   crossed_answers, current_question 
 } = window .stuff
@@ -144,7 +145,7 @@ S (_ => {{
   oo (map_just (({ app, ensemble }) => {{
     var app_kind = Oo (app, oo (data_kind))
     var app_students = Oo (app, oo (L .get (app_students)))
-    var ensemble_students = Oo (app, oo (L .get (app_students)))
+    var ensemble_students = Oo (app, oo (assemble_students (app_kind)))
     if (! Z .equals (ensemble_students) (app_students)) {
       ;app_state (
         Oo (app, oo (L .set ([app_students]) (ensemble_students)))) } }}))) }})
