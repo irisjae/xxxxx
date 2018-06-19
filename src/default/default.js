@@ -134,6 +134,15 @@ var maybe_all = _x =>
   : undefined
 
 
+var as_list = template =>
+  L .iso
+    (_x => template .map (lens => L .get (lens) (_x))[ _x .px, _x .py, _x .vx, _x .vy ])
+    (_x => ({ px: _x [0], py: _x [1], vx :_x [2], vy: _x [3] }))
+
+
+
+
+
 var every = _x => where ((
     every = S .data (false),
     next = _ => {{

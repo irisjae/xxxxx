@@ -229,6 +229,12 @@ var map_students =
 
 
 
+var projection_zip = key_projection => val_projection => a => b =>
+  where ((
+    a_projection = Oo (a, oo (Z_ .map ()))) =>
+  )
+
+
 
 
 var generate_board = size => questions =>
@@ -326,7 +332,7 @@ var messages_encoding = list =>
 
 var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
-  ? Oo (ensemble, oo (L .get ([ ensemble_student_pings, map_students ])))
+  ? Oo (ensemble, oo (L .collect ([ ensemble_student_pings, map_students ])))
   : !! (kind === 'playing') || (kind === 'game_over')
   ? Oo (ensemble, oo (L .get ([ ensemble_student_pings, map_students ])))
   : undefined
