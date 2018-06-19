@@ -231,7 +231,7 @@ var map_students =
 
 var projection_zip =
   where ((
-    zipped_projection_init = list => mates =>
+    zip_init = list => mates =>
       !! (Z_ .size (list) === 0 || Z_ .size (mates) === 0)
       ? []
       : where ((
@@ -242,21 +242,19 @@ var projection_zip =
           list_head_value = list_head [1],
           mates_head_value = mates_head [1] ) =>
         !! (Z_ .equals (list_head_key) (mates_head_key))
-        ? [ list_head_key, [ list_head_value, mates_head_value ] ]
-        : zipped_projection_init (list) (R .tail (mates)) ) ) =>
-        )
-    key_projection => val_projection => a => b =>
-  !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
-  ? []
-  : where ((
-    pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
-    a_projection = Oo (R .head (a), oo (pair_projection)),
-    b_projection = Oo (R .head (b), oo (pair_projection)),
- ) =>
-  Z_ .concat
-    (zipped_projection_init)
-    (projection_zip (key_projection) (val_projection) (R .tail (a)) (R .tail (b))) )
-
+        ? [[ list_head_key, [ list_head_value, mates_head_value ] ]]
+        : zip_init (list) (R .tail (mates)) ) ) =>
+  key_projection => val_projection => a => b =>
+    !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
+    ? []
+    : where ((
+      pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
+      a_projection = Oo (a, oo (Z_ .map (pair_projection))),
+      b_projection = Oo (b, oo (Z_ .map (pair_projection))),
+   ) =>
+    Z_ .concat
+      (zip_init (a_projection) (b_projection))
+      (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) ) )
 
 
 
@@ -357,7 +355,10 @@ var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
   ? Oo (ensemble, oo (L .collect ([ ensemble_student_pings, map_students ])))
   : !! (kind === 'playing') || (kind === 'game_over')
-  ? Oo (ensemble, oo (L .get ([ ensemble_student_pings, map_students ])))
+  ? where ((
+      boards = Oo (ensemble, oo (L .collect ([ ensemble_student_boards, map_students ]))),
+      histories = Oo (ensemble, oo (L .collect ([ ensemble_student_histories, map_students ]))) ) =>
+    projection_zip (R .head) (R .last) (boards) (histories))
   : undefined
 
 
