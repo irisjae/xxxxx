@@ -109,7 +109,7 @@ var board_view = board => crossed_answers =>
         crossed_answers = Oo (app_state (), oo (app_crossed_answers))) => 
       [ Oo (current_question,
         oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
-      , <ticker>{ Oo (game_tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
+      , <ticker>{ Oo (game_tick_sampler, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
       , <board> { Oo (board, oo (Z_ .map (row => 
         <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
           oo (L .get (cell_answer)),
