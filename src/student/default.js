@@ -300,7 +300,7 @@ S (last_ensemble => {{
     if (L .isDefined (app_get_ready) (_app)) {
       if (! L .get (ensemble_start) (last_ensemble)) {
         if (L .get (ensemble_start) (_ensemble)) {
-          var start = L .get (ensemble_start) (_ensemble)
+          var start = Oo (_ensemble, oo (L .get (ensemble_start)))
           var now = (new Date) .getTime ()
           
           var playing_app = student_app_get_ready_to_playing (_app)
@@ -309,7 +309,17 @@ S (last_ensemble => {{
           else {
             ;setTimeout (_ => {{
               ;app_state (playing_app) }}
-            , start - now) } } } } }}))
+            , start - now) }
+          
+          var _room = Oo (_app, oo (L .get (app_room)))
+          var _student = Oo (_app, oo (L .get (app_student)))
+          ;(io_state (io .messaging), api (_room, post (
+            message_encoding (
+              message .student_start (_student, start)))))
+          .catch (_e => {{
+            ;console .error (_e) }})
+          .then (_ => {{
+            ;io_state (io .inert) }}) } } } }}))
   return ensemble_state () }}
   , ensemble_state ())
 
@@ -329,8 +339,13 @@ S (_ => {{
           post (messages_encoding (
             Z_ .concat
               ([ message .student_ping (student, S .sample (connection)) ])
-              (Oo (app_state (), oo (L .get ([ playing, as_maybe ])),
-               )) ))))
+              (Oo (app_state (), oo (L .get (L .pick ({
+                  _board: [ app_board, as_maybe ],
+                  _history: [ app_history, as_maybe ] }))),
+                oo (maybe_all),
+                oo (Z_ .maybe ([]) (({ _board, _history }) => 
+                  [ message .student_join (student, _board)
+                  , message .student_update (student, _history) ] )))) ))))
         : (io_state (io .heartbeat), api (room)
           .then (_x => {{
             ;ensemble_state (
