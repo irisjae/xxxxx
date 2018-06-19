@@ -342,49 +342,58 @@ var history_stepped = old => curr =>
 
 var message_encoding = message =>
   where ((
+    strip = _x => JSON .parse (JSON .stringify (_x)),
     student = Oo (message, oo (L .get (message_student))) ) =>
   !! L .isDefined (message_teacher_setup) (message)
   ? Oo (message,
-    oo (L .get (message_teacher_setup)))
+    oo (L .get (message_teacher_setup)),
+    oo (strip))
   : !! L .isDefined (message_teacher_ping) (message)
   ? Oo (message,
     oo (L .get (message_ping)),
     oo (L .get (L .getInverse ([ ensemble_ping ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : !! L .isDefined (message_teacher_start) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
     oo (L .get (L .getInverse ([ ensemble_start ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : !! L .isDefined (message_teacher_abort) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
     oo (L .get (L .getInverse ([ ensemble_abort ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : !! L .isDefined (message_student_ping) (message)
   ? Oo (message,
     oo (L .get (message_ping)),
     oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : !! L .isDefined (message_student_join) (message)
   ? Oo (message,
     oo (L .get (message_board)),
     oo (L .get (L .getInverse ([ ensemble_student_boards, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : !! L .isDefined (message_student_start) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
     oo (L .get (L .getInverse ([ ensemble_student_starts, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : !! L .isDefined (message_student_update) (message)
   ? Oo (message,
     oo (L .get (message_history)),
     oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))))
+    oo (L .get (data_iso (ensemble .ensemble))),
+    oo (strip))
   : undefined)
 
 var messages_encoding = list =>
-  R .reduce (R .mergeDeepRight, {}, list .map (message_encoding))
+  Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
 var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
