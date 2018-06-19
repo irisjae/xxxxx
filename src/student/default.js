@@ -175,7 +175,7 @@ var connect_room = _room => {{
       var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
       ;app_state (
         student_app .get_ready (
-          _student
+          Z .Just (_student)
           , Z .Just (setup .setup (_room, _questions, default_rules)))) }})
     .catch (_e => {{
       ;lookbehind_state (student_lookbehind .bad_room (_room))
