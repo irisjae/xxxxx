@@ -148,12 +148,12 @@ S (_ => {{
       go
       .then (_ =>
         !! critical && S .sample (connection)
-        ? api (room, post (message_encoding (
-            message .teacher_ping (S .sample (connection)))))
-        : api (room)
+        ? (io_state (io .messaging), api (room, post (message_encoding (
+            message .teacher_ping (S .sample (connection))))))
+        : (io_state (io .heartbeat), api (room)
           .then (_x => {{
             ;ensemble_state (Z .Just (
-              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }}) )
+              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})) )
       .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
@@ -162,7 +162,9 @@ S (_ => {{
         ;console .error (_e)
         ;setTimeout (_ => {{
           ;heartbeat (phase) }}
-        , 300) }}) }}))) }})
+        , 300) }})
+      .then (_ => {{
+        ;io_state (io .inert) }}) }}))) }})
    
 S (_ => {{
   ;Oo (maybe_all ({
