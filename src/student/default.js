@@ -29,7 +29,7 @@ var {
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  crossed_answers, current_question 
+  app_crossed_answers, current_question 
 } = window .stuff
 
 
@@ -50,19 +50,19 @@ var io_state = S .data (io .inert)
 
 var clicking = ['click']
 
-var pipeline_student_input = input => {;
-  ;input .addEventListener ('keypress', e => {;
-    if (e .keyCode === 13) {
+var pipeline_student_input = input => {{
+  ;input .addEventListener ('keypress', _e => {{
+    if (_e .keyCode === 13) {
       var value = input .value
       ;input .value = ''
-      ;make_student (value) }})} 
+      ;make_student (value) } }}) }} 
 
-var pipeline_room_input = input => {;
-  ;input .addEventListener ('keypress', e => {;
-    if (e .keyCode === 13) {
+var pipeline_room_input = input => {{
+  ;input .addEventListener ('keypress', _e => {{
+    if (_e .keyCode === 13) {
       var value = input .value
       ;input .value = ''
-      ;connect_room (value) }})} 
+      ;connect_room (value) } }}) }} 
 
 var pipeline_board_cell = cell => _dom => {;
   ;clicking .forEach (click => {;
@@ -75,7 +75,7 @@ var enter_room_view = <room-input-etc>i
   { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
     ? where ((
         bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
-      Z .prepend (<warning>{bad_room} is not a valid room</warning>))
+      <div>{bad_room} is not a valid room</div> )
     : [] }
   <input fn={ pipeline_room_input } placeholder="Enter a room code" /> </room-input-etc>
   
@@ -98,25 +98,29 @@ var get_ready_view = <get-ready-etc>
       .map (_x => <div>{ _x }</div>)))) } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
-var board_view = board => history => <board-etc>
-  { Oo (app_state (), oo (current_question), oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) }
-  <ticker>{ Oo (tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
-  <board> { Oo (board, oo (R .map (row => 
-    <div> { Oo (row, oo (R .map (cell => Oo (cell,
-      oo (L .get (cell_answer)),
-      oo (_x => !! (Z .elem (_x) (crossed_answers (app_state ())))
-        ? <cell>{ crossed (_x) }</cell>
-        : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> ))))) } </div> ))) } </board> </board-etc>
+var board_view = board => crossed_answers =>
+  where ((
+    board = Oo (app_state (), oo (L .get (app_board))),
+    current_question = Oo (app_state (), oo (current_question)),
+    crossed_answers = Oo (app_state (), oo (L .get (app_history)), oo (app_crossed_answers))) => 
+  <board-etc>
+    { Oo (current_question), oo (Z_ .maybe ('') (_x => <question>{ _x }</question>)) }
+    <ticker>{ Oo (tick_sampler, Z_ .maybe ('') (t => 10 - t)) }</ticker>
+    <board> { Oo (board, oo (Z_ .map (row => 
+      <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
+        oo (L .get (cell_answer)),
+        oo (_x => !! (Z .elem (_x) (crossed_answers))
+          ? <cell>{ crossed (_x) }</cell>
+          : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> ))))) } </div> ))) } </board> </board-etc> )
+            
+            
 
 window .view = <student-app>
-	{ where ((
-      x = app_state ()) =>
-    !! (L .isDefined (app_get_ready, x))
+	{ !! (L .isDefined (app_get_ready) (app_state ()))
     ? get_ready_view
-    : !! (L .isDefined (app_playing, x))
-      ? board_view (L .get (app_board, x)) (L .get (app_history, x))
-    : undefined) }
-</student-app>
+    : !! (L .isDefined (app_playing) (app_state ()))
+    ? board_view
+    : undefined } </student-app>
 
 
 

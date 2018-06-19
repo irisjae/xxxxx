@@ -302,7 +302,7 @@ var student_app_next_playing = _state =>
          
 
 
-var crossed_answers = memoize (_state => 
+var app_crossed_answers = memoize (_state => 
   !! (L .isDefined (app_playing) (_state))
   ? where ((
       final_attempts = Oo (_state, oo (L .get (app_history)),
@@ -413,4 +413,4 @@ window .stuff = { ...window .stuff,
   message_encoding, messages_encoding,
   assemble_students, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  crossed_answers, current_question }
+  app_crossed_answers, current_question }
