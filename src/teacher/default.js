@@ -112,24 +112,11 @@ Oo (R .range (0, 10 + 1),
 var tick_sampler = S .data (Z .Nothing)
   
 S (_ => {{
-  if (L .isDefined ([from_maybe]) (app_state ())) {
+  if (! L .isDefined ([from_maybe]) (app_state ())) {
     if (L .isDefined (data_iso (io .inert)) (io_state ())) {
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
-S (_ => {{
-  Oo (app_state (), oo (map_just (_state => {{
-    if (L .isDefined (app_get_ready) (_state)) {
-      if (heartbeat ()) {
-        var room = L .get (app_room) (_state)
-        go
-        .then (_ =>
-          api (room) .then (_x => {{
-            ;ensemble_state (Z .Just (
-              Oo (_x, oo (L .get (L .getInverse (data_iso (ensemble .ensemble)))))))
-            ;setTimeout (_ => {{
-              ;heartbeat (true) }}
-            , 300) }} ) ) } } }}))) }})
 S (last_state => {{
   Oo (app_state (), oo (map_just (_state => {{
     if (! L .isDefined (app_playing) (last_state)) {
@@ -157,7 +144,8 @@ S (_ => {{
             message .teacher_ping (connection ()))))
         : api (room)
           .then (_x => {{
-            ;ensemble_state (L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }}) )
+            ;ensemble_state (
+              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }}) )
       .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
@@ -170,20 +158,20 @@ S (_ => {{
    
 S (_ => {{
   ;Oo (maybe_all ({
-    app: S .sample (app_state),
-    ensemble: ensemble_state () }),
-  oo (map_just (({ app, ensemble }) => {{
-    var app_kind = Oo (app, oo (data_kind))
-    var app_students = Oo (app, oo (L .get (app_students)))
-    var ensemble_students = Oo (app, oo (assemble_students (app_kind)))
-    if (! Z .equals (ensemble_students) (app_students)) {
-      ;app_state (
-        Oo (app, oo (L .set ([app_students]) (ensemble_students)))) } }}))) }})
+      app: S .sample (app_state),
+      ensemble: ensemble_state () }),
+    oo (map_just (({ app, ensemble }) => {{
+      var app_kind = Oo (app, oo (data_kind))
+      var app_students = Oo (app, oo (L .get (app_students)))
+      var ensemble_students = Oo (app, oo (assemble_students (app_kind)))
+      if (! Z .equals (ensemble_students) (app_students)) {
+        ;app_state (
+          Oo (app, oo (L .set ([app_students]) (ensemble_students)))) } }}))) }})
    
  
 
 var connection = S (_ => {{
-  ;return Oo (app_state (),
+  ;return Oo (app_state (), oo (L .get ([ from_maybe ])),
     oo (L .get ([ app_room, as_maybe ])),
     oo (Z_ .maybe (undefined) (_room => {{
       if (! connection [_room]) {

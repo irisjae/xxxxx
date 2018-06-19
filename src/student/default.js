@@ -252,8 +252,8 @@ S (_ => {{
               message .student_ping (student, connection ()))))
         : api (room)
           .then (_x => {{
-            ;ensemble_state (L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }}) )
-
+            ;ensemble_state (
+              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }}) )
       .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
