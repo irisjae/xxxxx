@@ -233,15 +233,20 @@ var projection_zip = key_projection => val_projection => a => b =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
-    a_projection = Oo (a, oo (Z_ .map (_x => [L .get (key_projection) (_x), L .get (val_projection) (_x)]))),
-    b_projection = Oo (b, oo (Z_ .map (_x => [L .get (key_projection) (_x), L .get (val_projection) (_x)]))),
-    a_head_key = R .head (a_projection) [0],
-    b_head_key = R .head (b_projection) [0],
-    a_head_value = R .head (a_projection) [1],
-    b_head_value = R .head (b_projection) [0] ) =>
+    pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
+    a_projection = Oo (R .head (a), oo (pair_projection)),
+    b_projection = Oo (R .head (b), oo (pair_projection)),
+    a_head_key = a_projection [0],
+    b_head_key = b_projection [0],
+    a_head_value = a_projection [1],
+    b_head_value = b_projection [1] ) =>
   !! (Z_ .equals (a_head_key) (b_head_key))
-  ? [ a_head_key, [ a_head_value, b_head_value ] ]
-  : )
+  ? Z_ .prepend
+    ([ a_head_key, [ a_head_value, b_head_value ] ])
+    (projection_zip (key_projection) (val_projection) (R .tail (a)) (R .tail (b)))
+  : Z_ .concat
+    (projection_zip (key_projection) (val_projection) (a) (R .tail (b)))
+    (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)))
 
 
 
