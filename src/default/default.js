@@ -104,6 +104,8 @@ var data_iso = data =>
       data .apply (null, list) ) =>
     L .iso (read) (write))
 */
+var data_kind = data =>
+  Z .head (Z_ .keys (data))
 
 
 var from_just = _x =>
@@ -178,6 +180,6 @@ window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
-  data, data_lens, data_iso,
+  data, data_lens, data_iso, data_kind,
   map_just, from_just, maybe_all,
   every, delay }

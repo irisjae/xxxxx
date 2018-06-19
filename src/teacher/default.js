@@ -1,7 +1,7 @@
 var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
-  data, data_lens, data_iso,
+  data, data_lens, data_iso, data_kind,
   map_just, from_just, maybe_all,
   every, delay,
   bool, number, timestamp, string,
@@ -138,16 +138,13 @@ S (last_state => {{
    
    
 S (_ => {{
-  Oo (maybe_all ({
+  ;Oo (maybe_all ({
     app: S .sample (app_state),
     ensemble: ensemble_state () }),
   oo (map_just (({ app, ensemble }) => {{
+    var app_kind = Oo (app, oo (data_kind))
     var app_students = Oo (app, oo (L .get (app_students)))
     var ensemble_students = Oo (app, oo (L .get (app_students)))
     if (! Z .equals (ensemble_students) (app_students)) {
       ;app_state (
-        Oo (app, oo (L .set ([app_students]) (ensemble_students))))}
-  }})))
- 
-  
-}})
+        Oo (app, oo (L .set ([app_students]) (ensemble_students)))) } }}))) }})
