@@ -106,10 +106,11 @@ var board_view = board => crossed_answers =>
     { where ((
         board = Oo (app_state (), oo (L .get (app_board))),
         current_question = Oo (app_state (), oo (app_current_question)),
-        crossed_answers = Oo (app_state (), oo (app_crossed_answers))) => 
+        crossed_answers = Oo (app_state (), oo (app_crossed_answers)),
+        game_tick = game_tick_sampler () ) => 
       [ Oo (current_question,
         oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
-      , <ticker>{ Oo (game_tick_sampler, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
+      , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
       , <board> { Oo (board, oo (Z_ .map (row => 
         <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
           oo (L .get (cell_answer)),
@@ -187,7 +188,7 @@ var connect_room = _room => {{
       ;io_state (io .inert) }}) }}))) }} 
 
 var attempt_question = _answer => {{
-  Oo (app_state (), oo (current_question), oo (map_just (_question => {{
+  Oo (app_state (), oo (app_current_question), oo (map_just (_question => {{
     if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
       var latency = lookbehind_latency ()
       if (Z .equals (_answer) (_question)) {

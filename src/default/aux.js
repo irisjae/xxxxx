@@ -188,7 +188,9 @@ var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (stu
 var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), L .choices (['student', from_maybe], 'student') ]
 var app_setup = [L .choices (app_get_ready, app_playing, app_game_over), L .choices ([ 'setup', from_maybe ], 'setup')]
 var app_board = [ L .choices (app_playing, app_game_over), 'board' ]
-var app_history = [ L .choices (app_playing, app_game_over), 'history' ]
+var app_history = L .choices (
+  data_lens (student_app .playing) .history,
+  app_game_over)
 
 var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
 
@@ -301,7 +303,7 @@ var student_app_get_ready_to_playing = _app =>
 var student_app_next_playing = _app =>
   where ((
     board_size = Oo (_app, oo (L .get ([app_setup, setup_size]))),
-    history_size = Oo (_app, oo (L .get (app_history), oo (Z .size)))) =>
+    history_size = Oo (_app, oo (L .get (app_history)), oo (Z .size))) =>
   !! (history_size < board_size * board_size)
   ? Oo (_app,
     oo (L .set ([app_history, L .append]) (rendition .rendition ([]))))
