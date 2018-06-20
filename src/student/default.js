@@ -130,7 +130,7 @@ var get_ready_view = _ => <get-ready-etc>
         : undefined
       : where ((
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
-      [ 'Connected to room ' + plain_room
+      [ <room> {'Connected to room ' + plain_room } </room>
       , 'Waiting for game to start...' ]
       .map (_x => <div>{ _x }</div>)))) } </get-ready-etc>
 

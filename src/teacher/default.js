@@ -58,6 +58,15 @@ var pipeline_play = _dom => {{
     ;_dom .addEventListener (click, _ => {{
       ;start_playing () }}) }}) }}
 
+var start_play = _dom => {{
+  ;clicking .forEach (click => {{
+    ;_dom .addEventListener (click, _ => {{
+      ;start_playing () }}) }}) }}
+
+var init_view = <init-etc> {
+    
+} </init-etc>
+
 var get_ready_view = <get-ready-etc> {
   [ Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
@@ -75,7 +84,8 @@ var get_ready_view = <get-ready-etc> {
 
 window .view =  <teacher-app>
   { !! (Z .equals (Z .Nothing) (app_state ())
-    || L .isDefined (app_get_ready) (from_just (app_state ())))
+    ? init_view
+    : L .isDefined (app_get_ready) (from_just (app_state ())))
     ? get_ready_view
     : undefined } </teacher-app>
 
