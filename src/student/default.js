@@ -64,12 +64,12 @@ var pipeline_room_entry = _dom => {{
     if (_e .keyCode === 13) {
       var value = _input .value
       ;_input .value = ''
-      ;connect_room (value) } }})
+      ;record_room (value) } }})
   ;clicking .forEach (click => {{
     ;_button .addEventListener (click, _e => {{
       var value = _input .value
       ;_input .value = ''
-      ;connect_room (value) }}) }}) }} 
+      ;record_room (value) }}) }}) }} 
 
 var pipeline_name_entry = _dom => {{
   var _input = _dom .querySelector ('input')
@@ -78,12 +78,14 @@ var pipeline_name_entry = _dom => {{
     if (_e .keyCode === 13) {
       var value = _input .value
       ;_input .value = ''
-      ;make_student (value) } }})
+      ;go
+      .then (_ => record_student (value))
+      .then (_ => record_student (value)) } }})
   ;clicking .forEach (click => {{
     ;_button .addEventListener (click, _e => {{
       var value = _input .value
       ;_input .value = ''
-      ;make_student (value) }}) }}) }} 
+      ;record_student (value) }}) }}) }} 
 
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
@@ -186,7 +188,28 @@ var lookbehind_latency = _ => {
        
        
        
-var make_student = _name => {{
+var record_room = _room => {{
+  var _student = Oo (app_state (), oo (L .get ([ app_student, as_maybe ])))
+  ;go 
+  .then (_ =>
+    (io_state (io .connecting), api (_room) .then (_x => {{
+      if (Z .equals (_x) ({})) {
+        ;throw new Error ('empty') }
+      else {
+        var _ensemble = Oo (_x,
+          oo (L .get (L .getInverse (data_iso (ensemble .ensemble)))))
+        var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
+        var _rules = Oo (_ensemble, oo (L .get (ensemble_rules)))
+        var _setup = setup .setup (_room, _questions, default_rules)
+        ;app_state (
+          student_app .get_ready ( _student, _setup )) } }})) )
+    .catch (_e => {{
+      ;lookbehind_state (student_lookbehind .bad_room (_room))
+      ;console .error (_e) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }}
+
+var record_student = _name => {{
   var _setup = Oo (app_state (), oo (L .get ([ app_setup, as_maybe ])))
   ;app_state (
     student_app .get_ready (
@@ -202,7 +225,8 @@ var connect_room = _room => {{
         if (Z .equals (_x) ({})) {
           ;throw new Error ('empty') }
         else {
-          var _ensemble = L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)
+          var _ensemble = Oo (_x,
+            oo (L .get (L .getInverse (data_iso (ensemble .ensemble)))))
           var _questions = Oo (_ensemble, oo (L .get (ensemble_questions)))
           var _rules = Oo (_ensemble, oo (L .get (ensemble_rules)))
           ;_setup = setup .setup (_room, _questions, default_rules)
