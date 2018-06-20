@@ -114,7 +114,7 @@ name , code {
   width: 50vw;
   display: inline-block;
 }
-buttonready {
+name > button, code > button{
   font-size: 16px;
   border-radius: 3px;
   background-color: #00A746;
@@ -125,11 +125,11 @@ buttonready {
   width: 20%;
 }
 
-buttonready:hover {
+name > button:hover, code > button:hover {
   background-color: #26F07B;
 }
 
-buttonready:active {
+name > button:active, code > button:active {
   box-shadow: none;
 }
 buttonresult{
@@ -191,4 +191,9 @@ timer{
 }
 gametitle,topic{ 
   font-size:42px;
+}
+message{
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  color: red;
+  margin: 10px;
 }

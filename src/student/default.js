@@ -76,12 +76,14 @@ var pipeline_board_cell = cell => _dom => {{
       ;attempt_question (L .get (cell_answer, cell)) }}) }}) }}
           
 var enter_room_view = <room-input-etc>
+  <code>
+    <input fn={ pipeline_room_input } placeholder="Enter a room code" />
+    <button> Go </button> </code>
   { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
     ? where ((
         bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
-      <div>{bad_room} is not a valid room</div> )
-    : [] }
-  <input fn={ pipeline_room_input } placeholder="Enter a room code" /> </room-input-etc>
+      <message>{bad_room} is not a valid room</message> )
+    : [] } </room-input-etc>
   
 var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
 
