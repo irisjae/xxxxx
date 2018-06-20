@@ -322,10 +322,11 @@ var student_app_next_playing = _app =>
 var student_app_to_board_viewer = _app =>
   Oo (_app, oo (L .get (L .pick ({
     _board: [ app_board, as_maybe ],
+    _questions: [ app_questions, as_maybe ],
     _history: [ app_history, as_maybe ] }))),
   oo (maybe_all),
-  oo (map_just (({ _board, _history }) => 
-    board_viewer .board_viewer (_board, _history) )))
+  oo (map_just (({ _board, _questions, _history }) => 
+    board_viewer .board_viewer (_board, _questions, _history) )))
 
 var size_patterns = memoize (size =>
   where ((
@@ -367,7 +368,7 @@ var board_viewer_crossed_answers = _board_viewer =>
 var board_viewer_bingoes = _board_viewer =>
   where ((
     _board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
-    _size = Oo (_board, oo (Z .size)),
+    _size = Oo (_board, oo (Z_ .size)),
     _crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)) ) =>
   Oo (size_patterns (_size),
     oo (Z_ .map (_pattern =>
