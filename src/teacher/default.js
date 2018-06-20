@@ -181,12 +181,14 @@ var connection = S (_ => {{
 
 
 
+/*
 S (_ => {{
-  if (! L .isDefined ([from_maybe]) (app_state ())) {
+  if (Z_ .isNothing (app_state ())) {
     if (L .isDefined (io_inert) (io_state ())) {
       ;get_room (Oo (Math .random (),
         oo (_x => _x * 100000000),
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
+*/
 S (last_app => {{
   Oo (app_state (), oo (map_just (_app => {{
     if (! L .isDefined (app_playing) (last_app)) {
