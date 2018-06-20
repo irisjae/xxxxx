@@ -157,7 +157,7 @@ var ensemble = data ({
 
 
 var board_viewer = data ({
-  board_viewer: (board =~ board, history =~ history) => defined })
+  board_viewer: (board =~ board, questions =~ list (question), history =~ history) => defined })
 
 
 //--------------------DEFAULTS--------------------
@@ -314,6 +314,13 @@ var student_app_next_playing = _app =>
     oo (L .get (data_iso (student_app .playing))),
     oo (L .get (L .getInverse (data_iso (student_app .game_over))))) )
          
+var student_app_to_board_viewer = _app =>
+  Oo (_app, oo (L .get (L .pick ({
+    _board: [ app_board, as_maybe ],
+    _history: [ app_history, as_maybe ] }))),
+  oo (maybe_all),
+  oo (map_just (({ _board, _history }) => 
+    board_viewer .board_viewer (_board, _history) )))
 
 var size_patterns = memoize (size =>
   where ((
