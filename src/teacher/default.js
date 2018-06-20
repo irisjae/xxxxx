@@ -66,7 +66,7 @@ var get_ready_view = <get-ready-etc> {
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
     oo (Z_ .maybe ([]) (_x => Oo (_x,
       oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <div>{_x + ' student is here'}</div>))))),
+      oo (Z_ .map (_x => <cellplayer>{_x + ' student is here'}</cellplayer>))))),
     oo (_x => !! (Z .size (_x) === 0)
       ? _x
       : Z_ .append (<div fn={ pipeline_play }>play</div>) (_x))) ] }
@@ -122,19 +122,19 @@ var start_playing = _ => {{
   Oo (maybe_all ({
     _ensemble: Oo (ensemble_state (), oo (L .get ([ as_maybe ]))),
     _room: Oo (app_state (), oo (L .get ([ from_maybe, app_room, as_maybe ]))) }),
-    oo (map_just (({ _ensemble, _room }) => {{
-      ;go
-      .then (_ =>
-        (io_state (io .messaging), api (_room,
-          post (message_encoding (
-            message .teacher_start (schedule_start (_ensemble)))))) .then (_x => {{
-          if (! _x .ok) {
-            ;throw new Error ('cannot post to ' + _room)}
-          else return _x }}))
-      .catch (_e => {{
-        ;console .error (_e) }})
-      .then (_ => {{
-        ;io_state (io .inert) }}) }} ))) }}
+  oo (map_just (({ _ensemble, _room }) => {{
+    ;go
+    .then (_ =>
+      (io_state (io .messaging), api (_room,
+        post (message_encoding (
+          message .teacher_start (schedule_start (_ensemble)))))) .then (_x => {{
+        if (! _x .ok) {
+          ;throw new Error ('cannot post to ' + _room)}
+        else return _x }}))
+    .catch (_e => {{
+      ;console .error (_e) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }} ))) }}
   
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
@@ -225,28 +225,28 @@ S (last_ensemble => {{
    
 S (_ => {{
   ;Oo (app_state (), oo (L .get ([ from_maybe ])), oo (L .get (L .pick ({
-      room: [ app_room, as_maybe ] }))),
-    oo (maybe_all),
-    oo (map_just (({ room }) => {{
-      var phase = heartbeat ()
-      var critical = phase === 1
-      go
-      .then (_ =>
-        !! critical && S .sample (connection)
-        ? (io_state (io .messaging), api (room, post (message_encoding (
-            message .teacher_ping (S .sample (connection))))))
-        : (io_state (io .heartbeat), api (room)
-          .then (_x => {{
-            ;ensemble_state (Z .Just (
-              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})))
-      .then (_ => {{
-        ;setTimeout (_ => {{
-          ;heartbeat (!! critical ? reping_period : phase - 1) }}
-        , 300) }})
-      .catch (_e => {{
-        ;console .error (_e)
-        ;setTimeout (_ => {{
-          ;heartbeat (phase) }}
-        , 300) }})
-      .then (_ => {{
-        ;io_state (io .inert) }}) }}))) }})
+    _room: [ app_room, as_maybe ] }))),
+  oo (maybe_all),
+  oo (map_just (({ _room }) => {{
+    var phase = heartbeat ()
+    var critical = phase === 1
+    go
+    .then (_ =>
+      !! critical && S .sample (connection)
+      ? (io_state (io .messaging), api (_room, post (message_encoding (
+          message .teacher_ping (S .sample (connection))))))
+      : (io_state (io .heartbeat), api (_room)
+        .then (_x => {{
+          ;ensemble_state (Z .Just (
+            L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})))
+    .then (_ => {{
+      ;setTimeout (_ => {{
+        ;heartbeat (!! critical ? reping_period : phase - 1) }}
+      , 300) }})
+    .catch (_e => {{
+      ;console .error (_e)
+      ;setTimeout (_ => {{
+        ;heartbeat (phase) }}
+      , 300) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }}))) }})

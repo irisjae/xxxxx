@@ -352,7 +352,7 @@ S (last_state => {{
   var last_history = Oo (last_state, oo (L .get ([app_history]))) || []
   var history = Oo (app_state (), oo (L .get ([app_history])))
   if (L .isDefined (app_playing) (app_state ())) {
-    if (! Z .equals (Z .size (last_history)) (Z .size (history))) {
+    if (! history_stepped (last_history) (history)) {
       ;game_clock .seek (0) }
     ;game_clock .play () }
   return app_state () }}
@@ -397,38 +397,38 @@ S (last_ensemble => {{
 
 S (_ => {{
   ;Oo (app_state (), oo (L .get (L .pick ({
-      student: [ app_student, as_maybe ],
-      room: [ app_room, as_maybe ] }))),
-    oo (maybe_all),
-    oo (map_just (({ student, room }) => {{
-      var phase = heartbeat ()
-      var critical = phase === 1
-      go
-      .then (_ =>
-        !! critical && S .sample (connection)
-        ? (io_state (io .messaging), api (room, 
-          post (messages_encoding (
-            Z_ .concat
-              ([ message .student_ping (student, S .sample (connection)) ])
-              (Oo (app_state (), oo (L .get (L .pick ({
-                  _board: [ app_board, as_maybe ],
-                  _history: [ app_history, as_maybe ] }))),
-                oo (maybe_all),
-                oo (Z_ .maybe ([]) (({ _board, _history }) => 
-                  [ message .student_join (student, _board)
-                  , message .student_update (student, _history) ] )))) ))))
-        : (io_state (io .heartbeat), api (room)
-          .then (_x => {{
-            ;ensemble_state (
-              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }})) )
-      .then (_ => {{
-        ;setTimeout (_ => {{
-          ;heartbeat (!! critical ? reping_period : phase - 1) }}
-        , 300) }})
-      .catch (_e => {{
-        ;console .error (_e)
-        ;setTimeout (_ => {{
-          ;heartbeat (phase) }}
-        , 300) }})
-      .then (_ => {{
-        ;io_state (io .inert) }}) }}))) }})
+    _student: [ app_student, as_maybe ],
+    _room: [ app_room, as_maybe ] }))),
+  oo (maybe_all),
+  oo (map_just (({ _student, _room }) => {{
+    var phase = heartbeat ()
+    var critical = phase === 1
+    go
+    .then (_ =>
+      !! critical && S .sample (connection)
+      ? (io_state (io .messaging), api (_room, 
+        post (messages_encoding (
+          Z_ .concat
+            ([ message .student_ping (_student, S .sample (connection)) ])
+            (Oo (app_state (), oo (L .get (L .pick ({
+                _board: [ app_board, as_maybe ],
+                _history: [ app_history, as_maybe ] }))),
+              oo (maybe_all),
+              oo (Z_ .maybe ([]) (({ _board, _history }) => 
+                [ message .student_join (_student, _board)
+                , message .student_update (_student, _history) ] )))) ))))
+      : (io_state (io .heartbeat), api (_room)
+        .then (_x => {{
+          ;ensemble_state (
+            L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }})) )
+    .then (_ => {{
+      ;setTimeout (_ => {{
+        ;heartbeat (!! critical ? reping_period : phase - 1) }}
+      , 300) }})
+    .catch (_e => {{
+      ;console .error (_e)
+      ;setTimeout (_ => {{
+        ;heartbeat (phase) }}
+      , 300) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }}))) }})
