@@ -88,9 +88,9 @@ var get_ready_view = <get-ready-etc> {
 
 
 window .view =  <teacher-app>
-  { !! (Z .equals (Z .Nothing) (app_state ())
+  { !! Z .equals (Z .Nothing) (app_state ())
     ? init_view
-    : L .isDefined (app_get_ready) (from_just (app_state ())))
+    : L .isDefined (app_get_ready) (from_just (app_state ()))
     ? get_ready_view
     : undefined } </teacher-app>
 
