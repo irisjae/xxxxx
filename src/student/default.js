@@ -74,8 +74,6 @@ var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
       ;attempt_question (L .get (cell_answer, cell)) }}) }}) }}
-
-var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
           
 var enter_room_view = <room-input-etc>
   { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
@@ -85,6 +83,8 @@ var enter_room_view = <room-input-etc>
     : [] }
   <input fn={ pipeline_room_input } placeholder="Enter a room code" /> </room-input-etc>
   
+var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
+
 var get_ready_view = _ => <get-ready-etc>
   { Oo (app_state (),
     oo (L .get (L .pick ({
@@ -92,12 +92,13 @@ var get_ready_view = _ => <get-ready-etc>
       student: [app_student, as_maybe] }))),
     oo (({ room, student }) =>
       !! Z .isNothing (room)
-        ? !! (L .isDefined (io_connecting, io_state ()))
-          ? 'Trying to connect...'
-          : enter_room_view
-        !! Z .isNothing (student)
-      ? enter_student_view
-      : 
+      ? enter_room_view
+      : !! Z .isNothing (student)
+      ? !! (L .isDefined (io_inert, io_state ()))
+        ? enter_student_view
+        : !! (L .isDefined (io_connecting, io_state ()))
+        ? 'Trying to connect...'
+        : undefined
       : where ((
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
       [ 'Connected to room ' + plain_room
