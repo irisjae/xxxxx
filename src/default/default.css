@@ -156,14 +156,16 @@ cellresult {
 /*   height: 95%; */ 
   display: inline-block;
 }
-cellplayer {
+player {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   clear: left;
 /*   color: white; */
   padding: 5px;
-  margin: 5px;
-  background-color: green;
-/*   width: 30%; */
+  margin: 2%;
+  background-color: #F5C3C2;
+  border-style: solid;
+  border-width: 5px;
+  width: 30%;
   display:block;
 }
 .rowresult{
@@ -196,8 +198,11 @@ timer{
 gametitle,topic{ 
   font-size:42px;
 }
-message{
+message {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   color: red;
   margin: 10px;
+}
+room button{
+  margin:auto;
 }

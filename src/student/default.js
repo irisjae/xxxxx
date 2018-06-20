@@ -352,7 +352,7 @@ S (last_state => {{
   var last_history = Oo (last_state, oo (L .get ([app_history]))) || []
   var history = Oo (app_state (), oo (L .get ([app_history])))
   if (L .isDefined (app_playing) (app_state ())) {
-    if (! history_stepped (last_history) (history)) {
+    if (history_stepped (last_history) (history)) {
       ;game_clock .seek (0) }
     ;game_clock .play () }
   return app_state () }}
