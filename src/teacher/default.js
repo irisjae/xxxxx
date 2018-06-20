@@ -66,7 +66,7 @@ var get_ready_view = <get-ready-etc> {
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
     oo (Z_ .maybe ([]) (_x => Oo (_x,
       oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <cellplayer>{_x + ' student is here'}</cellplayer>))))),
+      oo (Z_ .map (_x => <cellplayer>{ 'Name: '+ _x}</cellplayer>))))),
     oo (_x => !! (Z .size (_x) === 0)
       ? _x
       : Z_ .append (<div fn={ pipeline_play }>play</div>) (_x))) ] }

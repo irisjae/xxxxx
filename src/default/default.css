@@ -161,8 +161,8 @@ cellplayer {
   clear: left;
 /*   color: white; */
   padding: 2px;
-  width: 30%;
-  display: flex;
+/*   width: 30%; */
+  display:block;
 }
 .rowresult{
 /*   height: 28%; */
