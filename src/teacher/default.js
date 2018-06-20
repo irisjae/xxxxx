@@ -53,7 +53,7 @@ var io_state = S .data (io .inert)
 
 var clicking = ['click']
 
-var pipeline_init_button = _dom => {{
+var pipeline_init = _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
       get_room (Oo (Math .random (),
@@ -66,22 +66,17 @@ var pipeline_play = _dom => {{
       ;start_playing () }}) }}) }}
 
 var init_view = _ => <init-etc> 
-  <h1>
-    Bingo Class Game <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081" /> </h1>
-  <topic>
-    Equivalent Fractions
-  </topic>
-  <mode>
-    <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674" />
-  </mode>
-  <button fn={ pipeline_init_button }> Start </button>
- </init-etc>
+  <h1> Bingo Class Game <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081" /> </h1>
+  <topic> Equivalent Fractions </topic>
+  <mode> <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674" /> </mode>
+  <button fn={ pipeline_init }> Start </button>
+  { !! (L .isDefined (io_connecting) (io_state ()))
+    ? 'Generating Code...'
+    : [] }
+</init-etc>
 
 var get_ready_view = <get-ready-etc> {
   [ Oo (app_state (),
-    oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
-    oo (Z_ .maybe ('Generating Code.....') (_x => <room> {'Room: ' + _x } </room>)))
-  , Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
     oo (Z_ .maybe ([]) (_x => Oo (_x,
       oo (Z_ .map (L .get (student_name))), 
