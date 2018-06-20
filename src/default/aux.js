@@ -343,36 +343,32 @@ var size_patterns = memoize (size =>
     , diagonal_patterns ]) ))
 
 
-var app_current_question = _app =>
-  !! L .isDefined (app_playing) (_app)
-  ? where ((
-      history = Oo (_app, oo (L .get (app_history))),
-      current_question_index = Z .size (history) - 1) =>
-    Oo (_app, oo (L .get ([app_questions, current_question_index, as_maybe]))))
-  : Z .Nothing
-
-var app_crossed_answers = _app => 
-  !! (L .isDefined (app_playing) (_app))
-  ? where ((
-      final_attempts = Oo (_app, oo (L .get (app_history)),
-        oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
-      actual_answers = Oo (_app, oo (L .get (app_questions)))) =>
-    Oo (Z .zip (final_attempts) (actual_answers),
-      oo (Z .map (pair =>
-        where ((
-          maybe_attempt = Z .fst (pair),
-          maybe_answer = Z .Just (Z .snd (pair))) =>
-        !! (Z .equals (maybe_attempt) (maybe_answer))
-        ? maybe_attempt
-        : Z .Nothing))),
-      oo (Z .justs)))
-  : []
-
-var app_bingoes = _app =>
+var board_viewer_current_question = _board_viewer =>
   where ((
-    _size = Oo (_app, oo (L .get ([ app_setup, setup_size ]))),
-    _board = Oo (_app, oo (L .get (app_board))),
-    _crossed_answers = Oo (_app, oo (app_crossed_answers)) ) =>
+    history = Oo (_board_viewer, oo (L .get (board_viewer_history))),
+    current_question_index = Z .size (history) - 1) =>
+  Oo (_board_viewer, oo (L .get ([board_viewer_questions, current_question_index, as_maybe]))))
+
+var board_viewer_crossed_answers = _board_viewer => 
+  where ((
+    final_attempts = Oo (_board_viewer, oo (L .get (board_viewer_history)),
+      oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
+    actual_answers = Oo (_board_viewer, oo (L .get (board_viewer_questions)))) =>
+  Oo (Z .zip (final_attempts) (actual_answers),
+    oo (Z .map (pair =>
+      where ((
+        maybe_attempt = Z .fst (pair),
+        maybe_answer = Z .Just (Z .snd (pair))) =>
+      !! (Z .equals (maybe_attempt) (maybe_answer))
+      ? maybe_attempt
+      : Z .Nothing))),
+    oo (Z .justs)))
+
+var board_viewer_bingoes = _board_viewer =>
+  where ((
+    _board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
+    _size = Oo (_board, oo (Z .size)),
+    _crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)) ) =>
   Oo (size_patterns (_size),
     oo (Z_ .map (_pattern =>
       _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) )),
@@ -496,4 +492,5 @@ window .stuff = { ...window .stuff,
   assemble_students, schedule_start,
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
+  student_app_to_board_viewer,
   app_current_question, app_crossed_answers, app_bingoes }
