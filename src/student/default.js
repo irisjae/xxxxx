@@ -16,7 +16,6 @@ var {
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
   board_viewer_board, board_viewer_questions, board_viewer_history,
-  setup_room, setup_questions, setup_rules,
   lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
   io_inert, io_connecting,
   ensemble_questions, ensemble_rules,
@@ -37,7 +36,7 @@ var {
   student_app_to_board_viewer,
   board_viewer_current_question,
   board_viewer_crossed_answers, board_viewer_bingoes
-  bool, number, t
+} = window .stuff
 
 
 
@@ -107,25 +106,26 @@ var get_ready_view = _ => <get-ready-etc>
 var crossed = _x => <s>{ _x }</s>
 var bold_crossed = _x => <s><b>{ _x }</b></s>
 var board_view = _ => <board-etc>
-  { where ((
-      _board_viewer = Oo (app_state, oo (student_app_to_board_viewer)),
-      board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
-      current_question = Oo (_board_viewer, oo (board_viewer_current_question)),
-      crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)),
-      bingoes = Oo (_board_viewer, oo (board_viewer_bingoes)),
-      game_tick = game_tick_sampler () ) => 
-    [ Oo (current_question,
-      oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
-    , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
-    , <board> { Oo (board, oo (Z_ .map (row => 
-      <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
-        oo (L .get (cell_answer)),
-        oo (_x => !! (R .any (Z .elem (_x)) (bingoes))
-          ? <cell>{ bold_crossed (_x) }</cell>
-          : !! (Z .elem (_x) (crossed_answers))
-          ? <cell>{ crossed (_x) }</cell>
-          : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
-      } </div> ))) } </board> ]) } </board-etc>
+  { Oo (app_state (), oo (student_app_to_board_viewer),
+    oo (Z_ .maybe ([]) (_board_viewer =>
+      where ((
+        board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
+        current_question = Oo (_board_viewer, oo (board_viewer_current_question)),
+        crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)),
+        bingoes = Oo (_board_viewer, oo (board_viewer_bingoes)),
+        game_tick = game_tick_sampler () ) => 
+      [ Oo (current_question,
+        oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
+      , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
+      , <board> { Oo (board, oo (Z_ .map (row => 
+        <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
+          oo (L .get (cell_answer)),
+          oo (_x => !! (R .any (Z .elem (_x)) (bingoes))
+            ? <cell>{ bold_crossed (_x) }</cell>
+            : !! (Z .elem (_x) (crossed_answers))
+            ? <cell>{ crossed (_x) }</cell>
+            : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
+        } </div> ))) } </board> ])))) } </board-etc>
 
 
 
@@ -200,23 +200,25 @@ var connect_room = _room => {{
       ;io_state (io .inert) }}) }}))) }} 
 
 var attempt_question = _answer => {{
-  Oo (app_state (), oo (student_app_to_board_viewer),oo (board_viewer_current_question), oo (map_just (_question => {{
-    if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
-      var latency = game_clock .time () //lookbehind_latency ()
-      if (Z .equals (_answer) (_question)) {
-        ;Oo (app_state (),
-          oo (L .set
-            ([app_history, L .last, rendition_attempts, L .append])
-            ([_answer, latency])),
-          oo (student_app_next_playing),
-          oo (_x => {{ ;app_state (_x) }})) }
-      else {
-        ;Oo (app_state (),
-          oo (L .set
-            ([app_history, L .last, rendition_attempts, L .append])
-            ([_answer, latency])),
-          oo (_x => {{ ;app_state (_x) }}))
-        ;lookbehind_state (student_lookbehind .attempting (game_clock .time (), true)) } } }}))) }}
+  Oo (app_state (), oo (student_app_to_board_viewer),
+    oo (board_viewer_current_question),
+    oo (map_just (_question => {{
+      if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
+        var latency = game_clock .time () //lookbehind_latency ()
+        if (Z .equals (_answer) (_question)) {
+          ;Oo (app_state (),
+            oo (L .set
+              ([app_history, L .last, rendition_attempts, L .append])
+              ([_answer, latency])),
+            oo (student_app_next_playing),
+            oo (_x => {{ ;app_state (_x) }})) }
+        else {
+          ;Oo (app_state (),
+            oo (L .set
+              ([app_history, L .last, rendition_attempts, L .append])
+              ([_answer, latency])),
+            oo (_x => {{ ;app_state (_x) }}))
+          ;lookbehind_state (student_lookbehind .attempting (game_clock .time (), true)) } } }}))) }}
 
 var timesup_question = _ => {{
   ;app_state (student_app_next_playing (app_state ())) }}
