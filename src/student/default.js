@@ -118,14 +118,14 @@ var board_view = _ => <board-etc>
         oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
       , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
       , <board> { Oo (board, oo (Z_ .map (row => 
-        <div> { Oo (row, oo (Z_ .map (cell => Oo (cell,
+        <row> { Oo (row, oo (Z_ .map (cell => Oo (cell,
           oo (L .get (cell_answer)),
           oo (_x => !! (R .any (Z .elem (_x)) (bingoes))
             ? <cell>{ bold_crossed (_x) }</cell>
             : !! (Z .elem (_x) (crossed_answers))
             ? <cell>{ crossed (_x) }</cell>
             : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
-        } </div> ))) } </board> ])))) } </board-etc>
+        } </row> ))) } </board> ])))) } </board-etc>
 
 
 

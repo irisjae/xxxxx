@@ -1,4 +1,4 @@
-find ~/static -type f | grep -v default\\.js | xargs -I {} rm {}
+find ~/static -type f | grep \\.js | grep -v default\\.js | xargs -I {} rm {}
 find ~/src -maxdepth 1 | grep -v default | xargs -I {} cp -r {} ~/static
 
 find ~/static/ -type f ! -path ~/static/default.js | grep default | while read f; do 

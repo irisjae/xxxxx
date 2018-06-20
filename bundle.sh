@@ -22,5 +22,8 @@ find ~/static/ -type f | grep default/ | grep \\.js | grep -v default\\.js | whi
   cat "$f" >> ~/static/default.js
   rm "$f"
 done
+find ~/static/ -type f | grep default/ | grep default\\. |  while read f; do
+  mv "$f" ~/static/
+done
 
 find ~/static/ -type d -empty -delete
