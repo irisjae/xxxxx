@@ -9,12 +9,13 @@ var {
   shuffle, uuid, api, post,
   student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
-  teacher_app, teacher_lookbehind,
-  student_app, student_lookbehind,
+  teacher_app, student_app, student_lookbehind,
+  board_viewer,
   io, message, ensemble, 
   default_questions, default_rules,
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
+  board_viewer_board, board_viewer_questions, board_viewer_history,
   setup_room, setup_questions, setup_rules,
   lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
   io_inert, io_connecting,
@@ -30,10 +31,13 @@ var {
   cell_answer, student_name,
   history_stepped,
   message_encoding, messages_encoding,
-  assemble_students, 
+  assemble_students, schedule_start,
+  teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  app_current_question, app_crossed_answers, app_bingoes
-} = window .stuff
+  student_app_to_board_viewer,
+  board_viewer_current_question,
+  board_viewer_crossed_answers, board_viewer_bingoes
+  bool, number, t
 
 
 
@@ -104,10 +108,11 @@ var crossed = _x => <s>{ _x }</s>
 var bold_crossed = _x => <s><b>{ _x }</b></s>
 var board_view = _ => <board-etc>
   { where ((
-      board = Oo (app_state (), oo (L .get (app_board))),
-      current_question = Oo (app_state (), oo (app_current_question)),
-      crossed_answers = Oo (app_state (), oo (app_crossed_answers)),
-      bingoes = Oo (app_state (), oo (app_bingoes)),
+      _board_viewer = Oo (app_state, oo (student_app_to_board_viewer)),
+      board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
+      current_question = Oo (_board_viewer, oo (board_viewer_current_question)),
+      crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)),
+      bingoes = Oo (_board_viewer, oo (board_viewer_bingoes)),
       game_tick = game_tick_sampler () ) => 
     [ Oo (current_question,
       oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
@@ -128,6 +133,8 @@ window .view = <student-app>
 	{ !! (L .isDefined (app_get_ready) (app_state ()))
     ? get_ready_view
     : !! (L .isDefined (app_playing) (app_state ()))
+    ? board_view
+    : !! (L .isDefined (app_game) (app_state ()))
     ? board_view
     : undefined } </student-app>
 

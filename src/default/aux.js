@@ -493,4 +493,5 @@ window .stuff = { ...window .stuff,
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
   student_app_to_board_viewer,
-  app_current_question, app_crossed_answers, app_bingoes }
+  board_viewer_current_question,
+  board_viewer_crossed_answers, board_viewer_bingoes }
