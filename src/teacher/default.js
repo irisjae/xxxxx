@@ -61,12 +61,12 @@ var pipeline_play = _dom => {{
 var get_ready_view = <get-ready-etc> {
   [ Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
-    oo (Z_ .maybe ('Generating Code.....') (_x => <gameroomno> {'Room: ' + _x }</gameroomno>)))
+    oo (Z_ .maybe ('Generating Code.....') (_x => <room> {'Room: ' + _x } </room>)))
   , Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
     oo (Z_ .maybe ([]) (_x => Oo (_x,
       oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <cellplayer>{ 'Name: '+ _x}</cellplayer>))))),
+      oo (Z_ .map (_x => <player>{ 'Name: '+ _x}</player>))))),
     oo (_x => !! (Z .size (_x) === 0)
       ? _x
       : Z_ .append (<div fn={ pipeline_play }>play</div>) (_x))) ] }

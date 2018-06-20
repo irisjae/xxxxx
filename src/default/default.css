@@ -160,7 +160,9 @@ cellplayer {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   clear: left;
 /*   color: white; */
-  padding: 2px;
+  padding: 5px;
+  margin: 5px;
+  background-color: green;
 /*   width: 30%; */
   display:block;
 }
@@ -179,7 +181,7 @@ columnplayer {
   display: inline-block;
   margin: 1vw;
 }
-gameroomno{
+room {
   background-color: #D48A88;
   padding: 2%;
   margin: 2%;
