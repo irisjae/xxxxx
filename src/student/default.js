@@ -104,7 +104,7 @@ var room_entry_view = <room-entry-etc>
       <message>{bad_room} is not a valid room</message> )
     : [] } </room-entry-etc>
   
-var student_entry_view = <student-entry-etc>
+var name_entry_view = <student-entry-etc>
   <name fn={ pipeline_name_entry } >
     <input placeholder="Enter your name" />
     <button> Go </button>
@@ -124,7 +124,7 @@ var get_ready_view = _ => <get-ready-etc>
         : undefined
       : !! Z .isNothing (student)
       ? !! (L .isDefined (io_inert, io_state ()))
-        ? student_entry_view
+        ? name_entry_view
         : !! (L .isDefined (io_connecting, io_state ()))
         ? 'Trying to join room...'
         : undefined
