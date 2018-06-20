@@ -80,12 +80,14 @@ var pipeline_name_entry = _dom => {{
       ;_input .value = ''
       ;go
       .then (_ => record_student (value))
-      .then (_ => record_student (value)) } }})
+      .then (_ => connect_room ()) } }})
   ;clicking .forEach (click => {{
     ;_button .addEventListener (click, _e => {{
       var value = _input .value
       ;_input .value = ''
-      ;record_student (value) }}) }}) }} 
+      ;go
+      .then (_ => record_student (value))
+      .then (_ => connect_room ()) }}) }}) }} 
 
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
@@ -115,12 +117,16 @@ var get_ready_view = _ => <get-ready-etc>
       student: [app_student, as_maybe] }))),
     oo (({ room, student }) =>
       !! Z .isNothing (room)
-      ? room_entry_view
+      ? !! (L .isDefined (io_inert, io_state ()))
+        ? room_entry_view
+        : !! (L .isDefined (io_connecting, io_state ()))
+        ? 'Finding room...'
+        : undefined
       : !! Z .isNothing (student)
       ? !! (L .isDefined (io_inert, io_state ()))
         ? student_entry_view
         : !! (L .isDefined (io_connecting, io_state ()))
-        ? 'Trying to connect...'
+        ? 'Trying to join room...'
         : undefined
       : where ((
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
@@ -216,8 +222,12 @@ var record_student = _name => {{
       Z .Just ([ uuid (), _name ])
       ,_setup )) }}
 
-var connect_room = _room => {{
-  ;Oo (app_state (), oo (L .get ([ app_student, as_maybe ])), oo (map_just (_student => {{
+var connect_room = _ => {{
+  ;Oo (app_state (), oo (L .get (L .pick ({
+    _student: [ app_student, as_maybe ],
+    _room: [ app_room, as_maybe ] }))),
+  oo (maybe_all),
+  oo (map_just (({ _student, _room }) => {{
     var _setup
     ;return go 
     .then (_ =>
