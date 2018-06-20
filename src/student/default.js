@@ -91,12 +91,13 @@ var get_ready_view = _ => <get-ready-etc>
       room: [app_room, as_maybe],
       student: [app_student, as_maybe] }))),
     oo (({ room, student }) =>
-      !! Z .isNothing (student)
-      ? enter_student_view
-      : !! Z .isNothing (room)
+      !! Z .isNothing (room)
         ? !! (L .isDefined (io_connecting, io_state ()))
           ? 'Trying to connect...'
           : enter_room_view
+        !! Z .isNothing (student)
+      ? enter_student_view
+      : 
       : where ((
         { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
       [ 'Connected to room ' + plain_room

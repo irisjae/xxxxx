@@ -3,6 +3,9 @@
 /* * {
   box-sizing: border-box;
 } */
+body {
+  margin: 0; }
+
 board-etc {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   height: 100%;
@@ -21,6 +24,7 @@ board {
   margin:5%;
 }
 row{
+  display: block;
   height: 28%;
   margin:1%;
   width: 100%;
@@ -30,11 +34,13 @@ question{
   float :left;
   margin: 2em;
   background-color: #9464A3;
+  color: white;
 }
 ticker{
   float :right;
   margin: 2em;
   background-color: #9464A3;
+  color: white;
 }
 cell {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
