@@ -35,12 +35,16 @@ question{
   margin: 2em;
   background-color: #9464A3;
   color: white;
+  width: 25%;
+  padding: 5px;
 }
 ticker{
   float :right;
   margin: 2em;
   background-color: #9464A3;
   color: white;
+  width: 25%;
+  padding: 5px;
 }
 cell {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
