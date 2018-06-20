@@ -162,8 +162,7 @@ cellplayer {
 /*   color: white; */
   padding: 2px;
   width: 30%;
-/*   height: 95%; */ 
-  display: inline-block;
+  display: flex;
 }
 .rowresult{
 /*   height: 28%; */
@@ -180,15 +179,11 @@ columnplayer {
   display: inline-block;
   margin: 1vw;
 }
-cellplayer {
-  width: 100%;
-  
-}
 gameroomno{
   background-color: #D48A88;
   padding: 2%;
   margin: 2%;
-  display: inline-block;
+  display: block;
   width: 40vw;
 }
 timer{
