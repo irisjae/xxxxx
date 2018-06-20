@@ -201,7 +201,7 @@ var connect_room = _room => {{
 
 var attempt_question = _answer => {{
   Oo (app_state (), oo (student_app_to_board_viewer),
-    oo (map_just (board_viewer_current_question)),
+    oo (Z_ .maybe (Z .Nothing) (board_viewer_current_question)),
     oo (map_just (_question => {{
       if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
         var latency = game_clock .time () //lookbehind_latency ()
