@@ -56,36 +56,55 @@ var io_state = S .data (io .inert)
 
 var clicking = ['click']
 
-var pipeline_student_input = input => {{
-  ;input .addEventListener ('keypress', _e => {{
-    if (_e .keyCode === 13) {
-      var value = input .value
-      ;input .value = ''
-      ;make_student (value) } }}) }} 
 
-var pipeline_room_input = input => {{
-  ;input .addEventListener ('keypress', _e => {{
+var pipeline_room_entry = _dom => {{
+  var _input = _dom .querySelector ('input')
+  var _button = _dom .querySelector ('button')
+  ;_input .addEventListener ('keypress', _e => {{
     if (_e .keyCode === 13) {
-      var value = input .value
-      ;input .value = ''
-      ;connect_room (value) } }}) }} 
+      var value = _input .value
+      ;_input .value = ''
+      ;connect_room (value) } }})
+  ;clicking .forEach (click => {{
+    ;_button .addEventListener (click, _e => {{
+      var value = _input .value
+      ;_input .value = ''
+      ;connect_room (value) }}) }}) }} 
+
+var pipeline_name_entry = _dom => {{
+  var _input = _dom .querySelector ('input')
+  var _button = _dom .querySelector ('button')
+  ;_input .addEventListener ('keypress', _e => {{
+    if (_e .keyCode === 13) {
+      var value = _input .value
+      ;_input .value = ''
+      ;make_student (value) } }})
+  ;clicking .forEach (click => {{
+    ;_button .addEventListener (click, _e => {{
+      var value = _input .value
+      ;_input .value = ''
+      ;make_student (value) }}) }}) }} 
 
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
       ;attempt_question (L .get (cell_answer, cell)) }}) }}) }}
           
-var enter_room_view = <room-input-etc>
-  <code>
-    <input fn={ pipeline_room_input } placeholder="Enter a room code" />
+var room_entry_view = <room-entry-etc>
+  <code fn={ pipeline_room_entry } >
+    <input placeholder="Enter a room code" />
     <button> Go </button> </code>
   { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
     ? where ((
         bad_room = Oo (lookbehind_state (), oo (L .get (lookbehind_room)))) =>
       <message>{bad_room} is not a valid room</message> )
-    : [] } </room-input-etc>
+    : [] } </room-entry-etc>
   
-var enter_student_view = <input fn={ pipeline_student_input } placeholder="Enter your name" />
+var student_entry_view = <student-entry-etc>
+  <name fn={ pipeline_name_entry } >
+    <input placeholder="Enter your name" />
+    <button> Go </button>
+  </name> </student-entry-etc>
 
 var get_ready_view = _ => <get-ready-etc>
   { Oo (app_state (),
@@ -94,10 +113,10 @@ var get_ready_view = _ => <get-ready-etc>
       student: [app_student, as_maybe] }))),
     oo (({ room, student }) =>
       !! Z .isNothing (room)
-      ? enter_room_view
+      ? room_entry_view
       : !! Z .isNothing (student)
       ? !! (L .isDefined (io_inert, io_state ()))
-        ? enter_student_view
+        ? student_entry_view
         : !! (L .isDefined (io_connecting, io_state ()))
         ? 'Trying to connect...'
         : undefined
