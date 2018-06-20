@@ -134,7 +134,7 @@ window .view = <student-app>
     ? get_ready_view
     : !! (L .isDefined (app_playing) (app_state ()))
     ? board_view
-    : !! (L .isDefined (app_game) (app_state ()))
+    : !! (L .isDefined (app_game_over) (app_state ()))
     ? board_view
     : undefined } </student-app>
 
@@ -200,7 +200,7 @@ var connect_room = _room => {{
       ;io_state (io .inert) }}) }}))) }} 
 
 var attempt_question = _answer => {{
-  Oo (app_state (), oo (app_current_question), oo (map_just (_question => {{
+  Oo (app_state (), oo (student_app_to_board_viewer),oo (board_viewer_current_question), oo (map_just (_question => {{
     if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
       var latency = game_clock .time () //lookbehind_latency ()
       if (Z .equals (_answer) (_question)) {
