@@ -116,9 +116,11 @@ var student_app = data ({
 	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ list (rendition) ) => defined,
 	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ list (list (rendition)) ) => defined })
 
+/*
 var teacher_lookbehind = data ({
   nothing: () => defined,
   bad_room: () => defined })
+*/
 
 var student_lookbehind = data ({
   nothing: () => defined,
@@ -153,6 +155,9 @@ var ensemble = data ({
     student_boards =~ map (student) (board),
     student_histories =~ map (student) (history) ) => defined })
 
+
+var board_viewer = data ({
+  board_viewer: (board =~ board, history =~ history) => defined })
 
 
 //--------------------DEFAULTS--------------------
@@ -455,8 +460,8 @@ window .stuff = { ...window .stuff,
   shuffle, uuid, api, post,
   student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
-  teacher_app, student_app,
-  teacher_lookbehind, student_lookbehind,
+  teacher_app, student_app, student_lookbehind,
+  board_viewer,
   io, message, ensemble, 
   default_questions, default_rules,
   as_maybe, from_maybe,
