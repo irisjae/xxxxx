@@ -197,6 +197,11 @@ var app_history = L .choices ( data_lens (student_app .playing) .history, data_l
 
 var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
 
+
+var board_viewer_board = data_lens (board_viewer .board_viewer) .board
+var board_viewer_questions = data_lens (board_viewer .board_viewer) .questions
+var board_viewer_history = data_lens (board_viewer .board_viewer) .history
+
 var setup_room = data_lens (setup .setup) .room
 var setup_questions = data_lens (setup .setup) .questions
 var setup_rules = data_lens (setup .setup) .rules
