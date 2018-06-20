@@ -9,13 +9,13 @@ var {
   shuffle, uuid, api, post,
   student, question, answer, latency, ping, position,
   attempt, rendition, board, rules, setup,
-  teacher_app, teacher_lookbehind,
-  student_app, student_lookbehind,
+  teacher_app, student_app, student_lookbehind,
+  board_viewer,
   io, message, ensemble, 
   default_questions, default_rules,
   as_maybe, from_maybe,
   app_get_ready, app_playing, app_game_over,
-  setup_room, setup_questions, setup_rules,
+  board_viewer_board, board_viewer_questions, board_viewer_history,
   lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
   io_inert, io_connecting,
   ensemble_questions, ensemble_rules,
@@ -33,7 +33,9 @@ var {
   assemble_students, schedule_start,
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
-  app_crossed_answers, current_question 
+  student_app_to_board_viewer,
+  board_viewer_current_question,
+  board_viewer_crossed_answers, board_viewer_bingoes
 } = window .stuff
 
 
@@ -59,7 +61,7 @@ var pipeline_play = _dom => {{
 var get_ready_view = <get-ready-etc> {
   [ Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_room, as_maybe]))),
-    oo (Z_ .maybe ('Generating Code.....') (_x => 'Room: ' + _x)))
+    oo (Z_ .maybe ('Generating Code.....') (_x => <gameroomno> {'Room: ' + _x }</gameroomno>)))
   , Oo (app_state (),
     oo (Z_ .maybe (Z .Nothing) (L .get ([app_students, as_maybe]))),
     oo (Z_ .maybe ([]) (_x => Oo (_x,
