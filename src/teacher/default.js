@@ -89,6 +89,7 @@ var get_ready_view = <get-ready-etc> {
       oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
       oo (Z_ .fromMaybe ([])))) =>
   [ <message> Room Code: { _room } </message>
+  , <message> Number of students: { Z_ .size (_students) } </message>
   , Oo (_students,
       oo (Z_ .map (L .get (student_name))), 
       oo (Z_ .map (_x => <player>{ 'Name: '+ _x }</player>)))

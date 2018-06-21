@@ -1,6 +1,6 @@
 find ~/static -type f | grep \\.js | grep -v default\\.js | xargs -I {} rm {}
 find ~/static -type f | grep default\\. | grep -v default\\.js | xargs -I {} rm {}
-find ~/src -maxdepth 1 | grep -v default | xargs -I {} cp -r {} ~/static
+find ~/src -mindepth 1 -maxdepth 1 | grep -v default | xargs -I {} cp -r {} ~/static
 
 find ~/static/ -type f ! -path ~/static/default.js | grep default | while read f; do 
   mv "$f" "$(dirname $(dirname $f))/$(echo $(basename $f) | sed s/default/$(basename $(dirname $f))/)"

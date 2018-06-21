@@ -14,12 +14,17 @@ board-etc {
 }
 board {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-  width: 80%;
-  height: 60%;
+  width: 60%;
+  height: 80%;
   display: inline-block;
   background-color: #9464A3;
   text-align: center;
   margin:5%;
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
 }
 row{
   display: block;
