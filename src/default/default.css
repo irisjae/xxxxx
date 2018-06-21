@@ -1,5 +1,3 @@
-/* called by your view template */
-
 /* * {
   box-sizing: border-box;
 } */
@@ -175,7 +173,7 @@ player {
   width: 25vw;
 /*   display: block; */
 }
-.rowresult{
+.rowresult {
 /*   height: 28%; */
   margin:1%;
   width: 100%;
@@ -210,6 +208,7 @@ message {
 room button{
   margin:auto;
 }
+
 init-etc{
   min-width: 80%;
   position: absolute;
@@ -221,7 +220,7 @@ init-etc, init-etc button{
   margin: 0 auto;
   display: block;
 }
-[title], [topic] { 
+[title] , [topic] { 
   font-size: 42px;
 }
 [title], [topic], size{

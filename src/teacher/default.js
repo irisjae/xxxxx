@@ -71,7 +71,7 @@ var init_view = _ =>
     board_sizes_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
   <init-etc> 
     <div title>
-      <h1> Bingo Class Game </h1>
+      Bingo Class Game
       <img src={ bingo_img } /> </div>
     <div topic> Equivalent Fractions </div>
     <rules>
@@ -84,7 +84,7 @@ var init_view = _ =>
 var get_ready_view = <get-ready-etc> {
   where ((
     _room = Oo (app_state (),
-      oo (Z_ .maybe (Z .Nothing) (L .get ([ app_room ])))),
+      oo (Z_ .maybe (undefined) (L .get ([ app_room ])))),
     _students = Oo (app_state (),
       oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
       oo (Z_ .fromMaybe ([])))) =>

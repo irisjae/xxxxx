@@ -92,7 +92,7 @@ var pipeline_name_entry = _dom => {{
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
-      ;attempt_question (L .get (cell_answer, cell)) }}) }}) }}
+      ;attempt_question (L .get (cell_answer) (cell)) }}) }}) }}
           
 var room_entry_view = <room-entry-etc>
   <code fn={ pipeline_room_entry } >
@@ -117,15 +117,15 @@ var get_ready_view = _ => <get-ready-etc>
       student: [app_student, as_maybe] }))),
     oo (({ room, student }) =>
       !! Z .isNothing (room)
-      ? !! (L .isDefined (io_inert, io_state ()))
+      ? !! (L .isDefined (io_inert) (io_state ()))
         ? room_entry_view
-        : !! (L .isDefined (io_connecting, io_state ()))
+        : !! (L .isDefined (io_connecting) (io_state ()))
         ? 'Finding room...'
         : undefined
       : !! Z .isNothing (student)
-      ? !! (L .isDefined (io_inert, io_state ()))
+      ? !! (L .isDefined (io_inert) (io_state ()))
         ? name_entry_view
-        : !! (L .isDefined (io_connecting, io_state ()))
+        : !! (L .isDefined (io_connecting) (io_state ()))
         ? 'Trying to join room...'
         : undefined
       : where ((
