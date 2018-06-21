@@ -66,7 +66,7 @@ var pipeline_play = _dom => {{
       ;start_playing () }}) }}) }}
 
 var init_view = _ => <init-etc> 
-  <h1> Bingo Class Game <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081" /> </h1>
+  <game-title><h1> Bingo Class Game <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081" /> </h1></game-title>
   <topic> Equivalent Fractions </topic>
   <mode> <img src="https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674" /> </mode>
   <button fn={ pipeline_init }> Start </button>

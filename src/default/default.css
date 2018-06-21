@@ -206,3 +206,15 @@ message {
 room button{
   margin:auto;
 }
+game-title{
+  display: flex;
+  align-items: center;
+}
+game-title img{
+  width: 15%;
+}
+init-etc{
+  min-width: 500px;
+  margin: auto;
+}
+
