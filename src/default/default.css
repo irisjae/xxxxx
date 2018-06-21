@@ -212,7 +212,7 @@ room button{
   margin:auto;
 }
 
-init-etc, get-ready-etc, playing-etc{
+init-etc, get-ready-etc, playing-etc, result-etc{
   min-width: 80%;
   position: absolute;
   top: 50%;
