@@ -70,10 +70,10 @@ var init_view = _ =>
     bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081',
     board_sizes_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
   <init-etc> 
-    <a-title>
+    <div title>
       <h1> Bingo Class Game </h1>
-      <img src={ bingo_img } /> </a-title>
-    <topic> Equivalent Fractions </topic>
+      <img src={ bingo_img } /> </div>
+    <div topic> Equivalent Fractions </div>
     <rules>
       <size> <img src={ board_sizes_img } /> </size> </rules>
     <button fn={ pipeline_init }> Start </button>

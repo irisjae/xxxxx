@@ -218,18 +218,18 @@ init-etc{
   transform: translateX(-50%) translateY(-50%);
 }
 init-etc, init-etc button{
-  margin:0 auto;
-  display:block;
+  margin: 0 auto;
+  display: block;
 }
-gametitle,topic{ 
-  font-size:42px;
+[title], [topic] { 
+  font-size: 42px;
 }
-game-title, topic, size{
+[title], [topic], size{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-game-title img{
+[title] img{
   width: 10%;
 }
