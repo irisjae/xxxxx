@@ -160,7 +160,7 @@ var playing_view = _ => <playing-etc>
 
 var game_over_view = _ =>
   where ((
-    bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081') =>
+    bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' ) =>
   <game-over-etc>
     <result-etc>
       <tabs>

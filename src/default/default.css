@@ -134,7 +134,7 @@ name > button:hover, code > button:hover, init-etc button:hover, teacher-app but
   background-color: #26F07B;
 }
 
-name > button:active, code > button:active, init-etc button:active, teacher-app button:active, student-app button {
+name > button:active, code > button:active, init-etc button:active, teacher-app button:active, student-app button:active {
   box-shadow: none;
 }
 buttonresult{

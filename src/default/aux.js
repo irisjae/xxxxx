@@ -283,7 +283,7 @@ var mapping_students = [ students_mapping, L .last ]
 
 
 
-//--------------------TRANSFORMATIONS--------------------
+//--------------------TRANSITIONS--------------------
 
 
 
@@ -302,10 +302,10 @@ var generate_board = size => questions =>
 var teacher_app_get_ready_to_playing = _app =>
   Oo (_app,
     oo (L .get (L .pick ({
-      setup: L .get ([ app_setup, as_maybe ]) }))),
+      _setup: L .get ([ app_setup, as_maybe ]) }))),
     oo (maybe_all),
-    oo (map_just (({ setup }) => 
-      teacher_app .playing (setup, []) ) ))
+    oo (map_just (({ _setup }) => 
+      teacher_app .playing (_setup, []) ) ))
 
 var student_app_get_ready_to_playing = _app =>
   Oo (_app,
