@@ -238,3 +238,9 @@ get-ready-etc, playing-etc{
 [a-title] img{
   width: 15%;
 }
+result-etc{
+  background-color: #9464A3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
