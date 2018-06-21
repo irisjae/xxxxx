@@ -56,8 +56,8 @@ cell {
   display: inline-block;
 }
 h1 {
-  font-style: italic;
-  color: #373fff;
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  color: black;
 }
 .bold {
   font-weight: bold;
@@ -121,7 +121,7 @@ name , code {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-name > button, code > button{
+name > button, code > button, init-etc button{
   font-size: 16px;
   border-radius: 3px;
   background-color: #00A746;
@@ -132,11 +132,11 @@ name > button, code > button{
   width: 20%;
 }
 
-name > button:hover, code > button:hover {
+name > button:hover, code > button:hover, init-etc button:hover {
   background-color: #26F07B;
 }
 
-name > button:active, code > button:active {
+name > button:active, code > button:active, init-etc button:active {
   box-shadow: none;
 }
 buttonresult{
@@ -207,6 +207,7 @@ room button{
   margin:auto;
 }
 game-title, topic, mode{
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
