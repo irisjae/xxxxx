@@ -156,17 +156,24 @@ cellresult {
 /*   height: 95%; */ 
   display: inline-block;
 }
+get-ready-etc{
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 player {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   clear: left;
 /*   color: white; */
   padding: 5px;
-  margin: 2%;
+/*   margin: 2%; */
   background-color: #F5C3C2;
   border-style: solid;
   border-width: 5px;
-  width: 30%;
-  display:block;
+  width: 25vw;
+/*   display: block; */
 }
 .rowresult{
 /*   height: 28%; */
@@ -215,7 +222,13 @@ game-title, topic, mode{
 game-title img{
   width: 10%;
 }
-
+init-etc{
+  min-width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
 init-etc, init-etc button{
   margin:0 auto;
   display:block;
