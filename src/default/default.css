@@ -202,9 +202,6 @@ timer{
   float: left;
   margin: 2em;
 }
-gametitle,topic{ 
-  font-size:42px;
-}
 message {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   color: red;
@@ -212,15 +209,6 @@ message {
 }
 room button{
   margin:auto;
-}
-game-title, topic, size{
-  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-game-title img{
-  width: 10%;
 }
 init-etc{
   min-width: 80%;
@@ -232,4 +220,16 @@ init-etc{
 init-etc, init-etc button{
   margin:0 auto;
   display:block;
+}
+gametitle,topic{ 
+  font-size:42px;
+}
+game-title, topic, size{
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+game-title img{
+  width: 10%;
 }
