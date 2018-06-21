@@ -209,12 +209,14 @@ room button{
 game-title{
   display: flex;
   align-items: center;
+  height: 20vh;
 }
 game-title img{
   width: 15%;
 }
-init-etc{
+
+/* init-etc{
   min-width: 500px;
   margin: auto;
-}
+} */
 
