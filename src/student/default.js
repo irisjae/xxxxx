@@ -220,7 +220,7 @@ var record_student = _name => {{
   ;app_state (
     student_app .get_ready (
       Z .Just ([ uuid (), _name ])
-      ,_setup )) }}
+      , _setup )) }}
 
 var connect_room = _ => {{
   ;Oo (app_state (), oo (L .get (L .pick ({
@@ -332,7 +332,7 @@ S (last_app => {{
   var history = Oo (app_state (), oo (L .get ([app_history])))
   if (L .isDefined (app_playing) (app_state ())) {
     if (history_stepped (last_history) (history)) {
-      ;lookbehind_state (0, false) } }
+      ;lookbehind_state (student_lookbehind .attempting (0, false)) } }
   return app_state () }}
   , app_state ())
 S (_ => {{
@@ -410,13 +410,16 @@ S (_ => {{
         post (messages_encoding (
           Z_ .concat
             ([ message .student_ping (_student, S .sample (connection)) ])
-            (Oo (app_state (), oo (L .get (L .pick ({
-                _board: [ app_board, as_maybe ],
-                _history: [ app_history, as_maybe ] }))),
-              oo (maybe_all),
-              oo (Z_ .maybe ([]) (({ _board, _history }) => 
-                [ message .student_join (_student, _board)
-                , message .student_update (_student, _history) ] )))) ))))
+            (where ((
+              { _board, _history } = Oo (app_state (), oo (L .get (L .pick ({
+                  _board: [ app_board, as_maybe ],
+                  _history: [ app_history, as_maybe ] }))),
+                oo (maybe_all),
+                oo (Z .fromMaybe ({}))) ) =>
+            
+            [ message .student_join (_student, _board)
+            , message .student_update (_student, _history) ]))
+                 ))) )
       : (io_state (io .heartbeat), api (_room)
         .then (_x => {{
           ;ensemble_state (

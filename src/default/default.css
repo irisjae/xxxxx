@@ -209,26 +209,29 @@ room button{
   margin:auto;
 }
 
-init-etc{
+init-etc, get-ready-etc{
   min-width: 80%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-init-etc, init-etc button{
+init-etc button{
   margin: 0 auto;
   display: block;
 }
-[title] , [topic] { 
+[a-title] , [a-topic] { 
   font-size: 42px;
 }
-[title], [topic], size{
+get-ready-etc{
+  flex-direction: column;
+}
+[a-title], [a-topic], size, get-ready-etc{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-[title] img{
-  width: 10%;
+[a-title] img{
+  width: 15%;
 }
