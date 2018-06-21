@@ -89,7 +89,7 @@ var id = string
 var v = (...types) => defined
 
 var student = v (id, string)
-var question = string
+var question = v (string, list (answer))
 var answer = question
 var timeinterval = number
 var latency = timeinterval
@@ -165,6 +165,15 @@ var board_viewer = data ({
 
 
 var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+/* var default_questions = shuffle ([
+  ['1/4', ['2/8', '3/12']],
+  ['1/2', ['2/4', '3/6']],
+  ['3/4', ['2/8', '3/12']],
+  ['1/4', ['2/8', '3/12']],
+  ['1/4', ['2/8', '3/12']],
+  ['1/4', ['2/8', '3/12']],
+  [])
+*/
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
 var default_rules = rules .rules (10, 3)
 
@@ -353,7 +362,7 @@ var board_viewer_current_question = _board_viewer =>
 var board_viewer_crossed_answers = _board_viewer => 
   where ((
     final_attempts = Oo (_board_viewer, oo (L .get (board_viewer_history)),
-      oo (R .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
+      oo (Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
     actual_answers = Oo (_board_viewer, oo (L .get (board_viewer_questions)))) =>
   Oo (Z .zip (final_attempts) (actual_answers),
     oo (Z .map (pair =>
