@@ -1,0 +1,235 @@
+/* called by your view template */
+
+/* * {
+  box-sizing: border-box;
+} */
+body {
+  margin: 0; }
+
+board-etc {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  background-color: #80DAFB;
+  display: block;
+}
+board {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  width: 80%;
+  height: 60%;
+  display: inline-block;
+  background-color: #9464A3;
+  text-align: center;
+  margin:5%;
+}
+row{
+  display: block;
+  height: 28%;
+  margin:1%;
+  width: 100%;
+  clear: left;
+}
+question{
+  float :left;
+  margin: 2em;
+  background-color: #9464A3;
+  color: white;
+  width: 25%;
+  padding: 5px;
+}
+ticker{
+  float :right;
+  margin: 2em;
+  background-color: #9464A3;
+  color: white;
+  width: 25%;
+  padding: 5px;
+}
+cell {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  background-color: #E2BD4B;
+  padding: 2px;
+  border: 3px solid white;
+  width: 28%;
+  height: 95%;
+  display: inline-block;
+}
+h1 {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  color: black;
+}
+.bold {
+  font-weight: bold;
+}
+
+p {
+  max-width: 600px;
+}
+
+form {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: cyan;
+  display: inline-block;
+  width: 100%;
+  max-width: 340px;
+  border-radius: 3px;
+}
+
+input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+button {
+  font-size: 16px;
+  border-radius: 3px;
+  background-color: lightgrey;
+  border: 1px solid grey;
+  box-shadow: 2px 2px teal;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: yellow;
+}
+
+button:active {
+  box-shadow: none;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+footer {
+  margin-top: 50px;
+  padding-top: 25px;
+  border-top: 1px solid lightgrey;
+}
+
+name , code {
+  min-width: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+name > button, code > button, init-etc button{
+  font-size: 16px;
+  border-radius: 3px;
+  background-color: #00A746;
+  color: white;
+  border: 1px solid grey;
+  box-shadow: 2px 2px #224D34;
+  cursor: pointer;
+  width: 20%;
+}
+
+name > button:hover, code > button:hover, init-etc button:hover {
+  background-color: #26F07B;
+}
+
+name > button:active, code > button:active, init-etc button:active {
+  box-shadow: none;
+}
+buttonresult{
+  font-size: 16px;
+  border-radius: 3px;
+  background-color: white;
+  border: 1px solid grey;
+  box-shadow: 2px 2px #224D34;
+  cursor: pointer;
+  width: 20%;
+}
+cellresult {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  color: white;
+  padding: 2px;
+  width: 30%;
+/*   height: 95%; */ 
+  display: inline-block;
+}
+get-ready-etc{
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+player {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  clear: left;
+/*   color: white; */
+  padding: 5px;
+/*   margin: 2%; */
+  background-color: #F5C3C2;
+  border-style: solid;
+  border-width: 5px;
+  width: 25vw;
+/*   display: block; */
+}
+.rowresult{
+/*   height: 28%; */
+  margin:1%;
+  width: 100%;
+  clear: left;
+}
+#result{
+  width: 100%;
+  text-align: center;
+}
+columnplayer {
+  width: 30vw;
+  display: inline-block;
+  margin: 1vw;
+}
+room {
+  background-color: #D48A88;
+  padding: 2%;
+  margin: 2%;
+  display: block;
+  width: 40vw;
+}
+timer{
+  background-color: #D48A88;
+  float: left;
+  margin: 2em;
+}
+gametitle,topic{ 
+  font-size:42px;
+}
+message {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  color: red;
+  margin: 10px;
+}
+room button{
+  margin:auto;
+}
+game-title, topic, mode{
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+game-title img{
+  width: 10%;
+}
+init-etc{
+  min-width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+init-etc, init-etc button{
+  margin:0 auto;
+  display:block;
+}

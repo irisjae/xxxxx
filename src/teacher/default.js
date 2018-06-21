@@ -82,15 +82,20 @@ var init_view = _ =>
     </init-etc>)
 
 var get_ready_view = <get-ready-etc> {
-  [ Oo (app_state (),
-    oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
-    oo (Z_ .maybe ([]) (_x => Oo (_x,
+  where ((
+    _room = Oo (app_state (),
+      oo (Z_ .maybe (Z .Nothing) (L .get ([ app_room ])))),
+    _students = Oo (app_state (),
+      oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
+      oo (Z_ .fromMaybe ([])))) =>
+  [ <message> Room Code: { _room } </message>
+  , Oo (_students,
       oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <player>{ 'Name: '+ _x}</player>))))),
-    oo (_x => !! (Z .size (_x) === 0)
-      ? _x
-      : Oo (_x,
-        oo (Z_ .append (<button play fn={ pipeline_play }> play </button>))))) ] } </get-ready-etc>
+      oo (Z_ .map (_x => <player>{ 'Name: '+ _x }</player>)))
+  , !! (Z .size (_students) === 0)
+    ? []
+    : <button play fn={ pipeline_play }> play </button> ]) }
+  </get-ready-etc>
 
 
 window .view =  <teacher-app>
