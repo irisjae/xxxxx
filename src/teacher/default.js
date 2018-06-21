@@ -98,12 +98,27 @@ var get_ready_view = <get-ready-etc> {
     : <button play fn={ pipeline_play }> play </button> ]) }
   </get-ready-etc>
 
+var playing_view = <playing-etc> {
+  where ((
+    _students = Oo (app_state (),
+      oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
+      oo (Z_ .fromMaybe ([]))) ) =>
+  [ <message> Game in progress... </message>,
+  , <message> Number of students: { Z_ .size (_students) } </message>
+  , Oo (_students,
+      oo (Z_ .map (L .get (student_name))), 
+      oo (Z_ .map (_x => <player>{ 'Name: '+ _x }</player>))) ]) }
+  </playing-etc>
+
+
 
 window .view =  <teacher-app>
   { !! Z .equals (Z .Nothing) (app_state ())
     ? init_view
-    : L .isDefined (app_get_ready) (from_just (app_state ()))
+    : L .isDefined ([ from_maybe, app_get_ready ]) (app_state ())
     ? get_ready_view
+    : L .isDefined ([ from_maybe, app_playing ]) (app_state ())
+    ? playing_view
     : undefined } </teacher-app>
 
                          
