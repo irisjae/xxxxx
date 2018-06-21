@@ -160,14 +160,15 @@ var playing_view = _ => <playing-etc>
 
 var game_over_view = _ =>
   where ((
-    bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' ) =>
+    bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' ,
+    student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png') =>
   <game-over-etc>
     <result-etc>
       <tabs>
         <button> Overview </button>
         <button> Question </button>
         </tabs>
-      <id> (name) </id>
+      <id><img src={ student_img } />  (name) </id>
       <div a-logo> <img src={ bingo_img } /> </div>
       <table a-result>
         <tr>
