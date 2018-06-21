@@ -9,4 +9,8 @@ find ~/static/ -type f ! -path ~/static/default.js | grep \\.js | while read f; 
   echo "$(node -e "var fs = require ('fs'); var compiler = require ('surplus/compiler'); console .log (compiler .compile (fs .readFileSync ('$f') .toString (), { sourcemap: 'append' }));")" > "$f"
 done
 
+find ~/src/default -type f | grep -v \\.js | grep default |  while read f; do
+  mv "$f" ~/static/
+done
+
 find ~/static/ -type d -empty -delete

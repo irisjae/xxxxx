@@ -411,14 +411,15 @@ S (_ => {{
           Z_ .concat
             ([ message .student_ping (_student, S .sample (connection)) ])
             (where ((
-              { _board, _history } = Oo (app_state (), oo (L .get (L .pick ({
+              { _board, _history, not_playing } = Oo (app_state (),
+                oo (L .get (L .pick ({
                   _board: [ app_board, as_maybe ],
                   _history: [ app_history, as_maybe ] }))),
-                oo (maybe_all),
-                oo (Z .fromMaybe ({}))) ) =>
-            
-            [ message .student_join (_student, _board)
-            , message .student_update (_student, _history) ]))
+                oo (maybe_all), oo (Z .fromMaybe ({ not_playing: {} }))) ) =>
+            !! (not_playing)
+            ? []
+            : [ message .student_join (_student, _board)
+              , message .student_update (_student, _history) ]))
                  ))) )
       : (io_state (io .heartbeat), api (_room)
         .then (_x => {{

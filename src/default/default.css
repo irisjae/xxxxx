@@ -119,7 +119,7 @@ name , code {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-name > button, code > button, init-etc button{
+name > button, code > button, init-etc button, teacher-app button{
   font-size: 16px;
   border-radius: 3px;
   background-color: #00A746;
@@ -128,13 +128,13 @@ name > button, code > button, init-etc button{
   box-shadow: 2px 2px #224D34;
   cursor: pointer;
   width: 20%;
+  margin: 4px;
 }
-
-name > button:hover, code > button:hover, init-etc button:hover {
+name > button:hover, code > button:hover, init-etc button:hover, teacher-app button:hover {
   background-color: #26F07B;
 }
 
-name > button:active, code > button:active, init-etc button:active {
+name > button:active, code > button:active, init-etc button:active, teacher-app button:active {
   box-shadow: none;
 }
 buttonresult{
@@ -154,27 +154,24 @@ cellresult {
 /*   height: 95%; */ 
   display: inline-block;
 }
-get-ready-etc{
+/* get-ready-etc{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-}
+} */
 player {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-  clear: left;
-/*   color: white; */
   padding: 5px;
-/*   margin: 2%; */
+  margin: 1px;
   background-color: #F5C3C2;
   border-style: solid;
-  border-width: 5px;
+  border-width: 1px;
   width: 25vw;
-/*   display: block; */
+  box-shadow: 2px 2px #224D34;
 }
 .rowresult {
-/*   height: 28%; */
   margin:1%;
   width: 100%;
   clear: left;
