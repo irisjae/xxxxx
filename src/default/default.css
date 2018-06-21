@@ -245,4 +245,20 @@ game-over-etc{
 }
 student-app table{
   width: 100%;
+  margin: 10px;
 }
+id img{
+  max-width: 20%
+}
+id{
+  background-color: #4576B5;
+  border-color: #32547E;
+  border-style: solid;
+  border-width: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+}
+
+  

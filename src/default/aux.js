@@ -295,8 +295,8 @@ var generate_board = size => questions =>
     cell = y => x =>
       cells [(x - 1) * size + (y - 1)]) =>
   Oo (Z .range (1) (size + 1),
-    oo (R .map (row => Oo (Z .range (1) (size + 1),
-      oo (R .map (column => [row, column, cell (row) (column)] )))))))
+    oo (Z_ .map (row => Oo (Z .range (1) (size + 1),
+      oo (Z_ .map (column => [row, column, cell (row) (column)] )))))))
 
 
 var teacher_app_get_ready_to_playing = _app =>
