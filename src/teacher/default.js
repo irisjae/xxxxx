@@ -93,7 +93,7 @@ var get_ready_view = <get-ready-etc> {
   , Oo (_students,
       oo (Z_ .map (L .get (student_name))), 
       oo (Z_ .map (_x => <player>{ 'Name: '+ _x }</player>)))
-  , !! (Z .size (_students) === 0)
+  , !! (Z_ .size (_students) === 0)
     ? []
     : <button play fn={ pipeline_play }> play </button> ]) }
   </get-ready-etc>

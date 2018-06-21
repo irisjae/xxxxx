@@ -140,7 +140,7 @@ var playing_view = _ => <playing-etc>
   { Oo (app_state (), oo (student_app_to_board_viewer),
     oo (Z_ .maybe ([]) (_board_viewer =>
       where ((
-        board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
+        _board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
         current_question = Oo (_board_viewer, oo (board_viewer_current_question)),
         crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)),
         bingoes = Oo (_board_viewer, oo (board_viewer_bingoes)),
@@ -148,7 +148,7 @@ var playing_view = _ => <playing-etc>
       [ Oo (current_question,
         oo (Z_ .maybe ('') (_x => <question>{ _x }</question>))) 
       , <ticker>{ Oo (game_tick, oo (Z_ .maybe ('') (t => 10 - t))) }</ticker>
-      , <board> { Oo (board, oo (Z_ .map (row => 
+      , <board> { Oo (_board, oo (Z_ .map (row => 
         <row> { Oo (row, oo (Z_ .map (cell => Oo (cell,
           oo (L .get (cell_answer)),
           oo (_x => !! (R .any (Z .elem (_x)) (bingoes))

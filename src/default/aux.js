@@ -458,9 +458,9 @@ var assemble_students = kind => ensemble =>
   : !! (kind === 'playing') || (kind === 'game_over')
   ? where ((
       boards = Oo (ensemble,
-        oo (L .collect ([ ensemble_student_boards, map_students ]))),
+        oo (L .collect ([ ensemble_student_boards, students_mapping ]))),
       histories = Oo (ensemble,
-        oo (L .collect ([ ensemble_student_histories, map_students ]))) ) =>
+        oo (L .collect ([ ensemble_student_histories, students_mapping ]))) ) =>
     projection_zip (R .head) (R .last) (boards) (histories))
   : undefined
 
