@@ -263,9 +263,8 @@ var setup_size = [setup_rules, rules_size]
 
 var cell_answer = [ 2 ]
 
-var pair = L .cond ([ _x => _x .length === 2, [] ])
-var student_name = L .cond (
-  [[ L .isDefined ([ pair, L .first, pair ]) ], [ 1 ] ])
+var pair = [ L .cond ([ _x => _x .length === 2, [] ])
+var student_name = L .choices ( [ pair, L .first, pair ], [ pair, L .first ] )
 
 var ping_mean = [ 1 ]
 

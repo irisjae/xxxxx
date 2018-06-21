@@ -201,6 +201,7 @@ room button{
 student-app playing-etc{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   background-color: #53D7FF;
+  display: block;
 }
 init-etc, get-ready-etc, result-etc, teacher-app playing-etc{
   min-width: 80%;
