@@ -127,7 +127,7 @@ name > button, code > button, init-etc button, teacher-app button,student-app bu
   border: 1px solid grey;
   box-shadow: 2px 2px #224D34;
   cursor: pointer;
-  width: 20%;
+  min-width: 20%;
   margin: 4px;
 }
 name > button:hover, code > button:hover, init-etc button:hover, teacher-app button:hover,student-app button:hover {
@@ -235,4 +235,10 @@ result-etc{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+game-over-etc{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: #9464A3;
 }
