@@ -159,7 +159,36 @@ var playing_view = _ => <playing-etc>
         } </row> ))) } </board> ])))) } </playing-etc>
 
 var game_over_view = _ => <game-over-etc>
-   
+   <body>
+  <result-etc>
+    <tabs>
+      <button>
+        Overview
+      </button>
+      <button>
+        Question
+      </button>
+    </tabs>
+    <id>
+        { name } 
+    </id>
+    <div a-logo>
+      <img src= "https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081" />
+    </div>
+    <table a-result>
+      <tr>
+        <th>Question</th>
+        <th>Attempts</th>
+        <th>Avg. Time</th>
+      </tr>
+      <tr>
+        <td>{ }</td>
+        <td>{ }</td>
+        <td>{ }</td>
+      </tr>
+    </table>
+  </result-etc>
+</body>
   </game-over-etc> 
 
 
