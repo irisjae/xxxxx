@@ -16,7 +16,6 @@ board {
 /*   display: inline-block; */
   background-color: #9464A3;
   margin:0 auto;
-  padding: 10px;
 /*   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif; */
   display: flex;
   align-items: center;
@@ -120,7 +119,7 @@ name , code {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-name > button, code > button, init-etc button, teacher-app button{
+name > button, code > button, init-etc button, teacher-app button,student-app button {
   font-size: 16px;
   border-radius: 3px;
   background-color: #00A746;
@@ -131,11 +130,11 @@ name > button, code > button, init-etc button, teacher-app button{
   width: 20%;
   margin: 4px;
 }
-name > button:hover, code > button:hover, init-etc button:hover, teacher-app button:hover {
+name > button:hover, code > button:hover, init-etc button:hover, teacher-app button:hover,student-app button:hover {
   background-color: #26F07B;
 }
 
-name > button:active, code > button:active, init-etc button:active, teacher-app button:active {
+name > button:active, code > button:active, init-etc button:active, teacher-app button:active, student-app button {
   box-shadow: none;
 }
 buttonresult{
@@ -203,8 +202,9 @@ student-app playing-etc{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   background-color: #53D7FF;
   display: block;
+  padding: 20px;
 }
-init-etc, get-ready-etc, result-etc, teacher-app playing-etc{
+init-etc, get-ready-etc, result-etc, teacher-app playing-etc, student-app result-etc{
   min-width: 80%;
   position: absolute;
   top: 50%;
@@ -218,10 +218,10 @@ init-etc button{
 [a-title] , [a-topic] { 
   font-size: 42px;
 }
-get-ready-etc, teacher-app playing-etc{
+get-ready-etc, teacher-app playing-etc,student-app result-etc{
   flex-direction: column;
 }
-[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc{
+[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc, student-app result-etc{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;
