@@ -136,7 +136,7 @@ var get_ready_view = _ => <get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var bold_crossed = _x => <s><b>{ _x }</b></s>
-var board_view = _ => <board-etc>
+var playing_view = _ => <playing-etc>
   { Oo (app_state (), oo (student_app_to_board_viewer),
     oo (Z_ .maybe ([]) (_board_viewer =>
       where ((
@@ -156,17 +156,20 @@ var board_view = _ => <board-etc>
             : !! (Z .elem (_x) (crossed_answers))
             ? <cell>{ crossed (_x) }</cell>
             : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> )))))
-        } </row> ))) } </board> ])))) } </board-etc>
+        } </row> ))) } </board> ])))) } </playing-etc>
 
+var game_over_view = _ => <game-over-etc>
+   
+  </game-over-etc> 
 
 
 window .view = <student-app>
 	{ !! (L .isDefined (app_get_ready) (app_state ()))
     ? get_ready_view
     : !! (L .isDefined (app_playing) (app_state ()))
-    ? board_view
+    ? playing_view
     : !! (L .isDefined (app_game_over) (app_state ()))
-    ? board_view
+    ? game_over_view
     : undefined } </student-app>
 
 
