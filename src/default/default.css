@@ -213,7 +213,7 @@ message {
 room button{
   margin:auto;
 }
-game-title, topic, mode{
+game-title, topic, size{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;
