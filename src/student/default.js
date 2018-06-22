@@ -321,23 +321,23 @@ var timesup_question = _ => {{
 var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
 ;game_clock .add (timesup_question, 10)
-;T (R .range (0, 10 + 1)) 
-  oo (R .forEach (t => game_clock .add (_ => {{ ;game_tick_sampler (Z .Just (t)) }}, t))))
+;T (R .range (0, 10 + 1)) (
+  R .forEach (t => game_clock .add (_ => {{ ;game_tick_sampler (Z .Just (t)) }}, t)))
 
 
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
 var connection = S (_ => {{
-  ;return Oo (app_state (),
-    oo (L .get ([ app_room, as_maybe ])),
-    oo (Z_ .maybe (undefined) (_room => {{
+  ;return T (app_state ()) ([
+    L .get ([ app_room, as_maybe ]),
+    Z_ .maybe (undefined) (_room => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
       return connection [_room] () && where ((
         [mean, variance, n, timestamp] = connection [_room] () ) =>
-      [timestamp, mean, Math .sqrt (variance)]) }} ))) }})
+      [timestamp, mean, Math .sqrt (variance)]) }}) ]) }})
 
 
 
@@ -355,8 +355,8 @@ S (last_app => {{
   return app_state () }}
   , app_state ())
 S (last_app => {{
-  var last_history = Oo (last_app, oo (L .get ([app_history]))) || []
-  var history = Oo (app_state (), oo (L .get ([app_history])))
+  var last_history = T (last_app) (L .get ([app_history])) || []
+  var history = T (app_state ()) (L .get ([app_history]))
   if (L .isDefined (app_playing) (app_state ())) {
     if (history_stepped (last_history) (history)) {
       ;lookbehind_state (student_lookbehind .attempting (0, false)) } }
@@ -365,7 +365,7 @@ S (last_app => {{
 S (_ => {{
   if (L .get (lookbehind_blocked) (lookbehind_state ())) {
     ;var forget = setTimeout (_ => {{
-      var _since = Oo (lookbehind_state (), oo (L .get (lookbehind_since)))
+      var _since = T (lookbehind_state ()) (L .get (lookbehind_since))
       ;lookbehind_state (student_lookbehind .attempting (_since, false)) }}
     , 3000)
     ;S .cleanup (_ => {{
@@ -376,8 +376,8 @@ S (_ => {{
   if (L .isDefined (app_get_ready) (app_state ())) {
     ;game_clock .pause () } }})
 S (last_state => {{
-  var last_history = Oo (last_state, oo (L .get ([app_history]))) || []
-  var history = Oo (app_state (), oo (L .get ([app_history])))
+  var last_history = T (last_state) (L .get ([app_history, L .valueOr ([])]))
+  var history = T (app_state ()) (L .get ([app_history]))
   if (L .isDefined (app_playing) (app_state ())) {
     if (history_stepped (last_history) (history)) {
       ;game_clock .seek (0) }
@@ -390,15 +390,15 @@ S (_ => {{
 
 
 S (last_ensemble => {{
-  ;Oo ({
+  ;T ({
     last_ensemble: last_ensemble,
     _app: S .sample (app_state),
-    _ensemble: ensemble_state () },
-  oo (({ last_ensemble, _app, _ensemble }) => {{
+    _ensemble: ensemble_state () }
+  ) (({ last_ensemble, _app, _ensemble }) => {{
     if (L .isDefined (app_get_ready) (_app)) {
       if (! L .get (ensemble_start) (last_ensemble)) {
         if (L .get (ensemble_start) (_ensemble)) {
-          var start = Oo (_ensemble, oo (L .get (ensemble_start)))
+          var start = T (_ensemble) (L .get (ensemble_start))
           var now = (new Date) .getTime ()
           
           var playing_app = student_app_get_ready_to_playing (_app)
@@ -409,25 +409,26 @@ S (last_ensemble => {{
               ;app_state (playing_app) }}
             , start - now) }
           
-          var _room = Oo (_app, oo (L .get (app_room)))
-          var _student = Oo (_app, oo (L .get (app_student)))
+          var _room = T (_app) (L .get (app_room))
+          var _student = T (_app) (L .get (app_student))
           ;(io_state (io .messaging), api (_room, post (
             message_encoding (
               message .student_start (_student, start)))))
           .catch (_e => {{
             ;console .error (_e) }})
           .then (_ => {{
-            ;io_state (io .inert) }}) } } } }}))
+            ;io_state (io .inert) }}) } } } }})
   return ensemble_state () }}
   , ensemble_state ())
 
 
 S (_ => {{
-  ;Oo (app_state (), oo (L .get (L .pick ({
+  ;T (app_state ()) ([
+  L .get (L .pick ({
     _student: [ app_student, as_maybe ],
-    _room: [ app_room, as_maybe ] }))),
-  oo (maybe_all),
-  oo (Z_ .map (({ _student, _room }) => {{
+    _room: [ app_room, as_maybe ] })),
+  maybe_all,
+  Z_ .map (({ _student, _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
     go
@@ -438,11 +439,11 @@ S (_ => {{
           Z_ .concat
             ([ message .student_ping (_student, S .sample (connection)) ])
             (where ((
-              { _board, _history, not_playing } = Oo (app_state (),
-                oo (L .get (L .pick ({
+              { _board, _history, not_playing } = T (app_state ()) ([
+                L .get (L .pick ({
                   _board: [ app_board, as_maybe ],
-                  _history: [ app_history, as_maybe ] }))),
-                oo (maybe_all), oo (Z .fromMaybe ({ not_playing: {} }))) ) =>
+                  _history: [ app_history, as_maybe ] })),
+                maybe_all, Z .fromMaybe ({ not_playing: {} }) ]) ) =>
             !! (not_playing)
             ? []
             : [ message .student_join (_student, _board)
@@ -462,4 +463,4 @@ S (_ => {{
         ;heartbeat (phase) }}
       , 300) }})
     .then (_ => {{
-      ;io_state (io .inert) }}) }}))) }})
+      ;io_state (io .inert) }}) }}) ]) }})

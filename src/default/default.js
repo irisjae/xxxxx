@@ -16,23 +16,6 @@ var T = _x => _fn_obj =>
   : !! Z_ .is (Z$ .AnyFunction) (_fn_obj)
   ? _fn_obj (_x)
   : undefined
-var xx = function (x) {
-	return { xx: x } }
-var oo = function (x) {
-	return { oo: x } }
-var Oo = function () {
-	if ('oo' in arguments [1]) {
-		var answer = arguments [0]
-		for (var i = 1; i < arguments .length; i ++) {
-			;answer = arguments [i] .oo (answer) }
-		return answer }
-	else if ('xx' in arguments [1]) {
-		var answer = arguments [0]
-		for (var i = 1; i < arguments .length; i ++) {
-			;answer = answer (arguments [i] .xx) }
-		return answer }
-	else {
-		;throw 'Syntax Error; no oo or xx after focus Oo;' } }
 
 
 
@@ -174,23 +157,23 @@ var pair_zip = reducer => a => b =>
                 Z_ .Pair
                   (fst_head_key) (reducer (fst_head_value) (snd_head_value)),
               snd_zipper: snd_tail })
-          : Oo (pair_zip_fst_head (fst) (snd_tail),
-            oo (Z_ .map (({ zip_head, snd_zipper }) => (
+          : T (pair_zip_fst_head (fst) (snd_tail)
+          ) (Z_ .map (({ zip_head, snd_zipper }) => (
               { zip_head: zip_head,
                 snd_zipper:
                   Z_ .prepend
-                   (snd_head) (snd_zipper) }) ))) ))) ) =>
+                   (snd_head) (snd_zipper) }) )) ))) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
       maybe_zip_head = pair_zip_fst_head (a) (b) ) =>
-    Oo (maybe_zip_head, oo (Z_ .maybe_
+    T (maybe_zip_head) (Z_ .maybe_
       (_ =>
         pair_zip (reducer) (R .tail (a)) (b))
       (({ zip_head, snd_zipper }) =>
         Z_ .prepend
          (zip_head)
-         (pair_zip (reducer) (R .tail (a)) (snd_zipper)))))) )
+         (pair_zip (reducer) (R .tail (a)) (snd_zipper))))) )
 
 
 var pair_projection = key_projection => val_projection =>
@@ -213,23 +196,23 @@ var from_just = _x =>
 var maybe_all_list = list => where ((
   maybe_head = Z_ .head (list),
   maybe_tail = Z_ .tail (list)) =>
-  Oo (maybe_head, oo (Z_ .maybe (Z .Just ([]))
+  T (maybe_head) (Z_ .maybe (Z .Just ([]))
     (plain_head => where ((
       plain_tail = from_just (maybe_tail),
       recursion = maybe_all_list (plain_tail)) =>
-      Oo (plain_head, oo (Z_ .maybe (Z .Nothing)
-        (just_head => Oo (recursion, oo (Z_ .maybe (Z .Nothing)
+      T (plain_head) (Z_ .maybe (Z .Nothing)
+        (just_head => T (recursion) (Z_ .maybe (Z .Nothing)
           (just_tail =>
-            Z_ .Just (Z_ .prepend (just_head) (just_tail)))))))))))))
+            Z_ .Just (Z_ .prepend (just_head) (just_tail))))))))))
 var maybe_all = _x =>
   !! Z .is (Z$ .Array (Z$ .Any)) (_x)
   ? maybe_all_list (_x)
   : !! Z .is (Z$ .Object) (_x)
-  ? Oo (_x, oo (R .toPairs),
-    oo (R .map (L .modify (L .first) (_x => Z_ .Just (_x)))),
-    oo (R .map (maybe_all_list)),
-    oo (maybe_all_list),
-    oo (Z_ .map (R .fromPairs)))
+  ? T (_x) ([ R .toPairs,
+    R .map (L .modify (L .first) (_x => Z_ .Just (_x))),
+    R .map (maybe_all_list),
+    maybe_all_list,
+    Z_ .map (R .fromPairs) ])
   : undefined
 
 
