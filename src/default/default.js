@@ -171,7 +171,12 @@ var pair_zip = reducer => a => b =>
               { zip_head: zip_head,
                 snd_zipper:
                   Z_ .prepend
-                   (snd_head) (snd_zipper) }) ))) )))) ) =>
+                   (snd_head) (snd_zipper) }) )),
+            oo (Z_ .fromMaybe ({
+              zip_head:
+                Z_ .Pair (fst_head_key) (undefined),
+              snd_zipper: snd })),
+            oo (_x => Z_ .Just (_x))/**/) )))) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
