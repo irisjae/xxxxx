@@ -9,7 +9,13 @@ var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
 var TimelineMax = window .TimelineMax
 var T = _x => _fn_obj =>
-  !! ()
+  !! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
+  ? !! (Z_ .equals ([]) (_fn_obj))
+    ? _x
+    : T (R .head (_fn_obj) (_x)) (R .tail (_fn_obj))
+  : !! Z_ .is (Z$ .AnyFunction) (_fn_obj)
+  ? _fn_obj (_x)
+  : undefined
 var xx = function (x) {
 	return { xx: x } }
 var oo = function (x) {
@@ -63,23 +69,23 @@ var go = Promise .resolve ()
 
 
 
-var data = constructors => Oo (constructors,
-  oo (R .mapObjIndexed ((fn, key) => 
+var data = constructors => T (constructors)
+  (R .mapObjIndexed ((fn, key) => 
     where ((
       args_slice = fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
     ) =>
       !! (args_slice)
       ? where ((
         portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])) =>
-        Oo ((...vals) => 
-          R .objOf (key) (R .fromPairs (R .zip (portions, vals))),
-        oo (R .tap (_x => {{
+        T ((...vals) => 
+          R .objOf (key) (R .fromPairs (R .zip (portions, vals)))) (
+        R .tap (_x => {{
           ;__data_length .set (_x, portions .length)
-          ;__data_lens .set (_x, [key]) }}))) ) 
-      : Oo (R .objOf (key) ({}),
-        oo (R .tap (_x => {{
+          ;__data_lens .set (_x, [key]) }}))) 
+      : T (R .objOf (key) ({})) (
+        R .tap (_x => {{
           ;__data_length .set (_x, 0)
-          ;__data_lens .set (_x, [key]) }}))) ))))
+          ;__data_lens .set (_x, [key]) }})) )))
 
 var data_lens = data =>
   where ((
@@ -88,7 +94,7 @@ var data_lens = data =>
   ? where ((
       instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
       records = R .keys (R .head (R .values (instance_template))),
-      _ = Oo (records, oo (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})))) =>
+      _ = T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }}))) =>
     lens)
   : lens)
 
@@ -97,7 +103,7 @@ var data_iso = data =>
     instance_template = !! Z .is (Z$ .AnyFunction) (data)
       ? data .apply (null, R .range (1, __data_length .get (data) + 1))
       : data,
-    //factors = Oo (instance_template, oo (R .values), oo (R .head), oo (R .keys)),
+    //factors = T (instance_template) ([ R .values, R .head, R .keys]),
     inverted_template = R .invert (R .head (R .values (instance_template))),
     ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
     constructor_prefix = R .head (R .keys (instance_template)),
@@ -108,8 +114,8 @@ var data_iso = data =>
         records_list = ordered_factors .map (_x => record [_x])) =>
       data .apply (null, records_list)),
     lens = L .iso (read) (write),
-    _ = Oo (ordered_factors, oo (R .map (_x => {{
-      ;lens [_x] = [ lens, _x ] }})))) =>
+    _ = T (ordered_factors) (R .map (_x => {{
+      ;lens [_x] = [ lens, _x ] }}))) =>
   lens)
 /*
 var data_iso = data =>
@@ -153,11 +159,11 @@ var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
 var pair_zip = reducer => a => b =>
   where ((
     pair_zip_fst_head = fst => snd =>
-      Oo (maybe_all ({
+      T (maybe_all ({
         fst_head: Z_ .head (fst),
         snd_head: Z_ .head (snd),
-        snd_tail: Z_ .tail (snd) }),
-        oo (Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
+        snd_tail: Z_ .tail (snd) })) (
+        Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
           where ((
             fst_head_key = Z_ .fst (fst_head),
             snd_head_key = Z_ .fst (snd_head),
@@ -173,7 +179,7 @@ var pair_zip = reducer => a => b =>
               { zip_head: zip_head,
                 snd_zipper:
                   Z_ .prepend
-                   (snd_head) (snd_zipper) }) ))) )))) ) =>
+                   (snd_head) (snd_zipper) }) ))) ))) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
@@ -287,7 +293,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-  xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+  T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
   projection_zip, 

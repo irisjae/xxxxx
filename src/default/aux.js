@@ -1,5 +1,5 @@
 var {
-  xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+  T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
   //projection_zip,
@@ -43,17 +43,18 @@ var api = (room, _x) => {{
     var sample = end - begin
     if (! _ping_cache [room]) {
       ;_ping_cache [room] = [0, 0, 0, 0]}
-    ;_ping_cache [room] = Oo (_ping_cache [room],
-      oo (L .get (L .pick ({
+    ;_ping_cache [room] = T (_ping_cache [room]) ([
+      L .get (L .pick ({
         mean: 0,
         sqr_mean: 1,
-        n: 2 }))),
-      oo (({mean, sqr_mean, n}) => where ((
-        carry = n / (n + 1) ) =>
-      [ mean * carry + sample / (n + 1)
-      , sqr_mean * carry + (sample * sample) / (n + 1)
-      , n + 1
-      , (new Date) .getTime () ])))
+        n: 2 })),
+      ({mean, sqr_mean, n}) =>
+        where ((
+          carry = n / (n + 1) ) =>
+        [ mean * carry + sample / (n + 1)
+        , sqr_mean * carry + (sample * sample) / (n + 1)
+        , n + 1
+        , (new Date) .getTime () ]) ])
     ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
     return _x .json () }}) }}
 ;api .listen_ping = room => fn => {{ 
@@ -275,13 +276,14 @@ var pair_as_list = L .cond (
     , L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] )
 
 var students_mapping = 
-  [ L .reread (map => Oo (map,
-    oo (R .toPairs), oo (Z_ .map (pair => where ((
-        id = R .head (pair),
-        inner_pair = R .head (R .toPairs (R .last (pair))),
-        name = R .head (inner_pair),
-        val = R .last (inner_pair) ) =>
-      Z_ .Pair ({ id: id, name: name }) (val) ) ))))
+  [ L .reread (map => T (map) ([
+      R .toPairs,
+      Z_ .map (pair => where ((
+          id = R .head (pair),
+          inner_pair = R .head (R .toPairs (R .last (pair))),
+          name = R .head (inner_pair),
+          val = R .last (inner_pair) ) =>
+        Z_ .Pair ({ id: id, name: name }) (val) ) ) ]))
   , L .elems ]
 var map_students = [ students_mapping, pair_as_list, L .first ]
 var mapping_students = [ students_mapping, pair_as_list, L .last ]
@@ -300,8 +302,8 @@ var generate_board = size => questions =>
     cells = shuffle (questions .slice (0, size * size)),
     cell = y => x =>
       cells [(x - 1) * size + (y - 1)]) =>
-  Oo (Z .range (1) (size + 1),
-    oo (Z_ .map (row => Oo (Z .range (1) (size + 1),
+  T (Z .range (1) (size + 1)) (
+    Z_ .map (row => T (Z .range (1) (size + 1)) (
       oo (Z_ .map (column => [row, column, cell (row) (column)] )))))))
 
 
