@@ -157,8 +157,11 @@ var projection_zip =
           mates_head_value = mates_head [1] ) =>
         !! (Z_ .equals (list_head_key) (mates_head_key))
         ? Z .Just (
-            [ list_head_key, [ list_head_value, mates_head_value ] ])
-        : zip_init (list) (R .tail (mates)) ) ) =>
+            [ [ list_head_key, [ list_head_value, mates_head_value ] ]
+            , R .tail (mates) ])
+        : Oo (zip_init (list) (R .tail (mates)),
+          oo (map_just (([projection, tail_residue]) =>
+            [projection, Z_ .prepend (mates_head) (tail_residue)] ))) )) =>
   key_projection => val_projection => a => b =>
     !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
     ? []
