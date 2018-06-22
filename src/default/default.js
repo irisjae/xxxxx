@@ -164,18 +164,16 @@ var pair_zip = reducer => a => b =>
                 snd_zipper:
                   Z_ .prepend
                    (snd_head) (snd_zipper) }) )) )) ]),
-    a_tail = Z_ .tail (a) =>
-  !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
-  ? []
-  : where ((
-      maybe_zip_head = pair_zip_fst_head (a) (b) ) =>
+    maybe_zip_head = pair_zip_fst_head (a) (b),
+    a_tail = Z .tail (a)) =>
+  T (a_tail) (Z_ .maybe ([]) (a_tail =>
     T (maybe_zip_head) (Z_ .maybe_
       (_ =>
-        pair_zip (reducer) (R .tail (a)) (b))
+        pair_zip (reducer) (a_tail) (b))
       (({ zip_head, snd_zipper }) =>
         Z_ .prepend
          (zip_head)
-         (pair_zip (reducer) (R .tail (a)) (snd_zipper))))) )
+         (pair_zip (reducer) (a_tail) (snd_zipper)))))) )
 
 
 var pair_projection = key_projection => val_projection =>
@@ -194,16 +192,17 @@ var pair_projection = key_projection => val_projection =>
   
   
 var from_just = _x =>
-  Z_ .fromMaybe_ (_ => {}) (_x)
-var maybe_all_list = list => where ((
-  maybe_head = Z_ .head (list),
-  maybe_tail = Z_ .tail (list)) =>
-  T (maybe_head) (Z_ .maybe (Z .Just ([]))
-    (plain_head => where ((
-      plain_tail = from_just (maybe_tail),
-      recursion = maybe_all_list (plain_tail)) =>
-      T (plain_head) (Z_ .maybe (Z .Nothing)
-        (just_head => T (recursion) (Z_ .maybe (Z .Nothing)
+  Z_ .fromMaybe (undefined) (_x)
+var maybe_all_list = list =>
+  where ((
+    _head = Z_ .head (list),
+    _tail = Z_ .tail (list)) =>
+  T (_head) (Z_ .maybe (Z .Just ([]))
+    (maybe_head =>
+      where ((
+        maybe_tail = from_just (_tail) ) =>
+      T (maybe_head) (Z_ .maybe (Z .Nothing)
+        (just_head => T (maybe_all_list (maybe_tail)) (Z_ .maybe (Z .Nothing)
           (just_tail =>
             Z_ .Just (Z_ .prepend (just_head) (just_tail))))))))))
 var maybe_all = _x =>
