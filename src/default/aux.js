@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
-  projection_zip,
+  //projection_zip,
   from_just, maybe_all,
   every, delay 
 } = window .stuff
@@ -265,7 +265,7 @@ var cell_answer = [ 2 ]
 
 //report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
-var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], [ pair_as_list, L .last ] )
+var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_mean = [ 1 ]
 

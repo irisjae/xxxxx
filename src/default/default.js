@@ -8,6 +8,8 @@ var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
 var TimelineMax = window .TimelineMax
+var T = _x => _fn_obj =>
+  !! ()
 var xx = function (x) {
 	return { xx: x } }
 var oo = function (x) {
