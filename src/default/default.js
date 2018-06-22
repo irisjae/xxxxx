@@ -154,19 +154,19 @@ var pair_zip = reducer => a => b =>
       !! (Z_ .size (fst) === 0 || Z_ .size (snd) === 0)
       ? Z .Nothing
       : where ((
-          list_head = R .head (fst),
-          mates_head = R .head (snd),
-          list_head_key = list_head [0],
-          mates_head_key = mates_head [0],
-          list_head_value = list_head [1],
-          mates_head_value = mates_head [1] ) =>
-        !! (Z_ .equals (list_head_key) (mates_head_key))
-        ? Z_ .Just (
-            [ [ list_head_key, reducer (list_head_value) (mates_head_value) ]
-            , R .tail (snd) ])
+          fst_head = R .head (fst),
+          snd_head = R .head (snd),
+          fst_head_key = fst_head [0],
+          snd_head_key = snd_head [0],
+          fst_head_value = fst_head [1],
+          snd_head_value = snd_head [1] ) =>
+        !! (Z_ .equals (fst_head_key) (snd_head_key))
+        ? Z_ .Just ({
+            zip_head: [ fst_head_key, reducer (fst_head_value) (snd_head_value) ],
+            snd_zipper: R .tail (snd) })
         : Oo (pair_zip_fst_head (fst) (R .tail (snd)),
-          oo (Z_ .map (([zip_head, snd_zipper]) =>
-            [zip_head, Z_ .prepend (mates_head) (snd_zipper)] ))) ) ) =>
+          oo (Z_ .map (({ zip_head, snd_zipper }) =>
+            [zip_head, Z_ .prepend (snd_head) (snd_zipper)] ))) ) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
@@ -174,10 +174,10 @@ var pair_zip = reducer => a => b =>
     Oo (maybe_zip_head, oo (Z_ .maybe_
       (_ =>
         pair_zip (reducer) (R .tail (a)) (b))
-      (([_zip_head, _mates_residue]) =>
+      (([_zip_head, _b_residue]) =>
         Z_ .prepend
          (_zip_head)
-         (pair_zip (reducer) (R .tail (a)) (_mates_residue)))))) )
+         (pair_zip (reducer) (R .tail (a)) (_b_residue)))))) )
 
 
 var pair_projection = key_projection => val_projection =>
