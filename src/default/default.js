@@ -133,7 +133,7 @@ var __data_lens = new WeakMap
 
 var n_reducer = binary => n => 
   !! (n === 1)
-  ? _a => _a
+  ? _x => _x
   : _a => _b =>
       n_reducer (binary) (n - 1) (binary (_a) (_b))
 
@@ -146,7 +146,9 @@ var pair_zip = reducer => a => b =>
         fst_head: Z_ .head (fst),
         snd_head: Z_ .head (snd),
         snd_tail: Z_ .tail (snd) }
-      ) ([ maybe_all, Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
+      ) ([
+        maybe_all,
+        Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
           where ((
             fst_head_key = Z_ .fst (fst_head),
             snd_head_key = Z_ .fst (snd_head),
@@ -163,7 +165,7 @@ var pair_zip = reducer => a => b =>
               { zip_head: zip_head,
                 snd_zipper:
                   Z_ .prepend
-                   (snd_head) (snd_zipper) }) )) )) ]),
+                    (snd_head) (snd_zipper) }) )) )) ]),
     maybe_zip_head = pair_zip_fst_head (a) (b),
     a_tail = Z .tail (a)) =>
   T (a_tail) (Z_ .maybe ([]) (a_tail =>
@@ -201,19 +203,19 @@ var maybe_all_list = list =>
     (maybe_head =>
       where ((
         maybe_tail = from_just (_tail) ) =>
-      T (maybe_head) (Z_ .maybe (Z .Nothing)
-        (just_head => T (maybe_all_list (maybe_tail)) (Z_ .maybe (Z .Nothing)
-          (just_tail =>
-            Z_ .Just (Z_ .prepend (just_head) (just_tail))))))))))
+      T (maybe_head) (Z_ .chain (bare_head =>
+        T (maybe_all_list (maybe_tail)) (Z_ .chain (bare_tail =>
+          Z_ .Just (Z_ .prepend (bare_head) (bare_tail))))))))))
 var maybe_all = _x =>
   !! Z .is (Z$ .Array (Z$ .Any)) (_x)
   ? maybe_all_list (_x)
   : !! Z .is (Z$ .Object) (_x)
-  ? T (_x) ([ R .toPairs,
-    R .map (L .modify (L .first) (_x => Z_ .Just (_x))),
-    R .map (maybe_all_list),
-    maybe_all_list,
-    Z_ .map (R .fromPairs) ])
+  ? T (_x) ([
+      R .toPairs,
+      Z_ .map (L .modify (L .first) (_x => Z_ .Just (_x))),
+      Z_ .map (maybe_all_list),
+      maybe_all_list,
+      Z_ .map (R .fromPairs) ])
   : undefined
 
 
