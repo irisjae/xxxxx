@@ -155,10 +155,6 @@ var pair_zip = reducer => a => b =>
         fst_head: Z_ .head (fst),
         snd_head: Z_ .head (snd),
         snd_tail: Z_ .tail (snd) }),
-        oo (Z_ .map (({ fst_head, snd_head, snd_tail }) => 
-          !! (Z_ .equals (snd_tail) ([]))
-          ? { snd_tail: [ Z .Pair () ], ...rest }
-          : { fst_head, snd_head, snd_tail } )),
         oo (Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
           where ((
             fst_head_key = Z_ .fst (fst_head),
