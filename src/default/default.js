@@ -155,6 +155,10 @@ var pair_zip = reducer => a => b =>
         fst_head: Z_ .head (fst),
         snd_head: Z_ .head (snd),
         snd_tail: Z_ .tail (snd) }),
+        oo (Z_ .map (({ fst_head, snd_head, snd_tail }) => 
+          !! (Z_ .equals (snd_tail) ([]))
+          ? { snd_tail: [ Z .Pair () ], ...rest }
+          : { fst_head, snd_head, snd_tail } )),
         oo (Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
           where ((
             fst_head_key = Z_ .fst (fst_head),
@@ -171,12 +175,7 @@ var pair_zip = reducer => a => b =>
               { zip_head: zip_head,
                 snd_zipper:
                   Z_ .prepend
-                   (snd_head) (snd_zipper) }) )),
-            oo (Z_ .fromMaybe ({
-              zip_head:
-                Z_ .Pair (fst_head_key) (undefined),
-              snd_zipper: snd })),
-            oo (_x => Z_ .Just (_x))/**/) )))) ) =>
+                   (snd_head) (snd_zipper) }) ))) )))) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
