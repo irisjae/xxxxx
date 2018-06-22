@@ -162,25 +162,28 @@ var pair_zip = reducer => a => b =>
             fst_head_value = Z_ .snd (fst_head),
             snd_head_value = Z_ .snd (snd_head) ) =>
           !! (Z_ .equals (fst_head_key) (snd_head_key))
-          ? Z_ .Just ({
-              zip_head:
+          ? { zip_head:
                 Z_ .Pair
                   (fst_head_key) (reducer (fst_head_value) (snd_head_value)),
-              snd_zipper: snd_tail})
+              snd_zipper: snd_tail }
           : Oo (pair_zip_fst_head (fst) (snd_tail),
-            oo (Z_ .map (({ zip_head, snd_zipper }) =>
-              [zip_head, Z_ .prepend (snd_head) (snd_zipper)] ))) )))) ) =>
-  Oo (maybe_all ({
-    a_tail: Z_ .tail (a),
-    maybe_zip_head: pair_zip_fst_head (a) (b) }),
-  oo (Z_ .maybe ([]) (({ a_tail, maybe_zip_head }) =>
+            oo (Z_ .map (({ zip_head, snd_zipper }) => (
+              { zip_head: zip_head,
+                snd_zipper:
+                  Z_ .prepend
+                   (snd_head) (snd_zipper) }) ))) )))) ) =>
+  !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
+  ? []
+  : where ((
+      maybe_zip_head = pair_zip_fst_head (a) (b) ) =>
     Oo (maybe_zip_head, oo (Z_ .maybe_
       (_ =>
-        pair_zip (reducer) (a_tail) (b))
+        pair_zip (reducer) (R .tail (a)) (b))
       (({ zip_head, snd_zipper }) =>
         Z_ .prepend
          (zip_head)
-         (pair_zip (reducer) (a_tail) (snd_zipper)))))) )) )
+         (pair_zip (reducer) (R .tail (a)) (snd_zipper)))))) )
+
 
 var pair_projection = key_projection => val_projection =>
   _x => Z_ .Pair (L .get (key_projection) (_x)) (L .get (val_projection) (_x))
