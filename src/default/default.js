@@ -141,29 +141,29 @@ var __data_lens = new WeakMap
 
 
 
-var pair_zip_n = n =>
+var pair_zip_n = reducer => n =>
   !! (n === 1)
   ? _a => _a
   : _a => _b =>
-    pair_zip_n (n - 1) (pair_zip (_a) (_b))
+      pair_zip_n (reducer) (n - 1) (pair_zip (reducer) (_a) (_b))
 
-var pair_zip = a => b =>
+var pair_zip = reducer => a => b =>
   where ((
     pair_zip_fst_head = fst => snd =>
       !! (Z_ .size (fst) === 0 || Z_ .size (snd) === 0)
       ? Z .Nothing
       : where ((
-          list_head = R .head (a),
-          mates_head = R .head (b),
+          list_head = R .head (fst),
+          mates_head = R .head (snd),
           list_head_key = list_head [0],
           mates_head_key = mates_head [0],
           list_head_value = list_head [1],
           mates_head_value = mates_head [1] ) =>
         !! (Z_ .equals (list_head_key) (mates_head_key))
         ? Z_ .Just (
-            [ [ list_head_key, [ list_head_value, mates_head_value ] ]
-            , R .tail (b) ])
-        : Oo (pair_zip_fst_head (a) (R .tail (b)),
+            [ [ list_head_key, reducer (list_head_value) (mates_head_value) ]
+            , R .tail (snd) ])
+        : Oo (pair_zip_fst_head (fst) (R .tail (snd)),
           oo (Z_ .map (([zip_head, snd_zipper]) =>
             [zip_head, Z_ .prepend (mates_head) (snd_zipper)] ))) ) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
@@ -172,7 +172,7 @@ var pair_zip = a => b =>
       maybe_zip_head = pair_zip_fst_head (a) (b) ) =>
     Oo (maybe_zip_head, oo (Z_ .maybe_
       (_ =>
-        pair_zip (R .tail (a)) (b)) 
+        pair_zip (R .tail (a)) (b))
       (([_zip_head, _mates_residue]) =>
         Z_ .prepend
          (_zip_head)
