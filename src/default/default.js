@@ -140,12 +140,13 @@ var __data_lens = new WeakMap
 
 
 
-
-var pair_zip_n = reducer => n =>
+var n_reducer = binary => n => 
   !! (n === 1)
   ? _a => _a
   : _a => _b =>
-      pair_zip_n (reducer) (n - 1) (pair_zip (reducer) (_a) (_b))
+      n_reducer (binary) (n - 1) (binary (_a) (_b))
+
+var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
 
 var pair_zip = reducer => a => b =>
   where ((
