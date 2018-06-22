@@ -425,41 +425,41 @@ var message_encoding = message =>
     L .get (data_iso (ensemble .ensemble)),
     strip ])
   : !! L .isDefined (message_teacher_start) (message)
-  ? Oo (message,
-    oo (L .get (message_synchronization)),
-    oo (L .get (L .getInverse ([ ensemble_start ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_synchronization),
+    L .get (L .getInverse ([ ensemble_start ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : !! L .isDefined (message_teacher_abort) (message)
-  ? Oo (message,
-    oo (L .get (message_synchronization)),
-    oo (L .get (L .getInverse ([ ensemble_abort ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_synchronization),
+    L .get (L .getInverse ([ ensemble_abort ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : !! L .isDefined (message_student_ping) (message)
-  ? Oo (message,
-    oo (L .get (message_ping)),
-    oo (L .get (L .getInverse ([ ensemble_student_pings, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_ping),
+    L .get (L .getInverse ([ ensemble_student_pings, student ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : !! L .isDefined (message_student_join) (message)
-  ? Oo (message,
-    oo (L .get (message_board)),
-    oo (L .get (L .getInverse ([ ensemble_student_boards, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_board),
+    L .get (L .getInverse ([ ensemble_student_boards, student ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : !! L .isDefined (message_student_start) (message)
-  ? Oo (message,
-    oo (L .get (message_synchronization)),
-    oo (L .get (L .getInverse ([ ensemble_student_starts, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_synchronization),
+    L .get (L .getInverse ([ ensemble_student_starts, student ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : !! L .isDefined (message_student_update) (message)
-  ? Oo (message,
-    oo (L .get (message_history)),
-    oo (L .get (L .getInverse ([ ensemble_student_histories, student ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_history),
+    L .get (L .getInverse ([ ensemble_student_histories, student ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : undefined)
 
 var messages_encoding = list =>
@@ -467,21 +467,21 @@ var messages_encoding = list =>
 
 var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
-  ? Oo (ensemble, oo (L .collect ([ ensemble_student_pings, map_students ])))
+  ? T (ensemble) (L .collect ([ ensemble_student_pings, map_students ]))
   : !! (kind === 'playing') || (kind === 'game_over')
   ? where ((
-      boards = Oo (ensemble,
-        oo (L .collect ([ ensemble_student_boards, students_mapping ]))),
-      histories = Oo (ensemble,
-        oo (L .collect ([ ensemble_student_histories, students_mapping ]))) ) =>
+      boards = T (ensemble) (
+        L .collect ([ ensemble_student_boards, students_mapping ])),
+      histories = T (ensemble) (
+        L .collect ([ ensemble_student_histories, students_mapping ])) ) =>
     projection_zip (R .head) (R .last) (boards) (histories))
   : undefined
 
 var schedule_start = _ensemble =>
   where ((
-    teacher_ping = Oo (_ensemble, oo (L .get (ensemble_ping))),
-    student_pings = Oo (_ensemble, oo (L .collect ([ ensemble_student_pings, mapping_students ]))),
-    pings = Oo (Z .prepend (teacher_ping) (student_pings), oo (Z .map (L .get (ping_mean)))),
+    teacher_ping = T (_ensemble) (L .get (ensemble_ping)),
+    student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_students ])),
+    pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_mean))),
     confidence_interval = Z .reduce (Z .max) (0) (pings) ) =>
   (new Date) .getTime () + confidence_interval)
 

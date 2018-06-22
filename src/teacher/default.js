@@ -1,5 +1,5 @@
 var {
-  xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+  T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
   from_just, maybe_all,
@@ -56,9 +56,9 @@ var clicking = ['click']
 var pipeline_init = _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
-      get_room (Oo (Math .random (),
-        oo (_x => _x * 100000000),
-        oo (_x => Math .floor (_x)))) .catch (_ => {}) }}) }}) }}
+      get_room (T (Math .random ()) ([
+        _x => _x * 100000000,
+        _x => Math .floor (_x) ])) .catch (_ => {}) }}) }}) }}
 
 var pipeline_play = _dom => {{
   ;clicking .forEach (click => {{
@@ -77,22 +77,22 @@ var init_view = _ =>
     <rules>
       <size> <img src={ board_sizes_img } /> </size> </rules>
     <button fn={ pipeline_init }> Start </button>
-    { Oo (L .get ([io_connecting, as_maybe]) (io_state ()),
-      oo (Z_ .maybe ([]) (_ => 'Generating Code...'))) }
+    { T (L .get ([io_connecting, as_maybe]) (io_state ())) (
+      Z_ .maybe ([]) (_ => 'Generating Code...')) }
     </init-etc>)
 
 var get_ready_view = <get-ready-etc> {
   where ((
-    _room = Oo (app_state (),
-      oo (Z_ .maybe (undefined) (L .get ([ app_room ])))),
-    _students = Oo (app_state (),
-      oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
-      oo (Z_ .fromMaybe ([])))) =>
+    _room = T (app_state ()) (
+      Z_ .maybe (undefined) (L .get ([ app_room ]))),
+    _students = T (app_state ()) ([
+      Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
+      Z_ .fromMaybe ([]) ]) ) =>
   [ <message> Room Code: { _room } </message>
   , <message> Number of students: { Z_ .size (_students) } </message>
-  , Oo (_students,
-      oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <player>{ 'Name: '+ _x }</player>)))
+  , T (_students) ([
+      Z_ .map (L .get (student_name)),
+      Z_ .map (_x => <player>{ 'Name: '+ _x }</player>) ])
   , !! (Z_ .size (_students) === 0)
     ? []
     : <button play fn={ pipeline_play }> play </button> ]) }
@@ -100,14 +100,14 @@ var get_ready_view = <get-ready-etc> {
 
 var playing_view = <playing-etc> {
   where ((
-    _students = Oo (app_state (),
-      oo (Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ]))),
-      oo (Z_ .fromMaybe ([]))) ) =>
+    _students = T (app_state ()) ([
+      Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
+      Z_ .fromMaybe ([]) ]) ) =>
   [ <message> Game in progress... </message>,
   , <message> Number of students: { Z_ .size (_students) } </message>
-  , Oo (_students,
-      oo (Z_ .map (L .get (student_name))), 
-      oo (Z_ .map (_x => <player>{ 'Name: '+ _x }</player>))) ]) }
+  , T (_students) ([
+      Z_ .map (L .get (student_name)),
+      Z_ .map (_x => <player>{ 'Name: '+ _x }</player>) ]) ]) }
   </playing-etc>
 
 
@@ -148,7 +148,7 @@ var get_room = _room => {{
     api (_room,
       post (message_encoding (
         where ((
-          {questions, rules} = Oo (_setup, oo (L .get (data_iso (setup .setup))))) =>
+          {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) ) =>
         message .teacher_setup (questions, rules)) ))) .then (_x => {{
       if (! _x .ok) {
         ;throw new Error ('cannot post to ' + _room)}
@@ -161,10 +161,10 @@ var get_room = _room => {{
     ;io_state (io .inert) }}) }}
 
 var start_playing = _ => {{
-  Oo (maybe_all ({
-    _ensemble: Oo (ensemble_state (), oo (L .get ([ as_maybe ]))),
-    _room: Oo (app_state (), oo (L .get ([ from_maybe, app_room, as_maybe ]))) }),
-  oo (Z_ .map (({ _ensemble, _room }) => {{
+  T (maybe_all ({
+    _ensemble: T (ensemble_state ()) (L .get ([ as_maybe ])),
+    _room: T (app_state ()) (L .get ([ from_maybe, app_room, as_maybe ])) })
+  ) (Z_ .map (({ _ensemble, _room }) => {{
     ;go
     .then (_ =>
       (io_state (io .messaging), api (_room,
@@ -176,7 +176,7 @@ var start_playing = _ => {{
     .catch (_e => {{
       ;console .error (_e) }})
     .then (_ => {{
-      ;io_state (io .inert) }}) }} ))) }}
+      ;io_state (io .inert) }}) }} )) }}
   
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
@@ -193,23 +193,23 @@ var timesup_question = _ => {{
 var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
 ;game_clock .add (timesup_question, 10)
-;Oo (R .range (0, 10 + 1),
-  oo (R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t))))
+;T (R .range (0, 10 + 1)) (
+  R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t)))
 
    
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
   
 var connection = S (_ => {{
-  ;return Oo (app_state (), oo (L .get ([ from_maybe ])),
-    oo (L .get ([ app_room, as_maybe ])),
-    oo (Z_ .maybe (undefined) (_room => {{
+  ;return T (app_state ()) ([ L .get ([ from_maybe ]),
+    L .get ([ app_room, as_maybe ]),
+    Z_ .maybe (undefined) (_room => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
       return connection [_room] () && where ((
         [mean, variance, n, timestamp] = connection [_room] () ) =>
-      [timestamp, mean, Math .sqrt (variance)]) }} ))) }}) 
+      [timestamp, mean, Math .sqrt (variance)]) }} ) ]) }}) 
 
 
 
@@ -217,39 +217,39 @@ var connection = S (_ => {{
 S (_ => {{
   if (Z_ .isNothing (app_state ())) {
     if (L .isDefined (io_inert) (io_state ())) {
-      ;get_room (Oo (Math .random (),
-        oo (_x => _x * 100000000),
-        oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
+      ;get_room (T (Math .random ()) ([
+        _x => _x * 100000000,
+        _x => Math .floor (_x) ])) .catch (_ => {}) } } }})
 */
 S (last_app => {{
-  Oo (app_state (), oo (Z_ .map (_app => {{
+  T (app_state ()) (Z_ .map (_app => {{
     if (! L .isDefined (app_playing) (last_app)) {
       if (L .isDefined (app_playing) (_app)) {
       }
     }
-  }})))
+  }}))
   return app_state () }}
   , app_state ())
    
    
 S (_ => {{
-  ;Oo (maybe_all ({
+  ;T (maybe_all ({
       _app: S .sample (app_state),
-      _ensemble: ensemble_state () }),
-    oo (Z_ .map (({ _app, _ensemble }) => {{
-      var _app_kind = Oo (_app, oo (data_kind))
-      var _app_students = Oo (_app, oo (L .get (app_students)))
-      var _ensemble_students = Oo (_ensemble, oo (assemble_students (_app_kind)))
+      _ensemble: ensemble_state () })
+  ) (Z_ .map (({ _app, _ensemble }) => {{
+      var _app_kind = T (_app) (data_kind)
+      var _app_students = T (_app) (L .get (app_students))
+      var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
       if (! Z_ .equals (_ensemble_students) (_app_students)) {
         ;app_state (Z .Just (
-          Oo (_app,
-            oo (L .set ([app_students]) (_ensemble_students))))) } }}))) }})
+          T (_app)
+            (L .set ([app_students]) (_ensemble_students)))) } }})) }})
 S (last_ensemble => {{
-  ;Oo (maybe_all ({
+  ;T (maybe_all ({
     last_ensemble: last_ensemble,
     _app: S .sample (app_state),
-    _ensemble: ensemble_state () }),
-  oo (Z_ .map (({ last_ensemble, _app, _ensemble }) => {{
+    _ensemble: ensemble_state () })
+  ) (Z_ .map (({ last_ensemble, _app, _ensemble }) => {{
     if (L .isDefined (app_get_ready) (_app)) {
       if (! L .get (ensemble_start) (last_ensemble)) {
         if (L .get (ensemble_start) (_ensemble)) {
@@ -262,16 +262,16 @@ S (last_ensemble => {{
           else {
             ;setTimeout (_ => {{
               ;app_state (playing_app) }}
-            , start - now) } } } } }})))
+            , start - now) } } } } }}))
   return ensemble_state () }}
   , ensemble_state ())
    
    
 S (_ => {{
-  ;Oo (app_state (), oo (L .get ([ from_maybe ])), oo (L .get (L .pick ({
-    _room: [ app_room, as_maybe ] }))),
-  oo (maybe_all),
-  oo (Z_ .map (({ _room }) => {{
+  ;T (app_state ()) ([ L .get ([ from_maybe ]), L .get (L .pick ({
+    _room: [ app_room, as_maybe ] })),
+  maybe_all,
+  Z_ .map (({ _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
     go
@@ -293,4 +293,4 @@ S (_ => {{
         ;heartbeat (phase) }}
       , 300) }})
     .then (_ => {{
-      ;io_state (io .inert) }}) }}))) }})
+      ;io_state (io .inert) }}) }}) ]) }})
