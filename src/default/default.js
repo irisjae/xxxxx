@@ -144,8 +144,8 @@ var __data_lens = new WeakMap
 
 var pair_zip = a => b =>
   where ((
-    zip_init = list => mates =>
-      !! (Z_ .size (list) === 0 || Z_ .size (mates) === 0)
+    zip_fst_head = fst => snd =>
+      !! (Z_ .size (fst) === 0 || Z_ .size (snd) === 0)
       ? Z .Nothing
       : where ((
           list_head = R .head (list),
@@ -158,13 +158,13 @@ var pair_zip = a => b =>
         ? Z_ .Just (
             [ [ list_head_key, [ list_head_value, mates_head_value ] ]
             , R .tail (mates) ])
-        : Oo (zip_init (list) (R .tail (mates)),
-          oo (Z_ .map (([projection, tail_residue]) =>
-            [projection, Z_ .prepend (mates_head) (tail_residue)] ))) ) ) =>
+        : Oo (zip_fst_head (list) (R .tail (mates)),
+          oo (Z_ .map (([zip_head, snd_zipper]) =>
+            [zip_head, Z_ .prepend (mates_head) (snd_zipper)] ))) ) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
-      maybe_zip_head = zip_init (a) (b) ) =>
+      maybe_zip_head = zip_fst_head (a) (b) ) =>
     Oo (maybe_zip_head, oo (Z_ .maybe_
       (_ =>
         pair_zip (R .tail (a)) (b)) 
