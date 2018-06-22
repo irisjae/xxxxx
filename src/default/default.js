@@ -139,7 +139,7 @@ var n_reducer = binary => n =>
 
 var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
 
-var pair_zip = reducer => a => b =>
+var pair_zip = reducer => 
   where ((
     pair_zip_fst_head = fst => snd =>
       T ({
@@ -165,17 +165,16 @@ var pair_zip = reducer => a => b =>
               { zip_head: zip_head,
                 snd_zipper:
                   Z_ .prepend
-                    (snd_head) (snd_zipper) }) )) )) ]),
-    maybe_zip_head = pair_zip_fst_head (a) (b),
-    a_tail = Z .tail (a)) =>
-  T (a_tail) (Z_ .maybe ([]) (a_tail =>
-    T (maybe_zip_head) (Z_ .maybe_
-      (_ =>
-        pair_zip (reducer) (a_tail) (b))
-      (({ zip_head, snd_zipper }) =>
-        Z_ .prepend
-         (zip_head)
-         (pair_zip (reducer) (a_tail) (snd_zipper)))))) )
+                    (snd_head) (snd_zipper) }) )) )) ]) ) =>
+  a => b =>
+    T (Z_ .tail (a)) (Z_ .maybe ([]) (a_tail =>
+      T (pair_zip_fst_head (a) (b)) (Z_ .maybe_
+        (_ =>
+          pair_zip (reducer) (a_tail) (b))
+        (({ zip_head, snd_zipper }) =>
+          Z_ .prepend
+           (zip_head)
+           (pair_zip (reducer) (a_tail) (snd_zipper)))))) )
 
 
 var pair_projection = key_projection => val_projection =>
