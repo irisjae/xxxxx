@@ -174,10 +174,10 @@ var pair_zip = reducer => a => b =>
     Oo (maybe_zip_head, oo (Z_ .maybe_
       (_ =>
         pair_zip (reducer) (R .tail (a)) (b))
-      (([_zip_head, _b_residue]) =>
+      (({ zip_head, snd_zipper }) =>
         Z_ .prepend
-         (_zip_head)
-         (pair_zip (reducer) (R .tail (a)) (_b_residue)))))) )
+         (zip_head)
+         (pair_zip (reducer) (R .tail (a)) (snd_zipper)))))) )
 
 
 var pair_projection = key_projection => val_projection =>
