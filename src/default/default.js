@@ -151,22 +151,25 @@ var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
 var pair_zip = reducer => a => b =>
   where ((
     pair_zip_fst_head = fst => snd =>
-      !! (Z_ .size (fst) === 0 || Z_ .size (snd) === 0)
-      ? Z .Nothing
-      : where ((
-          fst_head = R .head (fst),
-          snd_head = R .head (snd),
-          fst_head_key = fst_head [0],
-          snd_head_key = snd_head [0],
-          fst_head_value = fst_head [1],
-          snd_head_value = snd_head [1] ) =>
-        !! (Z_ .equals (fst_head_key) (snd_head_key))
-        ? Z_ .Just ({
-            zip_head: [ fst_head_key, reducer (fst_head_value) (snd_head_value) ],
-            snd_zipper: R .tail (snd) })
-        : Oo (pair_zip_fst_head (fst) (R .tail (snd)),
-          oo (Z_ .map (({ zip_head, snd_zipper }) =>
-            [zip_head, Z_ .prepend (snd_head) (snd_zipper)] ))) ) ) =>
+      Oo (maybe_all ({
+        fst_head: Z_ .head (fst),
+        snd_head: Z_ .head (snd),
+        snd_tail: Z_ .tail (snd) }),
+        oo (Z_ .map (({ fst_head, snd_head, snd_tail }) =>
+          where ((
+            fst_head_key = Z_ .fst (fst_head),
+            snd_head_key = Z_ .fst (snd_head),
+            fst_head_value = Z_ .snd (fst_head),
+            snd_head_value = Z_ .snd (snd_head) ) =>
+          !! (Z_ .equals (fst_head_key) (snd_head_key))
+          ? Z_ .Just ({
+              zip_head:
+                Z_ .Pair
+                  (fst_head_key) (reducer (fst_head_value) (snd_head_value)),
+              snd_zipper: snd_tail})
+          : Oo (pair_zip_fst_head (fst) (snd_tail),
+            oo (Z_ .map (({ zip_head, snd_zipper }) =>
+              [zip_head, Z_ .prepend (snd_head) (snd_zipper)] ))) )))) ) =>
   !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
   ? []
   : where ((
@@ -181,7 +184,7 @@ var pair_zip = reducer => a => b =>
 
 
 var pair_projection = key_projection => val_projection =>
-  _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)]
+  _x => Z_ .Pair (L .get (key_projection) (_x)) (L .get (val_projection) (_x))
 
 
 
