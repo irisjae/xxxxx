@@ -162,14 +162,13 @@ var projection_zip =
     !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
     ? []
     : where ((
-      pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
-      a_projection = Oo (a, oo (Z_ .map (pair_projection))),
-      b_projection = Oo (b, oo (Z_ .map (pair_projection))),
-   ) =>
-    Z_ .concat
-      (zip_init (a_projection) (b_projection))
-      (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) ) )
-  
+        pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
+        a_projection = Oo (a, oo (Z_ .map (pair_projection))),
+        b_projection = Oo (b, oo (Z_ .map (pair_projection))), ) =>
+      Z_ .concat
+        (zip_init (a_projection) (b_projection))
+        (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) ) )
+
 
 
 
