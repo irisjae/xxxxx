@@ -143,14 +143,9 @@ var __data_lens = new WeakMap
 
 var pair_zip_n = n =>
   !! (n === 1)
-  ? _x => _x
-  : !! (n === 2)
-  ? pair_zip
-  : !! (n === 3)
-  ? _x =>
-      pair_zip (_x) ()
-  : _x =>
-      pair_zip (_x) (pair_zip_n (n - 1))
+  ? _a => _a
+  : _a => _b =>
+    pair_zip_n (n - 1) (pair_zip (_a) (_b))
 
 var pair_zip = a => b =>
   where ((
