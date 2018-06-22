@@ -155,17 +155,17 @@ var pair_zip = reducer => a => b =>
         fst_head: Z_ .head (fst),
         snd_head: Z_ .head (snd),
         snd_tail: Z_ .tail (snd) }),
-        oo (Z_ .map (({ fst_head, snd_head, snd_tail }) =>
+        oo (Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
           where ((
             fst_head_key = Z_ .fst (fst_head),
             snd_head_key = Z_ .fst (snd_head),
             fst_head_value = Z_ .snd (fst_head),
             snd_head_value = Z_ .snd (snd_head) ) =>
           !! (Z_ .equals (fst_head_key) (snd_head_key))
-          ? { zip_head:
+          ? Z .Just ({ zip_head:
                 Z_ .Pair
                   (fst_head_key) (reducer (fst_head_value) (snd_head_value)),
-              snd_zipper: snd_tail }
+              snd_zipper: snd_tail })
           : Oo (pair_zip_fst_head (fst) (snd_tail),
             oo (Z_ .map (({ zip_head, snd_zipper }) => (
               { zip_head: zip_head,
