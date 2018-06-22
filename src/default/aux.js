@@ -304,61 +304,63 @@ var generate_board = size => questions =>
       cells [(x - 1) * size + (y - 1)]) =>
   T (Z .range (1) (size + 1)) (
     Z_ .map (row => T (Z .range (1) (size + 1)) (
-      oo (Z_ .map (column => [row, column, cell (row) (column)] )))))))
+      Z_ .map (column => [row, column, cell (row) (column)] )))))
 
 
 var teacher_app_get_ready_to_playing = _app =>
-  Oo (_app,
-    oo (L .get (L .pick ({
-      _setup: L .get ([ app_setup, as_maybe ]) }))),
-    oo (maybe_all),
-    oo (Z_ .map (({ _setup }) => 
-      teacher_app .playing (_setup, []) ) ))
+  T (_app) ([
+    L .get (L .pick ({
+      _setup: L .get ([ app_setup, as_maybe ]) })),
+    maybe_all,
+    Z_ .map (({ _setup }) => 
+      teacher_app .playing (_setup, []) ) ])
 
 var student_app_get_ready_to_playing = _app =>
-  Oo (_app,
-    oo (L .get (L .pick ({
+  T (_app) ([
+    L .get (L .pick ({
       student: L .get ([ app_student, as_maybe ]),
-      setup: L .get ([ app_setup, as_maybe ]) }))),
-    oo (maybe_all),
-    oo (Z_ .maybe (undefined) (({student, setup}) => 
+      setup: L .get ([ app_setup, as_maybe ]) })),
+    maybe_all,
+    Z_ .maybe (undefined) (({student, setup}) => 
       where ((
         _size = L .get (setup_size) (setup),
         _questions = L .get (setup_questions) (setup),
         fresh_history = [rendition .rendition ([])] ) =>
       student_app .playing
-        (student, setup, generate_board (_size) (_questions), fresh_history)) )))
+        (student, setup, generate_board (_size) (_questions), fresh_history)) ) ])
 
 var student_app_next_playing = _app =>
   where ((
-    board_size = Oo (_app, oo (L .get ([app_setup, setup_size]))),
-    history_size = Oo (_app, oo (L .get (app_history)), oo (Z .size))) =>
+    board_size = T (_app) (L .get ([app_setup, setup_size])),
+    history_size = T (_app) ([ L .get (app_history), Z .size ]) ) =>
   !! (history_size < board_size * board_size)
-  ? Oo (_app,
-    oo (L .set ([app_history, L .append]) (rendition .rendition ([]))))
-  : Oo (_app,
-    oo (L .get (data_iso (student_app .playing))),
-    oo (L .get (L .getInverse (data_iso (student_app .game_over))))) )
+  ? T (_app)
+    (L .set ([app_history, L .append]) (rendition .rendition ([])))
+  : T (_app) ([
+    L .get (data_iso (student_app .playing)),
+    L .get (L .getInverse (data_iso (student_app .game_over))) ]) )
          
 var student_app_to_board_viewer = _app =>
-  Oo (_app, oo (L .get (L .pick ({
-    _board: [ app_board, as_maybe ],
-    _questions: [ app_questions, as_maybe ],
-    _history: [ app_history, as_maybe ] }))),
-  oo (maybe_all),
-  oo (Z_ .map (({ _board, _questions, _history }) => 
-    board_viewer .board_viewer (_board, _questions, _history) )))
+  T (_app) ([
+    L .get (L .pick ({
+      _board: [ app_board, as_maybe ],
+      _questions: [ app_questions, as_maybe ],
+      _history: [ app_history, as_maybe ] })),
+    maybe_all,
+    Z_ .map (({ _board, _questions, _history }) => 
+      board_viewer .board_viewer (_board, _questions, _history) ) ])
 
 var size_patterns = memoize (size =>
   where ((
     range = Z .range (0) (size),
-    vertical_patterns = Oo (range, oo (Z .map (_x =>
-      Oo (range, oo (Z .map (_y => [_x, _y] )))))),
-    horizontal_patterns = Oo (range, oo (Z .map (_y =>
-      Oo (range, oo (Z .map (_x => [_x, _y] )))))),
+    vertical_patterns = T (range) (Z .map (_x =>
+      T (range) (Z .map (_y => [_x, _y] )))),
+    horizontal_patterns = T (range) (Z .map (_y =>
+      T (range) (Z .map (_x => [_x, _y] )))),
     diagonal_patterns = [
-      Oo (range, oo (Z .map (_x => [_x, _x])))
-    , Oo (range, oo (Z .map (_x => [_x, (size - 1) - _x]))) ] ) =>
+      T (range) (Z .map (_x => [_x, _x])),
+      T (range) (Z .map (_x => [_x, (size - 1) - _x]))
+    ] ) =>
   Z .reduce (Z .concat) ([]) ([
       vertical_patterns
     , horizontal_patterns
@@ -367,39 +369,41 @@ var size_patterns = memoize (size =>
 
 var board_viewer_current_question = _board_viewer =>
   where ((
-    history = Oo (_board_viewer, oo (L .get (board_viewer_history))),
+    history = T (_board_viewer) (L .get (board_viewer_history)),
     current_question_index = Z .size (history) - 1) =>
-  Oo (_board_viewer, oo (L .get ([board_viewer_questions, current_question_index, as_maybe]))))
+  T (_board_viewer) (
+    L .get ([board_viewer_questions, current_question_index, as_maybe])))
 
 var board_viewer_crossed_answers = _board_viewer => 
   where ((
-    final_attempts = Oo (_board_viewer, oo (L .get (board_viewer_history)),
-      oo (Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])))),
-    actual_answers = Oo (_board_viewer, oo (L .get (board_viewer_questions)))) =>
-  Oo (Z .zip (final_attempts) (actual_answers),
-    oo (Z .map (pair =>
+    final_attempts = T (_board_viewer) ([
+      L .get (board_viewer_history),
+      Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ]),
+    actual_answers = T (_board_viewer) (L .get (board_viewer_questions)) ) =>
+  T (Z .zip (final_attempts) (actual_answers)) ([
+    Z .map (pair =>
       where ((
         maybe_attempt = Z .fst (pair),
         maybe_answer = Z .Just (Z .snd (pair))) =>
       !! (Z .equals (maybe_attempt) (maybe_answer))
       ? maybe_attempt
-      : Z .Nothing))),
-    oo (Z .justs)))
+      : Z .Nothing)),
+    Z .justs ]) )
 
 var board_viewer_bingoes = _board_viewer =>
   where ((
-    _board = Oo (_board_viewer, oo (L .get (board_viewer_board))),
-    _size = Oo (_board, oo (Z_ .size)),
-    _crossed_answers = Oo (_board_viewer, oo (board_viewer_crossed_answers)) ) =>
-  Oo (size_patterns (_size),
-    oo (Z_ .map (_pattern =>
-      _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) )),
-    oo (Z_ .map (_pattern =>
-      !! (Oo (_pattern,
-        oo (R .all (_answer => Z_ .elem (_answer) (_crossed_answers)))))
+    _board = T (_board_viewer) (L .get (board_viewer_board)),
+    _size = T (_board) (Z_ .size),
+    _crossed_answers = T (_board_viewer) (board_viewer_crossed_answers) ) =>
+  T (size_patterns (_size)) ([
+    Z_ .map (_pattern =>
+      _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) ),
+    Z_ .map (_pattern =>
+      !! (T (_pattern)
+        (R .all (_answer => Z_ .elem (_answer) (_crossed_answers))))
       ? Z .Just (_pattern)
-      : Z .Nothing)),
-    oo (Z .justs)) )
+      : Z .Nothing),
+    Z .justs ]) )
 
 
 var history_stepped = old => curr =>
@@ -409,17 +413,17 @@ var history_stepped = old => curr =>
 var message_encoding = message =>
   where ((
     strip = _x => JSON .parse (JSON .stringify (_x)),
-    student = Oo (message, oo (L .get (message_student))) ) =>
+    student = T (message) (L .get (message_student)) ) =>
   !! L .isDefined (message_teacher_setup) (message)
-  ? Oo (message,
-    oo (L .get (message_teacher_setup)),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_teacher_setup),
+    strip ])
   : !! L .isDefined (message_teacher_ping) (message)
-  ? Oo (message,
-    oo (L .get (message_ping)),
-    oo (L .get (L .getInverse ([ ensemble_ping ]))),
-    oo (L .get (data_iso (ensemble .ensemble))),
-    oo (strip))
+  ? T (message) ([
+    L .get (message_ping),
+    L .get (L .getInverse ([ ensemble_ping ])),
+    L .get (data_iso (ensemble .ensemble)),
+    strip ])
   : !! L .isDefined (message_teacher_start) (message)
   ? Oo (message,
     oo (L .get (message_synchronization)),
