@@ -161,21 +161,27 @@ var projection_zip =
             , R .tail (mates) ])
         : Oo (zip_init (list) (R .tail (mates)),
           oo (Z_ .map (([projection, tail_residue]) =>
-            [projection, Z_ .prepend (mates_head) (tail_residue)] ))) )) =>
+            [projection, Z_ .prepend (mates_head) (tail_residue)] ))) ),
+    pair_zip = a => b =>
+      where ((
+        maybe_zip_head = zip_init (a) (b) ) =>
+      ) ) =>
   key_projection => val_projection => a => b =>
     !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
     ? []
     : where ((
+        recurse = projection_zip (key_projection) (val_projection),
         pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
         a_projection = Oo (a, oo (Z_ .map (pair_projection))),
         b_projection = Oo (b, oo (Z_ .map (pair_projection))),
-        maybe_zip_head = zip_init (a_projection) (b_projection) ) =>
-      Oo (maybe_zip_head,
-        oo (Z_ .maybe
-          (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) 
-          (([_zip_head, _mates_residue]) =>
-            Z_ .prepend (_zip_head)
-             (projection_zip (key_projection) (val_projection) (R .tail (a)) (_mates_residue))))) ) )
+         ) =>
+      Oo (maybe_zip_head, oo (Z_ .maybe_
+        (_ =>
+          recurse (R .tail (a)) (b)) 
+        (([_zip_head, _mates_residue]) =>
+          Z_ .prepend
+           (_zip_head)
+           (recurse (R .tail (a)) (_mates_residue))))) ) )
 
 
 
