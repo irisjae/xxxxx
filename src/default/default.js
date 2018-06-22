@@ -147,7 +147,7 @@ var projection_zip =
   where ((
     zip_init = list => mates =>
       !! (Z_ .size (list) === 0 || Z_ .size (mates) === 0)
-      ? []
+      ? Z .Nothing
       : where ((
           list_head = R .head (list),
           mates_head = R .head (mates),
@@ -156,7 +156,8 @@ var projection_zip =
           list_head_value = list_head [1],
           mates_head_value = mates_head [1] ) =>
         !! (Z_ .equals (list_head_key) (mates_head_key))
-        ? [[ list_head_key, [ list_head_value, mates_head_value ] ]]
+        ? Z .Just (
+            [ list_head_key, [ list_head_value, mates_head_value ] ])
         : zip_init (list) (R .tail (mates)) ) ) =>
   key_projection => val_projection => a => b =>
     !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
