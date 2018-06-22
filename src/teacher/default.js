@@ -268,29 +268,31 @@ S (last_ensemble => {{
    
    
 S (_ => {{
-  ;T (app_state ()) ([ L .get ([ from_maybe ]), L .get (L .pick ({
-    _room: [ app_room, as_maybe ] })),
-  maybe_all,
-  Z_ .map (({ _room }) => {{
-    var phase = heartbeat ()
-    var critical = phase === 1
-    go
-    .then (_ =>
-      !! critical && S .sample (connection)
-      ? (io_state (io .messaging), api (_room, post (message_encoding (
-          message .teacher_ping (S .sample (connection))))))
-      : (io_state (io .heartbeat), api (_room)
-        .then (_x => {{
-          ;ensemble_state (Z .Just (
-            L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})))
-    .then (_ => {{
-      ;setTimeout (_ => {{
-        ;heartbeat (!! critical ? reping_period : phase - 1) }}
-      , 300) }})
-    .catch (_e => {{
-      ;console .error (_e)
-      ;setTimeout (_ => {{
-        ;heartbeat (phase) }}
-      , 300) }})
-    .then (_ => {{
-      ;io_state (io .inert) }}) }}) ]) }})
+  ;T (app_state ()) ([
+    L .get ([ from_maybe ]),
+    Z_ .map (L .get (L .pick ({
+      _room: [ app_room, as_maybe ] }))),
+    maybe_all,
+    Z_ .map (({ _room }) => {{
+      var phase = heartbeat ()
+      var critical = phase === 1
+      go
+      .then (_ =>
+        !! critical && S .sample (connection)
+        ? (io_state (io .messaging), api (_room, post (message_encoding (
+            message .teacher_ping (S .sample (connection))))))
+        : (io_state (io .heartbeat), api (_room)
+          .then (_x => {{
+            ;ensemble_state (Z .Just (
+              L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x))) }})))
+      .then (_ => {{
+        ;setTimeout (_ => {{
+          ;heartbeat (!! critical ? reping_period : phase - 1) }}
+        , 300) }})
+      .catch (_e => {{
+        ;console .error (_e)
+        ;setTimeout (_ => {{
+          ;heartbeat (phase) }}
+        , 300) }})
+      .then (_ => {{
+        ;io_state (io .inert) }}) }}) ]) }})
