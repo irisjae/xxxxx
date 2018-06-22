@@ -89,8 +89,8 @@ var id = string
 var v = (...types) => defined
 
 var student = v (id, string)
+var answer = string
 var question = v (string, list (answer))
-var answer = question
 var timeinterval = number
 var latency = timeinterval
 var position = v (nat, nat)
