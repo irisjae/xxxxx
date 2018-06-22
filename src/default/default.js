@@ -170,18 +170,17 @@ var pair_zip = reducer => a => b =>
           : Oo (pair_zip_fst_head (fst) (snd_tail),
             oo (Z_ .map (({ zip_head, snd_zipper }) =>
               [zip_head, Z_ .prepend (snd_head) (snd_zipper)] ))) )))) ) =>
-  !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
-  ? []
-  : where ((
-      maybe_zip_head = pair_zip_fst_head (a) (b) ) =>
+  Oo (maybe_all ({
+    a_tail: Z_ .tail (a),
+    maybe_zip_head: pair_zip_fst_head (a) (b) }),
+  oo (Z_ .maybe ([]) (({ a_tail, maybe_zip_head }) =>
     Oo (maybe_zip_head, oo (Z_ .maybe_
       (_ =>
-        pair_zip (reducer) (R .tail (a)) (b))
+        pair_zip (reducer) (a_tail) (b))
       (({ zip_head, snd_zipper }) =>
         Z_ .prepend
          (zip_head)
-         (pair_zip (reducer) (R .tail (a)) (snd_zipper)))))) )
-
+         (pair_zip (reducer) (a_tail) (snd_zipper)))))) )) )
 
 var pair_projection = key_projection => val_projection =>
   _x => Z_ .Pair (L .get (key_projection) (_x)) (L .get (val_projection) (_x))
