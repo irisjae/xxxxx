@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
-  map_just, from_just, maybe_all,
+  from_just, maybe_all,
   every, delay,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
@@ -164,7 +164,7 @@ var start_playing = _ => {{
   Oo (maybe_all ({
     _ensemble: Oo (ensemble_state (), oo (L .get ([ as_maybe ]))),
     _room: Oo (app_state (), oo (L .get ([ from_maybe, app_room, as_maybe ]))) }),
-  oo (map_just (({ _ensemble, _room }) => {{
+  oo (Z_ .map (({ _ensemble, _room }) => {{
     ;go
     .then (_ =>
       (io_state (io .messaging), api (_room,
@@ -222,7 +222,7 @@ S (_ => {{
         oo (_x => Math .floor (_x)))) .catch (_ => {}) } } }})
 */
 S (last_app => {{
-  Oo (app_state (), oo (map_just (_app => {{
+  Oo (app_state (), oo (Z_ .map (_app => {{
     if (! L .isDefined (app_playing) (last_app)) {
       if (L .isDefined (app_playing) (_app)) {
       }
@@ -236,7 +236,7 @@ S (_ => {{
   ;Oo (maybe_all ({
       _app: S .sample (app_state),
       _ensemble: ensemble_state () }),
-    oo (map_just (({ _app, _ensemble }) => {{
+    oo (Z_ .map (({ _app, _ensemble }) => {{
       var _app_kind = Oo (_app, oo (data_kind))
       var _app_students = Oo (_app, oo (L .get (app_students)))
       var _ensemble_students = Oo (_ensemble, oo (assemble_students (_app_kind)))
@@ -249,7 +249,7 @@ S (last_ensemble => {{
     last_ensemble: last_ensemble,
     _app: S .sample (app_state),
     _ensemble: ensemble_state () }),
-  oo (map_just (({ last_ensemble, _app, _ensemble }) => {{
+  oo (Z_ .map (({ last_ensemble, _app, _ensemble }) => {{
     if (L .isDefined (app_get_ready) (_app)) {
       if (! L .get (ensemble_start) (last_ensemble)) {
         if (L .get (ensemble_start) (_ensemble)) {
@@ -271,7 +271,7 @@ S (_ => {{
   ;Oo (app_state (), oo (L .get ([ from_maybe ])), oo (L .get (L .pick ({
     _room: [ app_room, as_maybe ] }))),
   oo (maybe_all),
-  oo (map_just (({ _room }) => {{
+  oo (Z_ .map (({ _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
     go

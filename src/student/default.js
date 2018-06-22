@@ -253,7 +253,7 @@ var connect_room = _ => {{
     _student: [ app_student, as_maybe ],
     _room: [ app_room, as_maybe ] }))),
   oo (maybe_all),
-  oo (map_just (({ _student, _room }) => {{
+  oo (Z_ .map (({ _student, _room }) => {{
     var _setup
     ;return go 
     .then (_ =>
@@ -285,7 +285,7 @@ var connect_room = _ => {{
 var attempt_question = _answer => {{
   Oo (app_state (), oo (student_app_to_board_viewer),
     oo (Z_ .maybe (Z .Nothing) (board_viewer_current_question)),
-    oo (map_just (_question => {{
+    oo (Z_ .map (_question => {{
       if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
         var latency = game_clock .time () //lookbehind_latency ()
         if (Z .equals (_answer) (_question)) {
@@ -426,7 +426,7 @@ S (_ => {{
     _student: [ app_student, as_maybe ],
     _room: [ app_room, as_maybe ] }))),
   oo (maybe_all),
-  oo (map_just (({ _student, _room }) => {{
+  oo (Z_ .map (({ _student, _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
     go
