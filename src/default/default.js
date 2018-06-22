@@ -168,10 +168,12 @@ var projection_zip =
     : where ((
         pair_projection = _x => [L .get (key_projection) (_x), L .get (val_projection) (_x)],
         a_projection = Oo (a, oo (Z_ .map (pair_projection))),
-        b_projection = Oo (b, oo (Z_ .map (pair_projection))), ) =>
-      Z_ .concat
-        (zip_init (a_projection) (b_projection))
-        (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) ) )
+        b_projection = Oo (b, oo (Z_ .map (pair_projection))),
+        _zip_head = zip_init (a_projection) (b_projection) ) =>
+      Z_ .maybe
+        (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) Z_ .concat
+        (([_zip_head, _residue]) =>
+          Z_ .prepend (_zip_head) (projection_zip (key_projection) (val_projection) (R .tail (a)) (_residue))) ) )
 
 
 
