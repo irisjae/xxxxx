@@ -263,10 +263,16 @@ var setup_size = [setup_rules, rules_size]
 
 var cell_answer = [ 2 ]
 
-var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
-var student_name = L .choices ( [ pair, L .first, pair, L .last ], [ pair, L .last ] )
+//report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
+//var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
+var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], [ pair_as_list, L .last ] )
 
 var ping_mean = [ 1 ]
+
+var pair_as_list = L .cond (
+  [ _x => Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_x)
+  , [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
+    , L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] )
 
 var students_mapping = 
   [ L .reread (map => Oo (map,
@@ -275,10 +281,10 @@ var students_mapping =
         inner_pair = R .head (R .toPairs (R .last (pair))),
         name = R .head (inner_pair),
         val = R .last (inner_pair) ) =>
-      [[id, name], val] ) ))))
+      Z_ .Pair ({ id: id, name: name }) (val) ) ))))
   , L .elems ]
-var map_students = [ students_mapping, L .first ]
-var mapping_students = [ students_mapping, L .last ]
+var map_students = [ students_mapping, pair_as_list, L .first ]
+var mapping_students = [ students_mapping, pair_as_list, L .last ]
 
 
 
