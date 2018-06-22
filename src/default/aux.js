@@ -3,7 +3,7 @@ var {
   where, go, defined,
   data, data_lens, data_iso, data_kind,
   projection_zip,
-  map_just, from_just, maybe_all,
+  from_just, maybe_all,
   every, delay 
 } = window .stuff
 
@@ -304,7 +304,7 @@ var teacher_app_get_ready_to_playing = _app =>
     oo (L .get (L .pick ({
       _setup: L .get ([ app_setup, as_maybe ]) }))),
     oo (maybe_all),
-    oo (map_just (({ _setup }) => 
+    oo (Z_ .map (({ _setup }) => 
       teacher_app .playing (_setup, []) ) ))
 
 var student_app_get_ready_to_playing = _app =>
@@ -338,7 +338,7 @@ var student_app_to_board_viewer = _app =>
     _questions: [ app_questions, as_maybe ],
     _history: [ app_history, as_maybe ] }))),
   oo (maybe_all),
-  oo (map_just (({ _board, _questions, _history }) => 
+  oo (Z_ .map (({ _board, _questions, _history }) => 
     board_viewer .board_viewer (_board, _questions, _history) )))
 
 var size_patterns = memoize (size =>

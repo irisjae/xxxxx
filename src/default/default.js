@@ -156,11 +156,11 @@ var projection_zip =
           list_head_value = list_head [1],
           mates_head_value = mates_head [1] ) =>
         !! (Z_ .equals (list_head_key) (mates_head_key))
-        ? Z .Just (
+        ? Z_ .Just (
             [ [ list_head_key, [ list_head_value, mates_head_value ] ]
             , R .tail (mates) ])
         : Oo (zip_init (list) (R .tail (mates)),
-          oo (map_just (([projection, tail_residue]) =>
+          oo (Z_ .map (([projection, tail_residue]) =>
             [projection, Z_ .prepend (mates_head) (tail_residue)] ))) )) =>
   key_projection => val_projection => a => b =>
     !! (Z_ .size (a) === 0 || Z_ .size (b) === 0)
@@ -170,10 +170,11 @@ var projection_zip =
         a_projection = Oo (a, oo (Z_ .map (pair_projection))),
         b_projection = Oo (b, oo (Z_ .map (pair_projection))),
         _zip_head = zip_init (a_projection) (b_projection) ) =>
-      Z_ .maybe
-        (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) Z_ .concat
-        (([_zip_head, _residue]) =>
-          Z_ .prepend (_zip_head) (projection_zip (key_projection) (val_projection) (R .tail (a)) (_residue))) ) )
+      Oo (_zip_head,
+        oo (Z_ .maybe
+          (projection_zip (key_projection) (val_projection) (R .tail (a)) (b)) 
+          (([_zip_head, _mates_residue]) =>
+            Z_ .prepend (_zip_head) (projection_zip (key_projection) (val_projection) (R .tail (a)) (_mates_residue))))) ) )
 
 
 
@@ -190,7 +191,6 @@ var projection_zip =
   
 var from_just = _x =>
   Z_ .fromMaybe_ (_ => {}) (_x)
-var map_just = fn => Z_ .maybe (Z .Nothing) (_x => Z_ .Just (fn (_x)))
 var maybe_all_list = list => where ((
   maybe_head = Z_ .head (list),
   maybe_tail = Z_ .tail (list)) =>
@@ -210,7 +210,7 @@ var maybe_all = _x =>
     oo (R .map (L .modify (L .first) (_x => Z_ .Just (_x)))),
     oo (R .map (maybe_all_list)),
     oo (maybe_all_list),
-    oo (map_just (R .fromPairs)))
+    oo (Z_ .map (R .fromPairs)))
   : undefined
 
 
@@ -278,5 +278,5 @@ window .stuff = { ...window .stuff,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
   projection_zip, 
-  map_just, from_just, maybe_all,
+  from_just, maybe_all,
   every, delay }

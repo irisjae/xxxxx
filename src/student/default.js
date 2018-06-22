@@ -2,7 +2,7 @@ var {
   xx, oo, Oo, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
-  map_just, from_just, maybe_all,
+  from_just, maybe_all,
   every, delay,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
