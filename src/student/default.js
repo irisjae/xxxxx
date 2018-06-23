@@ -283,11 +283,9 @@ var connect_room = _ => {{
       .then (_ => {{
         ;io_state (io .inert) }}) }}) ]) }} 
 
-var attempt_question = _lens => {{
+var attempt_question = _answer => {{
   T (app_state ()) ([ student_app_to_board_viewer,
-    Z_ .chain (L .get ([ L .reread (maybe_all), L .pick ({
-      _question: board_viewer_current_question,
-      _answer:  }) ])),
+    Z_ .chain (board_viewer_current_question),
     Z_ .map (_question => {{
       if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
         var latency = game_clock .time () //lookbehind_latency ()
