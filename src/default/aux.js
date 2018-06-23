@@ -3,7 +3,7 @@ var {
   where, whereby, go, defined,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
-  from_just, maybe_all,
+  map_defined, from_just, maybe_all,
   every, delay 
 } = window .stuff
 
@@ -312,19 +312,17 @@ var teacher_app_get_ready_to_playing = _app =>
     Z_ .map ( _setup  => 
       teacher_app .playing (_setup, []) ) ])
 
-var student_app_get_ready_to_playing = L .get (
-  [ L .pick ({
-      student: L .get ([ app_student, as_maybe ]),
-      setup: L .get ([ app_setup, as_maybe ]) })
-  , L .reread (maybe_all)
-  , from_maybe
-  , L .reread (({student, setup}) => 
-    where ((
-      _size = L .get (setup_size) (setup),
-      _questions = L .get (setup_questions) (setup),
-      fresh_history = [rendition .rendition ([])] ) =>
-    student_app .playing
-      (student, setup, generate_board (_size) (_questions), fresh_history))) ]) 
+var student_app_get_ready_to_playing = 
+  whereby (_app => (
+    exists = L .get (from_maybe) (maybe_all (T (_app) (L .pick ({
+      _student: L .get ([ app_student, as_maybe ]),
+      _setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
+  T (exists) (map_defined (({ _student, _setup }) => where ((
+    _size = L .get (setup_size) (_setup),
+    _questions = L .get (setup_questions) (_setup),
+    fresh_history = [rendition .rendition ([])] ) =>
+  student_app .playing
+    (_student, _setup, generate_board (_size) (_questions), fresh_history) ))) ) 
 
 var student_app_next_playing = 
   whereby (_app => (
@@ -337,16 +335,15 @@ var student_app_next_playing =
     L .get (data_iso (student_app .playing)),
     L .get (L .getInverse (data_iso (student_app .game_over))) ]) )
          
-var student_app_to_board_viewer = _app =>
-  T (_app) ([
-    L .get ([
-      L .pick ({
-        _board: [ app_board, as_maybe ],
-        _questions: [ app_questions, as_maybe ],
-        _history: [ app_history, as_maybe ] }))
-      , L .reread (maybe_all)
-      , L Z_ .map (({ _board, _questions, _history }) => 
-        board_viewer .board_viewer (_board, _questions, _history) ) ])
+var student_app_to_board_viewer = 
+  whereby (_app => (
+    exists = maybe_all (T (_app) (L .get (L .pick ({
+      _board: [ app_board, as_maybe ],
+      _questions: [ app_questions, as_maybe ],
+      _history: [ app_history, as_maybe ] })))) ) =>
+  T (exists) (Z_ .map (({ _board , _questions , _history }) =>
+    board_viewer .board_viewer (_board, _questions, _history)) ))
+
 
 var size_patterns = memoize (size =>
   where ((

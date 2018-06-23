@@ -193,6 +193,10 @@ var pair_projection = key_projection => val_projection =>
   
   
   
+var map_defined = fn => _x =>
+  !! (_x === undefined)
+  ? undefined
+  : fn (_x)
 var from_just = _x =>
   Z_ .fromMaybe (undefined) (_x)
 var maybe_all_list = list =>
@@ -283,5 +287,5 @@ window .stuff = { ...window .stuff,
   where, whereby, go, defined,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
-  from_just, maybe_all,
+  map_defined, from_just, maybe_all,
   every, delay }
