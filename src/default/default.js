@@ -33,6 +33,7 @@ var T = _x => _fn_obj =>
 
 var defined
 var where = x => x ()
+var whereby = _fn => x => _fn (x) ()
 var go = Promise .resolve ()
 
 
