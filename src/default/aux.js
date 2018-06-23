@@ -314,7 +314,7 @@ var teacher_app_get_ready_to_playing = _app =>
 
 var student_app_get_ready_to_playing = 
   whereby (_app => (
-    exists = L .get (from_maybe) (maybe_all (T (_app) (L .pick ({
+    exists = from_just (maybe_all (T (_app) (L .pick ({
       _student: L .get ([ app_student, as_maybe ]),
       _setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
   T (exists) (map_defined (({ _student, _setup }) => where ((
