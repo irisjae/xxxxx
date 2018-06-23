@@ -2,7 +2,7 @@ var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
-  //projection_zip,
+  n_reducer, pair_zip_n, pair_zip, pair_projection,
   from_just, maybe_all,
   every, delay 
 } = window .stuff
@@ -264,16 +264,16 @@ var setup_size = [setup_rules, rules_size]
 
 var cell_answer = [ 2 ]
 
+var pair_as_list = L .cond (
+  [ _x => Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_x)
+  , [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
+    , L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] /**/, [L .zero]/**/)
+
 //report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
 var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_mean = [ 1 ]
-
-var pair_as_list = L .cond (
-  [ _x => Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_x)
-  , [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
-    , L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] )
 
 var students_mapping = 
   [ L .reread (map => T (map) ([
@@ -474,7 +474,7 @@ var assemble_students = kind => ensemble =>
         L .collect ([ ensemble_student_boards, students_mapping ])),
       histories = T (ensemble) (
         L .collect ([ ensemble_student_histories, students_mapping ])) ) =>
-    projection_zip (R .head) (R .last) (boards) (histories))
+    pair_zip (_a => _b => [_a, _b]) (boards) (histories))
   : undefined
 
 var schedule_start = _ensemble =>

@@ -270,8 +270,8 @@ S (last_ensemble => {{
 S (_ => {{
   ;T (app_state ()) ([
     L .get ([ from_maybe ]),
-    Z_ .map (L .get (L .pick ({
-      _room: [ app_room, as_maybe ] }))),
+    L .get (L .pick ({
+      _room: [ app_room, as_maybe ] })),
     maybe_all,
     Z_ .map (({ _room }) => {{
       var phase = heartbeat ()
