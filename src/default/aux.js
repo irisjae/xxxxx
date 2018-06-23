@@ -324,16 +324,16 @@ var student_app_get_ready_to_playing =
   student_app .playing
     (_student, _setup, generate_board (_size) (_questions), fresh_history) ))) ) 
 
-var student_app_next_playing = 
-  whereby (_app => (
+var student_app_next_playing = _app => 
+  T (_app
+  ) (where ((
     board_size = T (_app) (L .get ([app_setup, setup_size])),
     history_size = T (_app) ([ L .get (app_history), Z .size ]) ) =>
   !! (history_size < board_size * board_size)
-  ? T (_app)
-    (L .set ([app_history, L .append]) (rendition .rendition ([])))
-  : T (_app) ([
-    L .get (data_iso (student_app .playing)),
-    L .get (L .getInverse (data_iso (student_app .game_over))) ]) )
+  ? L .set ([app_history, L .append]) (rendition .rendition ([]))
+  : L .get (
+      [ data_iso (student_app .playing)
+      , L .getInverse (data_iso (student_app .game_over)) ]) )) 
          
 var student_app_to_board_viewer = 
   whereby (_app => (
@@ -356,10 +356,10 @@ var size_patterns = memoize (size =>
       T (range) (Z .map (_x => [_x, _x])),
       T (range) (Z .map (_x => [_x, (size - 1) - _x]))
     ] ) =>
-  Z .reduce (Z .concat) ([]) ([
-      vertical_patterns
-    , horizontal_patterns
-    , diagonal_patterns ]) ))
+  n_reducer (Z .concat) (3)
+    (vertical_patterns)
+    (horizontal_patterns)
+    (diagonal_patterns) ))
 
 
 var board_viewer_current_question = _board_viewer =>
@@ -406,56 +406,49 @@ var history_stepped = old => curr =>
 
 
 var message_encoding = message =>
-  where ((
-    strip = _x => JSON .parse (JSON .stringify (_x)),
-    student = T (message) (L .get (message_student)) ) =>
-  !! L .isDefined (message_teacher_setup) (message)
-  ? T (message) ([
-    L .get (message_teacher_setup),
-    strip ])
-  : !! L .isDefined (message_teacher_ping) (message)
-  ? T (message) ([
-    L .get (message_ping),
-    L .get (L .getInverse ([ ensemble_ping ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : !! L .isDefined (message_teacher_start) (message)
-  ? T (message) ([
-    L .get (message_synchronization),
-    L .get (L .getInverse ([ ensemble_start ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : !! L .isDefined (message_teacher_abort) (message)
-  ? T (message) ([
-    L .get (message_synchronization),
-    L .get (L .getInverse ([ ensemble_abort ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : !! L .isDefined (message_student_ping) (message)
-  ? T (message) ([
-    L .get (message_ping),
-    L .get (L .getInverse ([ ensemble_student_pings, student ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : !! L .isDefined (message_student_join) (message)
-  ? T (message) ([
-    L .get (message_board),
-    L .get (L .getInverse ([ ensemble_student_boards, student ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : !! L .isDefined (message_student_start) (message)
-  ? T (message) ([
-    L .get (message_synchronization),
-    L .get (L .getInverse ([ ensemble_student_starts, student ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : !! L .isDefined (message_student_update) (message)
-  ? T (message) ([
-    L .get (message_history),
-    L .get (L .getInverse ([ ensemble_student_histories, student ])),
-    L .get (data_iso (ensemble .ensemble)),
-    strip ])
-  : undefined)
+  T (message) (
+    where ((
+      strip = _x => JSON .parse (JSON .stringify (_x)),
+      student = T (message) (L .get (message_student)) ) =>
+    !! L .isDefined (message_teacher_setup) (message)
+    ? [ L .get (message_teacher_setup)
+      , strip ]
+    : !! L .isDefined (message_teacher_ping) (message)
+    ? [ L .get (message_ping)
+      , L .get (L .getInverse ([ ensemble_ping ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : !! L .isDefined (message_teacher_start) (message)
+    ? [ L .get (message_synchronization)
+      , L .get (L .getInverse ([ ensemble_start ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : !! L .isDefined (message_teacher_abort) (message)
+    ? [ L .get (message_synchronization)
+      , L .get (L .getInverse ([ ensemble_abort ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : !! L .isDefined (message_student_ping) (message)
+    ? [ L .get (message_ping)
+      , L .get (L .getInverse ([ ensemble_student_pings, student ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : !! L .isDefined (message_student_join) (message)
+    ? [ L .get (message_board)
+      , L .get (L .getInverse ([ ensemble_student_boards, student ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : !! L .isDefined (message_student_start) (message)
+    ? [ L .get (message_synchronization)
+      , L .get (L .getInverse ([ ensemble_student_starts, student ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : !! L .isDefined (message_student_update) (message)
+    ? [ L .get (message_history)
+      , L .get (L .getInverse ([ ensemble_student_histories, student ]))
+      , L .get (data_iso (ensemble .ensemble))
+      , strip ]
+    : undefined))
 
 var messages_encoding = list =>
   Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
