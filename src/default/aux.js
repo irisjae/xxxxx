@@ -337,23 +337,16 @@ var student_app_next_playing =
     L .get (data_iso (student_app .playing)),
     L .get (L .getInverse (data_iso (student_app .game_over))) ]) )
          
-var student_app_to_board_viewer =  L .get ([
-  L .pick ({
-    _board: [ app_board, as_maybe ],
-    _questions: [ app_questions, as_maybe ],
-    _history: [ app_history, as_maybe ] })
-  , L .reread (maybe_all)
-  , L .reread (Z_ .map (({ _board, _questions, _history }) => 
-    board_viewer .board_viewer (_board, _questions, _history) )) ])
-
-/*
-
-Z .map (wherein (
-  { _board
-  , _questions
-  , _history }
-
-*/
+var student_app_to_board_viewer = _app =>
+  T (_app) ([
+    L .get ([
+      L .pick ({
+        _board: [ app_board, as_maybe ],
+        _questions: [ app_questions, as_maybe ],
+        _history: [ app_history, as_maybe ] }))
+      , L .reread (maybe_all)
+      , L Z_ .map (({ _board, _questions, _history }) => 
+        board_viewer .board_viewer (_board, _questions, _history) ) ])
 
 var size_patterns = memoize (size =>
   where ((
