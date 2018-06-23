@@ -1,6 +1,6 @@
 var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  where, go, defined,
+  where, whereby, go, defined,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   from_just, maybe_all,
@@ -43,18 +43,17 @@ var api = (room, _x) => {{
     var sample = end - begin
     if (! _ping_cache [room]) {
       ;_ping_cache [room] = [0, 0, 0, 0]}
-    ;_ping_cache [room] = T (_ping_cache [room]) ([
-      L .get (L .pick ({
-        mean: 0,
-        sqr_mean: 1,
-        n: 2 })),
-      ({mean, sqr_mean, n}) =>
-        where ((
-          carry = n / (n + 1) ) =>
-        [ mean * carry + sample / (n + 1)
-        , sqr_mean * carry + (sample * sample) / (n + 1)
-        , n + 1
-        , (new Date) .getTime () ]) ])
+    ;_ping_cache [room] = T (_ping_cache [room]) (
+      whereby (_x => (
+        {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
+          mean: 0,
+          sqr_mean: 1,
+          n: 2 }))),
+        carry = n / (n + 1) ) =>
+      [ mean * carry + sample / (n + 1)
+      , sqr_mean * carry + (sample * sample) / (n + 1)
+      , n + 1
+      , (new Date) .getTime () ]) )
     ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
     return _x .json () }}) }}
 ;api .listen_ping = room => fn => {{ 
@@ -309,25 +308,25 @@ var generate_board = size => questions =>
 
 var teacher_app_get_ready_to_playing = _app =>
   T (_app) ([
-    L .get (L .pick ({
-      _setup: L .get ([ app_setup, as_maybe ]) })),
-    maybe_all,
-    Z_ .map (({ _setup }) => 
+    L .get ([ app_setup, as_maybe ]),
+    Z_ .map ( _setup  => 
       teacher_app .playing (_setup, []) ) ])
 
 var student_app_get_ready_to_playing = _app =>
-  T (_app) ([
-    L .get (L .pick ({
-      student: L .get ([ app_student, as_maybe ]),
-      setup: L .get ([ app_setup, as_maybe ]) })),
-    maybe_all,
+  T (_app) (
+    L .get ([
+      L .pick ({
+        student: L .get ([ app_student, as_maybe ]),
+        setup: L .get ([ app_setup, as_maybe ]) })
+    , maybe_all, ]),
+    
     Z_ .maybe (undefined) (({student, setup}) => 
       where ((
         _size = L .get (setup_size) (setup),
         _questions = L .get (setup_questions) (setup),
         fresh_history = [rendition .rendition ([])] ) =>
       student_app .playing
-        (student, setup, generate_board (_size) (_questions), fresh_history)) ) ])
+        (student, setup, generate_board (_size) (_questions), fresh_history)) ) )
 
 var student_app_next_playing = _app =>
   where ((
