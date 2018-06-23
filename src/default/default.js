@@ -281,5 +281,6 @@ window .stuff = { ...window .stuff,
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   where, go, defined,
   data, data_lens, data_iso, data_kind,
+                 
   from_just, maybe_all,
   every, delay }
