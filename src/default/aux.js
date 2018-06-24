@@ -96,7 +96,7 @@ var latency = timeinterval
 var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
-var attempt = v (answer, timeinterval)
+var attempt = v (position, timeinterval)
 
 
 var rendition = data ({ rendition: (attempts = ~ list (attempt)) => defined })
@@ -369,6 +369,12 @@ var board_viewer_current_question = _board_viewer =>
   T (_board_viewer) (
     L .get ([board_viewer_questions, current_question_index, as_maybe])))
 
+var board_viewer_attempted_positions = _board_viewer => 
+  T (_board_viewer) ([
+    L .get (board_viewer_history),
+    Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
+
+//TODO: rewrite on new attempt data
 var board_viewer_crossed_answers = _board_viewer => 
   where ((
     final_attempts = T (_board_viewer) ([
