@@ -411,33 +411,37 @@ var message_encoding =
     student = T (message) (L .get (message_student)) ) =>
   T (message) ([
     !! L .isDefined (message_teacher_setup) (message)
-    ? L .get
-        ([ message_teacher_setup
-        , L .getInverse (data_iso (ensemble .ensemble)) ])
+    ? L .get (
+        [ message_teacher_setup
+        , L .getInverse (data_iso (ensemble .ensemble)) ] )
     : !! L .isDefined (message_teacher_ping) (message)
-    ? L .get
-        ([ message_ping
+    ? L .get (
+        [ message_ping
         , L .getInverse ([ ensemble_ping ]) ])
     : !! L .isDefined (message_teacher_start) (message)
-    ? L .get
-        ([ message_synchronization
+    ? L .get (
+        [ message_synchronization
         , L .getInverse ([ ensemble_start ]) ])
     : !! L .isDefined (message_teacher_abort) (message)
-    ? L .get
-        ([ message_synchronization
+    ? L .get (
+        [ message_synchronization
         , L .getInverse ([ ensemble_abort ]) ])
     : !! L .isDefined (message_student_ping) (message)
-    ? L .get ([ message_ping
-      , L .getInverse ([ ensemble_student_pings, student ]) ])
+    ? L .get (
+        [ message_ping
+        , L .getInverse ([ ensemble_student_pings, student ]) ])
     : !! L .isDefined (message_student_join) (message)
-    ? L .get ([ message_board
-      , L .getInverse ([ ensemble_student_boards, student ]) ])
+    ? L .get (
+        [ message_board
+        , L .getInverse ([ ensemble_student_boards, student ]) ])
     : !! L .isDefined (message_student_start) (message)
-    ? L .get ([ message_synchronization
-      , L .getInverse ([ ensemble_student_starts, student ]) ])
+    ? L .get (
+        [ message_synchronization
+        , L .getInverse ([ ensemble_student_starts, student ]) ])
     : !! L .isDefined (message_student_update) (message)
-    ? L .get ([ message_history
-      , L .getInverse ([ ensemble_student_histories, student ]) ])
+    ? L .get (
+        [ message_history
+        , L .getInverse ([ ensemble_student_histories, student ]) ])
     : undefined
   , L .get (data_iso (ensemble .ensemble)) 
   , strip ]) )
