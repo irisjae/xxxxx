@@ -335,6 +335,8 @@ var student_app_next_playing =
       [ data_iso (student_app .playing)
       , L .getInverse (data_iso (student_app .game_over)) ]) ) 
          
+var question_answer_matches = ...
+
 var student_app_to_board_viewer = _app => 
   where ((
     exists = maybe_all (T (_app) (L .get (L .pick ({

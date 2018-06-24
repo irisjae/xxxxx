@@ -165,25 +165,25 @@ var game_over_view = _ =>
   <game-over-etc>
     <result-etc>
       <tabs>
-        <button> Overview </button>
-        <button> Question </button>
-        </tabs>
-      <id><img src={ student_img } />  (name) </id>
-      <div a-logo> <img src={ bingo_img } /> </div>
+        <button> Overview </ button>
+        <button> Question </ button>
+        </ tabs>
+      <id><img src={ student_img } />  (name) </ id>
+      <div a-logo> <img src={ bingo_img } /> </ div>
       <table a-result>
         <tr>
-          <th>Question</th>
-          <th>Attempts</th>
-          <th>Avg. Time</th>
-          </tr>
+          <th>Question</ th>
+          <th>Attempts</ th>
+          <th>Avg. Time</ th>
+          </ tr>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          </tr>
-          </table>
-          </result-etc>
-          </game-over-etc>)         
+          <td></ td>
+          <td></ td>
+          <td></ td>
+          </ tr>
+          </ table>
+          </ result-etc>
+          </ game-over-etc>)         
 
 
 window .view = <student-app>
