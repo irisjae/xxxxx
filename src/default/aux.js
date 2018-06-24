@@ -309,20 +309,21 @@ var generate_board = size => questions =>
 var teacher_app_get_ready_to_playing = _app =>
   T (_app) ([
     L .get ([ app_setup, as_maybe ]),
-    Z_ .map ( _setup  => 
-      teacher_app .playing (_setup, []) ) ])
+    Z_ .map (_setup  => 
+      teacher_app .playing (_setup, [])) ])
 
 var student_app_get_ready_to_playing = _app => 
   where ((
     exists = from_just (maybe_all (T (_app) (L .pick ({
       _student: L .get ([ app_student, as_maybe ]),
       _setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
-  T (exists) (map_defined (({ _student, _setup }) => where ((
-    _size = L .get (setup_size) (_setup),
-    _questions = L .get (setup_questions) (_setup),
-    fresh_history = [rendition .rendition ([])] ) =>
-  student_app .playing
-    (_student, _setup, generate_board (_size) (_questions), fresh_history) ))) ) 
+  T (exists) (map_defined (({ _student, _setup }) =>
+    where ((
+      _size = L .get (setup_size) (_setup),
+      _questions = L .get (setup_questions) (_setup),
+      fresh_history = [rendition .rendition ([])] ) =>
+    student_app .playing
+      (_student, _setup, generate_board (_size) (_questions), fresh_history) ))) ) 
 
 var student_app_next_playing = 
   whereby (_app => (
@@ -450,7 +451,7 @@ var messages_encoding = list =>
 var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
   ? T (ensemble) (L .collect ([ ensemble_student_pings, map_students ]))
-  : !! (kind === 'playing') || (kind === 'game_over')
+  : !! (kind === 'playing' || kind === 'game_over')
   ? where ((
       boards = T (ensemble) (
         L .collect ([ ensemble_student_boards, students_mapping ])),
