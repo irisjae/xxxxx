@@ -43,8 +43,8 @@ var api = (room, _x) => {{
     var sample = end - begin
     if (! _ping_cache [room]) {
       ;_ping_cache [room] = [0, 0, 0, 0]}
-    ;_ping_cache [room] = T (_ping_cache [room]) (
-      whereby (_x => (
+    ;_ping_cache [room] = T (_ping_cache [room]) (_x => 
+      where ((
         {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
           mean: 0,
           sqr_mean: 1,
@@ -312,8 +312,8 @@ var teacher_app_get_ready_to_playing = _app =>
     Z_ .map ( _setup  => 
       teacher_app .playing (_setup, []) ) ])
 
-var student_app_get_ready_to_playing = 
-  whereby (_app => (
+var student_app_get_ready_to_playing = _app => 
+  where ((
     exists = from_just (maybe_all (T (_app) (L .pick ({
       _student: L .get ([ app_student, as_maybe ]),
       _setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
@@ -324,19 +324,18 @@ var student_app_get_ready_to_playing =
   student_app .playing
     (_student, _setup, generate_board (_size) (_questions), fresh_history) ))) ) 
 
-var student_app_next_playing = _app => 
-  T (_app
-  ) (where ((
+var student_app_next_playing = 
+  whereby (_app => (
     board_size = T (_app) (L .get ([app_setup, setup_size])),
     history_size = T (_app) ([ L .get (app_history), Z .size ]) ) =>
   !! (history_size < board_size * board_size)
   ? L .set ([app_history, L .append]) (rendition .rendition ([]))
   : L .get (
       [ data_iso (student_app .playing)
-      , L .getInverse (data_iso (student_app .game_over)) ]) )) 
+      , L .getInverse (data_iso (student_app .game_over)) ]) ) 
          
-var student_app_to_board_viewer = 
-  whereby (_app => (
+var student_app_to_board_viewer = _app => 
+  where ((
     exists = maybe_all (T (_app) (L .get (L .pick ({
       _board: [ app_board, as_maybe ],
       _questions: [ app_questions, as_maybe ],
@@ -409,8 +408,7 @@ var message_encoding =
   whereby (message => (
     strip = Z_ .compose (JSON .parse, JSON .stringify),
     student = T (message) (L .get (message_student)) ) =>
-  T (message) ([
-    !! L .isDefined (message_teacher_setup) (message)
+  [ !! L .isDefined (message_teacher_setup) (message)
     ? L .get (
         [ message_teacher_setup
         , L .getInverse (data_iso (ensemble .ensemble)) ] )
@@ -444,7 +442,7 @@ var message_encoding =
         , L .getInverse ([ ensemble_student_histories, student ]) ] )
     : undefined
   , L .get (data_iso (ensemble .ensemble)) 
-  , strip ]) )
+  , strip ] )
 
 var messages_encoding = list =>
   Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
