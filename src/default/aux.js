@@ -406,7 +406,7 @@ var history_stepped = old => curr =>
 
 
 var message_encoding = message =>
-  T (message) (
+  T (message) ([
     where ((
       strip = _x => JSON .parse (JSON .stringify (_x)),
       student = T (message) (L .get (message_student)) ) =>
@@ -448,7 +448,8 @@ var message_encoding = message =>
       , L .get (L .getInverse ([ ensemble_student_histories, student ]))
       , L .get (data_iso (ensemble .ensemble))
       , strip ]
-    : undefined))
+    : undefined)
+ ])
 
 var messages_encoding = list =>
   Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))

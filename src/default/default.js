@@ -12,7 +12,7 @@ var T = _x => _fn_obj =>
   !! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
   ? !! (Z_ .equals ([]) (_fn_obj))
     ? _x
-    : T (R .head (_fn_obj) (_x)) (R .tail (_fn_obj))
+    : T (T (_x) (R .head (_fn_obj))) (R .tail (_fn_obj))
   : !! Z_ .is (Z$ .AnyFunction) (_fn_obj)
   ? _fn_obj (_x)
   : undefined
