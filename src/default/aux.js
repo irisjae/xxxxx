@@ -260,6 +260,7 @@ var rendition_attempts = data_lens (rendition .rendition) .attempts
 var rules_size = data_lens (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
 
+var question_view = [ 0 ]
 var question_answers = [ 1 ]
 
 var cell_position = L .reread (_x => [ _x [0], _x [1] ])
@@ -360,7 +361,7 @@ var student_app_to_board_viewer = _app =>
 
 var size_patterns = memoize (size =>
   where ((
-    range = Z .range (0) (size),
+    range = Z .range (1) (size + 1),
     vertical_patterns = T (range) (Z .map (_x =>
       T (range) (Z .map (_y => [_x, _y] )))),
     horizontal_patterns = T (range) (Z .map (_y =>
@@ -515,6 +516,7 @@ window .stuff = { ...window .stuff,
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
+  question_view, question_answers,
   cell_position, position_lens,
   cell_answer, student_name,
   history_stepped,
