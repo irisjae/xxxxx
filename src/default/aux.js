@@ -400,7 +400,7 @@ var board_viewer_crossed_positions = _board_viewer =>
         : Z .Nothing )) )),
     Z .justs ]) )
 
-var board_viewer_bingoes = _board_viewer =>
+var board_viewer_bingoed_positions = _board_viewer =>
   where ((
     _board = T (_board_viewer) (L .get (board_viewer_board)),
     _size = T (_board) (Z_ .size),
@@ -517,4 +517,4 @@ window .stuff = { ...window .stuff,
   student_app_get_ready_to_playing, student_app_next_playing,
   student_app_to_board_viewer,
   board_viewer_current_question,
-  board_viewer_crossed_positions, board_viewer_bingoes }
+  board_viewer_crossed_positions, board_viewer_bingoed_positions }
