@@ -204,7 +204,7 @@ student-app playing-etc{
   display: block;
   padding: 20px;
 }
-init-etc, get-ready-etc, result-etc, teacher-app playing-etc, student-app result-etc{
+init-etc, get-ready-etc, result-etc, teacher-app playing-etc{
   min-width: 80%;
   position: absolute;
   top: 50%;
@@ -218,10 +218,10 @@ init-etc button{
 [a-title] , [a-topic] { 
   font-size: 42px;
 }
-get-ready-etc, teacher-app playing-etc,student-app result-etc{
+get-ready-etc, teacher-app playing-etc, result-etc{
   flex-direction: column;
 }
-[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc, student-app result-etc{
+[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc, result-etc{
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   display: flex;
   align-items: center;

@@ -384,9 +384,9 @@ var board_viewer_attempted_positions = _board_viewer =>
 
 var board_viewer_crossed_positions = _board_viewer => 
   where ((
-    board = T (_board_viewer) (board_viewer_board),
-    attempted_positions = T (_board_viewer) (board_viewer_attempted_positions),
-    questions = T (_board_viewer) (L .get (board_viewer_questions)) ) =>
+    board = T (_board_viewer) (L .get (board_viewer_board)),
+    questions = T (_board_viewer) (L .get (board_viewer_questions)),
+    attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) ) =>
   T (Z .zip (attempted_positions) (questions)) ([
     Z .map (pair =>
       where ((
