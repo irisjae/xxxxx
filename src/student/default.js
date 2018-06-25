@@ -295,7 +295,7 @@ var attempt_question = _position => {{
     //Z_ .chain (board_viewer_current_question),
       var _question = T (_board_viewer) ([ board_viewer_current_question, from_just  ])
       var _board = T (_board_viewer) (L .get (board_viewer_board))
-      var _answer = T (_board) (L .get (position_lens (_position)))
+      var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
       if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
         var latency = game_clock .time () //lookbehind_latency ()
         if (matches_question_answer (_question) (_answer)) {
