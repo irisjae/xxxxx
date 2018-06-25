@@ -164,8 +164,8 @@ var board_viewer = data ({
 
 
 
-var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-/* var default_questions = shuffle ([
+/*/var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+/*/ var default_questions = shuffle ([
   ['1/2', ['2/4', '3/6']],
   ['1/3', ['2/6', '3/9']],
   ['2/3', ['4/6', '6/9']],
@@ -174,9 +174,8 @@ var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
   ['1/5', ['2/10', '3/15']],
   ['2/5', ['4/10', '6/15']],
   ['3/5', ['6/10', '9/15']],
-  ['4/5', ['8/10', '12/15']]
-  [])
-*/
+  ['4/5', ['8/10', '12/15']] ])
+//*/
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
 var default_rules = rules .rules (10, 3)
 
