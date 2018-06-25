@@ -35,7 +35,7 @@ var {
   student_app_get_ready_to_playing, student_app_next_playing,
   student_app_to_board_viewer,
   board_viewer_current_question,
-  board_viewer_crossed_answers, board_viewer_bingoes
+  board_viewer_crossed_positions, board_viewer_bingoed_positions
 } = window .stuff
 
 

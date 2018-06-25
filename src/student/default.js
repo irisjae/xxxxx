@@ -149,16 +149,18 @@ var playing_view = _ => <playing-etc>
         (Z_ .maybe ('') (_x => <question>{ _x }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { T (_board) (Z_ .map (row => 
-        <row> { T (row) (Z_ .map (cell =>
-          where (() =>
-          )T (cell) ([
-            L .get (cell_position),
-            _x => !! (R .any (Z .elem (_x)) (bingoes))
-              ? <cell>{ bold_crossed (_x) }</cell>
-              : !! (Z .elem (_x) (crossed_answers))
-              ? <cell>{ crossed (_x) }</cell>
-              : <cell fn={ pipeline_board_cell (cell) }>{ _x }</cell> ])))
-          } </row> )) } </board> ] )) ]) } </playing-etc>
+        <row> { T (row) (Z_ .map (_cell =>
+          where ((
+            _cell_position = T (_cell) (cell_position),
+            _cell_answer = T (_cell) (cell_answer),
+            _cell_crossed = Z .elem (_cell_position) (crossed_positions),
+            _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) ) =>
+          !! _cell_bingo
+          ? <cell>{ bold_crossed (_cell_answer) }</cell>
+          : !! _cell_crossed
+          ? <cell>{ crossed (_cell_answer) }</cell>
+          : <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>) ))
+          } </ row> )) } </ board> ] )) ]) } </ playing-etc>
 
 var game_over_view = _ =>
   where ((
