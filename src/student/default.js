@@ -149,7 +149,7 @@ var playing_view = _ => <playing-etc>
         bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions),
         game_tick = game_tick_sampler () ) => 
       [ T (current_question)
-        (Z_ .maybe ('') (_x => <question>{ _x }</question>))
+        (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { T (_board) (Z_ .map (row => 
         <row> { T (row) (Z_ .map (_cell =>
