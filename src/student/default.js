@@ -142,8 +142,8 @@ var playing_view = _ => <playing-etc>
       where ((
         _board = T (_board_viewer) (L .get (board_viewer_board)),
         current_question = T (_board_viewer) (board_viewer_current_question),
-        crossed_answers = T (_board_viewer) (board_viewer_crossed_answers),
-        bingoes = T (_board_viewer) (board_viewer_bingoes),
+        crossed_positions = T (_board_viewer) (board_viewer_crossed_positions),
+        bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions),
         game_tick = game_tick_sampler () ) => 
       [ T (current_question)
         (Z_ .maybe ('') (_x => <question>{ _x }</question>))
