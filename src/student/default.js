@@ -27,8 +27,8 @@ var {
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
-  cell_answer, student_name,
-  history_stepped,
+  cell_position, cell_answer, student_name,
+  cell_answer, stu
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
   teacher_app_get_ready_to_playing, 
@@ -149,8 +149,10 @@ var playing_view = _ => <playing-etc>
         (Z_ .maybe ('') (_x => <question>{ _x }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { T (_board) (Z_ .map (row => 
-        <row> { T (row) (Z_ .map (cell => T (cell) ([
-            L .get (cell_answer),
+        <row> { T (row) (Z_ .map (cell =>
+          where (() =>
+          )T (cell) ([
+            L .get (cell_position),
             _x => !! (R .any (Z .elem (_x)) (bingoes))
               ? <cell>{ bold_crossed (_x) }</cell>
               : !! (Z .elem (_x) (crossed_answers))

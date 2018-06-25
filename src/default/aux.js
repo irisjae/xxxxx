@@ -263,6 +263,7 @@ var setup_size = [setup_rules, rules_size]
 
 var question_answers = [ 1 ]
 
+var cell_position = L .reread (_x => [ _x [0], _x [1] ])
 var cell_answer = [ 2 ]
 
 var pair_as_list = L .cond (
@@ -509,7 +510,7 @@ window .stuff = { ...window .stuff,
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
-  cell_answer, student_name,
+  cell_position, cell_answer, student_name,
   history_stepped,
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
