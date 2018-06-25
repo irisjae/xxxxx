@@ -265,6 +265,8 @@ var question_answers = [ 1 ]
 var cell_position = L .reread (_x => [ _x [0], _x [1] ])
 var cell_answer = [ 2 ]
 
+var position_lens = ([x, y]) => [x - 1, y - 1]
+
 var pair_as_list = L .cond (
   [ _x => Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_x)
   , [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
@@ -302,10 +304,14 @@ var generate_board = size => questions =>
   where ((
     cells = shuffle (questions .slice (0, size * size)),
     cell = y => x =>
-      cells [(x - 1) * size + (y - 1)]) =>
+      T (cells) (L .get ([
+        (x - 1) * size + (y - 1),
+        question_answers,
+        L .reread (shuffle),
+        L .first ])) ) =>
   T (Z .range (1) (size + 1)) (
     Z_ .map (row => T (Z .range (1) (size + 1)) (
-      Z_ .map (column => [row - 1, column - 1, cell (row) (column)] )))))
+      Z_ .map (column => [row, column, cell (row) (column)] )))))
 
 
 var teacher_app_get_ready_to_playing = _app =>
@@ -509,7 +515,8 @@ window .stuff = { ...window .stuff,
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
-  cell_position, cell_answer, student_name,
+  cell_position, position_lens,
+  cell_answer, student_name,
   history_stepped,
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
