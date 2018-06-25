@@ -381,15 +381,13 @@ var board_viewer_attempted_positions = _board_viewer =>
     L .get (board_viewer_history),
     Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
 
-var board_viewer_position_answer = _board_viewer => _position =>
-  T (_board_viewer) (
-    L .get ([ board_viewer_board ]))
-
 //TODO: rewrite on new attempt data
-var board_viewer_crossed_answers = _board_viewer => 
+var board_viewer_crossed_positions = _board_viewer => 
   where ((
-    final_attempts = T (_board_viewer) (board_viewer_attempted_positions),
-    actual_answers = T (_board_viewer) (L .get (board_viewer_questions)) ) =>
+    board = T (_board_viewer) (board_viewer_board),
+    attempted_positions = T (_board_viewer) (board_viewer_attempted_positions),
+      board_viewer_position_answer (_board_viewer)),
+    questions = T (_board_viewer) (L .get (board_viewer_questions)) ) =>
   T (Z .zip (final_attempts) (actual_answers)) ([
     Z .map (pair =>
       where ((
