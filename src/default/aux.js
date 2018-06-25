@@ -305,7 +305,7 @@ var generate_board = size => questions =>
       cells [(x - 1) * size + (y - 1)]) =>
   T (Z .range (1) (size + 1)) (
     Z_ .map (row => T (Z .range (1) (size + 1)) (
-      Z_ .map (column => [row, column, cell (row) (column)] )))))
+      Z_ .map (column => [row - 1, column - 1, cell (row) (column)] )))))
 
 
 var teacher_app_get_ready_to_playing = _app =>
@@ -337,7 +337,7 @@ var student_app_next_playing =
       [ data_iso (student_app .playing)
       , L .getInverse (data_iso (student_app .game_over)) ]) ) 
          
-var question_answer_matches = question => answer =>
+var matches_question_answer = question => answer =>
   where ((
     correct_answers = T (question) (L .get (question_answers)) ) =>
   Z .elem (answer) (correct_answers) )
@@ -395,7 +395,7 @@ var board_viewer_crossed_positions = _board_viewer =>
           T (board) (L .get (_position)))),
         question = Z .snd (pair) ) =>
       T (maybe_guess) (Z .chain (guess =>
-        !! (question_answer_matches (question) (guess))
+        !! (matches_question_answer (question) (guess))
         ? Z .Just (position)
         : Z .Nothing )) )),
     Z .justs ]) )
@@ -516,5 +516,6 @@ window .stuff = { ...window .stuff,
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
   student_app_to_board_viewer,
+  matches_question_answer, 
   board_viewer_current_question,
   board_viewer_crossed_positions, board_viewer_bingoed_positions }

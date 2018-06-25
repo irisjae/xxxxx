@@ -34,6 +34,7 @@ var {
   teacher_app_get_ready_to_playing, 
   student_app_get_ready_to_playing, student_app_next_playing,
   student_app_to_board_viewer,
+  matches_question_answer,
   board_viewer_current_question,
   board_viewer_crossed_positions, board_viewer_bingoed_positions
 } = window .stuff
@@ -92,7 +93,7 @@ var pipeline_name_entry = _dom => {{
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
-      ;attempt_question (L .get (cell_position) (cell)) }}) }}) }}
+      ;attempt_question (T (cell) (L .get (cell_position))) }}) }}) }}
           
 var room_entry_view = <room-entry-etc>
   <code fn={ pipeline_room_entry } >
@@ -292,22 +293,22 @@ var attempt_question = _position => {{
     Z_ .map (_board_viewer => {{
     //Z_ .chain (board_viewer_current_question),
       var _question = T (_board_viewer) ([ board_viewer_current_question, from_just  ])
-      var _board = T (_board_viewer) (L .get (board_viewer_))
-      var _answer = 
+      var _board = T (_board_viewer) (L .get (board_viewer_board))
+      var _answer = T (_board) (L .get (_position))
       if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
         var latency = game_clock .time () //lookbehind_latency ()
-        if (Z .equals (_answer) (_question)) {
+        if (matches_question_answer (_question) (_answer)) {
           ;T (app_state ()) ([
             L .set
               ([app_history, L .last, rendition_attempts, L .append])
-              ([_answer, latency]),
+              ([_position, latency]),
             student_app_next_playing,
             _x => {{ ;app_state (_x) }} ]) }
         else {
           ;T (app_state ()) ([
             L .set
               ([app_history, L .last, rendition_attempts, L .append])
-              ([_answer, latency]),
+              ([_position, latency]),
             _x => {{ ;app_state (_x) }} ])
           ;lookbehind_state (student_lookbehind .attempting (game_clock .time (), true)) } } }}) ]) }}
 
