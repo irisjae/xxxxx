@@ -28,7 +28,7 @@ var {
   rendition_attempts,
   rules_size, setup_size,
   cell_position, cell_answer, student_name,
-  cell_answer, stu
+  history_stepped,
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
   teacher_app_get_ready_to_playing, 
@@ -36,7 +36,7 @@ var {
   student_app_to_board_viewer,
   board_viewer_current_question,
   board_viewer_crossed_positions, board_viewer_bingoed_positions
-  board_viewer_cr
+} = window .stuff
 
 
 
@@ -160,7 +160,7 @@ var playing_view = _ => <playing-etc>
           : !! _cell_crossed
           ? <cell>{ crossed (_cell_answer) }</cell>
           : <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>) ))
-          } </ row> )) } </ board> ] )) ]) } </ playing-etc>
+          } </row> )) } </board> ] )) ]) } </playing-etc>
 
 var game_over_view = _ =>
   where ((
@@ -169,25 +169,25 @@ var game_over_view = _ =>
   <game-over-etc>
     <result-etc>
       <tabs>
-        <button> Overview </ button>
-        <button> Question </ button>
-        </ tabs>
-      <id><img src={ student_img } />  (name) </ id>
-      <div a-logo> <img src={ bingo_img } /> </ div>
+        <button> Overview </button>
+        <button> Question </button>
+        </tabs>
+      <id><img src={ student_img } />  (name) </id>
+      <div a-logo> <img src={ bingo_img } /> </div>
       <table a-result>
         <tr>
-          <th>Question</ th>
-          <th>Attempts</ th>
-          <th>Avg. Time</ th>
-          </ tr>
+          <th>Question</th>
+          <th>Attempts</th>
+          <th>Avg. Time</th>
+          </tr>
         <tr>
-          <td></ td>
-          <td></ td>
-          <td></ td>
-          </ tr>
-          </ table>
-          </ result-etc>
-          </ game-over-etc>)         
+          <td></td>
+          <td></td>
+          <td></td>
+          </tr>
+          </table>
+          </result-etc>
+          </game-over-etc>)         
 
 
 window .view = <student-app>
