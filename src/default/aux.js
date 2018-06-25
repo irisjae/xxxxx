@@ -336,7 +336,7 @@ var student_app_get_ready_to_playing = _app =>
 var student_app_next_playing = 
   whereby (_app => (
     board_size = T (_app) (L .get ([app_setup, setup_size])),
-    history_size = T (_app) ([ L .get (app_history), Z .size ]) ) =>
+    history_size = T (_app) ([ L .get (app_history), Z_ .size ]) ) =>
   !! (history_size < board_size * board_size)
   ? L .set ([app_history, L .append]) (rendition .rendition ([]))
   : L .get (
