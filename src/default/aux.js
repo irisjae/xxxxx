@@ -395,13 +395,13 @@ var board_viewer_crossed_positions = _board_viewer =>
   T (Z .zip (attempted_positions) (questions)) ([
     Z .map (pair =>
       where ((
-        maybe_guess_position = Z .fst (pair),
-        position = from_just (maybe_guess_position),
-        maybe_guess = T (maybe_guess_position) (Z .map (_position =>
-          T (board) (L .get (_position)))),
+        maybe_attempt_position = Z .fst (pair),
+        position = from_just (maybe_attempt_position),
+        maybe_attempt_answer = T (maybe_attempt_position) (Z .map (_position =>
+          T (board) (L .get ([ position_lens (_position), cell_answer ])))),
         question = Z .snd (pair) ) =>
-      T (maybe_guess) (Z .chain (guess =>
-        !! (matches_question_answer (question) (guess))
+      T (maybe_attempt_answer) (Z .chain (attempt_answer =>
+        !! (matches_question_answer (question) (attempt_answer))
         ? Z .Just (position)
         : Z .Nothing )) )),
     Z .justs ]) )
