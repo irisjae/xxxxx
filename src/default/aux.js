@@ -381,21 +381,24 @@ var board_viewer_attempted_positions = _board_viewer =>
     L .get (board_viewer_history),
     Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
 
+var board_viewer_position_answer = _board_viewer => _position =>
+  T (_board_viewer) (
+    L .get ([ board_viewer_board ]))
+
 //TODO: rewrite on new attempt data
 var board_viewer_crossed_answers = _board_viewer => 
   where ((
-    final_attempts = T (_board_viewer) ([
-      L .get (board_viewer_history),
-      Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ]),
+    final_attempts = T (_board_viewer) (board_viewer_attempted_positions),
     actual_answers = T (_board_viewer) (L .get (board_viewer_questions)) ) =>
   T (Z .zip (final_attempts) (actual_answers)) ([
     Z .map (pair =>
       where ((
-        maybe_attempt = Z .fst (pair),
-        maybe_answer = Z .Just (Z .snd (pair))) =>
+        maybe_guess = Z .fst (pair),
+        question = Z .snd (pair) ) =>
+      T (maybe_guess) (Z .map (guess =>
+        ))
       !! (Z .equals (maybe_attempt) (maybe_answer))
-      ? maybe_attempt
-      : Z .Nothing)),
+)),
     Z .justs ]) )
 
 var board_viewer_bingoes = _board_viewer =>
