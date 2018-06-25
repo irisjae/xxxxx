@@ -378,7 +378,7 @@ var size_patterns = memoize (size =>
 var board_viewer_current_question = _board_viewer =>
   where ((
     history = T (_board_viewer) (L .get (board_viewer_history)),
-    current_question_index = Z .size (history) - 1) =>
+    current_question_index = Z_ .size (history) - 1) =>
   T (_board_viewer) (
     L .get ([board_viewer_questions, current_question_index, as_maybe])))
 
@@ -421,7 +421,7 @@ var board_viewer_bingoed_positions = _board_viewer =>
 
 
 var history_stepped = old => curr =>
-  Z .size (curr) > Z .size (old)
+  Z_ .size (curr) > Z_ .size (old)
 
 
 var message_encoding =
