@@ -92,7 +92,7 @@ var pipeline_name_entry = _dom => {{
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
-      ;attempt_question (L .get (cell_answer) (cell)) }}) }}) }}
+      ;attempt_question (L .get (cell_position) (cell)) }}) }}) }}
           
 var room_entry_view = <room-entry-etc>
   <code fn={ pipeline_room_entry } >
@@ -287,10 +287,10 @@ var connect_room = _ => {{
       .then (_ => {{
         ;io_state (io .inert) }}) }}) ]) }} 
 
-var attempt_question = _answer => {{
+var attempt_question = _position => {{
   T (app_state ()) ([ student_app_to_board_viewer,
-    Z_ .chain (board_viewer_current_question),
     Z_ .map (_question => {{
+    //Z_ .chain (board_viewer_current_question),
       if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
         var latency = game_clock .time () //lookbehind_latency ()
         if (Z .equals (_answer) (_question)) {
