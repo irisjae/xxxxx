@@ -261,6 +261,8 @@ var rendition_attempts = data_lens (rendition .rendition) .attempts
 var rules_size = data_lens (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
 
+var question_answers = [ 1 ]
+
 var cell_answer = [ 2 ]
 
 var pair_as_list = L .cond (
@@ -335,7 +337,10 @@ var student_app_next_playing =
       [ data_iso (student_app .playing)
       , L .getInverse (data_iso (student_app .game_over)) ]) ) 
          
-var question_answer_matches = ...
+var question_answer_matches = question => answer =>
+  where ((
+    correct_answers = T (question) (L .get (question_answers)) ) =>
+  Z .elem (answer) (correct_answers) )
 
 var student_app_to_board_viewer = _app => 
   where ((
