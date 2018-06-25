@@ -381,7 +381,6 @@ var board_viewer_attempted_positions = _board_viewer =>
     L .get (board_viewer_history),
     Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
 
-//TODO: rewrite on new attempt data
 var board_viewer_crossed_positions = _board_viewer => 
   where ((
     board = T (_board_viewer) (board_viewer_board),
