@@ -386,30 +386,30 @@ var board_viewer_crossed_positions = _board_viewer =>
   where ((
     board = T (_board_viewer) (board_viewer_board),
     attempted_positions = T (_board_viewer) (board_viewer_attempted_positions),
-      board_viewer_position_answer (_board_viewer)),
     questions = T (_board_viewer) (L .get (board_viewer_questions)) ) =>
-  T (Z .zip (final_attempts) (actual_answers)) ([
+  T (Z .zip (attempted_positions) (questions)) ([
     Z .map (pair =>
       where ((
-        maybe_guess = Z .fst (pair),
+        maybe_guess_position = Z .fst (pair),
+        position = from_just (maybe_guess_position),
+        maybe_guess = T (maybe_guess_position) (_position =>
+          T (board) (L .get (_position))),
         question = Z .snd (pair) ) =>
-      T (maybe_guess) (Z .map (guess =>
-        ))
-      !! (Z .equals (maybe_attempt) (maybe_answer))
-)),
+      T (maybe_guess) (Z .chain (guess =>
+        !! (question_answer_matches (question) (guess))
+        ? Z .Just (position)
+        : Z .Nothing )) )),
     Z .justs ]) )
 
 var board_viewer_bingoes = _board_viewer =>
   where ((
     _board = T (_board_viewer) (L .get (board_viewer_board)),
     _size = T (_board) (Z_ .size),
-    _crossed_answers = T (_board_viewer) (board_viewer_crossed_answers) ) =>
+    _crossed_positions = T (_board_viewer) (board_viewer_crossed_positions) ) =>
   T (size_patterns (_size)) ([
     Z_ .map (_pattern =>
-      _pattern .map (_lens => L .get ([_lens, cell_answer]) (_board)) ),
-    Z_ .map (_pattern =>
       !! (T (_pattern)
-        (R .all (_answer => Z_ .elem (_answer) (_crossed_answers))))
+        (R .all (_answer => Z_ .elem (_answer) (_crossed_positions))))
       ? Z .Just (_pattern)
       : Z .Nothing),
     Z .justs ]) )
@@ -518,4 +518,4 @@ window .stuff = { ...window .stuff,
   student_app_get_ready_to_playing, student_app_next_playing,
   student_app_to_board_viewer,
   board_viewer_current_question,
-  board_viewer_crossed_answers, board_viewer_bingoes }
+  board_viewer_crossed_positions, board_viewer_bingoes }
