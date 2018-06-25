@@ -151,8 +151,8 @@ var playing_view = _ => <playing-etc>
       , <board> { T (_board) (Z_ .map (row => 
         <row> { T (row) (Z_ .map (_cell =>
           where ((
-            _cell_position = T (_cell) (cell_position),
-            _cell_answer = T (_cell) (cell_answer),
+            _cell_position = T (_cell) (L .get (cell_position)),
+            _cell_answer = T (_cell) (L .get (cell_answer)),
             _cell_crossed = Z .elem (_cell_position) (crossed_positions),
             _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) ) =>
           !! _cell_bingo

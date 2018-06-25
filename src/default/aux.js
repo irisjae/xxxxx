@@ -392,8 +392,8 @@ var board_viewer_crossed_positions = _board_viewer =>
       where ((
         maybe_guess_position = Z .fst (pair),
         position = from_just (maybe_guess_position),
-        maybe_guess = T (maybe_guess_position) (_position =>
-          T (board) (L .get (_position))),
+        maybe_guess = T (maybe_guess_position) (Z .map (_position =>
+          T (board) (L .get (_position)))),
         question = Z .snd (pair) ) =>
       T (maybe_guess) (Z .chain (guess =>
         !! (question_answer_matches (question) (guess))
