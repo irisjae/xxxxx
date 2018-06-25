@@ -27,7 +27,7 @@ var {
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
-  cell_answer, student_name,
+  cell_position, cell_answer, student_name,
   history_stepped,
   message_encoding, messages_encoding,
   assemble_students, schedule_start,
