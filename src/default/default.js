@@ -199,7 +199,7 @@ var map_defined = fn => _x =>
   : fn (_x)
 var from_just = _x =>
   Z_ .fromMaybe (undefined) (_x)
-var maybe_all_list = list =>
+/*var maybe_all_list = list =>
   where ((
     _head = Z_ .head (list),
     _tail = Z_ .tail (list)) =>
@@ -221,6 +221,8 @@ var maybe_all = _x =>
       maybe_all_list,
       Z_ .map (R .fromPairs) ])
   : undefined
+*/
+var maybe_all = Z_ .sequence (Z .Maybe)
 
 
 /*
