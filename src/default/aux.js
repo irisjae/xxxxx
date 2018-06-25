@@ -317,9 +317,9 @@ var teacher_app_get_ready_to_playing = _app =>
 
 var student_app_get_ready_to_playing = _app => 
   where ((
-    exists = from_just (maybe_all (T (_app) (L .pick ({
+    exists = from_just (maybe_all (T (_app) (L .get (L .pick ({
       _student: L .get ([ app_student, as_maybe ]),
-      _setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
+      _setup: L .get ([ app_setup, as_maybe ]) }))))) ) =>
   T (exists) (map_defined (({ _student, _setup }) =>
     where ((
       _size = L .get (setup_size) (_setup),
@@ -421,7 +421,7 @@ var history_stepped = old => curr =>
 
 var message_encoding =
   whereby (message => (
-    strip = Z_ .compose (JSON .parse, JSON .stringify),
+    strip = Z_ .compose (JSON .parse) (JSON .stringify),
     student = T (message) (L .get (message_student)) ) =>
   [ !! L .isDefined (message_teacher_setup) (message)
     ? L .get (
