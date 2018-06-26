@@ -149,7 +149,8 @@ var game_over_view = _ =>
     all_students = T (_ensemble) (
       assemble_students (data_kind (_app))),
     questions = T (_app) (L .collect ([app_questions, L .elems, question_view])),
-    attempts = 
+    attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ]),
+    average_time = 
     
                              ) =>
   <game-over-etc>
@@ -206,7 +207,12 @@ var lookbehind_latency = _ => {
     return now - start }
 */
        
-       
+var average = _list =>
+  !! (Z_ .equals ([]) (_list)) 
+  ? Z .Nothing
+  : Z .Just (     
+                         
+  Z .reduce / Z_ .size (_list))
        
        
        
