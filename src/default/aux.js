@@ -99,65 +99,68 @@ var ping = v (timestamp, latency, latency)
 var attempt = v (position, timeinterval)
 
 
-var rendition = data ({ rendition: (attempts = ~ list (attempt)) => defined })
-var board = data ({ board: (answers = ~ map (position) (answer)) => defined})
+var rendition = data ({ rendition: (attempts =- list (attempt)) => rendition })
+var board = data ({ board: (answers =- map (position) (answer)) => board })
 
-var rules = data ({ rules: (time_limit = ~ number, size = ~ nat) => defined })
-var setup = data ({ setup: ( room = ~ room, questions = ~ list (question), rules = ~ rules ) => defined })
+var rules = data ({ rules: (time_limit =- number, size =- nat) => rules })
+var setup = data ({ setup: ( room =- room, questions =- list (question), rules =- rules ) => setup })
 
 
 var teacher_app = data ({
-	get_ready: ( setup = ~ setup, students = ~ list (student) ) => defined,
-	playing: ( setup = ~ setup, students = ~ map (student) (board, list (rendition)) ) => defined,
-	game_over: ( setup = ~ setup, students = ~ map (student) (board, list (rendition)) ) => defined })
+	get_ready: ( setup =- setup, students =- list (student) ) => teacher_app,
+	playing: ( setup =- setup, students =- map (student) (board, list (rendition)) ) => teacher_app,
+	game_over: ( setup =- setup, students =- map (student) (board, list (rendition)) ) => teacher_app })
 
 var student_app = data ({
-	get_ready: ( student = ~ maybe (student), setup = ~ maybe (setup) ) => defined,
-	playing: ( student = ~ student, setup = ~ setup, board = ~ board, history = ~ list (rendition) ) => defined,
-	game_over: ( student = ~ student, setup = ~ setup, board = ~ board, history = ~ list (list (rendition)) ) => defined })
+	get_ready: ( student =- maybe (student), setup =- maybe (setup) ) => student_app,
+	playing: ( student =- student, setup =- setup, board =- board, history =- list (rendition) ) => student_app,
+	game_over: ( student =- student, setup =- setup, board =- board, history =- list (list (rendition)) ) => student_app })
+
+/*
+var te })
 
 /*
 var teacher_lookbehind = data ({
-  nothing: () => defined,
-  bad_room: () => defined })
+  nteacher_lookbehind => defined,
+  bad_roteacher_lookbehind=> defined })
 */
 
 var student_lookbehind = data ({
-  nothing: () => defined,
-  bad_room: (room = ~ room) => defined,
-  attempting: (since = ~ latency, blocked = ~ bool) => defined })
+  nothistudent_lookbehind=> defined,
+  bad_room: (room =-student_lookbehind=> defined,
+  attempting: (since =- latency, blocked =-student_lookbehind=> defined })
 
 var io = data ({
-  inert: () => defined,
-  connecting: () => defined,
-  messaging: () => defined,
-  heartbeat: () => defined })
+  ineio=> defined,
+  connectiio=> defined,
+  messagiio=> defined,
+  heartbeio=> defined })
 
 
 var message = data ({
-  teacher_setup: ( questions = ~ list (question), rules = ~ rules ) => defined,
-  teacher_ping: ( ping = ~ ping ) => defined,
-  teacher_start: ( synchroziation = ~ timestamp ) => defined,
-  teacher_abort: ( synchroziation = ~ timestamp ) => defined,
-  student_ping: ( student = ~ student, ping = ~ ping ) => defined,
-  student_start: ( student = ~ student, synchronization = ~ timestamp ) => defined,
-  student_join: ( student = ~ student, board = ~ board ) => defined,
-  student_update: ( student = ~ student, history = ~ list (rendition) ) => defined })
+  teacher_setup: ( questions =- list (question), rules =- rmessage=> defined,
+  teacher_ping: ( ping =- message=> defined,
+  teacher_start: ( synchroziation =- timesmessage=> defined,
+  teacher_abort: ( synchroziation =- timesmessage=> defined,
+  student_ping: ( student =- student, ping =- message=> defined,
+  student_start: ( student =- student, synchronization =- timesmessage=> defined,
+  student_join: ( student =- student, board =- bmessage=> defined,
+  student_update: ( student =- student, history =- list (renditmessage=> defined })
 var ensemble = data ({
   ensemble: (
-    ping = ~ ping,
-    questions = ~ list (question),
-    rules = ~ rules,
-    start = ~ timestamp,
-    abort = ~ maybe (timestamp),
-    student_starts = ~ map (student) (timestamp),
-    student_pings = ~ map (student) (ping),
-    student_boards = ~ map (student) (board),
-    student_histories = ~ map (student) (history) ) => defined })
+    ping =- ping,
+    questions =- list (question),
+    rules =- rules,
+    start =- timestamp,
+    abort =- maybe (timestamp),
+    student_starts =- map (student) (timestamp),
+    student_pings =- map (student) (ping),
+    student_boards =- map (student) (board),
+    student_histories =- map (student) (history) ) => defined })
 
 
 var board_viewer = data ({
-  board_viewer: (board = ~ board, questions = ~ list (question), history = ~ history) => defined })
+  board_viewer: (board =- board, questions =- list (question), history =- history) => defined })
 
 
 //--------------------DEFAULTS--------------------
