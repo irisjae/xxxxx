@@ -154,9 +154,10 @@ var game_over_view = _ =>
       assemble_students (data_kind (_app)),
       Z_ .map ($ ([
         Z .snd,
-        L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe]), Z .map (Z .of (Array)) ])), _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)), Z .map ($ ([Z .justs, average, Z_ .fromMaybe ('gg')]))])
-    
-                             ) =>
+        L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
+        Z .map (Z .of (Array)) ])),
+      _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
+      Z .map ($ ([ Z .justs, average, Z_ .fromMaybe ('gg') ])) ]) ) =>
   <game-over-etc>
     <result-etc>
       <tabs>
