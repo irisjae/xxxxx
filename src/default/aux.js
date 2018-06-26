@@ -118,7 +118,7 @@ var student_app = data ({
 
 /*
 var teacher_lookbehind = data ({
-  nothing: () =-> teacher_lookbehind,
+  nothing: () => teacher_lookbehind,
   bad_room: () => teacher_lookbehind })
 */
 
@@ -161,7 +161,7 @@ var board_viewer = data ({
 
 /*
 var board_viewer = data ({
-  board_viewer: ({_} =- board) => (questions = list (question)) => ({_} = history) => ({_} = board_viewer) })
+  board_viewer: ({_} =- board) => (questions =- list (question)) => ({_} =- history) => ({_} =- board_viewer) })
 */
 
 
