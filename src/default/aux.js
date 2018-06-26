@@ -117,35 +117,32 @@ var student_app = data ({
 	game_over: ( student =- student, setup =- setup, board =- board, history =- list (list (rendition)) ) => student_app })
 
 /*
-var te })
-
-/*
 var teacher_lookbehind = data ({
-  nteacher_lookbehind => defined,
-  bad_roteacher_lookbehind=> defined })
+  nothing: () => teacher_lookbehind,
+  bad_room: () => teacher_lookbehind })
 */
 
 var student_lookbehind = data ({
-  nothistudent_lookbehind=> defined,
-  bad_room: (room =-student_lookbehind=> defined,
-  attempting: (since =- latency, blocked =-student_lookbehind=> defined })
+  nothing: () => student_lookbehind,
+  bad_room: (room =- room) => student_lookbehind,
+  attempting: (since =- latency, blocked =- bool) => student_lookbehind })
 
 var io = data ({
-  ineio=> defined,
-  connectiio=> defined,
-  messagiio=> defined,
-  heartbeio=> defined })
+  inert: () => io,
+  connecting: () => io,
+  messaging: () => io,
+  heartbeat: () => io })
 
 
 var message = data ({
-  teacher_setup: ( questions =- list (question), rules =- rmessage=> defined,
-  teacher_ping: ( ping =- message=> defined,
-  teacher_start: ( synchroziation =- timesmessage=> defined,
-  teacher_abort: ( synchroziation =- timesmessage=> defined,
-  student_ping: ( student =- student, ping =- message=> defined,
-  student_start: ( student =- student, synchronization =- timesmessage=> defined,
-  student_join: ( student =- student, board =- bmessage=> defined,
-  student_update: ( student =- student, history =- list (renditmessage=> defined })
+  teacher_setup: ( questions =- list (question), rules =- rules ) => message,
+  teacher_ping: ( ping =- ping ) => message,
+  teacher_start: ( synchroziation =- timestamp ) => message,
+  teacher_abort: ( synchroziation =- timestamp ) => message,
+  student_ping: ( student =- student, ping =- ping ) => message,
+  student_start: ( student =- student, synchronization =- timestamp ) => message,
+  student_join: ( student =- student, board =- board ) => message,
+  student_update: ( student =- student, history =- list (rendition) ) => message })
 var ensemble = data ({
   ensemble: (
     ping =- ping,
@@ -156,11 +153,16 @@ var ensemble = data ({
     student_starts =- map (student) (timestamp),
     student_pings =- map (student) (ping),
     student_boards =- map (student) (board),
-    student_histories =- map (student) (histensemble=> defined })
+    student_histories =- map (student) (history) ) => ensemble })
 
 
 var board_viewer = data ({
-  board_viewer: (board =- board, questions =- list (question), history =- hiboard_viewer=> defined })
+  board_viewer: (board =- board, questions =- list (question), history =- history) => board_viewer })
+
+/*
+var board_viewer = data ({
+  board_viewer: ({_} =- board) => (questions =- list (question)) => ({_} =- history) => ({_} =- board_viewer) })
+*/
 
 
 //--------------------DEFAULTS--------------------
@@ -515,7 +517,7 @@ window .stuff = { ...window .stuff,
   ensemble_student_pings, ensemble_student_starts,
   ensemble_student_boards, ensemble_student_histories,
   app_setup, app_student, app_students, app_room,
-  app_board, app_history, app_questions,
+  app_questions, app_board, app_history,
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
