@@ -25,7 +25,7 @@ var {
   app_setup, app_student, app_students, app_room,
   app_questions, app_board, app_history,
   app_board, app_history,
-  lookbehind_room, lookbehind_
+  lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
   rules_size, setup_size,
   question_view, question_answers,
