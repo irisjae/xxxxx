@@ -172,8 +172,11 @@ var board_viewer = data ({
 	board_viewer: { board :- board, history :- history } ** { board_viewer } })
 ###########################################################
 var board_viewer = data ({
-	board_viewer: board [] -+ list (question) .questions -+ history .history -+ board_viewer })
-}
+	board_viewer: board -+ list (question) [typeof questions] -+ history [typeof history] -+ board_viewer })
+###########################################################
+var board_viewer = data ({
+	board_viewer: board .board -+ list (question) .questions -+ history .history -+ board_viewer }
+	board_viewer: board -+ list (question) [typeof questions] 
 */
 
 
