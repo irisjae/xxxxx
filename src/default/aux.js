@@ -188,7 +188,7 @@ var board_viewer = data ([
 ###########################################################
 var board_viewer = data ({
   	board_viewer: board|( board => list (question)|( questions => history|( history => board_viewer ))) })
-	board_viewer: board .board -+ list (question) .questions -
+###########################################################
 */
 
 
