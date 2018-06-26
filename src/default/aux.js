@@ -166,10 +166,16 @@ var board_viewer = data ({
   board_viewer: ({_} =- board) => (questions =- list (question)) => ({_} =- history) => ({_} =- board_viewer) })
 ###########################################################
 var board_viewer = data ({
+	board_viewer: (board =- board) => (questions =- list (question)) => (history =- history) => board_viewer })
+###########################################################
+var board_viewer = data ({
   board_viewer: ({_} =- board) => (questions =- list (question)) => ({_} =- history) => ({_} =- board_viewer) })
 ###########################################################
 var board_viewer = data ({
   board_viewer: { board :- board, questions :- list (question), history :- history }  [board_viewer] })
+###########################################################
+var board_viewer = data ({
+  board_viewer: { board :- board, questions :- list (question), history :- history } |- board_viewer })
 ###########################################################
 var board_viewer = data ({
 	board_viewer: { board :- board, questions :- list (question), history :- history } ** { board_viewer } })
