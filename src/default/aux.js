@@ -153,11 +153,11 @@ var ensemble = data ({
     student_starts = ~ map (student) (timestamp),
     student_pings = ~ map (student) (ping),
     student_boards = ~ map (student) (board),
-    student_histories = ~ map (student) (history) ) => defined })
+    student_histories = ~ map (student) (history) ) => ensemble })
 
 
 var board_viewer = data ({
-  board_viewer: (board = ~ board, questions = ~ list (question), history = ~ history) => defined })
+  board_viewer: (board = ~ board, questions = ~ list (question), history = ~ history) => board_viewer })
 
 
 //--------------------DEFAULTS--------------------
