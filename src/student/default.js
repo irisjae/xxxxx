@@ -23,7 +23,6 @@ var {
   ensemble_student_pings, ensemble_student_starts,
   ensemble_student_boards, ensemble_student_histories,
   app_setup, app_student, app_students, app_room,
-  app_questions, app_board, app_history,
   app_board, app_history,
   lookbehind_room, lookbehind_since, lookbehind_blocked,
   rendition_attempts,
@@ -96,7 +95,33 @@ var pipeline_name_entry = _dom => {{
 var pipeline_board_cell = cell => _dom => {{
   ;clicking .forEach (click => {{
     ;_dom .addEventListener (click, _ => {{
-      ;
+      ;attempt_question (T (cell) (L .get (cell_position))) }}) }}) }}
+          
+var room_entry_view = <room-entry-etc>
+  <code fn={ pipeline_room_entry } >
+    <input placeholder="Enter a room code" />
+    <button> Go </button> </code>
+  { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
+    ? where ((
+        bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))) =>
+      <message>{bad_room} is not a valid room</message> )
+    : [] } </room-entry-etc>
+  
+var name_entry_view = <student-entry-etc>
+  <name fn={ pipeline_name_entry } >
+    <input placeholder="Enter your name" />
+    <button> Go </button>
+  </name> </student-entry-etc>
+
+var get_ready_view = _ => <get-ready-etc>
+  { T (app_state ()) ([
+    L .get (L .pick ({
+      room: [app_room, as_maybe],
+      student: [app_student, as_maybe] })),
+    ({ room, student }) =>
+      !! Z .isNothing (room)
+      ? !! (L .isDefined (io_inert) (io_state ()))
+        ? room_entry_view
         : !! (L .isDefined (io_connecting) (io_state ()))
         ? 'Finding room...'
         : undefined
@@ -143,21 +168,7 @@ var playing_view = _ => <playing-etc>
 var game_over_view = _ =>
   where ((
     bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' ,
-    student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png',
-    _app = app_state (),
-    _ensemble = ensemble_state (),
-    all_students = T (_ensemble) (
-      assemble_students (data_kind (_app))),
-    questions = T (_app) (L .collect ([app_questions, L .elems, question_view])),
-    attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ]),
-    average_time = T (_ensemble) ([
-      assemble_students (data_kind (_app)),
-      Z_ .map ($ ([
-        Z .snd,
-        L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
-        Z .map (Z .of (Array)) ])),
-      _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
-      Z .map ($ ([ Z .justs, average, Z_ .fromMaybe ('gg') ])) ]) ) =>
+    student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png') =>
   <game-over-etc>
     <result-etc>
       <tabs>
@@ -212,12 +223,7 @@ var lookbehind_latency = _ => {
     return now - start }
 */
        
-var average = _list =>
-  !! (Z_ .equals ([]) (_list)) 
-  ? Z .Nothing
-  : Z .Just (     
-                         
-  Z .reduce / Z_ .size (_list))
+       
        
        
        
