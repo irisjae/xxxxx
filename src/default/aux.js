@@ -467,39 +467,31 @@ var message_encoding =
   whereby (message => (
     strip = Z_ .compose (JSON .parse) (JSON .stringify),
     student = T (message) (L .get (message_student)) ) =>
-  [ !! L .isDefined (message_teacher_setup) (message)
-    ? L .get (
+  [ R .cond ([
+    [ L .isDefined (message_teacher_setup), L .get (
         [ message_teacher_setup
-        , L .getInverse (data_iso (ensemble .ensemble)) ] )
-    : !! L .isDefined (message_teacher_ping) (message)
-    ? L .get (
+        , L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ) ],
+    [ L .isDefined (message_teacher_ping), L .get (
         [ message_ping
-        , L .getInverse ([ ensemble_ping ]) ] )
-    : !! L .isDefined (message_teacher_start) (message)
-    ? L .get (
+        , L .getInverse ([ ensemble_ping ]) ] ) ],
+    [ L .isDefined (message_teacher_start), L .get (
         [ message_synchronization
-        , L .getInverse ([ ensemble_start ]) ] )
-    : !! L .isDefined (message_teacher_abort) (message)
-    ? L .get (
+        , L .getInverse ([ ensemble_start ]) ] ) ],
+    [ L .isDefined (message_teacher_abort), L .get (
         [ message_synchronization
-        , L .getInverse ([ ensemble_abort ]) ] )
-    : !! L .isDefined (message_student_ping) (message)
-    ? L .get (
+        , L .getInverse ([ ensemble_abort ]) ] ) ],
+    [ L .isDefined (message_student_ping), L .get (
         [ message_ping
-        , L .getInverse ([ ensemble_student_pings, student ]) ] )
-    : !! L .isDefined (message_student_join) (message)
-    ? L .get (
+        , L .getInverse ([ ensemble_student_pings, student ]) ] ) ],
+    [ L .isDefined (message_student_join), L .get (
         [ message_board
-        , L .getInverse ([ ensemble_student_boards, student ]) ] )
-    : !! L .isDefined (message_student_start) (message)
-    ? L .get (
+        , L .getInverse ([ ensemble_student_boards, student ]) ] ) ],
+    [ L .isDefined (message_student_start), L .get (
         [ message_synchronization
-        , L .getInverse ([ ensemble_student_starts, student ]) ] )
-    : !! L .isDefined (message_student_update) (message)
-    ? L .get (
+        , L .getInverse ([ ensemble_student_starts, student ]) ] ) ],
+    [ L .isDefined (message_student_update), L .get (
         [ message_history
-        , L .getInverse ([ ensemble_student_histories, student ]) ] )
-    : undefined
+        , L .getInverse ([ ensemble_student_histories, student ]) ] ) ] ])
   , L .get (data_iso (ensemble .ensemble)) 
   , strip ] )
 
