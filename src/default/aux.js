@@ -466,38 +466,27 @@ var history_stepped = old => curr =>
 var message_encoding =
   whereby (message => (
     strip = Z_ .compose (JSON .parse) (JSON .stringify),
-    student = T (message) (L .get (message_student)) ) =>
-  [ where ((
-      encodings = 
-        [ [ message_teacher_setup, 
-            [ message_teacher_setup
-            , L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ]
-        , [ message_teacher_ping, 
-            [ message_ping
-            , L .getInverse ([ ensemble_ping ]) ] ]
-        , [ message_teacher_start, 
-            [ message_synchronization
-            , L .getInverse ([ ensemble_start ]) ] ],
-        [ message_teacher_abort, 
-            [ message_synchronization
-            , L .getInverse ([ ensemble_abort ]) ] ],
-        [ message_student_ping, 
-            [ message_ping
-            , L .getInverse ([ ensemble_student_pings, student ]) ] ],
-        [ message_student_join, 
-            [ message_board
-            , L .getInverse ([ ensemble_student_boards, student ]) ] ],
-        [ message_student_start, 
-            [ message_synchronization
-            , L .getInverse ([ ensemble_student_starts, student ]) ] ],
-        [ message_student_update, 
-            [ message_history
-            , L .getInverse ([ ensemble_student_histories, student ]) ] ] ]
-        ) (Z_ .map (([pattern, encoding]) =>
-          [L .isDefined (pattern), L .get (encoding)] ))
-       ) =>
-    R .cond (cases) )
-    
+    student = T (message) (L .get (message_student)),
+    encodings = 
+       [ [ message_teacher_setup , 
+           [ message_teacher_setup, L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ]
+       , [ message_teacher_ping , 
+           [ message_ping, L .getInverse ([ ensemble_ping ]) ] ]
+       , [ message_teacher_start , 
+           [ message_synchronization, L .getInverse ([ ensemble_start ]) ] ]
+       , [ message_teacher_abort , 
+           [ message_synchronization, L .getInverse ([ ensemble_abort ]) ] ]
+       , [ message_student_ping , 
+           [ message_ping, L .getInverse ([ ensemble_student_pings, student ]) ] ]
+       , [ message_student_join , 
+           [ message_board, L .getInverse ([ ensemble_student_boards, student ]) ] ]
+       , [ message_student_start , 
+           [ message_synchronization, L .getInverse ([ ensemble_student_starts, student ]) ] ]
+       , [ message_student_update , 
+           [ message_history, L .getInverse ([ ensemble_student_histories, student ]) ] ] ],
+     cases = T (encodings) (Z_ .map (([pattern, encoding]) =>
+         [L .isDefined (pattern), L .get (encoding)] )) ) =>
+  [ R .cond (cases)
   , L .get (data_iso (ensemble .ensemble)) 
   , strip ] )
 
