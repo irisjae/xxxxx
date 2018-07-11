@@ -6,7 +6,6 @@ var {
   map_defined, from_just, maybe_all,
   every, delay 
 } = window .stuff
-var WeakMap = window .WeakMap
 
 
 var shuffle = list => {
@@ -73,19 +72,6 @@ var post = x => ({
     'Content-Type': 'application/json' },
   body: JSON .stringify (x) })
 
-
-
-var O$ = obj =>
-  key =>
-    obj [$K .inv_map .get (key)]
-var $K = val => {
-  ;$K .map .set (val, $K .count)
-  ;$K .inv_map .set ($K .count, val)
-  ;$K .count ++ }
-$K .id = '$K:'
-$K .map = new WeakMap
-$K .inv_map = new WeakMap
-$K .count = 0
 
 
 
@@ -481,31 +467,37 @@ var message_encoding =
   whereby (message => (
     strip = Z_ .compose (JSON .parse) (JSON .stringify),
     student = T (message) (L .get (message_student)) ) =>
-  [ R .cond ([
-    [ L .isDefined (message_teacher_setup), L .get (
-        [ message_teacher_setup
-        , L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ) ],
-    [ L .isDefined (message_teacher_ping), L .get (
-        [ message_ping
-        , L .getInverse ([ ensemble_ping ]) ] ) ],
-    [ L .isDefined (message_teacher_start), L .get (
-        [ message_synchronization
-        , L .getInverse ([ ensemble_start ]) ] ) ],
-    [ L .isDefined (message_teacher_abort), L .get (
-        [ message_synchronization
-        , L .getInverse ([ ensemble_abort ]) ] ) ],
-    [ L .isDefined (message_student_ping), L .get (
-        [ message_ping
-        , L .getInverse ([ ensemble_student_pings, student ]) ] ) ],
-    [ L .isDefined (message_student_join), L .get (
-        [ message_board
-        , L .getInverse ([ ensemble_student_boards, student ]) ] ) ],
-    [ L .isDefined (message_student_start), L .get (
-        [ message_synchronization
-        , L .getInverse ([ ensemble_student_starts, student ]) ] ) ],
-    [ L .isDefined (message_student_update), L .get (
-        [ message_history
-        , L .getInverse ([ ensemble_student_histories, student ]) ] ) ] ])
+  [ where ((
+      encodings = 
+        [ [ message_teacher_setup, 
+            [ message_teacher_setup
+            , L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ]
+        , [ message_teacher_ping, 
+            [ message_ping
+            , L .getInverse ([ ensemble_ping ]) ] ]
+        , [ message_teacher_start, 
+            [ message_synchronization
+            , L .getInverse ([ ensemble_start ]) ] ],
+        [ message_teacher_abort, 
+            [ message_synchronization
+            , L .getInverse ([ ensemble_abort ]) ] ],
+        [ message_student_ping, 
+            [ message_ping
+            , L .getInverse ([ ensemble_student_pings, student ]) ] ],
+        [ message_student_join, 
+            [ message_board
+            , L .getInverse ([ ensemble_student_boards, student ]) ] ],
+        [ message_student_start, 
+            [ message_synchronization
+            , L .getInverse ([ ensemble_student_starts, student ]) ] ],
+        [ message_student_update, 
+            [ message_history
+            , L .getInverse ([ ensemble_student_histories, student ]) ] ] ]
+        ) (Z_ .map (([pattern, encoding]) =>
+          [L .isDefined (pattern), L .get (encoding)] ))
+       ) =>
+    R .cond (cases) )
+    
   , L .get (data_iso (ensemble .ensemble)) 
   , strip ] )
 
