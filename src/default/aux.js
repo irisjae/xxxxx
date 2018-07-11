@@ -6,6 +6,7 @@ var {
   map_defined, from_just, maybe_all,
   every, delay 
 } = window .stuff
+var WeakMap = window .WeakMap
 
 
 var shuffle = list => {
@@ -72,6 +73,19 @@ var post = x => ({
     'Content-Type': 'application/json' },
   body: JSON .stringify (x) })
 
+
+
+var O$ = obj =>
+  key =>
+    obj [$K .inv_map .get (key)]
+var $K = val => {
+  ;$K .map .set (val, $K .count)
+  ;$K .inv_map .set ($K .count, val)
+  ;$K .count ++ }
+$K .id = '$K:'
+$K .map = new WeakMap
+$K .inv_map = new WeakMap
+$K .count = 0
 
 
 
