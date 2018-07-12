@@ -105,26 +105,7 @@ var playing_view = <playing-etc> {
   where
   , _students = T (app_state ()) ([
       Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
-      Z_ .fromMaybe ([]) ]) ) =>
-  [ <message> Game in progress... </message>,
-  , <message> Number of students: { Z_ .size (_students) } </message>
-  , T (_students) ([
-      Z_ .map (L .get (student_name)),
-      Z_ .map (_x => <player>{ 'Name: '+ _x }</player>) ]) ]) }
-  </playing-etc>
-
-
-
-window .view =  <teacher-app>
-  { !! Z .equals (Z .Nothing) (app_state ())
-    ? init_view
-    : L .isDefined ([ from_maybe, app_get_ready ]) (app_state ())
-    ? get_ready_view
-    : L .isDefined ([ from_maybe, app_playing ]) (app_state ())
-    ? playing_view
-    : undefined } </teacher-app>
-
-                         
+                           
                          
                          
                          
