@@ -100,11 +100,12 @@ var room_entry_view = <room-entry-etc>
   <code fn={ pipeline_room_entry } >
     <input placeholder="Enter a room code" />
     <button> Go </button> </code>
-  { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
-    ? where ((
-        bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))) =>
-      <message>{bad_room} is not a valid room</message> )
-    : [] } </room-entry-etc>
+  { !! (! L .isDefined (lookbehind_bad_room) (lookbehind_state ()))
+    ? []
+    : so ((_=_=>
+      <message>{bad_room} is not a valid room</message>,
+      where
+      , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room)) )=>_) } </room-entry-etc>
   
 var name_entry_view = <student-entry-etc>
   <name fn={ pipeline_name_entry } >
@@ -169,23 +170,7 @@ var playing_view = _ => <playing-etc>
       , game_tick = game_tick_sampler () )=>_)) ]) } </playing-etc>
 
 var game_over_view = _ =>
-  where ((
-    bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' ,
-    student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png', 
-    _app = app_state (),
-    _ensemble = ensemble_state (),
-    all_students = T (_ensemble) (
-      assemble_students (data_kind (_app))),
-    questions = T (_app) (L .collect ([app_questions, L .elems, question_view])),
-    attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ]),
-    average_time = T (_ensemble) ([
-      assemble_students (data_kind (_app)),
-      Z_ .map ($ ([
-        Z .snd,
-        L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
-        Z .map (Z .of (Array)) ])),
-      _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
-      Z .map ($ ([ Z .justs, average, Z_ .fromMaybe ('gg') ])) ]) ) =>
+  so ((_=_=>
   <game-over-etc>
     <result-etc>
       <tabs>
@@ -207,7 +192,24 @@ var game_over_view = _ =>
           </tr>
           </table>
           </result-etc>
-          </game-over-etc>)         
+          </game-over-etc>,
+  where             
+  , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' 
+  , student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png',
+    _app = app_state ()
+  , _ensemble = ensemble_state ()
+  , all_students = T (_ensemble) (
+    assemble_students (data_kind (_app)))
+  , questions = T (_app) (L .collect ([app_questions, L .elems, question_view]))
+  , attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ])
+  , average_time = T (_ensemble) ([
+    assemble_students (data_kind (_app)),
+    Z_ .map ($ ([
+      Z .snd,
+      L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
+      Z .map (Z .of (Array)) ])),
+    _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
+    Z .map ($ ([ Z .justs, average, Z_ .fromMaybe ('gg') ])) ]) )=>_)
 
 
 window .view = <student-app>
@@ -465,16 +467,17 @@ S (_ => {{
         post (messages_encoding (
           Z_ .concat
             ([ message .student_ping (_student, S .sample (connection)) ])
-            (where ((
-              { _board, _history, not_playing } = T (app_state ()) ([
-                L .get (L .pick ({
-                  _board: [ app_board, as_maybe ],
-                  _history: [ app_history, as_maybe ] })),
-                maybe_all, Z .fromMaybe ({ not_playing: {} }) ]) ) =>
+            (so ((_=_=>
             !! (not_playing)
             ? []
             : [ message .student_join (_student, _board)
-              , message .student_update (_student, _history) ]))
+              , message .student_update (_student, _history) ],
+            where
+            , { _board, _history, not_playing } = T (app_state ()) ([
+                L .get (L .pick ({
+                  _board: [ app_board, as_maybe ],
+                  _history: [ app_history, as_maybe ] })),
+                maybe_all, Z .fromMaybe ({ not_playing: {} }) ]) )=>_))
                  ))) )
       : (io_state (io .heartbeat), api (_room)
         .then (_x => {{
