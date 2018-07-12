@@ -1,6 +1,6 @@
 var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  where, go, defined,
+  so, go, defined,
   data, data_lens, data_iso, data_kind,
   from_just, maybe_all,
   every, delay,
@@ -66,9 +66,10 @@ var pipeline_play = _dom => {{
       ;start_playing () }}) }}) }}
 
 var init_view = _ =>
-  where ((
-    bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081',
-    board_sizes_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
+  so ((
+  where
+  , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
+  , board_sizes_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
   <init-etc> 
     <div a-title>
       Bingo Class Game
@@ -82,10 +83,11 @@ var init_view = _ =>
     </init-etc>)
 
 var get_ready_view = <get-ready-etc> {
-  where ((
-    _room = T (app_state ()) (
-      Z_ .maybe (undefined) (L .get ([ app_room ]))),
-    _students = T (app_state ()) ([
+  so ((
+  where
+  , _room = T (app_state ()) (
+      Z_ .maybe (undefined) (L .get ([ app_room ])))
+  , _students = T (app_state ()) ([
       Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
       Z_ .fromMaybe ([]) ]) ) =>
   [ <message> Room Code: { _room } </message>
@@ -99,8 +101,9 @@ var get_ready_view = <get-ready-etc> {
   </get-ready-etc>
 
 var playing_view = <playing-etc> {
-  where ((
-    _students = T (app_state ()) ([
+  so ((
+  where
+  , _students = T (app_state ()) ([
       Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
       Z_ .fromMaybe ([]) ]) ) =>
   [ <message> Game in progress... </message>,
@@ -149,10 +152,9 @@ var get_room = _room => {{
       post (message_encoding (
         where ((
           {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) ) =>
-        message .teacher_setup (questions, rules)) ))) .then (_x => {{
-      if (! _x .ok) {
-        ;throw new Error ('cannot post to ' + _room)}
-      else return _x }}))
+        message .teacher_setup (questions, rules)) )))
+      .then (panic_on ([
+        [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
   .then (_ => {{
     ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
   .catch (_e => {{
@@ -167,12 +169,11 @@ var start_playing = _ => {{
   ) (Z_ .map (({ _ensemble, _room }) => {{
     ;go
     .then (_ =>
-      io_state (io .messaging)
-      && api (_room,
-        post (message_encoding (message .teacher_start (schedule_start (_ensemble))))) .then (_x => {{
-        if (! _x .ok) {
-          ;throw new Error ('cannot post to ' + _room)}
-        else return _x }}))
+      io_state (io .messaging) &&
+      api (_room,
+        post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
+      .then (panic_on ([
+        [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
     .catch (_e => {{
       ;console .error (_e) }})
     .then (_ => {{
@@ -183,16 +184,17 @@ var timesup_question = _ => {{
 }}
 
 
-
 var panic_on = cases =>
   _x =>
-    T (_x) ([
-      R .find (([cond, _]) => cond (_x)),
-      err => 
-        !! (err === undefined)
-        ? _x
-        : (_ => { ;throw new Error (err) }) () ])
-        
+    so ((
+    take
+    , _case = R .find (([cond, _]) => cond (_x)) (cases) ) =>
+    !! (_case === undefined)
+    ? _x
+    : T (_case
+      ) (([_, err]) => {{
+        ;throw new Error (err) }}) )
+
         
         
         
