@@ -67,7 +67,7 @@ var pipeline_play = _dom => {{
 
 var init_view = _ =>
   so ((
-  where
+  take
   , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
   , board_sizes_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
   <init-etc> 
@@ -84,7 +84,7 @@ var init_view = _ =>
 
 var get_ready_view = <get-ready-etc> {
   so ((
-  where
+  take
   , _room = T (app_state ()) (
       Z_ .maybe (undefined) (L .get ([ app_room ])))
   , _students = T (app_state ()) ([
@@ -102,7 +102,7 @@ var get_ready_view = <get-ready-etc> {
 
 var playing_view = <playing-etc> {
   so ((
-  where
+  take
   , _students = T (app_state ()) (
       Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])))
                            
@@ -131,9 +131,10 @@ var get_room = _room => {{
   .then (_ =>
     api (_room,
       post (message_encoding (
-        where ((
-          {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) ) =>
-        message .teacher_setup (questions, rules)) )))
+        so ((_=_=>
+        message .teacher_setup (questions, rules)  
+        where
+        , {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) )))
       .then (panic_on ([
         [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
   .then (_ => {{

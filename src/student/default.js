@@ -1,6 +1,6 @@
 var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  where, go, defined,
+  go, defined, so,
   data, data_lens, data_iso, data_kind,
   from_just, maybe_all,
   every, delay,
@@ -119,22 +119,24 @@ var get_ready_view = _ => <get-ready-etc>
       student: [app_student, as_maybe] })),
     ({ room, student }) =>
       !! Z .isNothing (room)
-      ? !! (L .isDefined (io_inert) (io_state ()))
-        ? room_entry_view
-        : !! (L .isDefined (io_connecting) (io_state ()))
-        ? 'Finding room...'
-        : undefined
+      ? !! (! L .isDefined (io_inert) (io_state ()))
+        ? !! (! L .isDefined (io_connecting) (io_state ()))
+        ? undefined
+        : 'Finding room...'
+        : room_entry_view
       : !! Z .isNothing (student)
       ? !! (L .isDefined (io_inert) (io_state ()))
         ? name_entry_view
         : !! (L .isDefined (io_connecting) (io_state ()))
         ? 'Trying to join room...'
         : undefined
-      : where ((
-        { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) ) =>
+      : so ((_=_=>
       [ <room> {'Connected to room ' + plain_room } </room>
       , 'Waiting for game to start...' ]
-      .map (_x => <div>{ _x }</div>)) ]) } </get-ready-etc>
+      .map (_x => <div>{ _x }</div>),
+      where
+      , { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) )=>_) ])
+  } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var bold_crossed = _x => <s><b>{ _x }</b></s>
