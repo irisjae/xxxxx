@@ -58,7 +58,7 @@ var go = Promise .resolve ()
 
 var data = constructors => T (constructors)
   (R .mapObjIndexed ((fn, key) => 
-    where ((
+    so (
       args_slice = fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
     ) =>
       !! (args_slice)
@@ -75,15 +75,16 @@ var data = constructors => T (constructors)
           ;__data_lens .set (_x, [key]) }})) )))
 
 var data_lens = data =>
-  where ((
-    lens = __data_lens .get (data)) =>  
-  !! Z .is (Z$ .AnyFunction) (data)
-  ? where ((
-      instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
-      records = R .keys (R .head (R .values (instance_template))),
-      _ = T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }}))) =>
-    lens)
-  : lens)
+  so ((_=_=>
+  lens,
+  where
+  , lens = __data_lens .get (data)
+  , $$X = !! (Z .is (Z$ .AnyFunction) (data))
+    && so ((_,
+    take
+    , instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1))
+    , records = R .keys (R .head (R .values (instance_template)))
+    , $$X = T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )=>_) )=>_) 
 
 var data_iso = data =>
   so ((_=_=>
