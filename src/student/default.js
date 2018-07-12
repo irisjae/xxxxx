@@ -147,8 +147,8 @@ var playing_view = _ => <playing-etc>
       [ T (current_question)
         (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
-      , <board> { T (_board) (Z_ .map (row => 
-        <row> { T (row) (Z_ .map (_cell =>
+      , <board> { T (_board) (Z_ .map (_row => 
+        <row> { T (_row) (Z_ .map (_cell =>
           so ((_=_=>
           !! (! _cell_bingo)
           ? !! (! _cell_crossed)
