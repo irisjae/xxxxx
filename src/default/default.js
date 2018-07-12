@@ -86,24 +86,26 @@ var data_lens = data =>
   : lens)
 
 var data_iso = data =>
-  where ((
-    instance_template = !! Z .is (Z$ .AnyFunction) (data)
-      ? data .apply (null, R .range (1, __data_length .get (data) + 1))
-      : data,
-    //factors = T (instance_template) ([ R .values, R .head, R .keys]),
-    inverted_template = R .invert (R .head (R .values (instance_template))),
-    ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template))),
-    constructor_prefix = R .head (R .keys (instance_template)),
-    read = data =>
-      L .get (constructor_prefix) (data),
-    write = record =>
-      where ((
-        records_list = ordered_factors .map (_x => record [_x])) =>
-      data .apply (null, records_list)),
-    lens = L .iso (read) (write),
-    _ = T (ordered_factors) (R .map (_x => {{
-      ;lens [_x] = [ lens, _x ] }}))) =>
-  lens)
+  so ((_=_=>
+  lens,
+  where
+  , instance_template = !! Z .is (Z$ .AnyFunction) (data)
+    ? data .apply (null, R .range (1, __data_length .get (data) + 1))
+    : data
+  //, factors = T (instance_template) ([ R .values, R .head, R .keys])
+  , inverted_template = R .invert (R .head (R .values (instance_template)))
+  , ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template)))
+  , constructor_prefix = R .head (R .keys (instance_template))
+  , read = data =>
+    L .get (constructor_prefix) (data)
+  , write = record =>
+    so ((_=_=>
+    data .apply (null, records_list),
+    where
+    , records_list = ordered_factors .map (_x => record [_x]) )=>_)
+  , lens = L .iso (read) (write)
+  , $$X = T (ordered_factors) (R .forEach (_x => {{
+    ;lens [_x] = [ lens, _x ] }})) )=>_)
 /*
 var data_iso = data =>
   where ((
