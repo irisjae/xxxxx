@@ -14,8 +14,8 @@ var T = _x => _fn_obj =>
     ? _x
     : T (T (_x) (R .head (_fn_obj))) (R .tail (_fn_obj))
   : !! Z_ .is (Z$ .AnyFunction) (_fn_obj)
-  ? _fn_obj (_x)
-  : undefined
+    ? _fn_obj (_x)
+    : panic ('T requires a function as its input')
 
 
 
@@ -28,6 +28,8 @@ var T = _x => _fn_obj =>
 
 
 
+var panic = err => {{
+  ; throw new Error (err) }}
 
 
 
@@ -248,13 +250,14 @@ var as_list = template =>
 
 
 
-var every = _x => where ((
-    every = S .data (false),
-    next = _ => {{
+var every = _x =>
+  so ((
+  take
+  , every = S .data (false)
+  , next = _ => {{
       ;every (true)
-      ;setTimeout (next, _x) }},
-    _ = setTimeout (next, _x)
-  ) =>
+      ;setTimeout (next, _x) }}
+  , $$X = setTimeout (next, _x) ) =>
   every)
 var delay = time => {{
   var done = S .data (false)
@@ -293,7 +296,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  so, whereby, go, defined,
+  so, by, go, defined,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   map_defined, from_just, maybe_all,
