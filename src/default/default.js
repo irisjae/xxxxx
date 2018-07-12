@@ -56,23 +56,25 @@ var go = Promise .resolve ()
 
 
 
-var data = constructors => T (constructors)
-  (R .mapObjIndexed ((fn, key) => 
-    so (
-      args_slice = fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
-    ) =>
-      !! (args_slice)
-      ? where ((
-        portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])) =>
-        T ((...vals) => 
-          R .objOf (key) (R .fromPairs (R .zip (portions, vals)))) (
-        R .tap (_x => {{
-          ;__data_length .set (_x, portions .length)
-          ;__data_lens .set (_x, [key]) }}))) 
-      : T (R .objOf (key) ({})) (
-        R .tap (_x => {{
-          ;__data_length .set (_x, 0)
-          ;__data_lens .set (_x, [key]) }})) )))
+var data = constructors =>
+  T (constructors
+  ) (R .mapObjIndexed ((fn, key) => 
+    so ((
+    take
+    , args_slice = fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
+    !! (args_slice)
+    ? so ((
+      take
+      , portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1]) )=>
+      T ((...vals) => 
+        R .objOf (key) (R .fromPairs (R .zip (portions, vals)))
+      ) (R .tap (_x => {{
+        ;__data_length .set (_x, portions .length)
+        ;__data_lens .set (_x, [key]) }}))) 
+    : T (R .objOf (key) ({})
+      ) (R .tap (_x => {{
+        ;__data_length .set (_x, 0)
+        ;__data_lens .set (_x, [key]) }})) )))
 
 var data_lens = data =>
   so ((_=_=>
@@ -147,32 +149,7 @@ var n_reducer = binary => n =>
 var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
 
 var pair_zip = reducer => 
-  where ((
-    pair_zip_fst_head = fst => snd =>
-      T ({
-        fst_head: Z_ .head (fst),
-        snd_head: Z_ .head (snd),
-        snd_tail: Z_ .tail (snd) }
-      ) ([
-        maybe_all,
-        Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
-          where ((
-            fst_head_key = Z_ .fst (fst_head),
-            snd_head_key = Z_ .fst (snd_head),
-            fst_head_value = Z_ .snd (fst_head),
-            snd_head_value = Z_ .snd (snd_head) ) =>
-          !! (Z_ .equals (fst_head_key) (snd_head_key))
-          ? Z .Just ({
-              zip_head:
-                Z_ .Pair
-                  (fst_head_key) (reducer (fst_head_value) (snd_head_value)),
-              snd_zipper: snd_tail })
-          : T (pair_zip_fst_head (fst) (snd_tail))
-            (Z_ .map (({ zip_head, snd_zipper }) => (
-              { zip_head: zip_head,
-                snd_zipper:
-                  Z_ .prepend
-                    (snd_head) (snd_zipper) }) )) )) ]) ) =>
+  so ((_=_=>
   a => b =>
     T (Z_ .tail (a)) (Z_ .maybe ([]) (a_tail =>
       T (pair_zip_fst_head (a) (b)) (Z_ .maybe_
@@ -181,7 +158,31 @@ var pair_zip = reducer =>
         (({ zip_head, snd_zipper }) =>
           Z_ .prepend
            (zip_head)
-           (pair_zip (reducer) (a_tail) (snd_zipper)))))) )
+           (pair_zip (reducer) (a_tail) (snd_zipper)))))),
+  where
+  , pair_zip_fst_head = fst => snd =>
+    T (maybe_all ({
+      fst_head: Z_ .head (fst),
+      snd_head: Z_ .head (snd),
+      snd_tail: Z_ .tail (snd) }
+    )) (Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
+      so ((_=_=>
+      !! (Z_ .equals (fst_head_key) (snd_head_key))
+      ? Z .Just ({
+          zip_head:
+            Z_ .Pair (fst_head_key)
+              (reducer (fst_head_value) (snd_head_value)),
+          snd_zipper: snd_tail })
+      : T (pair_zip_fst_head (fst) (snd_tail)
+        ) (Z_ .map (({ zip_head, snd_zipper }) => (
+          { zip_head: zip_head,
+            snd_zipper:
+              Z_ .prepend (snd_head) (snd_zipper) }) )),
+      where
+      , fst_head_key = Z_ .fst (fst_head)
+      , snd_head_key = Z_ .fst (snd_head)
+      , fst_head_value = Z_ .snd (fst_head)
+      , snd_head_value = Z_ .snd (snd_head) )=>_)) ) )=>_)
 
 
 var pair_projection = key_projection => val_projection =>
