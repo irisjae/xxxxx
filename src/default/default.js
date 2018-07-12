@@ -32,8 +32,11 @@ var T = _x => _fn_obj =>
 
 
 var defined
-var where = x => x ()
-var whereby = _fn => x => T (x) (where (_fn (x)))
+var so = fn_form => 
+	!! (fn_form .toString () .endsWith ('=>_'))
+	? fn_form () ()
+	: fn_form ()
+var by = _meta_fn => x => T (x) (_meta_fn (x))
 var go = Promise .resolve ()
 
 
@@ -286,7 +289,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  where, whereby, go, defined,
+  so, whereby, go, defined,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   map_defined, from_just, maybe_all,
