@@ -103,8 +103,8 @@ var get_ready_view = <get-ready-etc> {
 var playing_view = <playing-etc> {
   so ((
   where
-  , _students = T (app_state ()) ([
-      Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
+  , _students = T (app_state ()) (
+      Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])))
                            
                          
                          
