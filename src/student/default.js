@@ -2,7 +2,7 @@ var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   go, defined, so,
   data, data_lens, data_iso, data_kind,
-  from_just, maybe_all,
+  from_just, maybe_all, map_defined,
   every, delay,
   bool, number, timestamp, string,
   list, map, maybe, nat, id, v,
@@ -359,14 +359,15 @@ var heartbeat = S .data (reping_period)
 
 var connection = S (_ => {{
   ;return T (app_state ()) ([
-    L .get ([ app_room, as_maybe ]),
-    Z_ .maybe (undefined) (_room => {{
+    L .get (app_room),
+    map_defined (_room => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
-      return connection [_room] () && where ((
-        [mean, variance, n, timestamp] = connection [_room] () ) =>
-      [timestamp, mean, Math .sqrt (variance)]) }}) ]) }})
+      return so ((_=_=>
+      connection [_room] () && [timestamp, mean, Math .sqrt (variance)],
+      where
+      , [mean, variance, n, timestamp] = connection [_room] () )=>_) }}) ]) }})
 
 
 
@@ -477,8 +478,7 @@ S (_ => {{
                 L .get (L .pick ({
                   _board: [ app_board, as_maybe ],
                   _history: [ app_history, as_maybe ] })),
-                maybe_all, Z .fromMaybe ({ not_playing: {} }) ]) )=>_))
-                 ))) )
+                maybe_all, Z .fromMaybe ({ not_playing: {} }) ]) )=>_)) ))) )
       : (io_state (io .heartbeat), api (_room)
         .then (_x => {{
           ;ensemble_state (
