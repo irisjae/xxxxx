@@ -121,15 +121,15 @@ var get_ready_view = _ => <get-ready-etc>
       !! Z .isNothing (room)
       ? !! (! L .isDefined (io_inert) (io_state ()))
         ? !! (! L .isDefined (io_connecting) (io_state ()))
-        ? undefined
-        : 'Finding room...'
+          ? undefined
+          : 'Finding room...'
         : room_entry_view
       : !! Z .isNothing (student)
-      ? !! (L .isDefined (io_inert) (io_state ()))
-        ? name_entry_view
-        : !! (L .isDefined (io_connecting) (io_state ()))
-        ? 'Trying to join room...'
-        : undefined
+      ? !! (! L .isDefined (io_inert) (io_state ()))
+        ? !! (! L .isDefined (io_connecting) (io_state ()))
+          ? undefined
+          : 'Trying to join room...'
+        : name_entry_view
       : so ((_=_=>
       [ <room> {'Connected to room ' + plain_room } </room>
       , 'Waiting for game to start...' ]
@@ -143,28 +143,30 @@ var bold_crossed = _x => <s><b>{ _x }</b></s>
 var playing_view = _ => <playing-etc>
   { T (app_state ()) ([ student_app_to_board_viewer,
     Z_ .maybe ([]) (_board_viewer =>
-      where ((
-        _board = T (_board_viewer) (L .get (board_viewer_board)),
-        current_question = T (_board_viewer) (board_viewer_current_question),
-        crossed_positions = T (_board_viewer) (board_viewer_crossed_positions),
-        bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions),
-        game_tick = game_tick_sampler () ) => 
+      so ((_=_=>
       [ T (current_question)
         (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { T (_board) (Z_ .map (row => 
         <row> { T (row) (Z_ .map (_cell =>
-          where ((
-            _cell_position = T (_cell) (L .get (cell_position)),
-            _cell_answer = T (_cell) (L .get (cell_answer)),
-            _cell_crossed = Z .elem (_cell_position) (crossed_positions),
-            _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) ) =>
-          !! _cell_bingo
-          ? <cell>{ bold_crossed (_cell_answer) }</cell>
-          : !! _cell_crossed
-          ? <cell>{ crossed (_cell_answer) }</cell>
-          : <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>) ))
-          } </row> )) } </board> ] )) ]) } </playing-etc>
+          so ((_=_=>
+          !! (! _cell_bingo)
+          ? !! (! _cell_crossed)
+            ? <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>
+            : <cell>{ crossed (_cell_answer) }</cell>
+          : <cell>{ bold_crossed (_cell_answer) }</cell>,
+          where
+          , _cell_position = T (_cell) (L .get (cell_position))
+          , _cell_answer = T (_cell) (L .get (cell_answer))
+          , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
+          , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
+          } </row> )) } </board> ],
+      where
+      , _board = T (_board_viewer) (L .get (board_viewer_board))
+      , current_question = T (_board_viewer) (board_viewer_current_question)
+      , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
+      , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
+      , game_tick = game_tick_sampler () )=>_)) ]) } </playing-etc>
 
 var game_over_view = _ =>
   where ((
