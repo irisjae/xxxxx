@@ -167,9 +167,9 @@ var start_playing = _ => {{
   ) (Z_ .map (({ _ensemble, _room }) => {{
     ;go
     .then (_ =>
-      (io_state (io .messaging), api (_room,
-        post (message_encoding (
-          message .teacher_start (schedule_start (_ensemble)))))) .then (_x => {{
+      io_state (io .messaging)
+      && api (_room,
+        post (message_encoding (message .teacher_start (schedule_start (_ensemble))))) .then (_x => {{
         if (! _x .ok) {
           ;throw new Error ('cannot post to ' + _room)}
         else return _x }}))
@@ -182,6 +182,16 @@ var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
 }}
 
+
+
+var panic_on = cases =>
+  _x =>
+    T (_x) ([
+      R .find (([cond, _]) => cond (_x)),
+      err => 
+        !! (err === undefined)
+        ? _x
+        : (_ => { ;throw new Error (err) }) () ])
         
         
         
