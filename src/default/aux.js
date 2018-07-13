@@ -447,16 +447,16 @@ var board_viewer_crossed_positions = _board_viewer =>
   T (Z .zip (attempted_positions) (questions)) ([
     Z .map (pair =>
       so ((_=()=>
-      T (maybe_attempt_answer) (Z .chain (attempt_answer =>
+      T (attempt_answer_maybe) (Z .chain (attempt_answer =>
         !! (matches_question_answer (question) (attempt_answer))
         ? Z .Just (position)
         : Z .Nothing )),
       where
-      , maybe_attempt_position = Z .fst (pair)
-      , position = from_just (maybe_attempt_position)
-      , maybe_attempt_answer = T (maybe_attempt_position) (Z .map (_position =>
+      , attempt_position_maybe = Z .fst (pair)
+      , position = from_just (attempt_position_maybe)
+      , attempt_answer_maybe = T (attempt_position_maybe) (Z .map (_position =>
           T (board) (L .get ([ position_lens (_position), cell_answer ]))))
-      , question = Z .snd (pair) )=>_) ))
+      , question = Z .snd (pair) )=>_)),
     Z .justs ]),
   where
   , board = T (_board_viewer) (L .get (board_viewer_board))
@@ -464,49 +464,52 @@ var board_viewer_crossed_positions = _board_viewer =>
   , attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
-  where ((
-    _board = T (_board_viewer) (L .get (board_viewer_board)),
-    _size = T (_board) (Z_ .size),
-    _crossed_positions = T (_board_viewer) (board_viewer_crossed_positions) ) =>
-  T (size_patterns (_size)) ([
+  so ((_=()=>
+  T (bingo_patterns) ([
     Z_ .map (_pattern =>
-      !! (T (_pattern)
-        (R .all (_answer => Z_ .elem (_answer) (_crossed_positions))))
+      !! (T (_pattern
+        ) (R .all (_position => Z_ .elem (_position) (_crossed_positions))))
       ? Z .Just (_pattern)
       : Z .Nothing),
-    Z .justs ]) )
+    Z .justs ]),
+  where
+  , bingo_patterns = size_patterns (_size)
+  , _board = T (_board_viewer) (L .get (board_viewer_board))
+  , _size = T (_board) (Z_ .size)
+  , _crossed_positions = T (_board_viewer) (board_viewer_crossed_positions) )=>_)
 
 
 var history_stepped = old => curr =>
   Z_ .size (curr) > Z_ .size (old)
 
 
-var message_encoding =
-  whereby (message => (
-    strip = Z_ .compose (JSON .parse) (JSON .stringify),
-    student = T (message) (L .get (message_student)),
-    encodings = 
-       [ [ message_teacher_setup , 
-           [ message_teacher_setup, L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ]
-       , [ message_teacher_ping , 
-           [ message_ping, L .getInverse ([ ensemble_ping ]) ] ]
-       , [ message_teacher_start , 
-           [ message_synchronization, L .getInverse ([ ensemble_start ]) ] ]
-       , [ message_teacher_abort , 
-           [ message_synchronization, L .getInverse ([ ensemble_abort ]) ] ]
-       , [ message_student_ping , 
-           [ message_ping, L .getInverse ([ ensemble_student_pings, student ]) ] ]
-       , [ message_student_join , 
-           [ message_board, L .getInverse ([ ensemble_student_boards, student ]) ] ]
-       , [ message_student_start , 
-           [ message_synchronization, L .getInverse ([ ensemble_student_starts, student ]) ] ]
-       , [ message_student_update , 
-           [ message_history, L .getInverse ([ ensemble_student_histories, student ]) ] ] ],
-     cases = T (encodings) (Z_ .map (([pattern, encoding]) =>
-         [L .isDefined (pattern), L .get (encoding)] )) ) =>
+var message_encoding = by (message => 
+  so ((_=()=>
   [ R .cond (cases)
   , L .get (data_iso (ensemble .ensemble)) 
-  , strip ] )
+  , strip ],
+  where
+  , strip = Z_ .compose (JSON .parse) (JSON .stringify)
+  , student = T (message) (L .get (message_student))
+  , encodings = 
+    [ [ message_teacher_setup , 
+        [ message_teacher_setup, L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ]
+    , [ message_teacher_ping , 
+        [ message_ping, L .getInverse ([ ensemble_ping ]) ] ]
+    , [ message_teacher_start , 
+        [ message_synchronization, L .getInverse ([ ensemble_start ]) ] ]
+    , [ message_teacher_abort , 
+        [ message_synchronization, L .getInverse ([ ensemble_abort ]) ] ]
+    , [ message_student_ping , 
+        [ message_ping, L .getInverse ([ ensemble_student_pings, student ]) ] ]
+    , [ message_student_join , 
+        [ message_board, L .getInverse ([ ensemble_student_boards, student ]) ] ]
+    , [ message_student_start , 
+        [ message_synchronization, L .getInverse ([ ensemble_student_starts, student ]) ] ]
+    , [ message_student_update , 
+        [ message_history, L .getInverse ([ ensemble_student_histories, student ]) ] ] ]
+  , cases = T (encodings) (Z_ .map (([pattern, encoding]) =>
+      [L .isDefined (pattern), L .get (encoding)] )) )=>_))
 
 var messages_encoding = list =>
   Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
