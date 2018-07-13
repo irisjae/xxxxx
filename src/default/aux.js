@@ -377,26 +377,30 @@ var student_app_get_ready_to_playing = _app =>
     where 
     , _size = L .get (setup_size) (_setup)
     , _questions = L .get (setup_questions) (_setup)
-    , fresh_history = [rendition .rendition ([])] )=>_))) ) 
+    , fresh_history = [rendition .rendition ([])] )=>_))))
 
 var student_app_next_playing = 
-  whereby (_app => (
-    board_size = T (_app) (L .get ([app_setup, setup_size])),
-    history_size = T (_app) ([ L .get (app_history), Z_ .size ]) ) =>
-  !! (history_size < board_size * board_size)
-  ? L .set ([app_history, L .append]) (rendition .rendition ([]))
-  : L .get (
-      [ data_iso (student_app .playing)
-      , L .getInverse (data_iso (student_app .game_over)) ]) ) 
+  by (_app => 
+    so ((_=()=>
+    !! (history_size < board_size * board_size)
+    ? L .set ([app_history, L .append]) (rendition .rendition ([]))
+    : L .get (
+        [ data_iso (student_app .playing)
+        , L .getInverse (data_iso (student_app .game_over)) ]),
+    where
+    , board_size = T (_app) (L .get ([app_setup, setup_size]))
+    , history_size = T (_app) ([ L .get (app_history), Z_ .size ]) )=>_)) 
          
 var matches_question_answer = question => answer =>
-  where ((
-    correct_answers = T (question) (L .get (question_answers)) ) =>
-  Z .elem (answer) (correct_answers) )
+  so ((_=()=>
+  Z .elem (answer) (correct_answers),
+  where
+  , correct_answers = T (question) (L .get (question_answers)) )=>_)
 
 var student_app_to_board_viewer = _app => 
-  where ((
-    exists = maybe_all (T (_app) (L .get (L .pick ({
+  so ((
+  take
+  , exists = maybe_all (T (_app) (L .get (L .pick ({
       _board: [ app_board, as_maybe ],
       _questions: [ app_questions, as_maybe ],
       _history: [ app_history, as_maybe ] })))) ) =>
@@ -405,52 +409,59 @@ var student_app_to_board_viewer = _app =>
 
 
 var size_patterns = memoize (size =>
-  where ((
-    range = Z .range (1) (size + 1),
-    vertical_patterns = T (range) (Z .map (_x =>
-      T (range) (Z .map (_y => [_x, _y] )))),
-    horizontal_patterns = T (range) (Z .map (_y =>
-      T (range) (Z .map (_x => [_x, _y] )))),
-    diagonal_patterns = [
-      T (range) (Z .map (_x => [_x, _x])),
-      T (range) (Z .map (_x => [_x, (size - 1) - _x]))
-    ] ) =>
+  so ((_=()=>
   n_reducer (Z .concat) (3)
     (vertical_patterns)
     (horizontal_patterns)
-    (diagonal_patterns) ))
+    (diagonal_patterns),
+  where
+  , range = Z .range (1) (size + 1)
+  , vertical_patterns =
+      T (range) (Z .map (x =>
+        T (range) (Z .map (y =>
+          [x, y] ))))
+  , horizontal_patterns =
+      T (range) (Z .map (y =>
+        T (range) (Z .map (x =>
+          [x, y] ))))
+  , diagonal_patterns = [
+      T (range) (Z .map (_x => [_x, _x])),
+      T (range) (Z .map (_x => [_x, (size - 1) - _x]))
+    ] )=>_))
 
 
-var board_viewer_current_question = _board_viewer =>
-  where ((
-    history = T (_board_viewer) (L .get (board_viewer_history)),
-    current_question_index = Z_ .size (history) - 1) =>
-  T (_board_viewer) (
-    L .get ([board_viewer_questions, current_question_index, as_maybe])))
+var board_viewer_current_question = by (_board_viewer =>
+  so ((_=()=>
+  L .get ([board_viewer_questions, current_question_index, as_maybe]),
+  where
+  , history = T (_board_viewer) (L .get (board_viewer_history))
+  , current_question_index = Z_ .size (history) - 1 )=>_))
 
-var board_viewer_attempted_positions = _board_viewer => 
-  T (_board_viewer) ([
+var board_viewer_attempted_positions = 
+  $ ([
     L .get (board_viewer_history),
     Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
 
 var board_viewer_crossed_positions = _board_viewer => 
-  where ((
-    board = T (_board_viewer) (L .get (board_viewer_board)),
-    questions = T (_board_viewer) (L .get (board_viewer_questions)),
-    attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) ) =>
+  so ((_=()=>
   T (Z .zip (attempted_positions) (questions)) ([
     Z .map (pair =>
-      where ((
-        maybe_attempt_position = Z .fst (pair),
-        position = from_just (maybe_attempt_position),
-        maybe_attempt_answer = T (maybe_attempt_position) (Z .map (_position =>
-          T (board) (L .get ([ position_lens (_position), cell_answer ])))),
-        question = Z .snd (pair) ) =>
+      so ((_=()=>
       T (maybe_attempt_answer) (Z .chain (attempt_answer =>
         !! (matches_question_answer (question) (attempt_answer))
         ? Z .Just (position)
-        : Z .Nothing )) )),
-    Z .justs ]) )
+        : Z .Nothing )),
+      where
+      , maybe_attempt_position = Z .fst (pair)
+      , position = from_just (maybe_attempt_position)
+      , maybe_attempt_answer = T (maybe_attempt_position) (Z .map (_position =>
+          T (board) (L .get ([ position_lens (_position), cell_answer ]))))
+      , question = Z .snd (pair) )=>_) ))
+    Z .justs ]),
+  where
+  , board = T (_board_viewer) (L .get (board_viewer_board))
+  , questions = T (_board_viewer) (L .get (board_viewer_questions))
+  , attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
   where ((
