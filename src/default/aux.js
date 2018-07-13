@@ -2,7 +2,7 @@ var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   so, by, 
   go, panic,
-  data, data_lens, data_iso, data_kind,
+  fiat, data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   map_defined, from_just, maybe_all,
   every, delay   
@@ -46,7 +46,7 @@ var api = (room, _x) => {{
     if (! _ping_cache [room]) {
       ;_ping_cache [room] = [0, 0, 0, 0]}
     ;_ping_cache [room] = T (_ping_cache [room]) (_x => 
-      so ((_=_=>
+      so ((_=()=>
       [ mean * carry + sample / (n + 1)
       , sqr_mean * carry + (sample * sample) / (n + 1)
       , n + 1
@@ -80,16 +80,16 @@ var post = x => ({
 
 //--------------------TYPES--------------------
 
-var bool = defined
-var number = defined
+var bool = fiat
+var number = fiat
 var timestamp = number
-var string = defined
-var list = a => defined
+var string = fiat
+var list = a => fiat
 var map = a => (...b) => list (v (a, ...b))
-var maybe = a => defined
-var nat = defined
+var maybe = a => fiat
+var nat = fiat
 var id = string
-var v = (...types) => defined
+var v = (...types) => fiat
 
 var student = v (id, string)
 var answer = string
@@ -321,14 +321,15 @@ var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 var ping_mean = [ 1 ]
 
 var students_mapping = 
-  [ L .reread (map => T (map) ([
+  [ L .reread ($ ([
       R .toPairs,
-      Z_ .map (pair => where ((
-          id = R .head (pair),
-          inner_pair = R .head (R .toPairs (R .last (pair))),
-          name = R .head (inner_pair),
-          val = R .last (inner_pair) ) =>
-        Z_ .Pair ({ id: id, name: name }) (val) ) ) ]))
+      Z_ .map (pair => so ((_=()=>
+        Z_ .Pair ({ id: id, name: name }) (val),
+        where
+        , id = R .head (pair)
+        , inner_pair = R .head (R .toPairs (R .last (pair)))
+        , name = R .head (inner_pair)
+        , val = R .last (inner_pair) )=>_)) ]))
   , L .elems ]
 var map_students = [ students_mapping, pair_as_list, L .first ]
 var mapping_students = [ students_mapping, pair_as_list, L .last ]
@@ -343,17 +344,18 @@ var mapping_students = [ students_mapping, pair_as_list, L .last ]
 
 
 var generate_board = size => questions =>
-  where ((
-    cells = shuffle (questions .slice (0, size * size)),
-    cell = y => x =>
+  so ((_=()=>
+  T (Z .range (1) (size + 1)) (
+    Z_ .map (row => T (Z .range (1) (size + 1)) (
+      Z_ .map (column => [row, column, cell (row) (column)] )))),
+  where 
+  , cells = shuffle (questions .slice (0, size * size))
+  , cell = y => x =>
       T (cells) (L .get ([
         (x - 1) * size + (y - 1),
         question_answers,
         L .reread (shuffle),
-        L .first ])) ) =>
-  T (Z .range (1) (size + 1)) (
-    Z_ .map (row => T (Z .range (1) (size + 1)) (
-      Z_ .map (column => [row, column, cell (row) (column)] )))))
+        L .first ])) )=>_)
 
 
 var teacher_app_get_ready_to_playing = _app =>
@@ -363,17 +365,19 @@ var teacher_app_get_ready_to_playing = _app =>
       teacher_app .playing (_setup, [])) ])
 
 var student_app_get_ready_to_playing = _app => 
-  where ((
-    exists = from_just (maybe_all (T (_app) (L .get (L .pick ({
+  so ((
+  take
+  , exists = from_just (maybe_all (T (_app) (L .get (L .pick ({
       _student: L .get ([ app_student, as_maybe ]),
       _setup: L .get ([ app_setup, as_maybe ]) }))))) ) =>
   T (exists) (map_defined (({ _student, _setup }) =>
-    where ((
-      _size = L .get (setup_size) (_setup),
-      _questions = L .get (setup_questions) (_setup),
-      fresh_history = [rendition .rendition ([])] ) =>
+    so ((_=()=>
     student_app .playing
-      (_student, _setup, generate_board (_size) (_questions), fresh_history) ))) ) 
+      (_student, _setup, generate_board (_size) (_questions), fresh_history),
+    where 
+    , _size = L .get (setup_size) (_setup)
+    , _questions = L .get (setup_questions) (_setup)
+    , fresh_history = [rendition .rendition ([])] )=>_))) ) 
 
 var student_app_next_playing = 
   whereby (_app => (
