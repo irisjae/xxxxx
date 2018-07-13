@@ -518,21 +518,23 @@ var assemble_students = kind => ensemble =>
   !! (kind === 'get_ready')
   ? T (ensemble) (L .collect ([ ensemble_student_pings, map_students ]))
   : !! (kind === 'playing' || kind === 'game_over')
-  ? where ((
-      boards = T (ensemble) (
-        L .collect ([ ensemble_student_boards, students_mapping ])),
-      histories = T (ensemble) (
-        L .collect ([ ensemble_student_histories, students_mapping ])) ) =>
-    pair_zip (_a => _b => [_a, _b]) (boards) (histories))
-  : undefined
+  ? so ((_=()=>
+    pair_zip (_a => _b => [_a, _b]) (boards) (histories),
+    where
+    , boards = T (ensemble) (
+        L .collect ([ ensemble_student_boards, students_mapping ]))
+    , histories = T (ensemble) (
+        L .collect ([ ensemble_student_histories, students_mapping ])) )=>_)
+  : panic ('unknown student kind')
 
 var schedule_start = _ensemble =>
-  where ((
-    teacher_ping = T (_ensemble) (L .get (ensemble_ping)),
-    student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_students ])),
-    pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_mean))),
-    confidence_interval = Z .reduce (Z .max) (0) (pings) ) =>
-  (new Date) .getTime () + confidence_interval)
+  so ((_=()=>
+  (new Date) .getTime () + confidence_interval,
+  where
+  , teacher_ping = T (_ensemble) (L .get (ensemble_ping))
+  , student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_students ]))
+  , pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_mean)))
+  , confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
 
 

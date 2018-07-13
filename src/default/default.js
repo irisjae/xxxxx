@@ -33,6 +33,7 @@ var panic = err => {{
 
 
 
+//TODO: check form of fn_form
 var so = fn_form => 
 	!! (fn_form .toString () .endsWith ('=>_'))
 	? fn_form () ()
@@ -275,9 +276,9 @@ var delay = time => {{
 
 
 
-document .addEventListener ('DOMContentLoaded', _ => {;
-	;; document .body .appendChild (window .view)
-})
+document .addEventListener ('DOMContentLoaded', _ => {{
+	;document .body .appendChild (window .view)
+}})
 
 
 
