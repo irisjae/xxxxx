@@ -1,10 +1,11 @@
 var {
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  where, whereby, go, defined,
+  so, by, 
+  go, panic,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   map_defined, from_just, maybe_all,
-  every, delay 
+  every, delay   
 } = window .stuff
 
 
@@ -26,9 +27,10 @@ var shuffle = list => {
 
 var uuid = _ =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
-    where ((
-      r = Math .random () * 16 | 0,
-      v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
+    so ((
+    take
+    , r = Math .random () * 16 | 0
+    , v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
     v .toString (16) ))
 
 
@@ -44,16 +46,17 @@ var api = (room, _x) => {{
     if (! _ping_cache [room]) {
       ;_ping_cache [room] = [0, 0, 0, 0]}
     ;_ping_cache [room] = T (_ping_cache [room]) (_x => 
-      where ((
-        {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
-          mean: 0,
-          sqr_mean: 1,
-          n: 2 }))),
-        carry = n / (n + 1) ) =>
+      so ((_=_=>
       [ mean * carry + sample / (n + 1)
       , sqr_mean * carry + (sample * sample) / (n + 1)
       , n + 1
-      , (new Date) .getTime () ]) )
+      , (new Date) .getTime () ],
+      where 
+      , {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
+          mean: 0,
+          sqr_mean: 1,
+          n: 2 })))
+      , carry = n / (n + 1) )=>_))
     ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
     return _x .json () }}) }}
 ;api .listen_ping = room => fn => {{ 

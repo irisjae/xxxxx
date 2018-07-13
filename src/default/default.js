@@ -33,7 +33,6 @@ var panic = err => {{
 
 
 
-var defined
 var so = fn_form => 
 	!! (fn_form .toString () .endsWith ('=>_'))
 	? fn_form () ()
@@ -296,7 +295,8 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-  so, by, go, defined,
+  so, by, 
+  go, panic,
   data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   map_defined, from_just, maybe_all,
