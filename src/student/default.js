@@ -167,7 +167,7 @@ var playing_view = _ => <playing-etc>
       , current_question = T (_board_viewer) (board_viewer_current_question)
       , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
       , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
-      , game_tick = game_tick_sampler () )=>_)) ]) } </playing-etc>
+      , game_tick = game_tick_sampler () )=>_))) } </playing-etc>
 
 var game_over_view = _ =>
   so ((_=_=>
@@ -197,11 +197,12 @@ var game_over_view = _ =>
   , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' 
   , student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png'
   , _app = app_state ()
+  , _app_kind = data_kind (_app)
   , _ensemble = ensemble_state ()
-  , all_students = T (_ensemble) (
-    assemble_students (data_kind (_app)))
-  , questions = T (_app) (L .collect ([app_questions, L .elems, question_view]))
+  , all_students = T (_ensemble) (assemble_students (_app_kind))
+  , questions = T (_app) (L .collect ([ app_questions, L .elems, question_view ]))
   , attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ])
+  //TODO: make readable
   , average_time = T (_ensemble) ([
       assemble_students (data_kind (_app)),
       Z_ .map ($ ([
@@ -253,17 +254,16 @@ var record_room = _room => {{
   var _student = T (app_state ()) (L .get ([ app_student, as_maybe ]))
   ;go 
   .then (_ =>
-    io_state (io .connecting) && api (_room) .then (_x => {{
-      if (Z .equals (_x) ({})) {
-        ;throw new Error ('empty') }
-      else {
-        var _ensemble = T (_x)
-          (L .get (L .inverse (data_iso (ensemble .ensemble))))
+    io_state (io .connecting) && api (_room)
+    .then (panic_on ([ [Z_ .equals ({}), 'empty room; expired code?'] ]))
+    .then ($ ([
+      L .get (L .inverse (data_iso (ensemble .ensemble))),
+      _ensemble => {{
         var _questions = T (_ensemble) (L .get (ensemble_questions))
         var _rules = T (_ensemble) (L .get (ensemble_rules))
         var _setup = setup .setup (_room, _questions, default_rules)
         ;app_state (
-          student_app .get_ready ( _student, _setup )) } }}) )
+          student_app .get_ready ( _student, _setup )) }} ])) )
     .catch (_e => {{
       ;lookbehind_state (student_lookbehind .bad_room (_room))
       ;console .error (_e) }})
@@ -364,10 +364,10 @@ var connection = S (_ => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
-      return connection [_room] () && so ((_=_=>
-      [timestamp, mean, Math .sqrt (variance)],
+      return connection [_room] () && so ((_=()=>
+      [ timestamp, mean, Math .sqrt (variance) ],
       where
-      , [mean, variance, n, timestamp] = connection [_room] () )=>_) }}) ]) }})
+      , [ mean, variance, n, timestamp ] = connection [_room] () )=>_) }}) ]) }})
 
 
 
@@ -425,8 +425,8 @@ S (last_ensemble => {{
   , _app = S .sample (app_state)
   , _ensemble = ensemble_state () ) => {{
   if (L .isDefined (app_get_ready) (_app)) {
-    if (! L .get (ensemble_start) (last_ensemble)) {
-      if (L .get (ensemble_start) (_ensemble)) {
+    if (L .isEmpty (ensemble_start) (last_ensemble)) {
+      if (! L .isEmpty (ensemble_start) (_ensemble)) {
         var start = T (_ensemble) (L .get (ensemble_start))
         var now = (new Date) .getTime ()
 
@@ -454,11 +454,10 @@ S (last_ensemble => {{
 S (_ => {{
   ;so ((
   take
-  , exists = T (app_state ()) ([
-      L .get (L .pick ({
+  , exists = maybe_all (T (app_state ()
+      ) (L .get (L .pick ({
         _student: [ app_student, as_maybe ],
-        _room: [ app_room, as_maybe ] })),
-      maybe_all ]) ) => {{
+        _room: [ app_room, as_maybe ] })) )) ) => {{
   ;T (exists) (Z_ .map (({ _student, _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
