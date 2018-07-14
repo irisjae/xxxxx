@@ -86,23 +86,24 @@ var init_view = _ =>
       Z_ .maybe ([]) (_ => 'Generating Code...')) }
     </init-etc>)
 
-var get_ready_view = <get-ready-etc> {
-  so ((
-  take
+var get_ready_view = 
+  so ((_=()=>
+  <get-ready-etc>
+    <message> Room Code: { _room } </message>
+    <message> Number of students: { Z_ .size (_students) } </message>
+    { [ T (_students) ([
+          Z_ .map (L .get (student_name)),
+          Z_ .map (_x => <player>{ 'Name: '+ _x }</player>) ])
+      , !! (Z_ .size (_students) === 0)
+        ? []
+        : <button play fn={ pipeline_play }> play </button> ] }
+    </get-ready-etc>,
+  where
   , _room = T (app_state ()) (
       Z_ .maybe (undefined) (L .get ([ app_room ])))
   , _students = T (app_state ()) ([
       Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
-      Z_ .fromMaybe ([]) ]) ) =>
-  [ <message> Room Code: { _room } </message>
-  , <message> Number of students: { Z_ .size (_students) } </message>
-  , T (_students) ([
-      Z_ .map (L .get (student_name)),
-      Z_ .map (_x => <player>{ 'Name: '+ _x }</player>) ])
-  , !! (Z_ .size (_students) === 0)
-    ? []
-    : <button play fn={ pipeline_play }> play </button> ]) }
-  </get-ready-etc>
+      Z_ .fromMaybe ([]) ]) )=>_)
 
 var playing_view = <playing-etc> {
   so ((
