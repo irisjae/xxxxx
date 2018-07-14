@@ -100,19 +100,16 @@ var get_ready_view = _ =>
         : <button play fn={ pipeline_play }> play </button> ] }
     </get-ready-etc>,
   where
-  , _room = T (app_state ()) (
-      Z_ .maybe (undefined) (L .get ([ app_room ])))
-  , _students = T (app_state ()) ([
-      Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
-      Z_ .fromMaybe ([]) ]) )=>_)
+  , _room = T (app_state ()) (L .get (app_room))
+  , _students = T (app_state ()
+    ) (L .get ([ app_students, L .valueOr ([]) ])) )=>_)
 
 var playing_view = _ =>
   so ((_=()=>
   <playing-etc>
   </playing-etc>,
   where
-  , _students = T (app_state ()
-      ) (Z_ .chain (L .get ([ app_students, as_maybe ]))) )=>_)
+  , _students = T (app_state ()) (L .get (app_students)) )=>_)
                            
                          
                          
@@ -146,7 +143,7 @@ var get_room = _room => {{
       .then (panic_on ([
         [ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
   .then (_ => {{
-    ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
+    ;app_state (teacher_app .get_ready (_setup, [])) }})
   .catch (_e => {{
     ;console .error (_e) }})
   .then (_ => {{
@@ -155,7 +152,7 @@ var get_room = _room => {{
 var start_playing = _ => {{
   T (maybe_all ({
     _ensemble: T (ensemble_state ()) (L .get ([ as_maybe ])),
-    _room: T (app_state ()) (L .get ([ from_maybe, app_room, as_maybe ])) })
+    _room: T (app_state ()) (L .get ([ app_room, as_maybe ])) })
   ) (Z_ .map (({ _ensemble, _room }) => {{
     ;go
     .then (_ =>
@@ -204,7 +201,6 @@ var heartbeat = S .data (reping_period)
   
 var connection = S (_ => {{
   ;return T (app_state ()) ([
-    L .get ([ from_maybe ]),
     L .get (app_room),
     map_defined (_room => {{
       if (! connection [_room]) {
@@ -227,12 +223,12 @@ S (_ => {{
         _x => Math .floor (_x) ])) .catch (_ => {}) } } }})
 */
 S (last_app => {{
-  T (app_state ()) (Z_ .map (_app => {{
+  T (app_state ()) (_app => {{
     if (! L .isDefined (app_playing) (last_app)) {
       if (L .isDefined (app_playing) (_app)) {
       }
     }
-  }}))
+  }})
   return app_state () }}
   , app_state ())
    

@@ -146,23 +146,23 @@ var playing_view = _ => <playing-etc>
   { T (app_state ()) ([ student_app_to_board_viewer,
     Z_ .maybe ([]) (_board_viewer =>
       so ((_=_=>
-      [ T (current_question)
-        (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
+      [ T (current_question
+        ) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { T (_board) (Z_ .map (_row => 
-        <row> { T (_row) (Z_ .map (_cell =>
-          so ((_=_=>
-          !! (! _cell_bingo)
-          ? !! (! _cell_crossed)
-            ? <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>
-            : <cell>{ crossed (_cell_answer) }</cell>
-          : <cell>{ bold_crossed (_cell_answer) }</cell>,
-          where
-          , _cell_position = T (_cell) (L .get (cell_position))
-          , _cell_answer = T (_cell) (L .get (cell_answer))
-          , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
-          , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
-          } </row> )) } </board> ],
+          <row> { T (_row) (Z_ .map (_cell =>
+            so ((_=_=>
+            !! (_cell_bingo)
+            ? <cell>{ bold_crossed (_cell_answer) }</cell>
+            : !! (_cell_crossed)
+            ? <cell>{ crossed (_cell_answer) }</cell>
+            : <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>,
+            where
+            , _cell_position = T (_cell) (L .get (cell_position))
+            , _cell_answer = T (_cell) (L .get (cell_answer))
+            , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
+            , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
+            } </row> )) } </board> ],
       where
       , _board = T (_board_viewer) (L .get (board_viewer_board))
       , current_question = T (_board_viewer) (board_viewer_current_question)
