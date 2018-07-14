@@ -196,21 +196,24 @@ var game_over_view = _ =>
           </game-over-etc>,
   where             
   , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' 
-  , student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png',
-    _app = app_state ()
+  , student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png'
+  , _app = app_state ()
   , _ensemble = ensemble_state ()
   , all_students = T (_ensemble) (
     assemble_students (data_kind (_app)))
   , questions = T (_app) (L .collect ([app_questions, L .elems, question_view]))
   , attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ])
   , average_time = T (_ensemble) ([
-    assemble_students (data_kind (_app)),
-    Z_ .map ($ ([
-      Z .snd,
-      L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
-      Z .map (Z .of (Array)) ])),
-    _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
-    Z .map ($ ([ Z .justs, average, Z_ .fromMaybe ('gg') ])) ]) )=>_)
+      assemble_students (data_kind (_app)),
+      Z_ .map ($ ([
+        Z .snd,
+        L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
+        Z .map (Z .of (Array)) ])),
+      _x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
+      Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ])
+  , average = by (list => $ ([
+      Z .sum,
+      Z .div (Z .size (list)) ])) )=>_)
 
 
 window .view = <student-app>

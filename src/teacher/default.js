@@ -210,10 +210,11 @@ var connection = S (_ => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
-      return so ((_=()=>
-        connection [_room] () && [timestamp, mean, Math .sqrt (variance)],
+      if (connection [_room] ()) {
+        return so ((_=()=>
+        [timestamp, mean, Math .sqrt (variance)],
         where
-        , [mean, variance, n, timestamp] = connection [_room] () )=>_) }} ) ]) }}) 
+        , [mean, variance, n, timestamp] = connection [_room] () )=>_) } }} ) ]) }}) 
 
 
 
