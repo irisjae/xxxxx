@@ -1,4 +1,11 @@
-var { bool, number, timestamp, string,
+var { T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+so, by, 
+go, panic,
+fiat, data, data_lens, data_iso, data_kind,
+n_reducer, pair_zip_n, pair_zip, pair_projection,
+map_defined, from_just, maybe_all,
+every, delay,
+bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, answer, latency, ping, position,
@@ -33,13 +40,7 @@ student_app_get_ready_to_playing, student_app_next_playing,
 student_app_to_board_viewer,
 matches_question_answer, 
 board_viewer_current_question,
-board_viewer_crossed_positions, board_viewer_bingoed_positions,
-T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-where, whereby, go, defined,
-data, data_lens, data_iso, data_kind,
-n_reducer, pair_zip_n, pair_zip, pair_projection,
-map_defined, from_just, maybe_all,
-every, delay
+board_viewer_crossed_positions, board_viewer_bingoed_positions
 } = window .stuff
 
 
@@ -86,14 +87,14 @@ var init_view = _ =>
       Z_ .maybe ([]) (_ => 'Generating Code...')) }
     </init-etc>)
 
-var get_ready_view = 
+var get_ready_view = _ =>
   so ((_=()=>
   <get-ready-etc>
     <message> Room Code: { _room } </message>
     <message> Number of students: { Z_ .size (_students) } </message>
-    { [ T (_students) ([
-          Z_ .map (L .get (student_name)),
-          Z_ .map (_x => <player>{ 'Name: '+ _x }</player>) ])
+    { [ T (_students) (Z_ .map ($ ([
+          L .get (student_name),
+          _x => <player>{ 'Name: '+ _x }</player> ])))
       , !! (Z_ .size (_students) === 0)
         ? []
         : <button play fn={ pipeline_play }> play </button> ] }
@@ -105,11 +106,13 @@ var get_ready_view =
       Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])),
       Z_ .fromMaybe ([]) ]) )=>_)
 
-var playing_view = <playing-etc> {
-  so ((
-  take
-  , _students = T (app_state ()) (
-      Z_ .maybe (Z .Nothing) (L .get ([ app_students, as_maybe ])))
+var playing_view = _ =>
+  so ((_=()=>
+  <playing-etc>
+  </playing-etc>,
+  where
+  , _students = T (app_state ()
+      ) (Z_ .chain (L .get ([ app_students, as_maybe ]))) )=>_)
                            
                          
                          
@@ -136,12 +139,12 @@ var get_room = _room => {{
   .then (_ =>
     api (_room,
       post (message_encoding (
-        so ((_=_=>
-        message .teacher_setup (questions, rules)  
+        so ((_=()=>
+        message .teacher_setup (questions, rules),
         where
-        , {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) )))
+        , {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
       .then (panic_on ([
-        [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+        [ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
   .then (_ => {{
     ;app_state (Z .Just (teacher_app .get_ready (_setup, []))) }})
   .catch (_e => {{
@@ -200,15 +203,17 @@ var reping_period = 3
 var heartbeat = S .data (reping_period) 
   
 var connection = S (_ => {{
-  ;return T (app_state ()) ([ L .get ([ from_maybe ]),
-    L .get ([ app_room, as_maybe ]),
-    Z_ .maybe (undefined) (_room => {{
+  ;return T (app_state ()) ([
+    L .get ([ from_maybe ]),
+    L .get (app_room),
+    map_defined (_room => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
-      return connection [_room] () && where ((
-        [mean, variance, n, timestamp] = connection [_room] () ) =>
-      [timestamp, mean, Math .sqrt (variance)]) }} ) ]) }}) 
+      return so ((_=()=>
+        connection [_room] () && [timestamp, mean, Math .sqrt (variance)],
+        where
+        , [mean, variance, n, timestamp] = connection [_room] () )=>_) }} ) ]) }}) 
 
 
 
