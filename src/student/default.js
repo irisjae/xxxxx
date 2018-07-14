@@ -254,7 +254,7 @@ var record_room = _room => {{
   var _student = T (app_state ()) (L .get ([ app_student, as_maybe ]))
   ;go 
   .then (_ =>
-    (io_state (io .connecting), api (_room) .then (_x => {{
+    io_state (io .connecting) && api (_room) .then (_x => {{
       if (Z .equals (_x) ({})) {
         ;throw new Error ('empty') }
       else {
@@ -264,7 +264,7 @@ var record_room = _room => {{
         var _rules = T (_ensemble) (L .get (ensemble_rules))
         var _setup = setup .setup (_room, _questions, default_rules)
         ;app_state (
-          student_app .get_ready ( _student, _setup )) } }})) )
+          student_app .get_ready ( _student, _setup )) } }}) )
     .catch (_e => {{
       ;lookbehind_state (student_lookbehind .bad_room (_room))
       ;console .error (_e) }})
@@ -289,22 +289,18 @@ var connect_room = _ => {{
     var _setup
     ;return go 
     .then (_ =>
-      io_state (io .connecting), api (_room) .then (_x => {{
-        if (Z .equals (_x) ({})) {
-          ;throw new Error ('empty') }
-        else {
-          var _ensemble = T (_x)
-            (L .get (L .inverse (data_iso (ensemble .ensemble))))
-          var _questions = T (_ensemble) (L .get (ensemble_questions))
-          var _rules = T (_ensemble) (L .get (ensemble_rules))
-          ;_setup = setup .setup (_room, _questions, default_rules)
-          return _x } }}) )
+      io_state (io .connecting) && api (_room)
+      .then (panic_on ([ [Z .equals ({}), 'empty room; expired code?'] ]))
+      .then ($ [
+         L .get (L .inverse (data_iso (ensemble .ensemble))),
+         _ensemble => {{
+           var _questions = T (_ensemble) (L .get (ensemble_questions))
+           var _rules = T (_ensemble) (L .get (ensemble_rules))
+           ;_setup = setup .setup (_room, _questions, default_rules) }}]) )
     .then (_ =>
       api (_room, post (message_encoding (
-        message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
-        if (! _x .ok) {
-          ;throw new Error ('not ok') }
-        else return _x }}) )
+        message .student_ping (_student, [0, 0, 0]) )))
+      .then (panic_on ([ [Z .isEmpty ('ok'), 'not ok'] ])) )
     .then (_ => {{ 
       ;app_state (
         student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
@@ -369,8 +365,8 @@ var connection = S (_ => {{
       if (! connection [_room]) {
         ;connection [_room] = S .data ()
         ;api .listen_ping (_room) (connection [_room]) }
-      return so ((_=_=>
-      connection [_room] () && [timestamp, mean, Math .sqrt (variance)],
+      return connection [_room] () && so ((_=_=>
+      [timestamp, mean, Math .sqrt (variance)],
       where
       , [mean, variance, n, timestamp] = connection [_room] () )=>_) }}) ]) }})
 
@@ -470,8 +466,7 @@ S (_ => {{
     go
     .then (_ =>
       !! critical && S .sample (connection)
-      ? io_state (io .messaging)
-        && api (_room, 
+      ? io_state (io .messaging) && api (_room, 
           post (messages_encoding (
             so ((_=_=>
             !! (not_playing)
