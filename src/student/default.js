@@ -475,14 +475,14 @@ S (_ => {{
               , message .student_join (_student, _board)
               , message .student_update (_student, _history) ],
             where
-            , { _board, _history, not_playing } = T (app_state ()) ([
-                L .get (L .pick ({
-                  _board: [ app_board, as_maybe ],
-                  _history: [ app_history, as_maybe ] })),
-                maybe_all,
-                Z .fromMaybe ({ not_playing: {} }) ]) )=>_) ))) 
-      : io_state (io .heartbeat)
-        && api (_room)
+            , { _board, _history, not_playing } =
+                Z .fromMaybe
+                  ({
+                    not_playing: fiat })
+                  (maybe_all (T (app_state ()) (L .get (L .pick ({
+                    _board: [ app_board, as_maybe ],
+                    _history: [ app_history, as_maybe ] })) ))) )=>_) ))) 
+      : io_state (io .heartbeat) && api (_room)
         .then ($ ([
           L .get (L .inverse (data_iso (ensemble .ensemble))),
           _x => {{ ;ensemble_state (_x) }} ])) )

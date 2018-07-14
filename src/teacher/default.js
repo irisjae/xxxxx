@@ -74,7 +74,8 @@ var init_view = _ =>
   so ((
   take
   , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
-  , board_sizes_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
+  , board_sizes_img =
+      'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
   <init-etc> 
     <div a-title>
       Bingo Class Game
@@ -150,14 +151,20 @@ var get_room = _room => {{
     ;io_state (io .inert) }}) }}
 
 var start_playing = _ => {{
+  ;so ((
+  take
+  , exists = maybe_all ({
+      _ensemble: T (ensemble_state ()) (as_maybe),
+      _room: T (app_state ()) (L .get (app_room)) }) ) => {{
+  ;T (exists) ({ _ensemble, _room }) =>
+  }})
   if (L .isDefined ([]) (ensemble_state ())) {
     T (app_state ()) ([
       L .get (app_room),
       map_defined (_room => {{
         ;go
         .then (_ =>
-          io_state (io .messaging) &&
-          api (_room,
+          io_state (io .messaging) && api (_room,
             post (message_encoding (message .teacher_start (schedule_start (ensemble_state ())))))
           .then (panic_on ([
             [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
@@ -272,11 +279,10 @@ S (_ => {{
       go
       .then (_ =>
         !! critical && S .sample (connection)
-        ? io_state (io .messaging)
-          && api (_room,
+        ? io_state (io .messaging) && api (_room,
             post (message_encoding (message .teacher_ping (S .sample (connection)))))
-        : io_state (io .heartbeat)
-          && api (_room) .then ($ ([
+        : io_state (io .heartbeat) && api (_room)
+          .then ($ ([
             L .get (L .inverse (data_iso (ensemble .ensemble))),
             _x => {{
               ;ensemble_state (_x) }} ])) )
