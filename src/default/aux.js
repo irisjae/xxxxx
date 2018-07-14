@@ -386,7 +386,7 @@ var student_app_next_playing =
     ? L .set ([app_history, L .append]) (rendition .rendition ([]))
     : L .get (
         [ data_iso (student_app .playing)
-        , L .getInverse (data_iso (student_app .game_over)) ]),
+        , L .inverse (data_iso (student_app .game_over)) ]),
     where
     , board_size = T (_app) (L .get ([app_setup, setup_size]))
     , history_size = T (_app) ([ L .get (app_history), Z_ .size ]) )=>_)) 

@@ -277,7 +277,7 @@ S (_ => {{
             post (message_encoding (message .teacher_ping (S .sample (connection)))))
         : io_state (io .heartbeat)
           && api (_room) .then ($ ([
-            L .get (L .getInverse (data_iso (ensemble .ensemble))),
+            L .get (L .inverse (data_iso (ensemble .ensemble))),
             _x => {{
               ;ensemble_state (_x) }} ])) )
       .then (_ => {{

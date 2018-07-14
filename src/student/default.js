@@ -259,7 +259,7 @@ var record_room = _room => {{
         ;throw new Error ('empty') }
       else {
         var _ensemble = T (_x)
-          (L .get (L .getInverse (data_iso (ensemble .ensemble))))
+          (L .get (L .inverse (data_iso (ensemble .ensemble))))
         var _questions = T (_ensemble) (L .get (ensemble_questions))
         var _rules = T (_ensemble) (L .get (ensemble_rules))
         var _setup = setup .setup (_room, _questions, default_rules)
@@ -293,7 +293,7 @@ var connect_room = _ => {{
             ;throw new Error ('empty') }
           else {
             var _ensemble = T (_x)
-              (L .get (L .getInverse (data_iso (ensemble .ensemble))))
+              (L .get (L .inverse (data_iso (ensemble .ensemble))))
             var _questions = T (_ensemble) (L .get (ensemble_questions))
             var _rules = T (_ensemble) (L .get (ensemble_rules))
             ;_setup = setup .setup (_room, _questions, default_rules)
@@ -457,36 +457,41 @@ S (last_ensemble => {{
 
 
 S (_ => {{
-  ;T (app_state ()) ([
-  L .get (L .pick ({
-    _student: [ app_student, as_maybe ],
-    _room: [ app_room, as_maybe ] })),
-  maybe_all,
-  Z_ .map (({ _student, _room }) => {{
+  ;so ((
+  take
+  , exists = T (app_state ()) ([
+      L .get (L .pick ({
+        _student: [ app_student, as_maybe ],
+        _room: [ app_room, as_maybe ] })),
+      maybe_all ]) ) =>
+  T (exists) (Z_ .map (({ _student, _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
     go
     .then (_ =>
       !! critical && S .sample (connection)
-      ? (io_state (io .messaging), api (_room, 
-        post (messages_encoding (
-          Z_ .concat
-            ([ message .student_ping (_student, S .sample (connection)) ])
-            (so ((_=_=>
+      ? io_state (io .messaging)
+        && api (_room, 
+          post (messages_encoding (
+            so ((_=_=>
             !! (not_playing)
-            ? []
-            : [ message .student_join (_student, _board)
+            ? [ message .student_ping (_student, S .sample (connection)) ]
+            : [ message .student_ping (_student, S .sample (connection))
+              , message .student_join (_student, _board)
               , message .student_update (_student, _history) ],
             where
             , { _board, _history, not_playing } = T (app_state ()) ([
                 L .get (L .pick ({
                   _board: [ app_board, as_maybe ],
                   _history: [ app_history, as_maybe ] })),
-                maybe_all, Z .fromMaybe ({ not_playing: {} }) ]) )=>_)) ))) )
-      : (io_state (io .heartbeat), api (_room)
-        .then (_x => {{
-          ;ensemble_state (
-            L .get (L .getInverse (data_iso (ensemble .ensemble))) (_x)) }})) )
+                maybe_all,
+                Z .fromMaybe ({ not_playing: {} }) ]) )=>_) ))) 
+      : io_state (io .heartbeat)
+        && api (_room)
+        .then ($ ([
+          L .get (L .inverse (data_iso (ensemble .ensemble))),
+          _x => {{
+          ;ensemble_state (_x) }} ])) )
     .then (_ => {{
       ;setTimeout (_ => {{
         ;heartbeat (!! critical ? reping_period : phase - 1) }}
@@ -497,4 +502,4 @@ S (_ => {{
         ;heartbeat (phase) }}
       , 300) }})
     .then (_ => {{
-      ;io_state (io .inert) }}) }}) ]) }})
+      ;io_state (io .inert) }}) }})) ) }})
