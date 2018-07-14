@@ -150,22 +150,22 @@ var get_room = _room => {{
     ;io_state (io .inert) }}) }}
 
 var start_playing = _ => {{
-  T (maybe_all ({
-    _ensemble: T (ensemble_state ()) (L .get ([ as_maybe ])),
-    _room: T (app_state ()) (L .get ([ app_room, as_maybe ])) })
-  ) (Z_ .map (({ _ensemble, _room }) => {{
-    ;go
-    .then (_ =>
-      io_state (io .messaging) &&
-      api (_room,
-        post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
-      .then (panic_on ([
-        [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-    .catch (_e => {{
-      ;console .error (_e) }})
-    .then (_ => {{
-      ;io_state (io .inert) }}) }} )) }}
-  
+  if (L .isDefined ([]) (ensemble_state ())) {
+    T (app_state ()) ([
+      L .get (app_room),
+      map_defined (_room => {{
+        ;go
+        .then (_ =>
+          io_state (io .messaging) &&
+          api (_room,
+            post (message_encoding (message .teacher_start (schedule_start (ensemble_state ())))))
+          .then (panic_on ([
+            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+        .catch (_e => {{
+          ;console .error (_e) }})
+        .then (_ => {{
+          ;io_state (io .inert) }}) }}) ]) } }}
+
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
 }}
@@ -247,8 +247,8 @@ S (last_ensemble => {{
   var _app = S .sample (app_state)
   var _ensemble = ensemble_state ()
   if (L .isDefined (app_get_ready) (_app)) {
-    if (! L .get (ensemble_start) (last_ensemble)) {
-      if (L .get (ensemble_start) (_ensemble)) {
+    if (L .isEmpty (ensemble_start) (last_ensemble)) {
+      if (! L .isEmpty (ensemble_start) (_ensemble)) {
         var start = L .get (ensemble_start) (_ensemble)
         var now = (new Date) .getTime ()
 
