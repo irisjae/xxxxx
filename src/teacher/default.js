@@ -130,10 +130,8 @@ var get_room = _room => {{
 
   ;return go
   .then (_ =>
-    (io_state (io .connecting), api (_room) .then (_x => {{
-      if (! R .equals (_x) ({})) {
-        ;throw new Error (_room + ' taken') }
-      else return _x }})))
+    io_state (io .connecting) && api (_room)
+    .then (panic_on ([ [Z_ .equals ({}), _room + ' taken'] ])) )
   .then (_ =>
     api (_room,
       post (message_encoding (
@@ -141,8 +139,8 @@ var get_room = _room => {{
         message .teacher_setup (questions, rules),
         where
         , {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
-      .then (panic_on ([
-        [ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
+    .then (panic_on ([
+      [ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
   .then (_ => {{
     ;app_state (teacher_app .get_ready (_setup, [])) }})
   .catch (_e => {{
@@ -156,22 +154,17 @@ var start_playing = _ => {{
   , exists = maybe_all ({
       _ensemble: T (ensemble_state ()) (as_maybe),
       _room: T (app_state ()) (L .get (app_room)) }) ) => {{
-  ;T (exists) ({ _ensemble, _room }) =>
-  }})
-  if (L .isDefined ([]) (ensemble_state ())) {
-    T (app_state ()) ([
-      L .get (app_room),
-      map_defined (_room => {{
-        ;go
-        .then (_ =>
-          io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_start (schedule_start (ensemble_state ())))))
-          .then (panic_on ([
-            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-        .catch (_e => {{
-          ;console .error (_e) }})
-        .then (_ => {{
-          ;io_state (io .inert) }}) }}) ]) } }}
+  ;T (exists) (({ _ensemble, _room }) => {{
+    ;go
+    .then (_ =>
+      io_state (io .messaging) && api (_room,
+        post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
+      .then (panic_on ([
+        [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+    .catch (_e => {{
+      ;console .error (_e) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }}) }}) }}
 
 var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))

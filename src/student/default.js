@@ -103,7 +103,7 @@ var room_entry_view = <room-entry-etc>
     <button> Go </button> </code>
   { !! (! L .isDefined (lookbehind_bad_room) (lookbehind_state ()))
     ? []
-    : so ((_=_=>
+    : so ((_=()=>
       <message>{bad_room} is not a valid room</message>,
       where
       , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room)) )=>_) } </room-entry-etc>
@@ -115,36 +115,35 @@ var name_entry_view = <student-entry-etc>
   </name> </student-entry-etc>
 
 var get_ready_view = _ => <get-ready-etc>
-  { T (app_state ()) ([
-    L .get (L .pick ({
-      room: [app_room, as_maybe],
-      student: [app_student, as_maybe] })),
-    ({ room, student }) =>
-      !! Z .isNothing (room)
-      ? !! (! L .isDefined (io_inert) (io_state ()))
-        ? !! (! L .isDefined (io_connecting) (io_state ()))
-          ? undefined
-          : 'Finding room...'
-        : room_entry_view
-      : !! Z .isNothing (student)
-      ? !! (! L .isDefined (io_inert) (io_state ()))
-        ? !! (! L .isDefined (io_connecting) (io_state ()))
-          ? undefined
-          : 'Trying to join room...'
-        : name_entry_view
-      : so ((_=_=>
-      [ <room> {'Connected to room ' + plain_room } </room>
-      , 'Waiting for game to start...' ]
-      .map (_x => <div>{ _x }</div>),
-      where
-      , { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) )=>_) ])
+  { so ((
+    take
+    , room = T (app_state ()) ([ app_room, as_maybe ])
+    , student = T (app_state ()) ([ app_student, as_maybe ]) ) =>
+    !! Z .isNothing (room)
+    ? !! (! L .isDefined (io_inert) (io_state ()))
+      ? !! (! L .isDefined (io_connecting) (io_state ()))
+        ? panic ('invalid io at get ready view')
+        : 'Finding room...'
+      : room_entry_view
+    : !! Z .isNothing (student)
+    ? !! (! L .isDefined (io_inert) (io_state ()))
+      ? !! (! L .isDefined (io_connecting) (io_state ()))
+        ? panic ('invalid io at get ready view')
+        : 'Trying to join room...'
+      : name_entry_view
+    : so ((_=_=>
+    [ <room> {'Connected to room ' + plain_room } </room>
+    , 'Waiting for game to start...' ]
+    .map (_x => <div>{ _x }</div>),
+    where
+    , { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) )=>_))
   } </get-ready-etc>
 
 var crossed = _x => <s>{ _x }</s>
 var bold_crossed = _x => <s><b>{ _x }</b></s>
 var playing_view = _ => <playing-etc>
-  { T (app_state ()) ([ student_app_to_board_viewer,
-    Z_ .maybe ([]) (_board_viewer =>
+  { T (student_app_to_board_viewer (app_state ())
+    ) (Z_ .maybe ([]) (_board_viewer =>
       so ((_=_=>
       [ T (current_question
         ) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
