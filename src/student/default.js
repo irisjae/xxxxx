@@ -1,11 +1,4 @@
-var { T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-so, by, 
-go, panic,
-fiat, data, data_lens, data_iso, data_kind,
-n_reducer, pair_zip_n, pair_zip, pair_projection,
-map_defined, from_just, maybe_all,
-every, delay,
-bool, number, timestamp, string,
+var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, answer, latency, ping, position,
@@ -40,7 +33,14 @@ student_app_get_ready_to_playing, student_app_next_playing,
 student_app_to_board_viewer,
 matches_question_answer, 
 board_viewer_current_question,
-board_viewer_crossed_positions, board_viewer_bingoed_positions
+board_viewer_crossed_positions, board_viewer_bingoed_positions,
+T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+so, by, 
+go, panic, panic_on,
+fiat, data, data_lens, data_iso, data_kind,
+n_reducer, pair_zip_n, pair_zip, pair_projection,
+map_defined, from_just, maybe_all,
+every, delay
 } = window .stuff
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
@@ -131,7 +131,7 @@ var get_ready_view = _ => <get-ready-etc>
         ? panic ('invalid io at get ready view')
         : 'Trying to join room...'
       : name_entry_view
-    : so ((_=_=>
+    : so ((_=()=>
     [ <room> {'Connected to room ' + plain_room } </room>
     , 'Waiting for game to start...' ]
     .map (_x => <div>{ _x }</div>),
@@ -139,18 +139,16 @@ var get_ready_view = _ => <get-ready-etc>
     , { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) )=>_))
   } </get-ready-etc>
 
-var crossed = _x => <s>{ _x }</s>
-var bold_crossed = _x => <s><b>{ _x }</b></s>
 var playing_view = _ => <playing-etc>
   { T (student_app_to_board_viewer (app_state ())
     ) (Z_ .maybe ([]) (_board_viewer =>
-      so ((_=_=>
+      so ((_=()=>
       [ T (current_question
         ) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
       , <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
       , <board> { T (_board) (Z_ .map (_row => 
           <row> { T (_row) (Z_ .map (_cell =>
-            so ((_=_=>
+            so ((_=()=>
             !! (_cell_bingo)
             ? <cell>{ bold_crossed (_cell_answer) }</cell>
             : !! (_cell_crossed)
@@ -160,7 +158,9 @@ var playing_view = _ => <playing-etc>
             , _cell_position = T (_cell) (L .get (cell_position))
             , _cell_answer = T (_cell) (L .get (cell_answer))
             , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
-            , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
+            , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
+            , crossed = _x => <s>{ _x }</s>
+            , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
             } </row> )) } </board> ],
       where
       , _board = T (_board_viewer) (L .get (board_viewer_board))
@@ -170,7 +170,7 @@ var playing_view = _ => <playing-etc>
       , game_tick = game_tick_sampler () )=>_))) } </playing-etc>
 
 var game_over_view = _ =>
-  so ((_=_=>
+  so ((_=()=>
   <game-over-etc>
     <result-etc>
       <tabs>
@@ -466,7 +466,7 @@ S (_ => {{
       !! critical && S .sample (connection)
       ? io_state (io .messaging) && api (_room, 
           post (messages_encoding (
-            so ((_=_=>
+            so ((_=()=>
             !! (not_playing)
             ? [ message .student_ping (_student, S .sample (connection)) ]
             : [ message .student_ping (_student, S .sample (connection))

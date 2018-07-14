@@ -30,6 +30,18 @@ var T = _x => _fn_obj =>
 
 var panic = err => {{
   ; throw new Error (err) }}
+var panic_on = cases =>
+  _x =>
+    so ((
+    take
+    , triggered_case = T (cases) (R .find (([cond, _]) => cond (_x))) ) =>
+    !! (triggered_case === undefined)
+    ? _x
+    : T (triggered_case
+      ) (([_, err]) => {{
+        ;throw new Error (err) }}) )
+
+
 
 
 
@@ -297,7 +309,7 @@ window .Surplus = Surplus
 window .stuff = { ...window .stuff,
   T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
   so, by, 
-  go, panic,
+  go, panic, panic_on,
   fiat, data, data_lens, data_iso, data_kind,
   n_reducer, pair_zip_n, pair_zip, pair_projection,
   map_defined, from_just, maybe_all,

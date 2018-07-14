@@ -1,11 +1,4 @@
-var { T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-so, by, 
-go, panic,
-fiat, data, data_lens, data_iso, data_kind,
-n_reducer, pair_zip_n, pair_zip, pair_projection,
-map_defined, from_just, maybe_all,
-every, delay,
-bool, number, timestamp, string,
+var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, answer, latency, ping, position,
@@ -40,7 +33,14 @@ student_app_get_ready_to_playing, student_app_next_playing,
 student_app_to_board_viewer,
 matches_question_answer, 
 board_viewer_current_question,
-board_viewer_crossed_positions, board_viewer_bingoed_positions
+board_viewer_crossed_positions, board_viewer_bingoed_positions,
+T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+so, by, 
+go, panic, panic_on,
+fiat, data, data_lens, data_iso, data_kind,
+n_reducer, pair_zip_n, pair_zip, pair_projection,
+map_defined, from_just, maybe_all,
+every, delay
 } = window .stuff
 
 
@@ -170,18 +170,6 @@ var timesup_question = _ => {{
   //;app_state (student_app_next_playing (app_state ()))
 }}
 
-
-var panic_on = cases =>
-  _x =>
-    so ((
-    take
-    , _case = R .find (([cond, _]) => cond (_x)) (cases) ) =>
-    !! (_case === undefined)
-    ? _x
-    : T (_case
-      ) (([_, err]) => {{
-        ;throw new Error (err) }}) )
-
         
         
         
@@ -192,8 +180,8 @@ var panic_on = cases =>
 var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
 ;game_clock .add (timesup_question, 10)
-;T (R .range (0, 10 + 1)) (
-  R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t)))
+;T (Z .range (0) (10 + 1)) (R .forEach (t => {{
+  ;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }}))
 
    
 var reping_period = 3
