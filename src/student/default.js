@@ -279,39 +279,40 @@ var record_student = _name => {{
       , _setup )) }}
 
 var connect_room = _ => {{
-  ;T (app_state ()) ([
-    L .get (L .pick ({
-      _student: [ app_student, as_maybe ],
-      _room: [ app_room, as_maybe ] })),
-    maybe_all,
-    Z_ .map (({ _student, _room }) => {{
-      var _setup
-      ;return go 
-      .then (_ =>
-        (io_state (io .connecting), api (_room) .then (_x => {{
-          if (Z .equals (_x) ({})) {
-            ;throw new Error ('empty') }
-          else {
-            var _ensemble = T (_x)
-              (L .get (L .inverse (data_iso (ensemble .ensemble))))
-            var _questions = T (_ensemble) (L .get (ensemble_questions))
-            var _rules = T (_ensemble) (L .get (ensemble_rules))
-            ;_setup = setup .setup (_room, _questions, default_rules)
-            return _x } }})) )
-      .then (_ =>
-        api (_room, post (message_encoding (
-          message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
-          if (! _x .ok) {
-            ;throw new Error ('not ok') }
-          else return _x }}) )
-      .then (_ => {{ 
-        ;app_state (
-          student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
-      .catch (_e => {{
-        ;lookbehind_state (student_lookbehind .bad_room (_room))
-        ;console .error (_e) }})
-      .then (_ => {{
-        ;io_state (io .inert) }}) }}) ]) }} 
+  ;so ((
+  take
+  , exists = maybe_all (T (app_state ()) (
+      L .get (L .pick ({
+        _student: [ app_student, as_maybe ],
+        _room: [ app_room, as_maybe ] })))) ) => {{
+  ;T (exists) (Z_ .map (({ _student, _room }) => {{
+    var _setup
+    ;return go 
+    .then (_ =>
+      io_state (io .connecting), api (_room) .then (_x => {{
+        if (Z .equals (_x) ({})) {
+          ;throw new Error ('empty') }
+        else {
+          var _ensemble = T (_x)
+            (L .get (L .inverse (data_iso (ensemble .ensemble))))
+          var _questions = T (_ensemble) (L .get (ensemble_questions))
+          var _rules = T (_ensemble) (L .get (ensemble_rules))
+          ;_setup = setup .setup (_room, _questions, default_rules)
+          return _x } }}) )
+    .then (_ =>
+      api (_room, post (message_encoding (
+        message .student_ping (_student, [0, 0, 0]) ))) .then (_x => {{
+        if (! _x .ok) {
+          ;throw new Error ('not ok') }
+        else return _x }}) )
+    .then (_ => {{ 
+      ;app_state (
+        student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
+    .catch (_e => {{
+      ;lookbehind_state (student_lookbehind .bad_room (_room))
+      ;console .error (_e) }})
+    .then (_ => {{
+      ;io_state (io .inert) }}) }})) }} ) }}
 
 var attempt_question = _position => {{
   T (app_state ()) ([ student_app_to_board_viewer,
@@ -424,34 +425,33 @@ S (_ => {{
 
 
 S (last_ensemble => {{
-  ;T ({
-    last_ensemble: last_ensemble,
-    _app: S .sample (app_state),
-    _ensemble: ensemble_state () }
-  ) (({ last_ensemble, _app, _ensemble }) => {{
-    if (L .isDefined (app_get_ready) (_app)) {
-      if (! L .get (ensemble_start) (last_ensemble)) {
-        if (L .get (ensemble_start) (_ensemble)) {
-          var start = T (_ensemble) (L .get (ensemble_start))
-          var now = (new Date) .getTime ()
-          
-          var playing_app = student_app_get_ready_to_playing (_app)
-          if (start > now) {
-            ;app_state (playing_app) }
-          else {
-            ;setTimeout (_ => {{
-              ;app_state (playing_app) }}
-            , start - now) }
-          
-          var _room = T (_app) (L .get (app_room))
-          var _student = T (_app) (L .get (app_student))
-          ;(io_state (io .messaging), api (_room, post (
-            message_encoding (
-              message .student_start (_student, start)))))
-          .catch (_e => {{
-            ;console .error (_e) }})
-          .then (_ => {{
-            ;io_state (io .inert) }}) } } } }})
+  ;so ((
+  take
+  , _app = S .sample (app_state)
+  , _ensemble = ensemble_state () ) => {{
+  if (L .isDefined (app_get_ready) (_app)) {
+    if (! L .get (ensemble_start) (last_ensemble)) {
+      if (L .get (ensemble_start) (_ensemble)) {
+        var start = T (_ensemble) (L .get (ensemble_start))
+        var now = (new Date) .getTime ()
+
+        var playing_app = student_app_get_ready_to_playing (_app)
+        if (start > now) {
+          ;app_state (playing_app) }
+        else {
+          ;setTimeout (_ => {{
+            ;app_state (playing_app) }}
+          , start - now) }
+
+        var _room = T (_app) (L .get (app_room))
+        var _student = T (_app) (L .get (app_student))
+        ;(io_state (io .messaging), api (_room, post (
+          message_encoding (
+            message .student_start (_student, start)))))
+        .catch (_e => {{
+          ;console .error (_e) }})
+        .then (_ => {{
+          ;io_state (io .inert) }}) } } } }})
   return ensemble_state () }}
   , ensemble_state ())
 
@@ -463,8 +463,8 @@ S (_ => {{
       L .get (L .pick ({
         _student: [ app_student, as_maybe ],
         _room: [ app_room, as_maybe ] })),
-      maybe_all ]) ) =>
-  T (exists) (Z_ .map (({ _student, _room }) => {{
+      maybe_all ]) ) => {{
+  ;T (exists) (Z_ .map (({ _student, _room }) => {{
     var phase = heartbeat ()
     var critical = phase === 1
     go
@@ -490,8 +490,7 @@ S (_ => {{
         && api (_room)
         .then ($ ([
           L .get (L .inverse (data_iso (ensemble .ensemble))),
-          _x => {{
-          ;ensemble_state (_x) }} ])) )
+          _x => {{ ;ensemble_state (_x) }} ])) )
     .then (_ => {{
       ;setTimeout (_ => {{
         ;heartbeat (!! critical ? reping_period : phase - 1) }}
@@ -502,4 +501,4 @@ S (_ => {{
         ;heartbeat (phase) }}
       , 300) }})
     .then (_ => {{
-      ;io_state (io .inert) }}) }})) ) }})
+      ;io_state (io .inert) }}) }})) }}) }})
