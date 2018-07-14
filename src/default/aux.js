@@ -321,15 +321,15 @@ var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 var ping_mean = [ 1 ]
 
 var students_mapping = 
-  [ L .reread ($ ([
-      R .toPairs,
+  [ L .keyed
+  , L .reread (
       Z_ .map (pair => so ((_=()=>
         Z_ .Pair ({ id: id, name: name }) (val),
         where
         , id = R .head (pair)
         , inner_pair = R .head (R .toPairs (R .last (pair)))
         , name = R .head (inner_pair)
-        , val = R .last (inner_pair) )=>_)) ]))
+        , val = R .last (inner_pair) )=>_)))
   , L .elems ]
 var map_students = [ students_mapping, pair_as_list, L .first ]
 var mapping_students = [ students_mapping, pair_as_list, L .last ]
