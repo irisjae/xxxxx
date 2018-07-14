@@ -45,8 +45,8 @@ board_viewer_crossed_positions, board_viewer_bingoed_positions
 
 
 
-var app_state = S .data (Z .Nothing)
-var ensemble_state = S .data (Z .Nothing)
+var app_state = S .data (panic ('TODO: add init state for app'))
+var ensemble_state = S .data (panic ('TODO: add init state for ensemble'))
 var io_state = S .data (io .inert)
 
 
@@ -223,58 +223,50 @@ S (_ => {{
         _x => Math .floor (_x) ])) .catch (_ => {}) } } }})
 */
 S (last_app => {{
-  T (app_state ()) (_app => {{
+  var _app = app_state ()
     if (! L .isDefined (app_playing) (last_app)) {
       if (L .isDefined (app_playing) (_app)) {
       }
     }
-  }})
-  return app_state () }}
-  , app_state ())
+  return _app }}
+, app_state ())
    
    
 S (_ => {{
-  ;T (maybe_all ({
-      _app: S .sample (app_state),
-      _ensemble: ensemble_state () })
-  ) (Z_ .map (({ _app, _ensemble }) => {{
-      var _app_kind = T (_app) (data_kind)
-      var _app_students = T (_app) (L .get (app_students))
-      var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
-      if (! Z_ .equals (_ensemble_students) (_app_students)) {
-        ;app_state (Z .Just (
-          T (_app)
-            (L .set ([app_students]) (_ensemble_students)))) } }})) }})
+  var _app = S .sample (app_state)
+  var _ensemble = ensemble_state ()
+  
+  var _app_kind = T (_app) (data_kind)
+  var _app_students = T (_app) (L .get (app_students))
+  var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
+  if (! Z_ .equals (_ensemble_students) (_app_students)) {
+    ;app_state (
+      T (_app
+      ) (L .set (app_students) (_ensemble_students))) } }})
 S (last_ensemble => {{
-  ;T (maybe_all ({
-    last_ensemble: last_ensemble,
-    _app: S .sample (app_state),
-    _ensemble: ensemble_state () })
-  ) (Z_ .map (({ last_ensemble, _app, _ensemble }) => {{
-    if (L .isDefined (app_get_ready) (_app)) {
-      if (! L .get (ensemble_start) (last_ensemble)) {
-        if (L .get (ensemble_start) (_ensemble)) {
-          var start = L .get (ensemble_start) (_ensemble)
-          var now = (new Date) .getTime ()
-          
-          var playing_app = teacher_app_get_ready_to_playing (_app)
-          if (start > now) {
-            ;app_state (playing_app) }
-          else {
-            ;setTimeout (_ => {{
-              ;app_state (playing_app) }}
-            , start - now) } } } } }}))
-  return ensemble_state () }}
+  var _app = S .sample (app_state)
+  var _ensemble = ensemble_state ()
+  if (L .isDefined (app_get_ready) (_app)) {
+    if (! L .get (ensemble_start) (last_ensemble)) {
+      if (L .get (ensemble_start) (_ensemble)) {
+        var start = L .get (ensemble_start) (_ensemble)
+        var now = (new Date) .getTime ()
+
+        var playing_app = teacher_app_get_ready_to_playing (_app)
+        if (start > now) {
+          ;app_state (playing_app) }
+        else {
+          ;setTimeout (_ => {{
+            ;app_state (playing_app) }}
+          , start - now) } } } }
+  return _ensemble }}
   , ensemble_state ())
    
    
 S (_ => {{
   ;T (app_state ()) ([
-    L .get ([ from_maybe ]),
-    L .get (L .pick ({
-      _room: [ app_room, as_maybe ] })),
-    maybe_all,
-    Z_ .map (({ _room }) => {{
+    L .get (app_room),
+    map_defined (_room => {{
       var phase = heartbeat ()
       var critical = phase === 1
       go
@@ -286,8 +278,8 @@ S (_ => {{
         : io_state (io .heartbeat)
           && api (_room) .then ($ ([
             L .get (L .getInverse (data_iso (ensemble .ensemble))),
-            _ensemble => {{
-              ;ensemble_state (Z .Just (_ensemble)) }} ])) )
+            _x => {{
+              ;ensemble_state (_x) }} ])) )
       .then (_ => {{
         ;setTimeout (_ => {{
           ;heartbeat (!! critical ? reping_period : phase - 1) }}
