@@ -2,9 +2,8 @@
   "name": "noon-revolver",
   "version": "0.0.1",
   "description": "Boo-yea!",
-  "main": "server.js",
   "scripts": {
-    "start": "./build; node server.js"
+    "start": "node basic-server.js"
   },
   "dependencies": {
     "browserify": "^16.2.2",

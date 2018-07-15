@@ -2,8 +2,20 @@ var Koa = require ('koa')
 var route = require ('koa-route')
 var websockify = require ('koa-websocket')
  
-const app = websockify (new Koa());
+var app = websockify (new Koa);
  
+console .log (app.ws.use(function(ctx, next) {
+  // return `next` to pass the context (ctx) on to the next ws middleware
+  return next(ctx);
+}) === app .ws)
+
+console .log (app.ws.use(function(ctx, next) {
+  // return `next` to pass the context (ctx) on to the next ws middleware
+  return next(ctx);
+}) === app)
+
+
+/*
 // Regular middleware
 // Note it's app.ws.use and not app.use
 app.ws.use(function(ctx, next) {
@@ -23,3 +35,4 @@ app.ws.use(route.all('/test/:id', function (ctx) {
 }));
  
 app.listen(3000);
+*/
