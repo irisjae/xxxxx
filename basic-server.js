@@ -32,7 +32,7 @@ var clean_rooms = _ => {{
 ;clean_rooms ()
 
 
-{;require ('koa-qs') (new (require ('koa')) ())
+{;require ('koa-qs') (new (require ('koa')))
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
 	.use (function (ctx, next) {
@@ -65,7 +65,7 @@ var clean_rooms = _ => {{
         ;rooms [id] = { ... R .mergeDeepRight (rooms [id]) (_x), ref_time: (new Date) .getTime () } }})
         /*if (! rooms [id]) {
           ;rooms [id] = { logs: [] } }
-        ;rooms [id] .ref_time = new Date () .getTime ()
+        ;rooms [id] .ref_time = (new Date) .getTime ()
         ;rooms [id] .logs .push (_x) }})*/
       .then (_ => ({ ok: true }))
       .catch (_x => {{
