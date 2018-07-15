@@ -59,222 +59,222 @@ var io_state = S .data (io .inert)
 var clicking = ['click']
 
 var pipeline_init = _dom => {{
-  ;clicking .forEach (click => {{
-    ;_dom .addEventListener (click, _ => {{
-      get_room (T (Math .random ()) ([
-        _x => _x * 100000000,
-        _x => Math .floor (_x) ])) .catch (_ => {}) }}) }}) }}
+	;clicking .forEach (click => {{
+		;_dom .addEventListener (click, _ => {{
+			get_room (T (Math .random ()) ([
+				_x => _x * 100000000,
+				_x => Math .floor (_x) ])) .catch (_ => {}) }}) }}) }}
 
 var pipeline_play = _dom => {{
-  ;clicking .forEach (click => {{
-    ;_dom .addEventListener (click, _ => {{
-      ;start_playing () }}) }}) }}
+	;clicking .forEach (click => {{
+		;_dom .addEventListener (click, _ => {{
+			;start_playing () }}) }}) }}
 
 var init_view = _ =>
-  so ((
-  take
-  , bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
-  , board_sizes_img =
-      'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
-  <init-etc> 
-    <div a-title>
-      Bingo Class Game
-      <img src={ bingo_img } /> </div>
-    <div a-topic> Equivalent Fractions </div>
-    <rules>
-      <size> <img src={ board_sizes_img } /> </size> </rules>
-    <button fn={ pipeline_init }> Start </button>
-    { T (L .get ([io_connecting, as_maybe]) (io_state ())) (
-      Z_ .maybe ([]) (_ => 'Generating Code...')) }
-    </init-etc>)
+	so ((
+	take
+	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
+	, board_sizes_img =
+			'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
+	<init-etc> 
+		<div a-title>
+			Bingo Class Game
+			<img src={ bingo_img } /> </div>
+		<div a-topic> Equivalent Fractions </div>
+		<rules>
+			<size> <img src={ board_sizes_img } /> </size> </rules>
+		<button fn={ pipeline_init }> Start </button>
+		{ T (L .get ([io_connecting, as_maybe]) (io_state ())) (
+			Z_ .maybe ([]) (_ => 'Generating Code...')) }
+		</init-etc>)
 
 var get_ready_view = _ =>
-  so ((_=()=>
-  <get-ready-etc>
-    <message> Room Code: { _room } </message>
-    <message> Number of students: { Z_ .size (_students) } </message>
-    { [ T (_students) (Z_ .map ($ ([
-          L .get (student_name),
-          _x => <player>{ 'Name: '+ _x }</player> ])))
-      , !! (Z_ .size (_students) === 0)
-        ? []
-        : <button play fn={ pipeline_play }> play </button> ] }
-    </get-ready-etc>,
-  where
-  , _room = T (app_state ()) (L .get (app_room))
-  , _students = T (app_state ()
-    ) (L .get ([ app_students, L .valueOr ([]) ])) )=>_)
+	so ((_=()=>
+	<get-ready-etc>
+		<message> Room Code: { _room } </message>
+		<message> Number of students: { Z_ .size (_students) } </message>
+		{ [ T (_students) (Z_ .map ($ ([
+					L .get (student_name),
+					_x => <player>{ 'Name: '+ _x }</player> ])))
+			, !! (Z_ .size (_students) === 0)
+				? []
+				: <button play fn={ pipeline_play }> play </button> ] }
+		</get-ready-etc>,
+	where
+	, _room = T (app_state ()) (L .get (app_room))
+	, _students = T (app_state ()
+		) (L .get ([ app_students, L .valueOr ([]) ])) )=>_)
 
 var playing_view = _ =>
-  so ((_=()=>
-  <playing-etc>
-  </playing-etc>,
-  where
-  , _students = T (app_state ()) (L .get (app_students)) )=>_)
-                           
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
+	so ((_=()=>
+	<playing-etc>
+	</playing-etc>,
+	where
+	, _students = T (app_state ()) (L .get (app_students)) )=>_)
+													 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
+												 
 var get_room = _room => {{
-  var _setup = setup .setup ( _room, default_questions, default_rules )
+	var _setup = setup .setup ( _room, default_questions, default_rules )
 
-  ;return go
-  .then (_ =>
-    io_state (io .connecting) && api (_room)
-    .then (panic_on ([ [Z_ .equals ({}), _room + ' taken'] ])) )
-  .then (_ =>
-    api (_room,
-      post (message_encoding (
-        so ((_=()=>
-        message .teacher_setup (questions, rules),
-        where
-        , {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
-    .then (panic_on ([
-      [ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
-  .then (_ => {{
-    ;app_state (teacher_app .get_ready (_setup, [])) }})
-  .catch (_e => {{
-    ;console .error (_e) }})
-  .then (_ => {{
-    ;io_state (io .inert) }}) }}
+	;return go
+	.then (_ =>
+		io_state (io .connecting) && api (_room)
+		.then (panic_on ([ [Z_ .equals ({}), _room + ' taken'] ])) )
+	.then (_ =>
+		api (_room,
+			post (message_encoding (
+				so ((_=()=>
+				message .teacher_setup (questions, rules),
+				where
+				, {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
+		.then (panic_on ([
+			[ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
+	.then (_ => {{
+		;app_state (teacher_app .get_ready (_setup, [])) }})
+	.catch (_e => {{
+		;console .error (_e) }})
+	.then (_ => {{
+		;io_state (io .inert) }}) }}
 
 var start_playing = _ => {{
-  ;so ((
-  take
-  , exists = maybe_all ({
-      _ensemble: T (ensemble_state ()) (as_maybe),
-      _room: T (app_state ()) (L .get (app_room)) }) ) => {{
-  ;T (exists) (({ _ensemble, _room }) => {{
-    ;go
-    .then (_ =>
-      io_state (io .messaging) && api (_room,
-        post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
-      .then (panic_on ([
-        [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-    .catch (_e => {{
-      ;console .error (_e) }})
-    .then (_ => {{
-      ;io_state (io .inert) }}) }}) }}) }}
+	;so ((
+	take
+	, exists = maybe_all ({
+			_ensemble: T (ensemble_state ()) (as_maybe),
+			_room: T (app_state ()) (L .get (app_room)) }) ) => {{
+	;T (exists) (({ _ensemble, _room }) => {{
+		;go
+		.then (_ =>
+			io_state (io .messaging) && api (_room,
+				post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
+			.then (panic_on ([
+				[ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+		.catch (_e => {{
+			;console .error (_e) }})
+		.then (_ => {{
+			;io_state (io .inert) }}) }}) }}) }}
 
 var timesup_question = _ => {{
-  //;app_state (student_app_next_playing (app_state ()))
+	//;app_state (student_app_next_playing (app_state ()))
 }}
 
-        
-        
-        
-        
-        
-        
-        
+				
+				
+				
+				
+				
+				
+				
 var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
 ;game_clock .add (timesup_question, 10)
 ;T (Z .range (0) (10 + 1)) (R .forEach (t => {{
-  ;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }}))
+	;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }}))
 
-   
+	 
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
-  
+	
 var connection = S (_ => {{
-  ;return T (app_state ()) ([
-    L .get (app_room),
-    map_defined (_room => {{
-      if (! connection [_room]) {
-        ;connection [_room] = S .data ()
-        ;api .listen_ping (_room) (connection [_room]) }
-      if (connection [_room] ()) {
-        return so ((_=()=>
-        [ timestamp, mean, Math .sqrt (variance) ],
-        where
-        , [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } }} ) ]) }}) 
+	;return T (app_state ()) ([
+		L .get (app_room),
+		map_defined (_room => {{
+			if (! connection [_room]) {
+				;connection [_room] = S .data ()
+				;api .listen_ping (_room) (connection [_room]) }
+			if (connection [_room] ()) {
+				return so ((_=()=>
+				[ timestamp, mean, Math .sqrt (variance) ],
+				where
+				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } }} ) ]) }}) 
 
 
 
 /*
 S (_ => {{
-  if (Z_ .isNothing (app_state ())) {
-    if (L .isDefined (io_inert) (io_state ())) {
-      ;get_room (T (Math .random ()) ([
-        _x => _x * 100000000,
-        _x => Math .floor (_x) ])) .catch (_ => {}) } } }})
+	if (Z_ .isNothing (app_state ())) {
+		if (L .isDefined (io_inert) (io_state ())) {
+			;get_room (T (Math .random ()) ([
+				_x => _x * 100000000,
+				_x => Math .floor (_x) ])) .catch (_ => {}) } } }})
 */
 S (last_app => {{
-  var _app = app_state ()
-    if (! L .isDefined (app_playing) (last_app)) {
-      if (L .isDefined (app_playing) (_app)) {
-      }
-    }
-  return _app }}
+	var _app = app_state ()
+		if (! L .isDefined (app_playing) (last_app)) {
+			if (L .isDefined (app_playing) (_app)) {
+			}
+		}
+	return _app }}
 , app_state ())
-   
-   
+	 
+	 
 S (_ => {{
-  var _app = S .sample (app_state)
-  var _ensemble = ensemble_state ()
-  
-  var _app_kind = T (_app) (data_kind)
-  var _app_students = T (_app) (L .get (app_students))
-  var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
-  if (! Z_ .equals (_ensemble_students) (_app_students)) {
-    ;app_state (
-      T (_app
-      ) (L .set (app_students) (_ensemble_students))) } }})
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+	
+	var _app_kind = T (_app) (data_kind)
+	var _app_students = T (_app) (L .get (app_students))
+	var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
+	if (! Z_ .equals (_ensemble_students) (_app_students)) {
+		;app_state (
+			T (_app
+			) (L .set (app_students) (_ensemble_students))) } }})
 S (last_ensemble => {{
-  var _app = S .sample (app_state)
-  var _ensemble = ensemble_state ()
-  if (L .isDefined (app_get_ready) (_app)) {
-    if (L .isEmpty (ensemble_start) (last_ensemble)) {
-      if (! L .isEmpty (ensemble_start) (_ensemble)) {
-        var start = L .get (ensemble_start) (_ensemble)
-        var now = (new Date) .getTime ()
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+	if (L .isDefined (app_get_ready) (_app)) {
+		if (L .isEmpty (ensemble_start) (last_ensemble)) {
+			if (! L .isEmpty (ensemble_start) (_ensemble)) {
+				var start = L .get (ensemble_start) (_ensemble)
+				var now = (new Date) .getTime ()
 
-        var playing_app = teacher_app_get_ready_to_playing (_app)
-        if (start > now) {
-          ;app_state (playing_app) }
-        else {
-          ;setTimeout (_ => {{
-            ;app_state (playing_app) }}
-          , start - now) } } } }
-  return _ensemble }}
-  , ensemble_state ())
-   
-   
+				var playing_app = teacher_app_get_ready_to_playing (_app)
+				if (start > now) {
+					;app_state (playing_app) }
+				else {
+					;setTimeout (_ => {{
+						;app_state (playing_app) }}
+					, start - now) } } } }
+	return _ensemble }}
+	, ensemble_state ())
+	 
+	 
 S (_ => {{
-  ;T (app_state ()) ([
-    L .get (app_room),
-    map_defined (_room => {{
-      var phase = heartbeat ()
-      var critical = phase === 1
-      go
-      .then (_ =>
-        !! critical && S .sample (connection)
-        ? io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_ping (S .sample (connection)))))
-        : io_state (io .heartbeat) && api (_room)
-          .then ($ ([
-            L .get (L .inverse (data_iso (ensemble .ensemble))),
-            _x => {{
-              ;ensemble_state (_x) }} ])) )
-      .then (_ => {{
-        ;setTimeout (_ => {{
-          ;heartbeat (!! critical ? reping_period : phase - 1) }}
-        , 300) }})
-      .catch (_e => {{
-        ;console .error (_e)
-        ;setTimeout (_ => {{
-          ;heartbeat (phase) }}
-        , 300) }})
-      .then (_ => {{
-        ;io_state (io .inert) }}) }}) ]) }})
+	;T (app_state ()) ([
+		L .get (app_room),
+		map_defined (_room => {{
+			var phase = heartbeat ()
+			var critical = phase === 1
+			go
+			.then (_ =>
+				!! critical && S .sample (connection)
+				? io_state (io .messaging) && api (_room,
+						post (message_encoding (message .teacher_ping (S .sample (connection)))))
+				: io_state (io .heartbeat) && api (_room)
+					.then ($ ([
+						L .get (L .inverse (data_iso (ensemble .ensemble))),
+						_x => {{
+							;ensemble_state (_x) }} ])) )
+			.then (_ => {{
+				;setTimeout (_ => {{
+					;heartbeat (!! critical ? reping_period : phase - 1) }}
+				, 300) }})
+			.catch (_e => {{
+				;console .error (_e)
+				;setTimeout (_ => {{
+					;heartbeat (phase) }}
+				, 300) }})
+			.then (_ => {{
+				;io_state (io .inert) }}) }}) ]) }})
