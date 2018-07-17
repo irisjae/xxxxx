@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Boo-yea!",
   "scripts": {
-    "start": "node serve.js"
+    "start": "node host.js"
   },
   "dependencies": {
     "browserify": "^16.2.2",

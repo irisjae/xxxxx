@@ -490,26 +490,28 @@ var message_encoding = by (message =>
 	, strip ],
 	where
 	, strip = Z_ .compose (JSON .parse) (JSON .stringify)
-	, student = T (message) (L .get (message_student))
-	, encodings = 
-		[ [ message_teacher_setup , 
-				[ message_teacher_setup, L .getInverse ([ data_iso (ensemble .ensemble) ]) ] ]
-		, [ message_teacher_ping , 
-				[ message_ping, L .getInverse ([ ensemble_ping ]) ] ]
-		, [ message_teacher_start , 
-				[ message_synchronization, L .getInverse ([ ensemble_start ]) ] ]
-		, [ message_teacher_abort , 
-				[ message_synchronization, L .getInverse ([ ensemble_abort ]) ] ]
-		, [ message_student_ping , 
-				[ message_ping, L .getInverse ([ ensemble_student_pings, student ]) ] ]
-		, [ message_student_join , 
-				[ message_board, L .getInverse ([ ensemble_student_boards, student ]) ] ]
-		, [ message_student_start , 
-				[ message_synchronization, L .getInverse ([ ensemble_student_starts, student ]) ] ]
-		, [ message_student_update , 
-				[ message_history, L .getInverse ([ ensemble_student_histories, student ]) ] ] ]
-	, cases = T (encodings) (Z_ .map (([pattern, encoding]) =>
-			[L .isDefined (pattern), L .get (encoding)] )) )=>_))
+  , cases = so ((_=()=>
+      T (encodings) (Z_ .map (([pattern, encoding]) =>
+        [L .isDefined (pattern), L .get (encoding)] )),
+      where
+      , student = T (message) (L .get (message_student))
+      , encodings = 
+        [ [ message_teacher_setup , 
+            [ message_teacher_setup, L .getInverse (data_iso (ensemble .ensemble)) ] ]
+        , [ message_teacher_ping , 
+            [ message_ping, L .getInverse (ensemble_ping) ] ]
+        , [ message_teacher_start , 
+            [ message_synchronization, L .getInverse (ensemble_start) ] ]
+        , [ message_teacher_abort , 
+            [ message_synchronization, L .getInverse (ensemble_abort) ] ]
+        , [ message_student_ping , 
+            [ message_ping, L .getInverse ([ ensemble_student_pings, student ]) ] ]
+        , [ message_student_join , 
+            [ message_board, L .getInverse ([ ensemble_student_boards, student ]) ] ]
+        , [ message_student_start , 
+            [ message_synchronization, L .getInverse ([ ensemble_student_starts, student ]) ] ]
+        , [ message_student_update , 
+            [ message_history, L .getInverse ([ ensemble_student_histories, student ]) ] ] ] )=>_) )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
@@ -521,10 +523,10 @@ var assemble_students = kind => ensemble =>
 	? so ((_=()=>
 		pair_zip (_a => _b => [_a, _b]) (boards) (histories),
 		where
-		, boards = T (ensemble) (
-				L .collect ([ ensemble_student_boards, students_mapping ]))
-		, histories = T (ensemble) (
-				L .collect ([ ensemble_student_histories, students_mapping ])) )=>_)
+		, boards = T (ensemble
+        ) (L .collect ([ ensemble_student_boards, students_mapping ]))
+		, histories = T (ensemble
+        ) (L .collect ([ ensemble_student_histories, students_mapping ])) )=>_)
 	: panic ('unknown student kind')
 
 var schedule_start = _ensemble =>
