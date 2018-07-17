@@ -1,4 +1,5 @@
 var go = Promise .resolve ()
+
 var app = require ('koa-websocket') (new require ('koa'))
 
 app
@@ -11,5 +12,5 @@ app
       ;ctx .websocket .send ('Hello World')
       ;ctx .websocket .on ('message', message => {{
         ;console .log (message) }}) }}))
- 
-app.listen(3000)
+
+module .exports = app
