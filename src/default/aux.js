@@ -1,7 +1,8 @@
 var {
 	T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, 
-	go, panic,
+	go, panic, panic_on,
+  just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined, from_just, maybe_all,

@@ -45,6 +45,28 @@ var panic_on = cases =>
 
 
 
+var just_now = _temporary => _temporary ()
+var temporary = x =>
+  so ((_=_=>
+  _temporary,
+  where 
+  , _temporary = _ => x
+  , _gone = S .data ()
+  , $$1 = _gone (true)
+  , $$2 = S (_ => {
+      if (_gone ()) {
+        ;_temporary = _ => panic ('value is gone') } }) )=>_)
+
+
+
+
+
+
+
+
+
+
+
 //TODO: check form of fn_form
 var so = fn_form => 
 	!! (fn_form .toString () .endsWith ('=>_'))
@@ -202,20 +224,6 @@ var pair_zip = reducer =>
 var pair_projection = key_projection => val_projection =>
 	_x => Z_ .Pair (L .get (key_projection) (_x)) (L .get (val_projection) (_x))
 
-
-
-
-
-
-
-
-
-
-
-var temporal = x =>
-  
-
-
 	
 	
 	
@@ -322,6 +330,7 @@ window .stuff = { ...window .stuff,
 	T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, 
 	go, panic, panic_on,
+  just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined, from_just, maybe_all,
