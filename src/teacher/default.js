@@ -49,10 +49,13 @@ every, delay
 var app_state = S .data (panic ('TODO: add init state for app'))
 var ensemble_state = S .data (panic ('TODO: add init state for ensemble'))
 var io_state = S .data (io .inert)
+var feedback_state = S .data (temporary (feedback .nothing))
 
-var feedback_state = S .data ()
 
-
+var feedback = data ({
+  nothing: () => feedback,
+  init: () => feedback,
+  play: () => feedback })
 
 
 
@@ -61,24 +64,8 @@ var feedback_state = S .data ()
 
 var clicking = ['click']
 
-var pipeline_init = _dom => {{
-	;clicking .forEach (click => {{
-		;_dom .addEventListener (click, _ => {{
-			get_room (T (Math .random ()) ([
-				_x => _x * 100000000,
-				_x => Math .floor (_x) ])) .catch (_ => {}) }}) }}) }}
-
-var pipeline_play = _dom => {{
-	;clicking .forEach (click => {{
-		;_dom .addEventListener (click, _ => {{
-			;start_playing () }}) }}) }}
-
 var init_view = _ =>
-	so ((
-	take
-	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
-	, board_sizes_img =
-			'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674' ) =>
+	so ((_=_=>
 	<init-etc> 
 		<div a-title>
 			Bingo Class Game
@@ -86,10 +73,18 @@ var init_view = _ =>
 		<div a-topic> Equivalent Fractions </div>
 		<rules>
 			<size> <img src={ board_sizes_img } /> </size> </rules>
-		<button fn={ pipeline_init }> Start </button>
+		<button fn={ feedback_init }> Start </button>
 		{ T (L .get ([io_connecting, as_maybe]) (io_state ())) (
 			Z_ .maybe ([]) (_ => 'Generating Code...')) }
-		</init-etc>)
+		</init-etc>,
+  where
+	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
+	, board_sizes_img =
+			'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674'
+  , feedback_init = _dom => {{
+      ;clicking .forEach (click => {{
+        ;_dom .addEventListener (click, _ => {{
+          ;feedback_state (feedback .init) }}) }}) }} )=>_)
 
 var get_ready_view = _ =>
 	so ((_=()=>
@@ -101,12 +96,16 @@ var get_ready_view = _ =>
 					_x => <player>{ 'Name: '+ _x }</player> ])))
 			, !! (Z_ .size (_students) === 0)
 				? []
-				: <button play fn={ pipeline_play }> play </button> ] }
+				: <button play fn={ feedback_play }> play </button> ] }
 		</get-ready-etc>,
 	where
 	, _room = T (app_state ()) (L .get (app_room))
 	, _students = T (app_state ()
-		) (L .get ([ app_students, L .valueOr ([]) ])) )=>_)
+		) (L .get ([ app_students, L .valueOr ([]) ]))
+  , feedback_play = _dom => {{
+      ;clicking .forEach (click => {{
+        ;_dom .addEventListener (click, _ => {{
+          ;feedback_state (feedback .play) }}) }}) }} )=>_)
 
 var playing_view = _ =>
 	so ((_=()=>
@@ -202,6 +201,20 @@ var connection = S (_ => {{
 				[ timestamp, mean, Math .sqrt (variance) ],
 				where
 				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } }} ) ]) }}) 
+
+
+
+S (_ => {{
+  if (L .isDefined (data_iso (feedback .init))
+      (just_now (feedback_state ()))) {
+    ;get_room (T (Math .random ()) ([
+				_x => _x * 100000000,
+				_x => Math .floor (_x) ])) .catch (_ => {}) } }})
+S (_ => {{
+  if (L .isDefined (data_iso (feedback .play))
+      (just_now (feedback_state ()))) {
+    ;start_playing () } }})
+
 
 
 
