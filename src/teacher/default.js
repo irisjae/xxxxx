@@ -47,6 +47,7 @@ every, delay
 
 
 var app_state = S .data (panic ('TODO: add init state for app'))
+
 var ensemble_state = S .data (panic ('TODO: add init state for ensemble'))
 var io_state = S .data (io .inert)
 var feedback_state = S .data (temporary (feedback .nothing))
@@ -108,7 +109,7 @@ var get_ready_view = _ =>
           ;feedback_state (feedback .play) }}) }}) }} )=>_)
 
 var playing_view = _ =>
-	so ((_=()=>
+	so ((_=_=>
 	<playing-etc>
 	</playing-etc>,
 	where
