@@ -49,6 +49,8 @@ var app_state = S .data (panic ('TODO: add init state for app'))
 var ensemble_state = S .data (panic ('TODO: add init state for ensemble'))
 var io_state = S .data (io .inert)
 
+var feedback_state = S .data ()
+
 
 
 

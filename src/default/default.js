@@ -204,6 +204,18 @@ var pair_projection = key_projection => val_projection =>
 
 
 
+
+
+
+
+
+
+
+
+var temporal = x =>
+  
+
+
 	
 	
 	
