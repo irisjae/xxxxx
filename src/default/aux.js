@@ -39,9 +39,9 @@ var uuid = _ =>
 var _ping_cache = {}
 var _ping_listeners = {}
 
-var api = (room, _x) => {{
+var api = (room, _x) => {;{
 	var begin = performance .now ()
-	return fetch ('/room/' + room, _x) .then (_x => {{
+	return fetch ('/room/' + room, _x) .then (_x => {;{
 		var end = performance .now ()
 		var sample = end - begin
 		if (! _ping_cache [room]) {
@@ -163,43 +163,6 @@ var ensemble = data ({
 var board_viewer = data ({
 	board_viewer: (board = ~ board, questions = ~ list (question), history = ~ history) => board_viewer })
 
-
-/*
-###########################################################
-var board_viewer = data ({
-	board_viewer: ({_} =- board) => (questions =- list (question)) => ({_} =- history) => ({_} =- board_viewer) })
-###########################################################
-var board_viewer = data ({
-	board_viewer: (board =- board) => (questions =- list (question)) => (history =- history) => board_viewer })
-###########################################################
-var board_viewer = data ({
-	board_viewer: ({_} =- board) => (questions =- list (question)) => ({_} =- history) => ({_} =- board_viewer) })
-###########################################################
-var board_viewer = data ({
-	board_viewer: { board :- board, questions :- list (question), history :- history }	[board_viewer] })
-###########################################################
-var board_viewer = data ({
-	board_viewer: { board :- board, questions :- list (question), history :- history } |- board_viewer })
-###########################################################
-var board_viewer = data ({
-	board_viewer: { board :- board, questions :- list (question), history :- history } ** { board_viewer } })
-###########################################################
-var board_viewer = data ({
-	board_viewer: board -+ list (question) [typeof questions] -+ history [typeof history] -+ board_viewer })
-###########################################################
-var board_viewer = data ({
-	board_viewer: board .board -+ list (question) .questions -+ history .history -+ board_viewer })
-###########################################################
-var board_viewer = data ({
-	board_viewer: board, board => list (question), questions => history, history => board_viewer })
-###########################################################
-var board_viewer = data ([
-	board, board => list (question), questions => history, history => board_viewer, board_viewer ])
-###########################################################
-var board_viewer = data ({
-		board_viewer: board|( board => list (question)|( questions => history|( history => board_viewer ))) })
-###########################################################
-*/
 
 
 //--------------------DEFAULTS--------------------
