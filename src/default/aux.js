@@ -47,7 +47,7 @@ var api = (room, _x) => {;{
 		if (! _ping_cache [room]) {
 			;_ping_cache [room] = [0, 0, 0, 0]}
 		;_ping_cache [room] = T (_ping_cache [room]) (_x => 
-			so ((_=()=>
+			so ((_=_=>
 			[ mean * carry + sample / (n + 1)
 			, sqr_mean * carry + (sample * sample) / (n + 1)
 			, n + 1
@@ -287,7 +287,7 @@ var ping_mean = [ 1 ]
 var students_mapping = 
 	[ L .keyed
 	, L .reread (
-			Z_ .map (pair => so ((_=()=>
+			Z_ .map (pair => so ((_=_=>
 				Z_ .Pair ({ id: id, name: name }) (val),
 				where
 				, id = R .head (pair)
@@ -308,7 +308,7 @@ var mapping_students = [ students_mapping, pair_as_list, L .last ]
 
 
 var generate_board = size => questions =>
-	so ((_=()=>
+	so ((_=_=>
 	T (Z .range (1) (size + 1)) (
 		Z_ .map (row => T (Z .range (1) (size + 1)) (
 			Z_ .map (column => [row, column, cell (row) (column)] )))),
@@ -335,7 +335,7 @@ var student_app_get_ready_to_playing = _app =>
 			_student: L .get ([ app_student, as_maybe ]),
 			_setup: L .get ([ app_setup, as_maybe ]) }))))) ) =>
 	T (exists) (map_defined (({ _student, _setup }) =>
-		so ((_=()=>
+		so ((_=_=>
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_history),
 		where 
@@ -345,7 +345,7 @@ var student_app_get_ready_to_playing = _app =>
 
 var student_app_next_playing = 
 	by (_app => 
-		so ((_=()=>
+		so ((_=_=>
 		!! (history_size < board_size * board_size)
 		? L .set ([app_history, L .append]) (rendition .rendition ([]))
 		: L .get (
@@ -355,8 +355,8 @@ var student_app_next_playing =
 		, board_size = T (_app) (L .get ([app_setup, setup_size]))
 		, history_size = T (_app) ([ L .get (app_history), Z_ .size ]) )=>_)) 
 				 
-var matches_question_answer = question => answer =>
-	so ((_=()=>
+var question_answer_matches = question => answer =>
+	so ((_=_=>
 	Z .elem (answer) (correct_answers),
 	where
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
@@ -373,7 +373,7 @@ var student_app_to_board_viewer = _app =>
 
 
 var size_patterns = memoize (size =>
-	so ((_=()=>
+	so ((_=_=>
 	n_reducer (Z .concat) (3)
 		(vertical_patterns)
 		(horizontal_patterns)
@@ -395,7 +395,7 @@ var size_patterns = memoize (size =>
 
 
 var board_viewer_current_question = by (_board_viewer =>
-	so ((_=()=>
+	so ((_=_=>
 	L .get ([board_viewer_questions, current_question_index, as_maybe]),
 	where
 	, history = T (_board_viewer) (L .get (board_viewer_history))
@@ -407,12 +407,12 @@ var board_viewer_attempted_positions =
 		Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
 
 var board_viewer_crossed_positions = _board_viewer => 
-	so ((_=()=>
+	so ((_=_=>
 	T (Z .zip (attempted_positions) (questions)) ([
 		Z .map (pair =>
-			so ((_=()=>
+			so ((_=_=>
 			T (attempt_answer_maybe) (Z .chain (attempt_answer =>
-				!! (matches_question_answer (question) (attempt_answer))
+				!! (question_answer_matches (question) (attempt_answer))
 				? Z .Just (position)
 				: Z .Nothing )),
 			where
@@ -428,7 +428,7 @@ var board_viewer_crossed_positions = _board_viewer =>
 	, attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
-	so ((_=()=>
+	so ((_=_=>
 	T (bingo_patterns) ([
 		Z_ .map (_pattern =>
 			!! (T (_pattern
@@ -448,13 +448,13 @@ var history_stepped = old => curr =>
 
 
 var message_encoding = by (message => 
-	so ((_=()=>
+	so ((_=_=>
 	[ R .cond (cases)
 	, L .get (data_iso (ensemble .ensemble)) 
 	, strip ],
 	where
 	, strip = Z_ .compose (JSON .parse) (JSON .stringify)
-  , cases = so ((_=()=>
+  , cases = so ((_=_=>
       T (encodings) (Z_ .map (([pattern, encoding]) =>
         [L .isDefined (pattern), L .get (encoding)] )),
       where
@@ -484,7 +484,7 @@ var assemble_students = kind => ensemble =>
 	!! (kind === 'get_ready')
 	? T (ensemble) (L .collect ([ ensemble_student_pings, map_students ]))
 	: !! (kind === 'playing' || kind === 'game_over')
-	? so ((_=()=>
+	? so ((_=_=>
 		pair_zip (_a => _b => [_a, _b]) (boards) (histories),
 		where
 		, boards = T (ensemble
@@ -494,7 +494,7 @@ var assemble_students = kind => ensemble =>
 	: panic ('unknown student kind')
 
 var schedule_start = _ensemble =>
-	so ((_=()=>
+	so ((_=_=>
 	(new Date) .getTime () + confidence_interval,
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_ping))
@@ -539,6 +539,6 @@ window .stuff = { ...window .stuff,
 	teacher_app_get_ready_to_playing, 
 	student_app_get_ready_to_playing, student_app_next_playing,
 	student_app_to_board_viewer,
-	matches_question_answer, 
+	question_answer_matches, 
 	board_viewer_current_question,
 	board_viewer_crossed_positions, board_viewer_bingoed_positions }
