@@ -11,11 +11,11 @@ dependencies:
   koa-router: 7.4.0
   koa-static: 4.0.3
   koa-websocket: 5.0.1
-  partial.lenses: 13.12.0
+  partial.lenses: 14.9.1
   ramda: 0.25.0
   s-js: 0.4.8
   sanctuary: 0.15.0
-  surplus: 0.5.2
+  surplus: 0.5.3
 packages:
   /JSONStream/1.3.3:
     dependencies:
@@ -650,10 +650,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-VhDzCKN7K8ufStx/CLj5/PDTMgph+qwN5Pkd5i0sGnVwk56zJ0lkT8Qzi1xqWLS0Wp29DgDtNeS7v8/wMoZeHg==
-  /infestines/0.4.7:
+  /infestines/0.4.11:
     dev: false
     resolution:
-      integrity: sha512-IblbzErQFjrm9or0AKKL7m6VD34l2ZNKd6WzHVcKHIrhpkZkDbxi1gVKot/b94u0spgH6Zzmxd7hiL32DAHkmw==
+      integrity: sha512-09nHagZLOYUaXKHqdV+nxEaYaD0hRlKyhQMhgTMwfbvWpMkowXf4XLZzAkLq6Y90wZ7Wqm6aMoL2trBsNNKGeg==
   /inflation/2.0.0:
     dev: false
     engines:
@@ -1090,12 +1090,12 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-/CidTtiZMRlGDBViUyYs3I3mW/M=
-  /partial.lenses/13.12.0:
+  /partial.lenses/14.9.1:
     dependencies:
-      infestines: 0.4.7
+      infestines: 0.4.11
     dev: false
     resolution:
-      integrity: sha512-kS123pAp9rc6iBS2zOOA7zQZ8hCkflW26yvkc5toSGbPNptqaivjjsiSwPtTg7hssRZ5GQX0yr/rqTuaMGu/NQ==
+      integrity: sha512-WRKxbWcTywVSeidLiiLSQPYHnG+3VJhqNpfcIJD0miptENVMsfaQRTh6tbnZjWI5marxdnC8e3z4yMJiVTY8Ug==
   /path-browserify/0.0.0:
     dev: false
     resolution:
@@ -1422,12 +1422,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-9izxdYHplrSPyWVpn1TAauJouNI=
-  /surplus/0.5.2:
+  /surplus/0.5.3:
     dev: false
     peerDependencies:
-      s-js: ^0.4.4
+      s-js: ^0.4.9
     resolution:
-      integrity: sha512-UF0+KUCAUhlAxxDe3RtCP7JvuFidbRMOBWBsG6tSesxo6PmKpkL8LdUirBwUl8fx8U7t41H2zy9yApwTbUjqlg==
+      integrity: sha512-3Ki9XL9mSLXnx1dtyCtUrFsSYhYCpVAXr0gGiSmIMNDtWpODk6P9D3B+8GpmHAhJQZBmfySaaOg4uZ94XIcbiA==
   /syntax-error/1.4.0:
     dependencies:
       acorn-node: 1.3.0
@@ -1547,7 +1547,7 @@ packages:
     resolution:
       integrity: sha1-pcbVMr5lbiPbgg77lDofBJmNY68=
 registry: 'https://registry.npmjs.org/'
-shrinkwrapMinorVersion: 8
+shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   browserify: ^16.2.2
@@ -1562,8 +1562,8 @@ specifiers:
   koa-router: ^7.4.0
   koa-static: ^4.0.3
   koa-websocket: ^5.0.1
-  partial.lenses: ^13.12.0
+  partial.lenses: ^14.9.1
   ramda: ^0.25.0
   s-js: ^0.4.8
   sanctuary: ^0.15.0
-  surplus: ^0.5.2
+  surplus: ^0.5.3
