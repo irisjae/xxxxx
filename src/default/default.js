@@ -24,6 +24,12 @@ var apply = fn => arg_list =>
 
 
 
+var sole = {
+  unwrap: list =>
+    !! list .length === 1 ? list [0]
+    : panic (list + ' is not sole') }
+
+
 
 
 
@@ -117,51 +123,50 @@ var data = cons_definitions =>
       , $$1= __data_length .set (faux_cons, 0)
       , $$2= __data_lens .set (faux_cons, [cons_name]) )=>_))))
 
-var data_lens = data =>
+var data_lens = cons =>
 	so ((_=_=>
 	lens,
 	where
-	, lens = __data_lens .get (data)
+	, lens = __data_lens .get (cons)
 	, $$1=
-    !! (Z .is (Z$ .AnyFunction) (data)) ? so ((
-      take
-      , instance_template = so ((_=_=> so ((_=_=>
-          T (data) (
+    !! (Z .is (Z$ .AnyFunction) (cons)) ? so ((
+      define
+      , template = so ((_=_=> so ((_=_=>
+          T (cons) (
           [ apply
           , T (factors) ]),
           where
-          , factors = R .range (1, data_length + 1) )=>_),
+          , factors = R .range (1, cons_length + 1) )=>_),
           where
-          , data_length = __data_length .get (data) )=>_)
-      , records = T (instance_template) ([ R .values, R .head, R .keys ]) )=>
+          , cons_length = __data_length .get (cons) )=>_)
+      , records = T (template) ([ R .values, sole .unwrap, R .keys ]) )=>
       T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )
     : 'nothing' )=>_)
 
-var data_iso = data =>
+var data_iso = cons =>
 	so ((_=_=>
 	lens,
 	where
-	, instance_template =
-    !! Z .not (Z .is (Z$ .AnyFunction) (data)) ? data
-    : so ((_=_=> so ((_=_=>
-      T (data) (
-      [ apply
-      , T (factors) ]),
-      where
-      , factors = R .range (1, data_length + 1) )=>_),
-      where
-      , data_length = __data_length .get (data) )=>_)
-	//, factors = T (instance_template) ([ R .values, R .head, R .keys])
-	, inverted_template = T (instance_template) ([ R .values, R .head, R .invert ])
+	, template =
+      !! Z .not (Z .is (Z$ .AnyFunction) (cons)) ? cons
+      : so ((_=_=> so ((_=_=>
+        T (cons) (
+        [ apply
+        , T (factors) ]),
+        where
+        , factors = R .range (1, cons_length + 1) )=>_),
+        where
+        , cons_length = __data_length .get (cons) )=>_)
+	, inverted_template = T (template) ([ R .values, sole .unwrap, R .invert ])
 	, ordered_factors = T (inverted_template) ([ R .toPairs, R .sortBy (R .head), R .map (R .last) ])
-	, constructor_prefix = R .head (R .keys (instance_template))
-	, read = data =>
-		L .get (constructor_prefix) (data)
+	, constructor_prefix = sole .unwrap (R .keys (template))
+	, read = _x =>
+      L .get (constructor_prefix) (_x)
 	, write = record =>
-		so ((_=_=>
-		data .apply (null, records_list),
-		where
-		, records_list = ordered_factors .map (_x => record [_x]) )=>_)
+      so ((_=_=>
+      T (cons) ([ apply, records_list),
+      where
+      , records_list = ordered_factors .map (_x => record [_x]) )=>_)
 	, lens = L .iso (read) (write)
 	, $$X = T (ordered_factors) (R .forEach (_x => {{
 		;lens [_x] = [ lens, _x ] }})) )=>_)
