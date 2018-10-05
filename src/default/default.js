@@ -24,10 +24,9 @@ var apply = fn => arg_list =>
 
 
 
-var sole = {
-  unwrap: list =>
-    !! list .length === 1 ? list [0]
-    : panic (list + ' is not sole') }
+var sole = list =>
+  !! (list .length === 1) ? list [0]
+  : panic (list + ' is not sole')
 
 
 
@@ -104,72 +103,68 @@ var go = Promise .resolve ()
 var fiat
 var data = cons_definitions =>
 	T (cons_definitions
-	) (R .mapObjIndexed ((def_fn, cons_name) => 
+	) (R .mapObjIndexed ((def_fn, cons_label) => 
 		so ((
 		take
-		, args_slice = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
-		!! (args_slice) ? so ((_=_=> 
+		, args_match = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
+		!! args_match ? so ((_=_=> 
       faux_cons,
       where
-      , faux_cons = (...vals) => 
-          R .objOf (cons_name) (R .fromPairs (R .zip (portions, vals)))
-			, portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
-      , $$1= __data_length .set (faux_cons, portions .length)
-      , $$2= __data_lens .set (faux_cons, [cons_name]) )=>_)  
+      , faux_cons = (...vals) => (
+          { [cons_label]: R .fromPairs (R .zip (arg_labels, vals)) } )
+			, arg_labels = args_match .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
+      , $$1= __data_length .set (faux_cons, arg_labels .length)
+      , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_)  
 		: so ((_=_=> 
       faux_cons,
       where
       , faux_cons = {}
       , $$1= __data_length .set (faux_cons, 0)
-      , $$2= __data_lens .set (faux_cons, [cons_name]) )=>_))))
+      , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_))))
 
 var data_lens = cons =>
 	so ((_=_=>
-	lens,
+	faux_lens,
 	where
-	, lens = __data_lens .get (cons)
+	, faux_lens = __data_lens .get (cons)
 	, $$1=
-    !! (Z .is (Z$ .AnyFunction) (cons)) ? so ((
+    !! Z .not ((Z .is (Z$ .AnyFunction) (cons))) ? 'nothing'
+    : so ((
       define
       , template = so ((_=_=> so ((_=_=>
-          T (cons) (
-          [ apply
-          , T (factors) ]),
+          T (cons) ([ apply, T (factors) ]),
           where
           , factors = R .range (1, cons_length + 1) )=>_),
           where
           , cons_length = __data_length .get (cons) )=>_)
-      , records = T (template) ([ R .values, sole .unwrap, R .keys ]) )=>
-      T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )
-    : 'nothing' )=>_)
+      , records = T (template) ([ R .values, sole, R .keys ]) )=>
+      T (records) (R .forEach (_x => {{ ;faux_lens [_x] = [faux_lens, _x] }})) ))=>_)
 
 var data_iso = cons =>
 	so ((_=_=>
-	lens,
+	faux_lens,
 	where
 	, template =
       !! Z .not (Z .is (Z$ .AnyFunction) (cons)) ? cons
       : so ((_=_=> so ((_=_=>
-        T (cons) (
-        [ apply
-        , T (factors) ]),
+        T (cons) ([ apply, T (factors) ]),
         where
         , factors = R .range (1, cons_length + 1) )=>_),
         where
         , cons_length = __data_length .get (cons) )=>_)
-	, inverted_template = T (template) ([ R .values, sole .unwrap, R .invert ])
+	, inverted_template = T (template) ([ R .values, sole, R .invert ])
 	, ordered_factors = T (inverted_template) ([ R .toPairs, R .sortBy (R .head), R .map (R .last) ])
-	, constructor_prefix = sole .unwrap (R .keys (template))
+	, constructor_prefix = sole (R .keys (template))
 	, read = _x =>
       L .get (constructor_prefix) (_x)
 	, write = record =>
       so ((_=_=>
-      T (cons) ([ apply, records_list),
+      T (cons) ([ apply, T (record_list) ]),
       where
-      , records_list = ordered_factors .map (_x => record [_x]) )=>_)
-	, lens = L .iso (read) (write)
+      , record_list = ordered_factors .map (_x => record [_x]) )=>_)
+	, faux_lens = L .iso (read) (write)
 	, $$X = T (ordered_factors) (R .forEach (_x => {{
-		;lens [_x] = [ lens, _x ] }})) )=>_)
+      ;faux_lens [_x] = [ faux_lens, _x ] }})) )=>_)
 /*
 var data_iso = data =>
 	where ((
