@@ -50,7 +50,9 @@ var temporary = x =>
   so ((_=_=>
   _temporary,
   where 
-  , _temporary = _ => x
+  , _temporary = _ => {;
+      if (! _gone ()) {
+        ;_temporary = _ => panic ('value is gone') } }
   , _gone = S .data ()
   , $$1 = _gone (true)
   , $$2 = S (_ => {
