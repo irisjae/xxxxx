@@ -125,8 +125,15 @@ var data_lens = data =>
 	, $$1=
     !! (Z .is (Z$ .AnyFunction) (data)) ? so ((
       take
-      , instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1))
-      , records = R .keys (R .head (R .values (instance_template))) )=>
+      , instance_template = so ((_=_=> so ((_=_=>
+          T (data) (
+          [ apply
+          , T (factors) ]),
+          where
+          , factors = R .range (1, data_length + 1) )=>_),
+          where
+          , data_length = __data_length .get (data) )=>_)
+      , records = T (instance_template) ([ R .values, R .head, R .keys ]) )=>
       T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )
     : 'nothing' )=>_)
 
