@@ -135,19 +135,18 @@ var data_iso = data =>
 	lens,
 	where
 	, instance_template =
-    !! Z .is (Z$ .AnyFunction) (data)
-    ? so ((_=_=> so ((_=_=>
+    !! Z .not (Z .is (Z$ .AnyFunction) (data)) ? data
+    : so ((_=_=> so ((_=_=>
       T (data) (
       [ apply
       , T (factors) ]),
       where
       , factors = R .range (1, data_length + 1) )=>_),
       where
-      , data_length = R .range (1, __data_length .get (data) + 1) )=>_)
-		: data
+      , data_length = __data_length .get (data) )=>_)
 	//, factors = T (instance_template) ([ R .values, R .head, R .keys])
-	, inverted_template = R .invert (R .head (R .values (instance_template)))
-	, ordered_factors = R .map (R .last) (R .sortBy (R .head) (R .toPairs (inverted_template)))
+	, inverted_template = T (instance_template) ([ R .values, R .head, R .invert ])
+	, ordered_factors = T (inverted_template) ([ R .toPairs, R .sortBy (R .head), R .map (R .last) ])
 	, constructor_prefix = R .head (R .keys (instance_template))
 	, read = data =>
 		L .get (constructor_prefix) (data)
