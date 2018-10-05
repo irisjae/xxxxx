@@ -93,25 +93,24 @@ var go = Promise .resolve ()
 
 
 var fiat
-var data = constructors =>
-	T (constructors
-	) (R .mapObjIndexed ((fn, key) => 
+var data = cons_definitions =>
+	T (cons_definitions
+	) (R .mapObjIndexed ((def_fn, cons_name) => 
 		so ((
 		take
-		, args_slice = fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
-		!! (args_slice)
-		? so ((
+		, args_slice = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
+		!! (args_slice) ? so ((
 			take
 			, portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1]) )=>
 			T ((...vals) => 
-				R .objOf (key) (R .fromPairs (R .zip (portions, vals)))
+				R .objOf (cons_name) (R .fromPairs (R .zip (portions, vals)))
 			) (R .tap (_x => {{
 				;__data_length .set (_x, portions .length)
-				;__data_lens .set (_x, [key]) }}))) 
-		: T (R .objOf (key) ({})
+				;__data_lens .set (_x, [cons_name]) }}))) 
+		: T (R .objOf (cons_name) ({})
 			) (R .tap (_x => {{
 				;__data_length .set (_x, 0)
-				;__data_lens .set (_x, [key]) }})) )))
+				;__data_lens .set (_x, [cons_name]) }})) )))
 
 var data_lens = data =>
 	so ((_=_=>
