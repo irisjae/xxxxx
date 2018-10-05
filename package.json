@@ -20,7 +20,6 @@
     "koa-websocket": "^5.0.1",
     "partial.lenses": "^14.9.1",
     "ramda": "^0.25.0",
-    "s-js": "^0.4.8",
     "sanctuary": "^0.15.0",
     "surplus": "^0.5.3"
   },
