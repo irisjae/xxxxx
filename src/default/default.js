@@ -106,8 +106,7 @@ var data = cons_definitions =>
           R .objOf (cons_name) (R .fromPairs (R .zip (portions, vals)))
 			, portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
       , $$1= __data_length .set (faux_cons, portions .length)
-      , $$2= __data_lens .set (faux_cons, [cons_name])
-      )=>_)  
+      , $$2= __data_lens .set (faux_cons, [cons_name]) )=>_)  
 		: so ((_=_=> 
       faux_cons,
       where
@@ -120,12 +119,24 @@ var data_lens = data =>
 	lens,
 	where
 	, lens = __data_lens .get (data)
-	, $$X = !! (Z .is (Z$ .AnyFunction) (data))
-		&& so ((_,
-		take
-		, instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1))
-		, records = R .keys (R .head (R .values (instance_template)))
-		, $$X = T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )=>_) )=>_) 
+	, $$1=
+    !! (Z .is (Z$ .AnyFunction) (data)) ? so ((
+      take
+      , instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1))
+      , records = R .keys (R .head (R .values (instance_template))) )=>
+      T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )
+    : undefined )=>_) )=>_) 
+
+
+  where ((
+    lens = __data_lens .get (data)) =>  
+  !! Z .is (Z$ .AnyFunction) (data)
+  ? where ((
+      instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
+      records = R .keys (R .head (R .values (instance_template))),
+      _ = T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }}))) =>
+    lens)
+  : lens)
 
 var data_iso = data =>
 	so ((_=_=>
