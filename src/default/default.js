@@ -105,13 +105,15 @@ var data = cons_definitions =>
       , faux_cons = (...vals) => 
           R .objOf (cons_name) (R .fromPairs (R .zip (portions, vals)))
 			, portions = args_slice .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
-      , $$1= __data_length .set (_x, portions .length)
-      , $$2= __data_lens .set (_x, [cons_name])
+      , $$1= __data_length .set (faux_cons, portions .length)
+      , $$2= __data_lens .set (faux_cons, [cons_name])
       )=>_)  
-		: T ({ [cons_name]: fiat }
-			) (R .tap (_x => {{
-				;__data_length .set (_x, 0)
-				;__data_lens .set (_x, [cons_name]) }})) )))
+		: so ((_=_=> 
+      faux_cons,
+      where
+      , faux_cons = fiat
+      , $$1= __data_length .set (faux_cons, 0)
+      , $$2= __data_lens .set (faux_cons, [cons_name]) )=>_))))
 
 var data_lens = data =>
 	so ((_=_=>
