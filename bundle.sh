@@ -10,7 +10,7 @@ find ~/static/ -type f | grep -v default/ | grep \\.js | while read f; do
 done
 
 
-~/node_modules/.bin/browserify ~/static/default/default.js -o ~/static/default.bundle.js
+pnpx browserify ~/static/default/default.js -o ~/static/default.bundle.js
 echo ';' >> ~/static/default.js
 cat ~/static/default.bundle.js >> ~/static/default.js
 rm ~/static/default/default.js
