@@ -111,6 +111,7 @@ var setup = data ({ setup: ( room = ~ room, questions = ~ list (question), rules
 
 
 var teacher_app = data ({
+  nothing: () => teacher_app,
 	get_ready: ( setup = ~ setup, students = ~ list (student) ) => teacher_app,
 	playing: ( setup = ~ setup, students = ~ map (student) (board, list (rendition)) ) => teacher_app,
 	game_over: ( setup = ~ setup, students = ~ map (student) (board, list (rendition)) ) => teacher_app })
@@ -148,6 +149,7 @@ var message = data ({
 	student_join: ( student = ~ student, board = ~ board ) => message,
 	student_update: ( student = ~ student, history = ~ list (rendition) ) => message })
 var ensemble = data ({
+  nothing: () => ensemble,
 	ensemble: (
 		ping = ~ ping,
 		questions = ~ list (question),

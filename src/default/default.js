@@ -52,12 +52,11 @@ var temporary = x =>
   where 
   , _temporary = _ => {;
       if (! _gone ()) {
+        return x }
+      else {
         ;_temporary = _ => panic ('value is gone') } }
   , _gone = S .data ()
-  , $$1 = _gone (true)
-  , $$2 = S (_ => {
-      if (_gone ()) {
-        ;_temporary = _ => panic ('value is gone') } }) )=>_)
+  , $$1= _gone (true) )=>_)
 
 
 

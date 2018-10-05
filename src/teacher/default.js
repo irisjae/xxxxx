@@ -45,18 +45,18 @@ every, delay
 } = window .stuff
 
 
-
-var app_state = S .data (panic ('TODO: add init state for app'))
-
-var ensemble_state = S .data (panic ('TODO: add init state for ensemble'))
-var io_state = S .data (io .inert)
-var feedback_state = S .data (temporary (feedback .nothing))
-
-
 var feedback = data ({
   nothing: () => feedback,
   init: () => feedback,
   play: () => feedback })
+
+
+var app_state = S .data (teacher_app .nothing)
+
+var ensemble_state = S .data (ensemble .nothing)
+var io_state = S .data (io .inert)
+var feedback_state = S .data (temporary (feedback .nothing))
+
 
 
 
@@ -88,7 +88,7 @@ var init_view = _ =>
           ;feedback_state (feedback .init) }}) }}) }} )=>_)
 
 var get_ready_view = _ =>
-	so ((_=()=>
+	so ((_=_=>
 	<get-ready-etc>
 		<message> Room Code: { _room } </message>
 		<message> Number of students: { Z_ .size (_students) } </message>
