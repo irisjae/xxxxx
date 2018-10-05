@@ -1,5 +1,5 @@
 var {
-	T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, 
 	go, panic, panic_on,
   just_now, temporary,

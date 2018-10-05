@@ -16,6 +16,9 @@ var T = _x => _fn_obj =>
 	: !! Z_ .is (Z$ .AnyFunction) (_fn_obj)
 		? _fn_obj (_x)
 		: panic ('T requires a function as its input')
+var $ = form =>
+  x =>
+    T (x) (form)
 
 
 
@@ -110,7 +113,7 @@ var data = cons_definitions =>
 		: so ((_=_=> 
       faux_cons,
       where
-      , faux_cons = fiat
+      , faux_cons = {}
       , $$1= __data_length .set (faux_cons, 0)
       , $$2= __data_lens .set (faux_cons, [cons_name]) )=>_))))
 
@@ -125,18 +128,7 @@ var data_lens = data =>
       , instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1))
       , records = R .keys (R .head (R .values (instance_template))) )=>
       T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )
-    : undefined )=>_) )=>_) 
-
-
-  where ((
-    lens = __data_lens .get (data)) =>  
-  !! Z .is (Z$ .AnyFunction) (data)
-  ? where ((
-      instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1)),
-      records = R .keys (R .head (R .values (instance_template))),
-      _ = T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }}))) =>
-    lens)
-  : lens)
+    : undefined )=>_)
 
 var data_iso = data =>
 	so ((_=_=>
@@ -341,7 +333,7 @@ document .addEventListener ('DOMContentLoaded', _ => {{
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-	T, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, 
 	go, panic, panic_on,
   just_now, temporary,
