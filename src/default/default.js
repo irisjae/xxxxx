@@ -136,13 +136,14 @@ var data_iso = data =>
 	where
 	, instance_template =
     !! Z .is (Z$ .AnyFunction) (data)
-    ? so ((_=_=>
+    ? so ((_=_=> so ((_=_=>
       T (data) (
       [ apply
       , T (factors) ]),
       where
-      , factors = R .range (1, __data_length .get (data) + 1)
-      )=>_)
+      , factors = R .range (1, data_length + 1) )=>_),
+      where
+      , data_length = R .range (1, __data_length .get (data) + 1) )=>_)
 		: data
 	//, factors = T (instance_template) ([ R .values, R .head, R .keys])
 	, inverted_template = R .invert (R .head (R .values (instance_template)))
