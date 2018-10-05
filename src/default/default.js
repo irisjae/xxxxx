@@ -118,7 +118,7 @@ var data = cons_definitions =>
 		: so ((_=_=> 
       faux_cons,
       where
-      , faux_cons = {}
+      , faux_cons = { [cons_label]: {} }
       , $$1= __data_length .set (faux_cons, 0)
       , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_))))
 
