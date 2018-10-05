@@ -128,14 +128,19 @@ var data_lens = data =>
       , instance_template = data .apply (null, R .range (1, __data_length .get (data) + 1))
       , records = R .keys (R .head (R .values (instance_template))) )=>
       T (records) (R .forEach (_x => {{ ;lens [_x] = [lens, _x] }})) )
-    : undefined )=>_)
+    : 'nothing' )=>_)
 
 var data_iso = data =>
 	so ((_=_=>
 	lens,
 	where
-	, instance_template = !! Z .is (Z$ .AnyFunction) (data)
-		? data .apply (null, R .range (1, __data_length .get (data) + 1))
+	, instance_template =
+    !! Z .is (Z$ .AnyFunction) (data)
+    ? so ((_=_=>
+      data .apply (null, R .range (1, __data_length .get (data) + 1)),
+      where
+      , 
+      )=>_)
 		: data
 	//, factors = T (instance_template) ([ R .values, R .head, R .keys])
 	, inverted_template = R .invert (R .head (R .values (instance_template)))
