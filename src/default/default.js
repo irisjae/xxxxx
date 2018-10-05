@@ -19,8 +19,8 @@ var T = _x => _fn_obj =>
 var $ = form =>
   x =>
     T (x) (form)
-
-
+var apply = fn => arg_list =>
+  fn .apply (null, arg_list)
 
 
 
@@ -137,7 +137,7 @@ var data_iso = data =>
 	, instance_template =
     !! Z .is (Z$ .AnyFunction) (data)
     ? so ((_=_=>
-      data .apply (null, R .range (1, __data_length .get (data) + 1)),
+      apply (data) (R .range (1, __data_length .get (data) + 1)),
       where
       , 
       )=>_)
