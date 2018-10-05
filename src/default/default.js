@@ -137,9 +137,11 @@ var data_iso = data =>
 	, instance_template =
     !! Z .is (Z$ .AnyFunction) (data)
     ? so ((_=_=>
-      apply (data) (R .range (1, __data_length .get (data) + 1)),
+      T (data) (
+      [ apply
+      , T (factors) ]),
       where
-      , 
+      , factors = R .range (1, __data_length .get (data) + 1)
       )=>_)
 		: data
 	//, factors = T (instance_template) ([ R .values, R .head, R .keys])
