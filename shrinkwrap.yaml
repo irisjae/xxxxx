@@ -12,6 +12,7 @@ dependencies:
   koa-websocket: 5.0.1
   partial.lenses: 14.9.1
   ramda: 0.25.0
+  s-js: 0.4.9
   sanctuary: 0.15.0
   surplus: 0.5.3
 packages:
@@ -516,6 +517,10 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-xL2p9e+y/OZSR4c6s2u02DT+Fvc=
+  /s-js/0.4.9:
+    dev: false
+    resolution:
+      integrity: sha512-RtpOm+cM6O0sHg6IA70wH+UC3FZcND+rccBZpBAHzlUgNO2Bm5BN+FnM8+OBxzXdwpKWFwX11JGF0MFRkhSoIQ==
   /safe-buffer/5.1.1:
     dev: false
     resolution:
@@ -683,5 +688,6 @@ specifiers:
   koa-websocket: ^5.0.1
   partial.lenses: ^14.9.1
   ramda: ^0.25.0
+  s-js: ^0.4.9
   sanctuary: ^0.15.0
   surplus: ^0.5.3
