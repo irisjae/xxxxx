@@ -118,8 +118,8 @@ var name_entry_view = <student-entry-etc>
 var get_ready_view = _ => <get-ready-etc>
 	{ so ((
 		take
-		, room = T (app_state ()) ([ app_room, as_maybe ])
-		, student = T (app_state ()) ([ app_student, as_maybe ]) ) =>
+		, room = T (app_state ()) (L .get ([ app_room, as_maybe ]))
+		, student = T (app_state ()) (L .get ([ app_student, as_maybe ])) ) =>
 		!! Z .isNothing (room)
 		? !! (! L .isDefined (io_inert) (io_state ()))
 			? !! (! L .isDefined (io_connecting) (io_state ()))

@@ -154,9 +154,9 @@ var data_iso = cons =>
         , cons_length = __data_length .get (cons) )=>_)
 	, inverted_template = T (template) ([ R .values, sole, R .invert ])
 	, ordered_factors = T (inverted_template) ([ R .toPairs, R .sortBy (R .head), R .map (R .last) ])
-	, constructor_prefix = sole (R .keys (template))
+	, cons_label = sole (R .keys (template))
 	, read = _x =>
-      L .get (constructor_prefix) (_x)
+      L .get (cons_label) (_x)
 	, write = record =>
       so ((_=_=>
       T (cons) ([ apply, T (record_list) ]),
