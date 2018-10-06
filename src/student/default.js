@@ -44,10 +44,18 @@ board_viewer_current_question,
 board_viewer_crossed_positions, board_viewer_bingoed_positions
 } = window .stuff
 
+
+var feedback = data ({
+  nothing: () => feedback,
+  init: () => feedback,
+  play: () => feedback })
+
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
-var lookbehind_state = S .data (student_lookbehind .nothing)
-var ensemble_state = S .data (undefined)
+
 var io_state = S .data (io .inert)
+var ensemble_state = S .data (undefined)
+var feedback_state = S .data (temporary (feedback .nothing))
+var lookbehind_state = S .data (student_lookbehind .nothing)
 
 
 
