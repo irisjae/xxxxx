@@ -5,7 +5,7 @@ just_now, temporary,
 fiat, data, data_lens, data_iso, data_kind,
 n_reducer, pair_zip_n, pair_zip, pair_projection,
 map_defined, from_just, maybe_all,
-every, delay,
+sole, every, delay,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
@@ -16,7 +16,7 @@ board_viewer,
 io, message, ensemble, 
 default_questions, default_rules,
 as_maybe, from_maybe,
-app_get_ready, app_playing, app_game_over,
+app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
 board_viewer_board, board_viewer_questions, board_viewer_history,
 lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
@@ -117,7 +117,15 @@ var playing_view = _ =>
 													 
   
 window .view = <teacher-app>
-  { !! (L .isDefined ()) } </teacher-app>
+  { !! (L .isDefined (app_nothing) (app_state ()))
+    ? init_view
+    : !! (L .isDefined (app_get_ready) (app_state ()))
+    ? get_ready_view
+    : !! (L .isDefined (app_playing) (app_state ()))
+    ? playing_view
+    : !! (L .isDefined (app_game_over) (app_state ()))
+    ? 'unimplemented'
+    : undefined  } </teacher-app>
 												 
 												 
 												 

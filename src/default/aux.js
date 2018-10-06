@@ -6,7 +6,7 @@ var {
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined, from_just, maybe_all,
-	every, delay	 
+	sole, every, delay	 
 } = window .stuff
 
 
@@ -204,6 +204,7 @@ var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Noth
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
 
+var app_nothing = data_iso (teacher_app .nothing)
 var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
 var app_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
@@ -520,7 +521,7 @@ window .stuff = { ...window .stuff,
 	io, message, ensemble, 
 	default_questions, default_rules,
 	as_maybe, from_maybe,
-	app_get_ready, app_playing, app_game_over,
+	app_nothing, app_get_ready, app_playing, app_game_over,
 	setup_room, setup_questions, setup_rules,
 	board_viewer_board, board_viewer_questions, board_viewer_history,
 	lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 

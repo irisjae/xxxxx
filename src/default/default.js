@@ -62,7 +62,7 @@ var temporary = x =>
       if (! _gone ()) {
         return x }
       else {
-        ;_temporary = _ => panic ('value is gone') } }
+        ;panic ('value is gone') } }
   , _gone = S .data ()
   , $$1= _gone (true) )=>_)
 
@@ -354,4 +354,4 @@ window .stuff = { ...window .stuff,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined, from_just, maybe_all,
-	every, delay }
+	sole, every, delay }
