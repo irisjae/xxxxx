@@ -63,7 +63,7 @@ var temporary = x =>
         return x }
       else {
         ;panic ('value is gone') } }
-  , _gone = S .data ()
+  , _gone = S .data (false)
   , $$1= _gone (true) )=>_)
 
 
