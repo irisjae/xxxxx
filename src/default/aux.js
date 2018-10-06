@@ -483,7 +483,9 @@ var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
 var assemble_students = kind => ensemble =>
-	!! (kind === 'get_ready')
+	!! (kind === 'nothing')
+  ? undefined
+	: !! (kind === 'get_ready')
 	? T (ensemble) (L .collect ([ ensemble_student_pings, map_students ]))
 	: !! (kind === 'playing' || kind === 'game_over')
 	? so ((_=_=>
