@@ -115,6 +115,9 @@ var playing_view = _ =>
 	where
 	, _students = T (app_state ()) (L .get (app_students)) )=>_)
 													 
+  
+window .view = <teacher-app>
+  { !! (L .isDefined ()) } </teacher-app>
 												 
 												 
 												 
