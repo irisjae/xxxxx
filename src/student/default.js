@@ -49,7 +49,7 @@ var feedback = data ({
   nothing: () => feedback,
   enter_room: (room =~ room) => feedback,
   enter_name: (name =~ string) => feedback,
-  play: () => feedback })
+  attempt_cell: () => feedback })
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 
@@ -76,13 +76,12 @@ var pipeline_room_entry = _dom => {{
 		if (_e .keyCode === 13) {
 			var value = _input .value
 			;_input .value = ''
-      feedback_state (feedback .init_room)
-			;record_room (value) } }})
+      ;feedback_state (feedback .enter_room (value)) } }})
 	;clicking .forEach (click => {{
 		;_button .addEventListener (click, _e => {{
 			var value = _input .value
 			;_input .value = ''
-			;record_room (value) }}) }}) }} 
+      ;feedback_state (feedback .enter_room (value)) }}) }}) }} 
 
 var pipeline_name_entry = _dom => {{
 	var _input = _dom .querySelector ('input')
@@ -91,20 +90,17 @@ var pipeline_name_entry = _dom => {{
 		if (_e .keyCode === 13) {
 			var value = _input .value
 			;_input .value = ''
-			;go
-			.then (_ => record_student (value))
-			.then (_ => connect_room ()) } }})
+      ;feedback_state (feedback .enter_name (value)) } }})
 	;clicking .forEach (click => {{
 		;_button .addEventListener (click, _e => {{
 			var value = _input .value
 			;_input .value = ''
-			;go
-			.then (_ => record_student (value))
-			.then (_ => connect_room ()) }}) }}) }} 
+      ;feedback_state (feedback .enter_name (value)) }}) }}) }} 
 
 var pipeline_board_cell = cell => _dom => {{
 	;clicking .forEach (click => {{
 		;_dom .addEventListener (click, _ => {{
+      ;feedback_state (feedback .enter_name (value))
 			;attempt_question (T (cell) (L .get (cell_position))) }}) }}) }}
 					
 var room_entry_view = <room-entry-etc>
@@ -384,6 +380,22 @@ var connection = S (_ => {{
 			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) }}) ]) }})
 
 
+
+
+S (_ => {{
+  T (just_now (feedback_state)
+  ) (
+  [ data_iso (feedback .enter_room)
+  , map_defined (({ room: _room }) => {;
+      ;record_room (_room) }) ]) }})
+S (_ => {{
+  T (just_now (feedback_state)
+  ) (
+  [ data_iso (feedback .enter_room)
+  , map_defined (({ name: _name }) => {;
+			;go
+			.then (_ => record_student (_name))
+			.then (_ => connect_room ()) }) ]) }})
 
 S (_ => {{
 	if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {

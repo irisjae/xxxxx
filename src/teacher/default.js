@@ -125,7 +125,7 @@ window .view = <teacher-app>
     : !! (L .isDefined (app_playing) (app_state ()))
     ? playing_view
     : !! (L .isDefined (app_game_over) (app_state ()))
-    ? 'unimplemented'
+    ? panic ('unimplemented')
     : undefined  } </teacher-app>
 												 
 												 
