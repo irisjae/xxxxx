@@ -69,19 +69,7 @@ var lookbehind_state = S .data (student_lookbehind .nothing)
 var clicking = ['click']
 
 
-var pipeline_room_entry = _dom => {{
-	var _input = _dom .querySelector ('input')
-	var _button = _dom .querySelector ('button')
-	;_input .addEventListener ('keypress', _e => {{
-		if (_e .keyCode === 13) {
-			var value = _input .value
-			;_input .value = ''
-      ;feedback_state (feedback .enter_room (value)) } }})
-	;clicking .forEach (click => {{
-		;_button .addEventListener (click, _e => {{
-			var value = _input .value
-			;_input .value = ''
-      ;feedback_state (feedback .enter_room (value)) }}) }}) }} 
+var pipeline_room_entry = 
 
 var pipeline_name_entry = _dom => {{
 	var _input = _dom .querySelector ('input')
@@ -96,23 +84,31 @@ var pipeline_name_entry = _dom => {{
 			var value = _input .value
 			;_input .value = ''
       ;feedback_state (feedback .enter_name (value)) }}) }}) }} 
-
-var pipeline_board_cell = cell => _dom => {{
-	;clicking .forEach (click => {{
-		;_dom .addEventListener (click, _ => {{
-      ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }}) }}) }}
 					
-var room_entry_view = <room-entry-etc>
-	<code fn={ pipeline_room_entry } >
-		<input placeholder="Enter a room code" />
-		<button> Go </button> </code>
-	{ !! (! L .isDefined (lookbehind_bad_room) (lookbehind_state ()))
-		? []
-		: so ((_=()=>
-			<message>{bad_room} is not a valid room</message>,
-			where
-			, bad_room = T (lookbehind_state ()) (L .get (lookbehind_room)) )=>_) } </room-entry-etc>
-	
+var room_entry_view = so ((_=_=>
+  <room-entry-etc>
+    <code fn={ room_entry_feedback } >
+      <input placeholder="Enter a room code" />
+      <button> Go </button> </code>
+    { !! (L .isDefined (lookbehind_bad_room) (lookbehind_state ()))
+      ? <message>{bad_room} is not a valid room</message>
+      : [] } </room-entry-etc>,
+    where
+    , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
+    , room_entry_feedback = _dom => {{
+        var _input = _dom .querySelector ('input')
+        var _button = _dom .querySelector ('button')
+        ;_input .addEventListener ('keypress', _e => {{
+          if (_e .keyCode === 13) {
+            var value = _input .value
+            ;_input .value = ''
+            ;feedback_state (feedback .enter_room (value)) } }})
+        ;clicking .forEach (click => {{
+          ;_button .addEventListener (click, _e => {{
+            var value = _input .value
+            ;_input .value = ''
+            ;feedback_state (feedback .enter_room (value)) }}) }}) }}  )=>_)
+
 var name_entry_view = <student-entry-etc>
 	<name fn={ pipeline_name_entry } >
 		<input placeholder="Enter your name" />
@@ -162,7 +158,7 @@ var playing_view = _ => <playing-etc>
 						? <cell>{ bold_crossed (_cell_answer) }</cell>
 						: !! (_cell_crossed)
 						? <cell>{ crossed (_cell_answer) }</cell>
-						: <cell fn={ pipeline_board_cell (_cell) }>{ _cell_answer }</cell>,
+						: <cell fn={ cell_feedback (_cell) }>{ _cell_answer }</cell>,
 						where
 						, _cell_position = T (_cell) (L .get (cell_position))
 						, _cell_answer = T (_cell) (L .get (cell_answer))
@@ -176,7 +172,11 @@ var playing_view = _ => <playing-etc>
 			, current_question = T (_board_viewer) (board_viewer_current_question)
 			, crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
 			, bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
-			, game_tick = game_tick_sampler () )=>_))) } </playing-etc>
+			, game_tick = game_tick_sampler ()
+      , cell_feedback = cell => _dom => {{
+          ;clicking .forEach (click => {{
+            ;_dom .addEventListener (click, _ => {{
+              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }}) }}) }} )=>_))) } </playing-etc>
 
 var game_over_view = _ =>
 	so ((_=()=>
