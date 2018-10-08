@@ -47,7 +47,8 @@ sole, every, delay
 
 var feedback = data ({
   nothing: () => feedback,
-  init_room: (room =~ room) => feedback,
+  enter_room: (room =~ room) => feedback,
+  enter_name: (name =~ string) => feedback,
   play: () => feedback })
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
