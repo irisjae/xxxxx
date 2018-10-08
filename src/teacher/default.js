@@ -55,7 +55,8 @@ var app_state = S .data (teacher_app .nothing)
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (ensemble .nothing)
-var feedback_state// = S .data (temporary (feedback .nothing))
+var feedback_state = S .data ()
+//var feedback_state = S .data (temporary (feedback .nothing))
 
 
 
@@ -218,13 +219,13 @@ var connection = S (_ => {{
 
 S (_ => {{
   if (L .isDefined (data_iso (feedback .init)
-  ) (just_now (feedback_state))) {
+  ) (just_now (feedback_state ()))) {
     ;get_room (T (Math .random ()) ([
 				_x => _x * 100000000,
 				_x => Math .floor (_x) ])) .catch (_ => {}) } }})
 S (_ => {{
   if (L .isDefined (data_iso (feedback .play)
-  ) (just_now (feedback_state))) {
+  ) (just_now (feedback_state ()))) {
     ;start_playing () } }})
 
 
@@ -308,4 +309,4 @@ S (_ => {{
 				;io_state (io .inert) }}) }}) ]) }})
 
 
-feedback_state = S .data (temporary (feedback .nothing))
+feedback_state (temporary (feedback .nothing))
