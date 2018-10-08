@@ -69,8 +69,6 @@ var lookbehind_state = S .data (student_lookbehind .nothing)
 var clicking = ['click']
 
 
-var pipeline_name_entry = 
-					
 var room_entry_view = so ((_=_=>
   <room-entry-etc>
     <code fn={ room_entry_feedback }>
@@ -96,11 +94,26 @@ var room_entry_view = so ((_=_=>
           ;feedback_state (feedback .enter_room (value)) }}) }}) }} )=>_)
 
 var name_entry_view = so ((_=_=>
-                  <student-entry-etc>
-	<name fn={ pipeline_name_entry } >
-		<input placeholder="Enter your name" />
-		<button> Go </button>
-	</name> </student-entry-etc>
+  <student-entry-etc>
+    <name fn={ name_entry_feedback } >
+      <input placeholder="Enter your name" />
+      <button> Go </button>
+    </name> </student-entry-etc>,
+  where
+  , name_entry_feedback = _dom => {{
+      var _input = _dom .querySelector ('input')
+      var _button = _dom .querySelector ('button')
+      ;_input .addEventListener ('keypress', _e => {{
+        if (_e .keyCode === 13) {
+          var value = _input .value
+          ;_input .value = ''
+          ;feedback_state (feedback .enter_name (value)) } }})
+      ;clicking .forEach (click => {{
+        ;_button .addEventListener (click, _e => {{
+          var value = _input .value
+          ;_input .value = ''
+          ;feedback_state (feedback .enter_name (value)) }}) }}) }}  )=>_)
+
 
 var get_ready_view = _ => <get-ready-etc>
 	{ so ((
@@ -123,7 +136,7 @@ var get_ready_view = _ => <get-ready-etc>
 				? panic ('invalid io at get ready view')
 				: 'Trying to join room...'
 			: name_entry_view
-		: so ((_=()=>
+		: so ((_=_=>
 		[ <room> {'Connected to room ' + plain_room } </room>
 		, 'Waiting for game to start...' ]
 		.map (_x => <div>{ _x }</div>),
@@ -134,13 +147,13 @@ var get_ready_view = _ => <get-ready-etc>
 var playing_view = _ => <playing-etc>
 	{ T (student_app_to_board_viewer (app_state ())
 		) (Z_ .maybe ([]) (_board_viewer =>
-			so ((_=()=>
+			so ((_=_=>
 			[ T (current_question
 				) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
 			, <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
 			, <board> { T (_board) (Z_ .map (_row => 
 					<row> { T (_row) (Z_ .map (_cell =>
-						so ((_=()=>
+						so ((_=_=>
 						!! (_cell_bingo)
 						? <cell>{ bold_crossed (_cell_answer) }</cell>
 						: !! (_cell_crossed)
@@ -166,7 +179,7 @@ var playing_view = _ => <playing-etc>
               ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }}) }}) }} )=>_))) } </playing-etc>
 
 var game_over_view = _ =>
-	so ((_=()=>
+	so ((_=_=>
 	<game-over-etc>
 		<result-etc>
 			<tabs>
@@ -360,7 +373,7 @@ var connection = S (_ => {{
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
-			return connection [_room] () && so ((_=()=>
+			return connection [_room] () && so ((_=_=>
 			[ timestamp, mean, Math .sqrt (variance) ],
 			where
 			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) }}) ]) }})
@@ -483,7 +496,7 @@ S (_ => {{
 			!! critical && S .sample (connection)
 			? io_state (io .messaging) && api (_room, 
 					post (messages_encoding (
-						so ((_=()=>
+						so ((_=_=>
 						!! (not_playing)
 						? [ message .student_ping (_student, S .sample (connection)) ]
 						: [ message .student_ping (_student, S .sample (connection))
@@ -491,16 +504,15 @@ S (_ => {{
 							, message .student_update (_student, _history) ],
 						where
 						, { _board, _history, not_playing } =
-								Z .fromMaybe
-									({
-										not_playing: fiat })
-									(maybe_all (T (app_state ()) (L .get (L .pick ({
+								$ (Z .fromMaybe
+								) ({ not_playing: fiat }
+                ) (maybe_all (T (app_state ()) (L .get (L .pick ({
 										_board: [ app_board, as_maybe ],
 										_history: [ app_history, as_maybe ] })) ))) )=>_) ))) 
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
-					_x => {{ ;ensemble_state (_x) }} ])) )
+					_x => {;ensemble_state (_x)} ])) )
 		.then (_ => {{
 			;setTimeout (_ => {{
 				;heartbeat (!! critical ? reping_period : phase - 1) }}
