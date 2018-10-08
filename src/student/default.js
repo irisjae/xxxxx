@@ -64,8 +64,7 @@ var lookbehind_state = S .data (student_lookbehind .nothing)
 
 
 
-
-
+ 
 var clicking = ['click']
 
 
@@ -76,6 +75,7 @@ var pipeline_room_entry = _dom => {{
 		if (_e .keyCode === 13) {
 			var value = _input .value
 			;_input .value = ''
+      feedback_state (feedback .init_room)
 			;record_room (value) } }})
 	;clicking .forEach (click => {{
 		;_button .addEventListener (click, _e => {{
@@ -129,14 +129,18 @@ var get_ready_view = _ => <get-ready-etc>
 		, room = T (app_state ()) (L .get ([ app_room, as_maybe ]))
 		, student = T (app_state ()) (L .get ([ app_student, as_maybe ])) ) =>
 		!! Z .isNothing (room)
-		? !! (! L .isDefined (io_inert) (io_state ()))
-			? !! (! L .isDefined (io_connecting) (io_state ()))
+		? !! Z .not (L .isDefined (io_inert
+    ) (io_state ()))
+			? !! Z .not (L .isDefined (io_connecting
+      ) (io_state ()))
 				? panic ('invalid io at get ready view')
 				: 'Finding room...'
 			: room_entry_view
 		: !! Z .isNothing (student)
-		? !! (! L .isDefined (io_inert) (io_state ()))
-			? !! (! L .isDefined (io_connecting) (io_state ()))
+		? !! Z .not (L .isDefined (io_inert
+    ) (io_state ()))
+			? !! Z .not (L .isDefined (io_connecting
+      ) (io_state ()))
 				? panic ('invalid io at get ready view')
 				: 'Trying to join room...'
 			: name_entry_view
