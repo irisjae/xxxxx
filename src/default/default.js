@@ -289,7 +289,9 @@ var temporary = x =>
       else {
         ;panic ('value is gone') } }
   , _gone = S .data (false)
-  , $$1= _gone (true) )=>_)
+  , $$1= S (_ => {;
+      if (! _gone ()) {
+        ;_gone (true) }}) )=>_)
 
 
 
