@@ -278,18 +278,25 @@ var as_list = template =>
 
 
 
-var just_now = map_defined (_temporary => _temporary ())
-var temporary = x =>
-  so ((_=_=>
-  _temporary,
+var just_now = _temporal => map_defined (_temporal ())
+var temporal = so ((_=_=>
+  faux_temporal,
   where 
+  , _temporal = S .data ()
+  , faux_temporal = (...args) => {;
+      if (args .length) {
+        ;_temporal (args [0]) }
+      else {
+        return  } }
+  , $$1= S (_ => {;
+      ; })
   , _temporary = _ => {;
       if (! _gone ()) {
         return x }
       else {
         ;panic ('value is gone') } }
   , _gone = S .data (false)
-  , $$1= S (_ => {;
+  , $$2= S (_ => {;
       if (! _gone ()) {
         ;_gone (true) }}) )=>_)
 
