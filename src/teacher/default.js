@@ -218,16 +218,17 @@ var connection = S (_ => {{
 
 
 S (_ => {{
-  if (L .isDefined (data_iso (feedback .init)
-  ) (just_now (feedback_state))) {
-    ;get_room (T (Math .random ()) ([
+  T (just_now (feedback_state)
+  ) (
+  L .get (L .choice (
+  [ data_iso (feedback .init)
+  , R .tap (_ => {;
+      ;get_room (T (Math .random ()) ([
 				_x => _x * 100000000,
-				_x => Math .floor (_x) ])) .catch (_ => {}) } }})
-S (_ => {{
-  if (L .isDefined (data_iso (feedback .play)
-  ) (just_now (feedback_state))) {
-    ;start_playing () } }})
-
+				_x => Math .floor (_x) ])) .catch (_ => {}) }) ],
+  [ data_iso (feedback .enter_name)
+  , R .tap (_ => {;
+			;start_playing () }) ] ))) }})
 
 
 
