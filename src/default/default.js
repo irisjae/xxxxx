@@ -53,29 +53,6 @@ var panic_on = cases =>
 
 
 
-var just_now = _temporary => _temporary ()
-var temporary = x =>
-  so ((_=_=>
-  _temporary,
-  where 
-  , _temporary = _ => {;
-      if (! _gone ()) {
-        return x }
-      else {
-        ;panic ('value is gone') } }
-  , _gone = S .data (false)
-  , $$1= _gone (true) )=>_)
-
-
-
-
-
-
-
-
-
-
-
 //TODO: check form of fn_form
 var so = fn_form => 
 	!! (fn_form .toString () .endsWith ('=>_'))
@@ -292,6 +269,29 @@ var as_list = template =>
 		(_x => template .map (lens => L .get (lens) (_x)))
 		(_x => ({ px: _x [0], py: _x [1], vx :_x [2], vy: _x [3] }))
 */
+
+
+
+
+
+
+
+
+
+var just_now = map_defined (_temporary => _temporary ())
+var temporary = x =>
+  so ((_=_=>
+  _temporary,
+  where 
+  , _temporary = _ => {;
+      if (! _gone ()) {
+        return x }
+      else {
+        ;panic ('value is gone') } }
+  , _gone = S .data (false)
+  , $$1= _gone (true) )=>_)
+
+
 
 
 
