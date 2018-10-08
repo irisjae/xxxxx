@@ -93,21 +93,21 @@ var room_entry_view = so ((_=_=>
     { !! (L .isDefined (lookbehind_bad_room) (lookbehind_state ()))
       ? <message>{bad_room} is not a valid room</message>
       : [] } </room-entry-etc>,
-    where
-    , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
-    , room_entry_feedback = _dom => {{
-        var _input = _dom .querySelector ('input')
-        var _button = _dom .querySelector ('button')
-        ;_input .addEventListener ('keypress', _e => {{
-          if (_e .keyCode === 13) {
-            var value = _input .value
-            ;_input .value = ''
-            ;feedback_state (feedback .enter_room (value)) } }})
-        ;clicking .forEach (click => {{
-          ;_button .addEventListener (click, _e => {{
-            var value = _input .value
-            ;_input .value = ''
-            ;feedback_state (feedback .enter_room (value)) }}) }}) }}  )=>_)
+  where
+  , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
+  , room_entry_feedback = _dom => {{
+      var _input = _dom .querySelector ('input')
+      var _button = _dom .querySelector ('button')
+      ;_input .addEventListener ('keypress', _e => {{
+        if (_e .keyCode === 13) {
+          var value = _input .value
+          ;_input .value = ''
+          ;feedback_state (feedback .enter_room (value)) } }})
+      ;clicking .forEach (click => {{
+        ;_button .addEventListener (click, _e => {{
+          var value = _input .value
+          ;_input .value = ''
+          ;feedback_state (feedback .enter_room (value)) }}) }}) }} )=>_)
 
 var name_entry_view = <student-entry-etc>
 	<name fn={ pipeline_name_entry } >
