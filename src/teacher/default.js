@@ -167,7 +167,7 @@ var start_playing = _ => {{
 	;so ((
 	take
 	, exists = maybe_all ({
-			_ensemble: T (ensemble_state ()) (as_maybe),
+			_ensemble: T (ensemble_state ()) (L .get (as_maybe)),
 			_room: T (app_state ()) (L .get (app_room)) }) ) => {{
 	;T (exists) (({ _ensemble, _room }) => {{
 		;go
