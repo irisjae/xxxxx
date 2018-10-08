@@ -47,14 +47,14 @@ sole, every, delay
 
 var feedback = data ({
   nothing: () => feedback,
-  init: () => feedback,
+  init_room: (room =~ room) => feedback,
   play: () => feedback })
 
 var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (undefined)
-var feedback_state = S .data (temporary (feedback .nothing))
+var feedback_state = temporal (feedback .nothing)
 var lookbehind_state = S .data (student_lookbehind .nothing)
 
 

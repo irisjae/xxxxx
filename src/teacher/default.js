@@ -146,7 +146,7 @@ var get_room = _room => {{
 	;return go
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
-		.then (panic_on ([ [Z_ .equals ({}), _room + ' taken'] ])) )
+		.then (panic_on ([ [_x => Z .not (Z_ .equals ({}) (_x)), _room + ' taken'] ])) )
 	.then (_ =>
 		api (_room,
 			post (message_encoding (
