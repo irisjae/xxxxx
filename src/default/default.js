@@ -279,7 +279,7 @@ var as_list = template =>
 
 
 var just_now = _temporal => map_defined (_x => _x .ref ()) (_temporal ())
-var temporal = so ((_=_=>
+var temporal = _ => so ((_=_=>
   faux_temporal,
   where 
   , _backing = S .data ()
@@ -288,11 +288,11 @@ var temporal = so ((_=_=>
       if (args .length) {
         ;_backing ({ ref: _ => args [0] }) }
       else {
-        return _backing () .ref () } }
+        return _backing () && _backing () .ref () } }
   , $$1= S (_ => {;
       _gone (_backing (), {}) })
   , $$2= S (_ => {;
-      _gone (), _backing () .ref = _ => {;panic ('value is gone')} }) )=>_)
+      _gone (), _backing () && (_backing () .ref = _ => {;panic ('value is gone')}) }) )=>_)
 
 
 
