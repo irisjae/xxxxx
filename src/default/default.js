@@ -278,27 +278,21 @@ var as_list = template =>
 
 
 
-var just_now = _temporal => map_defined (_temporal ())
+var just_now = _temporal => map_defined (_x => _x .ref ()) (_temporal ())
 var temporal = so ((_=_=>
   faux_temporal,
   where 
-  , _temporal = S .data ()
+  , _backing = S .data ()
+  , _gone = S .data ({})
   , faux_temporal = (...args) => {;
       if (args .length) {
-        ;_temporal (args [0]) }
+        ;_backing ({ ref: _ => args [0] }) }
       else {
-        return  } }
+        return _backing () .ref () } }
   , $$1= S (_ => {;
-      ; })
-  , _temporary = _ => {;
-      if (! _gone ()) {
-        return x }
-      else {
-        ;panic ('value is gone') } }
-  , _gone = S .data (false)
+      _gone (_backing (), {}) })
   , $$2= S (_ => {;
-      if (! _gone ()) {
-        ;_gone (true) }}) )=>_)
+      _gone (), _backing () .ref = _ => {;panic ('value is gone')} }) )=>_)
 
 
 
@@ -359,7 +353,7 @@ window .stuff = { ...window .stuff,
 	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, 
 	go, panic, panic_on,
-  just_now, temporary,
+  just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined, from_just, maybe_all,
