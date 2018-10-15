@@ -402,15 +402,15 @@ S (_ => {{
   action),
   where
   , action = 
-  )_=>)
-  T (cases
-  ) (
-  Z_ .map (_case => {;
-    var predicate = _case [0]
-    var action = _case [1]
-    var result = predicate (_feedback)
-    if (result) {
-      ;action (result) } }))) ) }})
+      T (cases
+      ) (
+      Z_ .map (_case => {;
+        var predicate = _case [0]
+        var action = _case [1]
+        var result = predicate (_feedback)
+        if (result) {
+          ;action (result) } }))
+  )_=>)) }})
 
 
 
