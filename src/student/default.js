@@ -183,7 +183,7 @@ var playing_view = _ => <playing-etc>
 						so ((_=_=>
 						!! (_cell_bingo)
 						? <cell>{ bold_crossed (_cell_answer) }</cell>
-						: !! (_cell_crossed)
+						:!! (_cell_crossed)
 						? <cell>{ crossed (_cell_answer) }</cell>
 						: <cell fn={ cell_feedback (_cell) }>{ _cell_answer }</cell>,
 						where
