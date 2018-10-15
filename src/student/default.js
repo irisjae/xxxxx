@@ -384,7 +384,7 @@ var connection = S (_ => {{
 S (_ => {{
   T (just_now (feedback_state)
   ) (
-  L .get (L .choice (
+  L .get (L .cond (
   [ data_iso (feedback .enter_room)
   , R .tap (({ room: _room }) => {;
       ;record_room (_room) }) ],
