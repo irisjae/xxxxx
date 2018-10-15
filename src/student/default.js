@@ -382,20 +382,27 @@ var connection = S (_ => {{
 
 
 S (_ => {{
-  T (just_now (feedback_state)
-  ) (
-  L .get (L .cond (
-  [ data_iso (feedback .enter_room)
-  , R .tap (({ room: _room }) => {;
-      ;record_room (_room) }) ],
-  [ data_iso (feedback .enter_name)
-  , R .tap (({ name: _name }) => {;
-			;go
-			.then (_ => record_student (_name))
-			.then (_ => connect_room ()) }) ],
-  [ data_iso (feedback .attempt_question)
-  , R .tap (({ position: _position }) => {;
-      ;attempt_question (_position) }) ] ))) }})
+  ;so ((
+  take
+  , cases = 
+      [ [ data_iso (feedback .enter_room)
+        , ({ room: _room }) => {;
+            ;record_room (_room) } ]
+      , [ data_iso (feedback .enter_name)
+        , ({ name: _name }) => {;
+            ;go
+            .then (_ => record_student (_name))
+            .then (_ => connect_room ()) } ]
+      , [ data_iso (feedback .attempt_question)
+        , ({ position: _position }) => {;
+            ;attempt_question (_position) } ] ]
+  , _feedback = just_now (feedback_state) )=>
+  T (cases) (Z_ .map (_case => {;
+    var predicate = _case [0]
+    var action = _case [1]
+    var result = predicate (_feedback)
+    if (result) {
+      ;action (result) } })) ) }})
 
 
 
