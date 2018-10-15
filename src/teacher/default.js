@@ -167,9 +167,9 @@ var start_playing = _ => {{
 	;so ((
 	take
 	, exists = maybe_all ({
-			_ensemble: T (ensemble_state ()) (L .get (as_maybe)),
-			_room: T (app_state ()) (L .get ([ app_room, as_maybe ])) }) ) => {{
-	;T (exists) (({ _ensemble, _room }) => {{
+			_ensemble: T (S .sample (ensemble_state)) (L .get (as_maybe)),
+			_room: T (S .sample (app_state)) (L .get ([ app_room, as_maybe ])) }) ) => {{
+	;T (exists) (Z_ .map (({ _ensemble, _room }) => {{
 		;go
 		.then (_ =>
 			io_state (io .messaging) && api (_room,
@@ -179,7 +179,7 @@ var start_playing = _ => {{
 		.catch (_e => {{
 			;console .error (_e) }})
 		.then (_ => {{
-			;io_state (io .inert) }}) }}) }}) }}
+			;io_state (io .inert) }}) }})) }}) }}
 
 var timesup_question = _ => {{
 	//;app_state (student_app_next_playing (app_state ()))
@@ -217,6 +217,7 @@ var connection = S (_ => {{
 
 
 
+//TODO: add guard to warn against depending on datas other than feedback
 S (_ => {{
   ;so ((
   take
