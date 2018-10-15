@@ -279,11 +279,11 @@ var as_list = template =>
 
 
 //TODO: polyfill for S.sample as well
-var just_now = _temporal => map_defined (_x => _x .ref ()) (_temporal ())
+var just_now = _temporal => _temporal () .ref ()
 var temporal = _init_val => so ((_=_=>
   faux_temporal,
   where 
-  , _backing = S .data (_init_val)
+  , _backing = S .data ({ ref: _ => _init_val })
   , _gone = S .data ({})
   , faux_temporal = (...args) => {;
       if (args .length) {

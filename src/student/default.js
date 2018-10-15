@@ -298,7 +298,7 @@ var connect_room = _ => {{
 		;return go 
 		.then (_ =>
 			io_state (io .connecting) && api (_room)
-			.then (panic_on ([ [Z .equals ({}), 'empty room; expired code?'] ]))
+      .then (panic_on ([ [Z .equals ({}), 'empty room; expired code?'] ]))
 			.then ($ [
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
 				 _ensemble => {{
@@ -309,6 +309,7 @@ var connect_room = _ => {{
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
 			.then (panic_on ([ [Z .isEmpty ('ok'), 'not ok'] ])) )
+//TODO: fix Z .isEmpty
 		.then (_ => {{ 
 			;app_state (
 				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
