@@ -396,9 +396,16 @@ S (_ => {{
       , [ data_iso (feedback .attempt_question)
         , ({ position: _position }) => {;
             ;attempt_question (_position) } ] ] )=>
+  so ((_=_=>
   T (just_now (feedback_state)
   ) (
-  T (cases) (Z_ .map (_case => {;
+  action),
+  where
+  , action = 
+  )_=>)
+  T (cases
+  ) (
+  Z_ .map (_case => {;
     var predicate = _case [0]
     var action = _case [1]
     var result = predicate (_feedback)
