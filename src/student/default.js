@@ -51,12 +51,28 @@ var feedback = data ({
   enter_name: (name =~ string) => feedback,
   attempt_question: (position =~ position) => feedback })
 
-var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 
+
+
+var lookbehind_nothing = data_iso (student_lookbehind .nothing)
+var lookbehind_bad_room = data_iso (student_lookbehind .bad_room)
+var lookbehind_attempting = data_iso (student_lookbehind .attempting)
+
+var lookbehind_room = data_lens (student_lookbehind .bad_room) .room
+var lookbehind_since = data_lens (student_lookbehind .attempting) .since
+var lookbehind_blocked = data_lens (student_lookbehind .attempting) .blocked
+
+
+
+
+
+ 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (undefined)
 var feedback_state = temporal (feedback .nothing)
 var lookbehind_state = S .data (student_lookbehind .nothing)
+var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
+
 
 
 
