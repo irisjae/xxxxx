@@ -395,14 +395,15 @@ S (_ => {{
             .then (_ => connect_room ()) } ]
       , [ data_iso (feedback .attempt_question)
         , ({ position: _position }) => {;
-            ;attempt_question (_position) } ] ]
-  , _feedback = just_now (feedback_state) )=>
+            ;attempt_question (_position) } ] ] )=>
+  T (just_now (feedback_state)
+  ) (
   T (cases) (Z_ .map (_case => {;
     var predicate = _case [0]
     var action = _case [1]
     var result = predicate (_feedback)
     if (result) {
-      ;action (result) } })) ) }})
+      ;action (result) } }))) ) }})
 
 
 
