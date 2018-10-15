@@ -308,8 +308,7 @@ var connect_room = _ => {{
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
-			.then (panic_on ([ [Z .isEmpty ('ok'), 'not ok'] ])) )
-//TODO: fix Z .isEmpty
+			.then (panic_on ([ [L .get ('ok'), 'not ok'] ])) )
 		.then (_ => {{ 
 			;app_state (
 				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
