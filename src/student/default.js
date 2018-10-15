@@ -104,19 +104,20 @@ var room_entry_view = so ((_=_=>
         : [] } </room-entry-etc>,
   where
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
-  , room_entry_feedback = _dom => {{
-      var _input = _dom .querySelector ('input')
-      var _button = _dom .querySelector ('button')
-      ;_input .addEventListener ('keypress', _e => {{
+  , room_entry_feedback = _dom => so ((_=_=>
+      (_input .addEventListener ('keypress', _e => {{
         if (_e .keyCode === 13) {
-          var value = _input .value
-          ;_input .value = ''
-          ;feedback_state (feedback .enter_room (value)) } }})
-      ;clicking .forEach (click => {{
+          ;let_room_enter () } }}),
+      clicking .forEach (click => {{
         ;_button .addEventListener (click, _e => {{
+          ;let_room_enter () }}) }})),
+      where
+      , _input = _dom .querySelector ('input')
+      , _button = _dom .querySelector ('button')
+      , let_room_enter = _ => {;
           var value = _input .value
           ;_input .value = ''
-          ;feedback_state (feedback .enter_room (value)) }}) }}) }} )=>_)
+          ;feedback_state (feedback .enter_room (value)) } )=>_))=>_)
 
 var name_entry_view = so ((_=_=>
   <student-entry-etc>
@@ -141,33 +142,33 @@ var name_entry_view = so ((_=_=>
           ;feedback_state (feedback .enter_name (value)) } )=>_))=>_)
 
 
-var get_ready_view = _ => <get-ready-etc>
+var get_ready_view = <get-ready-etc>
 	{ so ((
 		take
 		, room = T (app_state ()) (L .get ([ app_room, as_maybe ]))
 		, student = T (app_state ()) (L .get ([ app_student, as_maybe ])) ) =>
-		!! Z .isNothing (room)
-		? !! (L .isDefined (io_inert
+		!! Z .isNothing (room) ?
+      !! (L .isDefined (io_inert
       ) (io_state ()))
 			? room_entry_view
 			: !! (L .isDefined (io_connecting
       ) (io_state ()))
       ? 'Finding room...'
       : panic ('invalid io at get ready view')
-		: !! Z .isNothing (student)
-		? !! (L .isDefined (io_inert
+		:!! Z .isNothing (student) ?
+      !! (L .isDefined (io_inert
       ) (io_state ()))
 			? name_entry_view
-			: !! (L .isDefined (io_connecting
+			:!! (L .isDefined (io_connecting
       ) (io_state ()))
       ? 'Trying to join room...'
       : panic ('invalid io at get ready view')
 		: so ((_=_=>
-		[ <room> {'Connected to room ' + plain_room } </room>
-		, 'Waiting for game to start...' ]
-		.map (_x => <div>{ _x }</div>),
-		where
-		, { plain_room, plain_student } = from_just (maybe_all ({ plain_room: room, plain_student: student })) )=>_))
+      [ <room> {'Connected to room ' + _room } </room>
+      , 'Waiting for game to start...' ]
+      .map (_x => <div>{ _x }</div>),
+      where
+      , { _room, _student } = from_just (maybe_all ({ _room: room, _student: student })) )=>_))
 	} </get-ready-etc>
 
 var playing_view = _ => <playing-etc>

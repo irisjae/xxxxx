@@ -352,7 +352,7 @@ var question_answer_matches = question => answer =>
 	where
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
 
-var student_app_to_board_viewer = _app => 
+var student_app_board_viewer = _app => 
 	so ((
 	take
 	, exists = maybe_all (T (_app) (L .get (L .pick ({
@@ -504,7 +504,7 @@ window .stuff = { ...window .stuff,
 	shuffle, uuid, api, post,
 	student, question, answer, latency, ping, position,
 	attempt, rendition, board, rules, setup,
-	teacher_app, student_app, student_lookbehind,
+	teacher_app, student_app, 
 	board_viewer,
 	io, message, ensemble, 
 	default_questions, default_rules,
