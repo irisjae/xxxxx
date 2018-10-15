@@ -55,7 +55,7 @@ var app_state = S .data (teacher_app .nothing)
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (ensemble .nothing)
-var feedback_state = temporal ()
+var feedback_state = temporal (feedback .nothing)
 //var feedback_state = S .data (temporal (feedback .nothing))
 
 
@@ -322,6 +322,3 @@ S (_ => {{
 				, 300) }})
 			.then (_ => {{
 				;io_state (io .inert) }}) }}) ]) }})
-
-
-feedback_state (feedback .nothing)
