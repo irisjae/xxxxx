@@ -308,7 +308,7 @@ var connect_room = _ => {{
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
-			.then (panic_on ([ [L .get ('ok'), 'not ok'] ])) )
+			.then (panic_on ([ [_x => ! _x .ok, 'not ok'] ])) )
 		.then (_ => {{ 
 			;app_state (
 				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
@@ -469,8 +469,8 @@ S (last_ensemble => {{
 	, _app = S .sample (app_state)
 	, _ensemble = ensemble_state () ) => {{
 	if (L .isDefined (app_get_ready) (_app)) {
-		if (L .isDefined (ensemble_start) (last_ensemble)) {
-			if (! L .isDefined (ensemble_start) (_ensemble)) {
+		if (! L .isDefined (ensemble_start) (last_ensemble)) {
+			if (L .isDefined (ensemble_start) (_ensemble)) {
 				var start = T (_ensemble) (L .get (ensemble_start))
 				var now = (new Date) .getTime ()
 
