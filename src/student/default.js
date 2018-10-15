@@ -409,8 +409,7 @@ S (_ => {{
             ;action (result) } },
         where
         , predicate = _case [0]
-        , action = _case [1] )=>_) )))
-  )=>_)) }})
+        , action = _case [1] )=>_) ))) )=>_)) }})
 
 
 

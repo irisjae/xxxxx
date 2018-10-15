@@ -218,17 +218,31 @@ var connection = S (_ => {{
 
 
 S (_ => {{
+  ;so ((
+  take
+  , cases = 
+      [ [ data_iso (feedback .init)
+        , _ => {;
+            ;get_room (T (Math .random ()) ([
+              _x => _x * 100000000,
+              _x => Math .floor (_x) ])) .catch (_ => {}) } ]
+      , [ data_iso (feedback .play)
+        , _ => {;
+            ;start_playing () } ] ] )=>
+  so ((_=_=>
   T (just_now (feedback_state)
   ) (
-  L .get (L .choice (
-  [ data_iso (feedback .init)
-  , R .tap (_ => {;
-      ;get_room (T (Math .random ()) ([
-				_x => _x * 100000000,
-				_x => Math .floor (_x) ])) .catch (_ => {}) }) ],
-  [ data_iso (feedback .enter_name)
-  , R .tap (_ => {;
-			;start_playing () }) ] ))) }})
+  action),
+  where
+  , action = 
+      $ (T (cases) (Z_ .map (_case => so ((_=_=>
+        _feedback => {;
+          var result = L .get (predicate) (_feedback)
+          if (result) {
+            ;action (result) } },
+        where
+        , predicate = _case [0]
+        , action = _case [1] )=>_) ))) )=>_)) }})
 
 
 

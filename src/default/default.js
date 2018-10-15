@@ -294,7 +294,8 @@ var temporal = _ => so ((_=_=>
   , $$1= S (_ => {;
       _gone (_backing (), {}) })
   , $$2= S (_ => {;
-      _gone (), S .sample (_backing) && (S .sample (_backing) .ref = _ => {;panic ('value is gone')}) }) )=>_)
+      // disable for now
+      /*_gone (), S .sample (_backing) && (S .sample (_backing) .ref = _ => {;panic ('value is gone')})*/ }) )=>_)
 
 
 
