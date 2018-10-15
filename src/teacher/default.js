@@ -235,7 +235,7 @@ S (_ => {{
   action),
   where
   , action = 
-      $ (T (cases) (Z_ .map (_case => so ((_=_=>
+      Z_ .flip (T (cases) (Z_ .map (_case => so ((_=_=>
         _feedback => {;
           var result = L .get (predicate) (_feedback)
           if (result) {
