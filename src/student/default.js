@@ -260,7 +260,7 @@ var lookbehind_latency = _ => {
 			 
 			 
 var record_room = _room => {{
-	var _student = T (app_state ()) (L .get ([ app_student, as_maybe ]))
+	var _student = T (S .sample (app_state)) (L .get ([ app_student, as_maybe ]))
 	;go 
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
@@ -280,7 +280,7 @@ var record_room = _room => {{
 			;io_state (io .inert) }}) }}
 
 var record_student = _name => {{
-	var _setup = T (app_state ()) (L .get ([ app_setup, as_maybe ]))
+	var _setup = T (S .sample (app_state)) (L .get ([ app_setup, as_maybe ]))
 	;app_state (
 		student_app .get_ready (
 			Z .Just ([ uuid (), _name ])
