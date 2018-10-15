@@ -470,8 +470,8 @@ S (last_ensemble => {{
 	, _app = S .sample (app_state)
 	, _ensemble = ensemble_state () ) => {{
 	if (L .isDefined (app_get_ready) (_app)) {
-		if (L .isEmpty (ensemble_start) (last_ensemble)) {
-			if (! L .isEmpty (ensemble_start) (_ensemble)) {
+		if (L .isDefined (ensemble_start) (last_ensemble)) {
+			if (! L .isDefined (ensemble_start) (_ensemble)) {
 				var start = T (_ensemble) (L .get (ensemble_start))
 				var now = (new Date) .getTime ()
 
