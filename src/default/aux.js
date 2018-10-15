@@ -128,11 +128,6 @@ var teacher_lookbehind = data ({
 	bad_room: () => teacher_lookbehind })
 */
 
-var student_lookbehind = data ({
-	nothing: () => student_lookbehind,
-	bad_room: (room =~ room) => student_lookbehind,
-	attempting: (since =~ latency, blocked =~ bool) => student_lookbehind })
-
 var io = data ({
 	inert: () => io,
 	connecting: () => io,
@@ -227,14 +222,6 @@ var setup_questions = data_lens (setup .setup) .questions
 var setup_rules = data_lens (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
-
-var lookbehind_nothing = data_iso (student_lookbehind .nothing)
-var lookbehind_bad_room = data_iso (student_lookbehind .bad_room)
-var lookbehind_attempting = data_iso (student_lookbehind .attempting)
-
-var lookbehind_room = data_lens (student_lookbehind .bad_room) .room
-var lookbehind_since = data_lens (student_lookbehind .attempting) .since
-var lookbehind_blocked = data_lens (student_lookbehind .attempting) .blocked
 
 var io_inert = data_iso (io .inert)
 var io_connecting = data_iso (io .connecting)
@@ -525,7 +512,6 @@ window .stuff = { ...window .stuff,
 	app_nothing, app_get_ready, app_playing, app_game_over,
 	setup_room, setup_questions, setup_rules,
 	board_viewer_board, board_viewer_questions, board_viewer_history,
-	lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
 	io_inert, io_connecting,
 	ensemble_questions, ensemble_rules,
 	ensemble_ping, ensemble_start, ensemble_abort,
@@ -533,7 +519,6 @@ window .stuff = { ...window .stuff,
 	ensemble_student_boards, ensemble_student_histories,
 	app_setup, app_student, app_students, app_room,
 	app_board, app_history, app_questions,
-	lookbehind_room, lookbehind_since, lookbehind_blocked,
 	rendition_attempts,
 	rules_size, setup_size,
 	question_view, question_answers,

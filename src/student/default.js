@@ -51,28 +51,37 @@ var feedback = data ({
   enter_name: (name =~ string) => feedback,
   attempt_question: (position =~ position) => feedback })
 
+var lookbehind = data ({
+	nothing: () => lookbehind,
+	bad_room: (room =~ room) => lookbehind,
+	attempting: (since =~ latency, blocked =~ bool) => lookbehind })
+
+
+var feedback_nothing = data_iso (feedback .nothing)
+var feedback_enter_room = data_iso (feedback .enter_room)
+var feedback_enter_name = data_iso (feedback .enter_name)
+var feedback_attempt_question = data_iso (feedback .attempt_question)
+
+var lookbehind_nothing = data_iso (lookbehind .nothing)
+var lookbehind_bad_room = data_iso (lookbehind .bad_room)
+var lookbehind_attempting = data_iso (lookbehind .attempting)
+
+var lookbehind_room = data_lens (lookbehind .bad_room) .room
+var lookbehind_since = data_lens (lookbehind .attempting) .since
+var lookbehind_blocked = data_lens (lookbehind .attempting) .blocked
 
 
 
-var lookbehind_nothing = data_iso (student_lookbehind .nothing)
-var lookbehind_bad_room = data_iso (student_lookbehind .bad_room)
-var lookbehind_attempting = data_iso (student_lookbehind .attempting)
-
-var lookbehind_room = data_lens (student_lookbehind .bad_room) .room
-var lookbehind_since = data_lens (student_lookbehind .attempting) .since
-var lookbehind_blocked = data_lens (student_lookbehind .attempting) .blocked
 
 
 
-
-
+var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
  
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (undefined)
-var feedback_state = temporal (feedback .nothing)
-var lookbehind_state = S .data (student_lookbehind .nothing)
-var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 
+var feedback_state = temporal (feedback .nothing)
+var lookbehind_state = S .data (lookbehind .nothing)
 
 
 
@@ -116,19 +125,20 @@ var name_entry_view = so ((_=_=>
       <button> Go </button>
     </name> </student-entry-etc>,
   where
-  , name_entry_feedback = _dom => {{
+  , name_entry_feedback = _dom => so ((_=_=>
+      
       var _input = _dom .querySelector ('input')
       var _button = _dom .querySelector ('button')
+      var let_name_enter = _ => {;
+        var value = _input .value
+        ;_input .value = ''
+        ;feedback_state (feedback .enter_name (value)) }
       ;_input .addEventListener ('keypress', _e => {{
         if (_e .keyCode === 13) {
-          var value = _input .value
-          ;_input .value = ''
-          ;feedback_state (feedback .enter_name (value)) } }})
+           let_name_enter () } }})
       ;clicking .forEach (click => {{
         ;_button .addEventListener (click, _e => {{
-          var value = _input .value
-          ;_input .value = ''
-          ;feedback_state (feedback .enter_name (value)) }}) }}) }}  )=>_)
+          let_name_enter () }}) }}) }}  )=>_)
 
 
 var get_ready_view = _ => <get-ready-etc>
@@ -290,7 +300,7 @@ var record_room = _room => {{
 				;app_state (
 					student_app .get_ready ( _student, _setup )) }} ])) )
 		.catch (_e => {{
-			;lookbehind_state (student_lookbehind .bad_room (_room))
+			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) }})
 		.then (_ => {{
 			;io_state (io .inert) }}) }}
@@ -329,7 +339,7 @@ var connect_room = _ => {{
 			;app_state (
 				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
 		.catch (_e => {{
-			;lookbehind_state (student_lookbehind .bad_room (_room))
+			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) }})
 		.then (_ => {{
 			;io_state (io .inert) }}) }})) }} ) }}
@@ -356,7 +366,7 @@ var attempt_question = _position => {{
 							([app_history, L .last, rendition_attempts, L .append])
 							([_position, latency]),
 						_x => {{ ;app_state (_x) }} ])
-					;lookbehind_state (student_lookbehind .attempting (game_clock .time (), true)) } } }}) ]) }}
+					;lookbehind_state (lookbehind .attempting (game_clock .time (), true)) } } }}) ]) }}
 
 var timesup_question = _ => {{
 	;app_state (student_app_next_playing (app_state ())) }}
@@ -401,15 +411,15 @@ S (_ => {{
   ;so ((
   take
   , cases = 
-      [ [ data_iso (feedback .enter_room)
+      [ [ feedback_enter_room
         , ({ room: _room }) => {;
             ;record_room (_room) } ]
-      , [ data_iso (feedback .enter_name)
+      , [ feedback_enter_name
         , ({ name: _name }) => {;
             ;go
             .then (_ => record_student (_name))
             .then (_ => connect_room ()) } ]
-      , [ data_iso (feedback .attempt_question)
+      , [ feedback_attempt_question
         , ({ position: _position }) => {;
             ;attempt_question (_position) } ] ] )=>
   so ((_=_=>
@@ -434,14 +444,14 @@ S (_ => {{
 S (_ => {{
 	if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {{
-			;lookbehind_state (student_lookbehind .nothing) }}
+			;lookbehind_state (lookbehind .nothing) }}
 		, 1500)
 		;S .cleanup (_ => {{
 			;clearTimeout (forget) }}) } }})
 S (last_app => {{
 	if (! L .isDefined (app_room) (last_app)) {
 		if (L .isDefined (app_room) (app_state ())) {
-			;lookbehind_state (student_lookbehind .nothing) } }
+			;lookbehind_state (lookbehind .nothing) } }
 	return app_state () }}
 	, app_state ())
 S (last_app => {{
@@ -449,14 +459,14 @@ S (last_app => {{
 	var history = T (app_state ()) (L .get ([app_history]))
 	if (L .isDefined (app_playing) (app_state ())) {
 		if (history_stepped (last_history) (history)) {
-			;lookbehind_state (student_lookbehind .attempting (0, false)) } }
+			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }}
 	, app_state ())
 S (_ => {{
 	if (L .get (lookbehind_blocked) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {{
 			var _since = T (lookbehind_state ()) (L .get (lookbehind_since))
-			;lookbehind_state (student_lookbehind .attempting (_since, false)) }}
+			;lookbehind_state (lookbehind .attempting (_since, false)) }}
 		, 3000)
 		;S .cleanup (_ => {{
 			;clearTimeout (forget) }}) } }})
