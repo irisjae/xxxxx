@@ -19,7 +19,7 @@ as_maybe, from_maybe,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
 board_viewer_board, board_viewer_questions, board_viewer_history,
-io_inert, io_connecting,
+io_inert, io_connecting, io_heartbeat,
 ensemble_questions, ensemble_rules,
 ensemble_ping, ensemble_start, ensemble_abort,
 ensemble_student_pings, ensemble_student_starts,
@@ -149,7 +149,7 @@ var get_ready_view = <get-ready-etc>
       !! (L .isDefined (io_inert
       ) (io_state ()))
 			? room_entry_view
-			: !! (L .isDefined (L .choice (io_connecting
+			: !! (L .isDefined (L .choice (io_connecting, io_heartbeat)
       ) (io_state ()))
       ? 'Finding room...'
       : panic ('invalid io at get ready view')
@@ -157,7 +157,7 @@ var get_ready_view = <get-ready-etc>
       !! (L .isDefined (io_inert
       ) (io_state ()))
 			? name_entry_view
-			:!! (L .isDefined (io_connecting
+			: !! (L .isDefined (L .choice (io_connecting, io_heartbeat)
       ) (io_state ()))
       ? 'Trying to join room...'
       : panic ('invalid io at get ready view')
@@ -492,7 +492,7 @@ S (last_ensemble => {;
 				var start = T (_ensemble) (L .get (ensemble_start))
 				var now = (new Date) .getTime ()
 
-				var playing_app = student_app_get_ready_to_playing (_app)
+				var playing_app = from_just (student_app_get_ready_to_playing (_app))
 				if (start > now) {
 					;app_state (playing_app) }
 				else {

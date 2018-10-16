@@ -225,6 +225,7 @@ var app_questions = [ app_setup, setup_questions ]
 
 var io_inert = data_iso (io .inert)
 var io_connecting = data_iso (io .connecting)
+var io_heartbeat = data_iso (io .heartbeat)
 
 var message_teacher_setup = data_iso (message .teacher_setup)
 var message_teacher_ping = data_iso (message .teacher_ping) 
@@ -325,7 +326,7 @@ var student_app_get_ready_to_playing = _app =>
 	, exists = from_just (maybe_all (T (_app) (L .get (L .pick ({
 			_student: L .get ([ app_student, as_maybe ]),
 			_setup: L .get ([ app_setup, as_maybe ]) }))))) ) =>
-	T (exists) (map_defined (({ _student, _setup }) =>
+	T (exists) (Z_ .map (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_history),
@@ -512,7 +513,7 @@ window .stuff = { ...window .stuff,
 	app_nothing, app_get_ready, app_playing, app_game_over,
 	setup_room, setup_questions, setup_rules,
 	board_viewer_board, board_viewer_questions, board_viewer_history,
-	io_inert, io_connecting,
+	io_inert, io_connecting, io_heartbeat,
 	ensemble_questions, ensemble_rules,
 	ensemble_ping, ensemble_start, ensemble_abort,
 	ensemble_student_pings, ensemble_student_starts,

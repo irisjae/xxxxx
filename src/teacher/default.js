@@ -19,7 +19,7 @@ as_maybe, from_maybe,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
 board_viewer_board, board_viewer_questions, board_viewer_history,
-io_inert, io_connecting,
+io_inert, io_connecting, io_heartbeat,
 ensemble_questions, ensemble_rules,
 ensemble_ping, ensemble_start, ensemble_abort,
 ensemble_student_pings, ensemble_student_starts,
@@ -284,13 +284,16 @@ S (last_ensemble => {;
 				var start = L .get (ensemble_start) (_ensemble)
 				var now = (new Date) .getTime ()
 
-				var playing_app = teacher_app_get_ready_to_playing (_app)
-				if (start > now) {
-					;app_state (playing_app) }
-				else {
-					;setTimeout (_ => {;
-						;app_state (playing_app) }
-					, start - now) } } } }
+				T (_app
+        ) (
+        [ teacher_app_get_ready_to_playing
+        , Z_ .map (playing_app => {;
+            if (start > now) {
+              ;app_state (playing_app) }
+            else {
+              ;setTimeout (_ => {;
+                ;app_state (playing_app) }
+              , start - now) } }) ]) } } }
 	return _ensemble }
 , ensemble_state ())
 	 
