@@ -537,7 +537,7 @@ S (_ => {;
 						where
 						, { _board, _history, not_playing } =
 								$ (Z .fromMaybe
-								) ({ not_playing: fiat }
+								) ({ not_playing: 'not playing' }
                 ) (maybe_all (T (app_state ()) (L .get (L .pick ({
 										_board: [ app_board, as_maybe ],
 										_history: [ app_history, as_maybe ] })) ))) )=>_) ))) 
