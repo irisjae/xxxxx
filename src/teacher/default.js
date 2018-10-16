@@ -65,8 +65,7 @@ var feedback_state = temporal (feedback .nothing)
 
 var clicking = ['click']
 
-var init_view = _ =>
-	so ((_=_=>
+var init_view = so ((_=_=>
 	<init-etc> 
 		<div a-title>
 			Bingo Class Game
@@ -75,9 +74,10 @@ var init_view = _ =>
 		<rules>
 			<size> <img src={ board_sizes_img } /> </size> </rules>
 		<button fn={ feedback_init }> Start </button>
-		{ T (L .get ([io_connecting, as_maybe]) (io_state ())
+		{ T (io_state ()
       ) (
-			Z_ .maybe ([]) (_ => 'Generating Code...')) }
+			[ L .get ([io_connecting, as_maybe])
+      , Z_ .maybe ([]) (Z .K ('Generating Code...')) ]) }
 		</init-etc>,
   where
 	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
@@ -88,18 +88,18 @@ var init_view = _ =>
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .init) }) }) } )=>_)
 
-var get_ready_view = _ =>
-	so ((_=_=>
+var get_ready_view = so ((_=_=>
 	<get-ready-etc>
 		<message> Room Code: { _room } </message>
 		<message> Number of students: { Z_ .size (_students) } </message>
-		{ [ T (_students) (Z_ .map ($ ([
-					L .get (student_name),
-					_x => <player>{ 'Name: '+ _x }</player> ])))
-			, !! (Z_ .size (_students) === 0)
-				? []
-				: <button play fn={ feedback_play }> play </button> ] }
-		</get-ready-etc>,
+		{ [ T (_students
+        ) (
+        Z_ .map ($ (
+        [ L .get (student_name)
+        , _x => <player>{ 'Name: '+ _x }</player> ])))
+			, !! Z .not (Z_ .size (_students) === 0)
+				? <button play fn={ feedback_play }> play </button>
+				: [] ] } </get-ready-etc>,
 	where
 	, _room = T (app_state ()) (L .get (app_room))
 	, _students = T (app_state ()
@@ -150,7 +150,7 @@ var get_room = _room => {;
 	.then (_ =>
 		api (_room,
 			post (message_encoding (
-				so ((_=()=>
+				so ((_=_=>
 				message .teacher_setup (questions, rules),
 				where
 				, {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
@@ -297,14 +297,15 @@ S (last_ensemble => {;
 	 
 	 
 S (_ => {;
-	;T (app_state ()) ([
-		L .get (app_room),
-		map_defined (_room => {;
+	;T (app_state ()
+  ) (
+  [ L .get (app_room)
+  , map_defined (_room => {;
 			var phase = heartbeat ()
 			var critical = phase === 1
 			go
 			.then (_ =>
-				!! critical && S .sample (connection)
+				!! critical && S .sample (connection) // why need && sample
 				? io_state (io .messaging) && api (_room,
 						post (message_encoding (message .teacher_ping (S .sample (connection)))))
 				: io_state (io .heartbeat) && api (_room)
