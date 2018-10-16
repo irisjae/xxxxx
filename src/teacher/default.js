@@ -119,11 +119,11 @@ var playing_view = _ => so ((_=_=>
 window .view = <teacher-app>
   { !! (L .isDefined (app_nothing) (app_state ()))
     ? init_view
-    : !! (L .isDefined (app_get_ready) (app_state ()))
+    :!! (L .isDefined (app_get_ready) (app_state ()))
     ? get_ready_view
-    : !! (L .isDefined (app_playing) (app_state ()))
+    :!! (L .isDefined (app_playing) (app_state ()))
     ? playing_view
-    : !! (L .isDefined (app_game_over) (app_state ()))
+    :!! (L .isDefined (app_game_over) (app_state ()))
     ? panic ('unimplemented')
     : panic ('undefined app state in view')  } </teacher-app>
 												 

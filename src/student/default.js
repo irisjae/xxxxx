@@ -316,7 +316,7 @@ var connect_room = _ => {;
 	, exists = maybe_all (T (S .sample (app_state)) (
 			L .get (L .pick ({
 				_student: [ app_student, as_maybe ],
-				_room: [ app_room, as_maybe ] })))) )=> {;
+				_room: [ app_room, as_maybe ] })))) )=>{;
 	;T (exists) (Z_ .map (({ _student, _room }) => {;
 		var _setup
 		;return go 
