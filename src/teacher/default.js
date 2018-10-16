@@ -53,6 +53,7 @@ var app_state = S .data (teacher_app .nothing)
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (ensemble .nothing)
+
 var feedback_state = temporal (feedback .nothing)
 //var feedback_state = S .data (temporal (feedback .nothing))
 
@@ -74,17 +75,18 @@ var init_view = _ =>
 		<rules>
 			<size> <img src={ board_sizes_img } /> </size> </rules>
 		<button fn={ feedback_init }> Start </button>
-		{ T (L .get ([io_connecting, as_maybe]) (io_state ())) (
+		{ T (L .get ([io_connecting, as_maybe]) (io_state ())
+      ) (
 			Z_ .maybe ([]) (_ => 'Generating Code...')) }
 		</init-etc>,
   where
 	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
 	, board_sizes_img =
 			'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674'
-  , feedback_init = _dom => {{
-      ;clicking .forEach (click => {{
-        ;_dom .addEventListener (click, _ => {{
-          ;feedback_state (feedback .init) }}) }}) }} )=>_)
+  , feedback_init = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;feedback_state (feedback .init) }) }) } )=>_)
 
 var get_ready_view = _ =>
 	so ((_=_=>
@@ -102,10 +104,10 @@ var get_ready_view = _ =>
 	, _room = T (app_state ()) (L .get (app_room))
 	, _students = T (app_state ()
 		) (L .get ([ app_students, L .valueOr ([]) ]))
-  , feedback_play = _dom => {{
-      ;clicking .forEach (click => {{
-        ;_dom .addEventListener (click, _ => {{
-          ;feedback_state (feedback .play) }}) }}) }} )=>_)
+  , feedback_play = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;feedback_state (feedback .play) }) }) } )=>_)
 
 var playing_view = _ =>
 	so ((_=_=>
@@ -124,7 +126,7 @@ window .view = <teacher-app>
     ? playing_view
     : !! (L .isDefined (app_game_over) (app_state ()))
     ? panic ('unimplemented')
-    : undefined  } </teacher-app>
+    : panic ('undefined app state in view')  } </teacher-app>
 												 
 												 
 												 
@@ -138,7 +140,7 @@ window .view = <teacher-app>
 												 
 												 
 												 
-var get_room = _room => {{
+var get_room = _room => {;
 	var _setup = setup .setup ( _room, default_questions, default_rules )
 
 	;return go
@@ -154,34 +156,34 @@ var get_room = _room => {{
 				, {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
 		.then (panic_on ([
 			[ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
-	.then (_ => {{
-		;app_state (teacher_app .get_ready (_setup, [])) }})
-	.catch (_e => {{
-		;console .error (_e) }})
-	.then (_ => {{
-		;io_state (io .inert) }}) }}
+	.then (_ => {;
+		;app_state (teacher_app .get_ready (_setup, [])) })
+	.catch (_e => {;
+		;console .error (_e) })
+	.then (_ => {;
+		;io_state (io .inert) }) }
 
-var start_playing = _ => {{
+var start_playing = _ => {;
 	;so ((
 	take
 	, exists = maybe_all ({
 			_ensemble: T (S .sample (ensemble_state)) (L .get (as_maybe)),
-			_room: T (S .sample (app_state)) (L .get ([ app_room, as_maybe ])) }) ) => {{
-	;T (exists) (Z_ .map (({ _ensemble, _room }) => {{
+			_room: T (S .sample (app_state)) (L .get ([ app_room, as_maybe ])) }) ) => {;
+	;T (exists) (Z_ .map (({ _ensemble, _room }) => {;
 		;go
 		.then (_ =>
 			io_state (io .messaging) && api (_room,
 				post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
 			.then (panic_on ([
 				[ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-		.catch (_e => {{
-			;console .error (_e) }})
-		.then (_ => {{
-			;io_state (io .inert) }}) }})) }}) }}
+		.catch (_e => {;
+			;console .error (_e) })
+		.then (_ => {;
+			;io_state (io .inert) }) })) }) }
 
-var timesup_question = _ => {{
+var timesup_question = _ => {;
 	//;app_state (student_app_next_playing (app_state ()))
-}}
+}
 
 				
 				
@@ -193,17 +195,17 @@ var timesup_question = _ => {{
 var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
 ;game_clock .add (timesup_question, 10)
-;T (Z .range (0) (10 + 1)) (R .forEach (t => {{
-	;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }}))
+;T (Z .range (0) (10 + 1)) (R .forEach (t => {;
+	;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }))
 
 	 
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 	
-var connection = S (_ => {{
+var connection = S (_ => {;
 	;return T (app_state ()) ([
 		L .get (app_room),
-		map_defined (_room => {{
+		map_defined (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
@@ -211,12 +213,12 @@ var connection = S (_ => {{
 				return so ((_=()=>
 				[ timestamp, mean, Math .sqrt (variance) ],
 				where
-				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } }} ) ]) }}) 
+				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } } ) ]) }) 
 
 
 
 //TODO: add guard to warn against depending on datas other than feedback
-S (_ => {{
+S (_ => {;
   ;so ((
   take
   , cases = 
@@ -241,29 +243,29 @@ S (_ => {{
             ;action (result) } },
         where
         , predicate = _case [0]
-        , action = _case [1] )=>_) ))) )=>_)) }})
+        , action = _case [1] )=>_) ))) )=>_)) })
 
 
 
 /*
-S (_ => {{
+S (_ => {;
 	if (Z_ .isNothing (app_state ())) {
 		if (L .isDefined (io_inert) (io_state ())) {
 			;get_room (T (Math .random ()) ([
 				_x => _x * 100000000,
 				_x => Math .floor (_x) ])) .catch (_ => {}) } } }})
 */
-S (last_app => {{
+S (last_app => {;
 	var _app = app_state ()
 		if (! L .isDefined (app_playing) (last_app)) {
 			if (L .isDefined (app_playing) (_app)) {
 			}
 		}
-	return _app }}
+	return _app }
 , app_state ())
 	 
 	 
-S (_ => {{
+S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	
@@ -273,8 +275,8 @@ S (_ => {{
 	if (! Z_ .equals (_ensemble_students) (_app_students)) {
 		;app_state (
 			T (_app
-			) (L .set (app_students) (_ensemble_students))) } }})
-S (last_ensemble => {{
+			) (L .set (app_students) (_ensemble_students))) } })
+S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	if (L .isDefined (app_get_ready) (_app)) {
@@ -287,17 +289,17 @@ S (last_ensemble => {{
 				if (start > now) {
 					;app_state (playing_app) }
 				else {
-					;setTimeout (_ => {{
-						;app_state (playing_app) }}
+					;setTimeout (_ => {;
+						;app_state (playing_app) }
 					, start - now) } } } }
-	return _ensemble }}
-	, ensemble_state ())
+	return _ensemble }
+, ensemble_state ())
 	 
 	 
-S (_ => {{
+S (_ => {;
 	;T (app_state ()) ([
 		L .get (app_room),
-		map_defined (_room => {{
+		map_defined (_room => {;
 			var phase = heartbeat ()
 			var critical = phase === 1
 			go
@@ -308,16 +310,16 @@ S (_ => {{
 				: io_state (io .heartbeat) && api (_room)
 					.then ($ ([
 						L .get (L .inverse (data_iso (ensemble .ensemble))),
-						_x => {{
-							;ensemble_state (_x) }} ])) )
-			.then (_ => {{
-				;setTimeout (_ => {{
-					;heartbeat (!! critical ? reping_period : phase - 1) }}
-				, 300) }})
-			.catch (_e => {{
+						_x => {;
+							;ensemble_state (_x) } ])) )
+			.then (_ => {;
+				;setTimeout (_ => {;
+					;heartbeat (!! critical ? reping_period : phase - 1) }
+				, 300) })
+			.catch (_e => {;
 				;console .error (_e)
-				;setTimeout (_ => {{
-					;heartbeat (phase) }}
-				, 300) }})
-			.then (_ => {{
-				;io_state (io .inert) }}) }}) ]) }})
+				;setTimeout (_ => {;
+					;heartbeat (phase) }
+				, 300) })
+			.then (_ => {;
+				;io_state (io .inert) }) }) ]) })

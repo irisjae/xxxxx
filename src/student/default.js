@@ -103,12 +103,12 @@ var room_entry_view = so ((_=_=>
   where
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
   , room_entry_feedback = _dom => so ((_=_=>
-      (_input .addEventListener ('keypress', _e => {{
+      (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
-          ;let_room_enter () } }}),
-      clicking .forEach (click => {{
-        ;_button .addEventListener (click, _e => {{
-          ;let_room_enter () }}) }})),
+          ;let_room_enter () } }),
+      clicking .forEach (click => {;
+        ;_button .addEventListener (click, _e => {;
+          ;let_room_enter () }) })),
       where
       , _input = _dom .querySelector ('input')
       , _button = _dom .querySelector ('button')
@@ -198,10 +198,10 @@ var playing_view = _ => <playing-etc>
 			, crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
 			, bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
 			, game_tick = game_tick_sampler ()
-      , cell_feedback = cell => _dom => {{
-          ;clicking .forEach (click => {{
-            ;_dom .addEventListener (click, _ => {{
-              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }}) }}) }} )=>_))) } </playing-etc>
+      , cell_feedback = cell => _dom => {;
+          ;clicking .forEach (click => {;
+            ;_dom .addEventListener (click, _ => {;
+              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }) }) } )=>_))) } </playing-etc>
 
 var game_over_view = _ =>
 	so ((_=_=>
@@ -257,7 +257,7 @@ window .view = <student-app>
 		? playing_view
 		: !! (L .isDefined (app_game_over) (app_state ()))
 		? game_over_view
-		: undefined } </student-app>
+		: panic ('undefined app state in view') } </student-app>
 
 
 
@@ -284,7 +284,7 @@ var lookbehind_latency = _ => {
 			 
 			 
 			 
-var record_room = _room => {{
+var record_room = _room => {;
 	var _student = T (S .sample (app_state)) (L .get ([ app_student, as_maybe ]))
 	;go 
 	.then (_ =>
@@ -292,33 +292,33 @@ var record_room = _room => {{
 		.then (panic_on ([ [Z_ .equals ({}), 'empty room; expired code?'] ]))
 		.then ($ ([
 			L .get (L .inverse (data_iso (ensemble .ensemble))),
-			_ensemble => {{
+			_ensemble => {;
 				var _questions = T (_ensemble) (L .get (ensemble_questions))
 				var _rules = T (_ensemble) (L .get (ensemble_rules))
 				var _setup = setup .setup (_room, _questions, default_rules)
 				;app_state (
-					student_app .get_ready ( _student, _setup )) }} ])) )
-		.catch (_e => {{
+					student_app .get_ready ( _student, _setup )) } ])) )
+		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
-			;console .error (_e) }})
-		.then (_ => {{
-			;io_state (io .inert) }}) }}
+			;console .error (_e) })
+		.then (_ => {;
+			;io_state (io .inert) }) }
 
-var record_student = _name => {{
+var record_student = _name => {;
 	var _setup = T (S .sample (app_state)) (L .get ([ app_setup, as_maybe ]))
 	;app_state (
 		student_app .get_ready (
 			Z .Just ([ uuid (), _name ])
-			, _setup )) }}
+			, _setup )) }
 
-var connect_room = _ => {{
+var connect_room = _ => {;
 	;so ((
 	take
 	, exists = maybe_all (T (S .sample (app_state)) (
 			L .get (L .pick ({
 				_student: [ app_student, as_maybe ],
-				_room: [ app_room, as_maybe ] })))) ) => {{
-	;T (exists) (Z_ .map (({ _student, _room }) => {{
+				_room: [ app_room, as_maybe ] })))) )=> {;
+	;T (exists) (Z_ .map (({ _student, _room }) => {;
 		var _setup
 		;return go 
 		.then (_ =>
@@ -326,26 +326,26 @@ var connect_room = _ => {{
       .then (panic_on ([ [Z .equals ({}), 'empty room; expired code?'] ]))
 			.then ($ [
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
-				 _ensemble => {{
+				 _ensemble => {;
 					 var _questions = T (_ensemble) (L .get (ensemble_questions))
 					 var _rules = T (_ensemble) (L .get (ensemble_rules))
-					 ;_setup = setup .setup (_room, _questions, default_rules) }}]) )
+					 ;_setup = setup .setup (_room, _questions, default_rules) }]) )
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
 			.then (panic_on ([ [_x => ! _x .ok, 'not ok'] ])) )
-		.then (_ => {{ 
+		.then (_ => {; 
 			;app_state (
-				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) }})
-		.catch (_e => {{
+				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) })
+		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
-			;console .error (_e) }})
-		.then (_ => {{
-			;io_state (io .inert) }}) }})) }} ) }}
+			;console .error (_e) })
+		.then (_ => {;
+			;io_state (io .inert) }) })) } ) }
 
-var attempt_question = _position => {{
+var attempt_question = _position => {;
 	T (S .sample (app_state)) ([ student_app_to_board_viewer,
-		Z_ .map (_board_viewer => {{
+		Z_ .map (_board_viewer => {;
 		//Z_ .chain (board_viewer_current_question),
 			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just  ])
 			var _board = T (_board_viewer) (L .get (board_viewer_board))
@@ -359,10 +359,10 @@ var attempt_question = _position => {{
           !! question_answer_matches (_question) (_answer)
           ? student_app_playing_to_next
           : _x => _x,
-          _x => {;app_state (_x)} ]) } }}) ]) }}
+          _x => {;app_state (_x)} ]) } }) ]) }
 
-var timesup_question = _ => {{
-	;app_state (student_app_playing_to_next (S .sample (app_state))) }}
+var timesup_question = _ => {;
+	;app_state (student_app_playing_to_next (S .sample (app_state))) }
 
 
 
@@ -400,7 +400,7 @@ var connection = S (_ => {;
 
 
 
-S (_ => {{
+S (_ => {;
   ;so ((
   take
   , cases = 
@@ -428,7 +428,7 @@ S (_ => {{
             ;action (result) } },
         where
         , predicate = _case [0]
-        , action = _case [1] )=>_) ))) )=>_)) }})
+        , action = _case [1] )=>_) ))) )=>_)) })
 
 
 
@@ -436,57 +436,57 @@ S (_ => {{
 
 S (_ => {;
 	if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
-		;var forget = setTimeout (_ => {{
-			;lookbehind_state (lookbehind .nothing) }}
+		;var forget = setTimeout (_ => {;
+			;lookbehind_state (lookbehind .nothing) }
 		, 1500)
-		;S .cleanup (_ => {{
-			;clearTimeout (forget) }}) } })
-S (last_app => {
+		;S .cleanup (_ => {;
+			;clearTimeout (forget) }) } })
+S (last_app => {;
 	if (! L .isDefined (app_room) (last_app)) {
 		if (L .isDefined (app_room) (app_state ())) {
 			;lookbehind_state (lookbehind .nothing) } }
-	return app_state () }}
-	, app_state ())
-S (last_app => {{
+	return app_state () }
+, app_state ())
+S (last_app => {;
 	var last_history = T (last_app) (L .get ([app_history])) || []
 	var history = T (app_state ()) (L .get ([app_history]))
 	if (L .isDefined (app_playing) (app_state ())) {
 		if (history_stepped (last_history) (history)) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
-	return app_state () }}
-	, app_state ())
-S (_ => {{
+	return app_state () }
+, app_state ())
+S (_ => {;
 	if (L .get (lookbehind_blocked) (lookbehind_state ())) {
-		;var forget = setTimeout (_ => {{
+		;var forget = setTimeout (_ => {;
 			var _since = T (lookbehind_state ()) (L .get (lookbehind_since))
-			;lookbehind_state (lookbehind .attempting (_since, false)) }}
+			;lookbehind_state (lookbehind .attempting (_since, false)) }
 		, 3000)
-		;S .cleanup (_ => {{
-			;clearTimeout (forget) }}) } }})
+		;S .cleanup (_ => {;
+			;clearTimeout (forget) }) } })
 
 
-S (_ => {{
+S (_ => {;
 	if (L .isDefined (app_get_ready) (app_state ())) {
-		;game_clock .pause () } }})
-S (last_state => {{
+		;game_clock .pause () } })
+S (last_state => {;
 	var last_history = T (last_state) (L .get ([app_history, L .valueOr ([])]))
 	var history = T (app_state ()) (L .get ([app_history]))
 	if (L .isDefined (app_playing) (app_state ())) {
 		if (history_stepped (last_history) (history)) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
-	return app_state () }}
-	, app_state ())
-S (_ => {{
+	return app_state () }
+, app_state ())
+S (_ => {;
 	if (L .isDefined (app_game_over) (app_state ())) {
-		;game_clock .pause () } }})
+		;game_clock .pause () } })
 
 
-S (last_ensemble => {{
+S (last_ensemble => {;
 	;so ((
 	take
 	, _app = S .sample (app_state)
-	, _ensemble = ensemble_state () ) => {{
+	, _ensemble = ensemble_state () ) => {;
 	if (L .isDefined (app_get_ready) (_app)) {
 		if (! L .isDefined (ensemble_start) (last_ensemble)) {
 			if (L .isDefined (ensemble_start) (_ensemble)) {
@@ -497,8 +497,8 @@ S (last_ensemble => {{
 				if (start > now) {
 					;app_state (playing_app) }
 				else {
-					;setTimeout (_ => {{
-						;app_state (playing_app) }}
+					;setTimeout (_ => {;
+						;app_state (playing_app) }
 					, start - now) }
 
 				var _room = T (_app) (L .get (app_room))
@@ -506,22 +506,22 @@ S (last_ensemble => {{
 				;(io_state (io .messaging), api (_room, post (
 					message_encoding (
 						message .student_start (_student, start)))))
-				.catch (_e => {{
-					;console .error (_e) }})
-				.then (_ => {{
-					;io_state (io .inert) }}) } } } }})
-	return ensemble_state () }}
-	, ensemble_state ())
+				.catch (_e => {;
+					;console .error (_e) })
+				.then (_ => {;
+					;io_state (io .inert) }) } } } })
+	return ensemble_state () }
+, ensemble_state ())
 
 
-S (_ => {{
+S (_ => {;
 	;so ((
 	take
 	, exists = maybe_all (T (app_state ()
 			) (L .get (L .pick ({
 				_student: [ app_student, as_maybe ],
-				_room: [ app_room, as_maybe ] })) )) ) => {{
-	;T (exists) (Z_ .map (({ _student, _room }) => {{
+				_room: [ app_room, as_maybe ] })) )) ) => {;
+	;T (exists) (Z_ .map (({ _student, _room }) => {;
 		var phase = heartbeat ()
 		var critical = phase === 1
 		go
@@ -546,14 +546,14 @@ S (_ => {{
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
 					_x => {;ensemble_state (_x)} ])) )
-		.then (_ => {{
-			;setTimeout (_ => {{
-				;heartbeat (!! critical ? reping_period : phase - 1) }}
-			, 300) }})
-		.catch (_e => {{
+		.then (_ => {;
+			;setTimeout (_ => {;
+				;heartbeat (!! critical ? reping_period : phase - 1) }
+			, 300) })
+		.catch (_e => {;
 			;console .error (_e)
-			;setTimeout (_ => {{
-				;heartbeat (phase) }}
-			, 300) }})
-		.then (_ => {{
-			;io_state (io .inert) }}) }})) }}) }})
+			;setTimeout (_ => {;
+				;heartbeat (phase) }
+			, 300) })
+		.then (_ => {;
+			;io_state (io .inert) }) })) }) })
