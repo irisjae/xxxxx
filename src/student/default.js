@@ -351,14 +351,20 @@ var attempt_question = _position => {;
 			var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
 			if (! L .get (lookbehind_blocked) (T .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
-        ;T (S .sample (app_state)) ([
-          L .set
-            ([app_history, L .last, rendition_attempts, L .append])
-            ([_position, latency]),
-          !! question_answer_matches (_question) (_answer)
-          ? student_app_playing_to_next
-          : _x => _x,
-          _x => {;app_state (_x)} ]) } }) ]) }
+        if (question_answer_matches (_question) (_answer)) {
+          ;T (S .sample (app_state)) ([
+            L .set
+              ([app_history, L .last, rendition_attempts, L .append])
+              ([_position, latency]),
+            student_app_playing_to_next,
+            _x => {;app_state (_x)} ]) }
+        else {
+          ;T (S .sample (app_state)) ([
+            L .set
+              ([app_history, L .last, rendition_attempts, L .append])
+              ([_position, latency]),
+            _x => {;app_state (_x)} ])
+          ;lookbehind_state (lookbehind .attempting (latency, true)) } } }) ]) }
 
 var timesup_question = _ => {;
 	;app_state (student_app_playing_to_next (S .sample (app_state))) }
