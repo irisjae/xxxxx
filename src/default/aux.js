@@ -138,8 +138,8 @@ var io = data ({
 var message = data ({
 	teacher_setup: ( questions =~ list (question), rules =~ rules ) => message,
 	teacher_ping: ( ping =~ ping ) => message,
-	teacher_start: ( synchroziation =~ timestamp ) => message,
-	teacher_abort: ( synchroziation =~ timestamp ) => message,
+	teacher_start: ( synchronization =~ timestamp ) => message,
+	teacher_abort: ( synchronization =~ timestamp ) => message,
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
@@ -334,7 +334,7 @@ var student_app_get_ready_to_playing = _app =>
 		, _questions = L .get (setup_questions) (_setup)
 		, fresh_history = [rendition .rendition ([])] )=>_))))
 
-var student_app_next_playing = 
+var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
 		!! (history_size < board_size * board_size)

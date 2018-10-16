@@ -354,12 +354,12 @@ var attempt_question = _position => {{
 			var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
 			if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
 				var latency = game_clock .time () //lookbehind_latency ()
-				if (matches_question_answer (_question) (_answer)) {
+				if (question_answer_matches (_question) (_answer)) {
 					;T (app_state ()) ([
 						L .set
 							([app_history, L .last, rendition_attempts, L .append])
 							([_position, latency]),
-						student_app_next_playing,
+						,
 						_x => {{ ;app_state (_x) }} ]) }
 				else {
 					;T (app_state ()) ([
