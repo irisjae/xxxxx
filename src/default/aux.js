@@ -60,6 +60,7 @@ var _ping_listeners = {}
 			, carry = n / (n + 1) )=>_))
 		;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
 		return _x .json () }}) }}*/
+//add retire code for sockets?
 var api = (room, _x) => {;
   var [ continuation, signal ] = api .new_continuation ()
                          
@@ -71,8 +72,8 @@ var api = (room, _x) => {;
   
   if (! api .sockets [room]) {
     ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room)
-    ;api .sockets [room] .onmessage = event => {;
-      var _packet = JSON .parse (event .data)
+    ;api .sockets [room] .onmessage = _event => {;
+      var _packet = JSON .parse (_event .data)
       var id = sole (Z_ .keys (_packet))
       var data = _packet [id]
       if (api .continuations [id]) {;
