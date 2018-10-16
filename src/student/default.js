@@ -486,7 +486,7 @@ S (last_ensemble => {;
 	take
 	, _app = S .sample (app_state)
 	, _ensemble = ensemble_state () ) => {;
-	if (L .isDefined (app_get_ready) (_app)) {
+	if (L .isDefined (app_get_ready) (_app)) { //c change unready get readies to setup state?
 		if (! L .isDefined (ensemble_start) (last_ensemble)) {
 			if (L .isDefined (ensemble_start) (_ensemble)) {
 				var start = T (_ensemble) (L .get (ensemble_start))

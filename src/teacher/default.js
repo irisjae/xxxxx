@@ -284,16 +284,13 @@ S (last_ensemble => {;
 				var start = L .get (ensemble_start) (_ensemble)
 				var now = (new Date) .getTime ()
 
-				T (_app
-        ) (
-        [ teacher_app_get_ready_to_playing
-        , Z_ .map (playing_app => {;
-            if (start > now) {
-              ;app_state (playing_app) }
-            else {
-              ;setTimeout (_ => {;
-                ;app_state (playing_app) }
-              , start - now) } }) ]) } } }
+				var playing_app = from_just (teacher_app_get_ready_to_playing (_app))
+				if (start > now) {
+					;app_state (playing_app) }
+				else {
+					;setTimeout (_ => {;
+						;app_state (playing_app) }
+					, start - now) } } } }
 	return _ensemble }
 , ensemble_state ())
 	 
