@@ -64,7 +64,6 @@ var api = (room, _x) => {;
   if (! api .sockets [room]) {
     ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room) }
 	var begin = performance .now ()
-  exampleSocket.send("Here's some text that the server is urgently awaiting!");
    }
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
@@ -74,7 +73,7 @@ var api = (room, _x) => {;
 		;fn (_ping_cache [room]) } }}
 ;api .sockets = []
 ;api .continuations = {}
-;api .new_continuation = timeout => {;
+;api .new_continuation = (_x, timeout) => {;
   if (timeout === undefined) {
     ;timeout = 2000 }
                                      
@@ -92,7 +91,8 @@ var api = (room, _x) => {;
   
   ;setTimeout (_ => {;
     ;resolve = _ => _
-    ;reject ({ error: 'timeout' }) } ,timeout)
+    ;reject ({ error: 'timeout' }) }
+  , timeout)
   
   return continuation }
 
