@@ -1,9 +1,17 @@
-var { bool, number, timestamp, string,
+var { T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+so, by, 
+go, panic, panic_on,
+just_now, temporal,
+fiat, data, data_lens, data_iso, data_kind,
+n_reducer, pair_zip_n, pair_zip, pair_projection,
+map_defined, from_just, maybe_all,
+sole, every, delay,
+bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, answer, latency, ping, position,
 attempt, rendition, board, rules, setup,
-teacher_app, student_app, student_lookbehind,
+teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
 default_questions, default_rules,
@@ -11,7 +19,6 @@ as_maybe, from_maybe,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
 board_viewer_board, board_viewer_questions, board_viewer_history,
-lookbehind_nothing, lookbehind_bad_room, lookbehind_attempting, 
 io_inert, io_connecting,
 ensemble_questions, ensemble_rules,
 ensemble_ping, ensemble_start, ensemble_abort,
@@ -19,7 +26,6 @@ ensemble_student_pings, ensemble_student_starts,
 ensemble_student_boards, ensemble_student_histories,
 app_setup, app_student, app_students, app_room,
 app_board, app_history, app_questions,
-lookbehind_room, lookbehind_since, lookbehind_blocked,
 rendition_attempts,
 rules_size, setup_size,
 question_view, question_answers,
@@ -29,19 +35,11 @@ history_stepped,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
-student_app_get_ready_to_playing, student_app_next_playing,
+student_app_get_ready_to_playing, student_app_playing_to_next,
 student_app_to_board_viewer,
 question_answer_matches, 
 board_viewer_current_question,
-board_viewer_crossed_positions, board_viewer_bingoed_positions,
-T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-so, by, 
-go, panic, panic_on,
-just_now, temporal,
-fiat, data, data_lens, data_iso, data_kind,
-n_reducer, pair_zip_n, pair_zip, pair_projection,
-map_defined, from_just, maybe_all,
-sole, every, delay
+board_viewer_crossed_positions, board_viewer_bingoed_positions
 } = window .stuff
 
 
@@ -316,7 +314,7 @@ var record_student = _name => {{
 var connect_room = _ => {{
 	;so ((
 	take
-	, exists = maybe_all (T (app_state ()) (
+	, exists = maybe_all (T (S .sample (app_state)) (
 			L .get (L .pick ({
 				_student: [ app_student, as_maybe ],
 				_room: [ app_room, as_maybe ] })))) ) => {{
@@ -346,7 +344,7 @@ var connect_room = _ => {{
 			;io_state (io .inert) }}) }})) }} ) }}
 
 var attempt_question = _position => {{
-	T (app_state ()) ([ student_app_to_board_viewer,
+	T (S .sample (app_state)) ([ student_app_to_board_viewer,
 		Z_ .map (_board_viewer => {{
 		//Z_ .chain (board_viewer_current_question),
 			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just  ])
@@ -354,23 +352,17 @@ var attempt_question = _position => {{
 			var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
 			if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
 				var latency = game_clock .time () //lookbehind_latency ()
-				if (question_answer_matches (_question) (_answer)) {
-					;T (app_state ()) ([
-						L .set
-							([app_history, L .last, rendition_attempts, L .append])
-							([_position, latency]),
-						,
-						_x => {{ ;app_state (_x) }} ]) }
-				else {
-					;T (app_state ()) ([
-						L .set
-							([app_history, L .last, rendition_attempts, L .append])
-							([_position, latency]),
-						_x => {{ ;app_state (_x) }} ])
-					;lookbehind_state (lookbehind .attempting (game_clock .time (), true)) } } }}) ]) }}
+        ;T (app_state ()) ([
+          L .set
+            ([app_history, L .last, rendition_attempts, L .append])
+            ([_position, latency]),
+          !! question_answer_matches (_question) (_answer)
+          ? student_app_playing_to_next
+          : _x => _x,
+          _x => {;app_state (_x)} ]) } }}) ]) }}
 
 var timesup_question = _ => {{
-	;app_state (student_app_next_playing (app_state ())) }}
+	;app_state (student_app_playing_to_next (S .sample (app_state))) }}
 
 
 
@@ -387,23 +379,23 @@ var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
 ;game_clock .add (timesup_question, 10)
 ;T (R .range (0, 10 + 1)) (
-	R .forEach (t => game_clock .add (_ => {{ ;game_tick_sampler (Z .Just (t)) }}, t)))
+	R .forEach (t => game_clock .add (_ => {;game_tick_sampler (Z .Just (t))}, t)))
 
 
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
-var connection = S (_ => {{
+var connection = S (_ => {;
 	;return T (app_state ()) ([
 		L .get (app_room),
-		map_defined (_room => {{
+		map_defined (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
 			return connection [_room] () && so ((_=_=>
 			[ timestamp, mean, Math .sqrt (variance) ],
 			where
-			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) }}) ]) }})
+			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) }) ]) })
 
 
 
@@ -442,14 +434,14 @@ S (_ => {{
 
 
 
-S (_ => {{
+S (_ => {;
 	if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {{
 			;lookbehind_state (lookbehind .nothing) }}
 		, 1500)
 		;S .cleanup (_ => {{
-			;clearTimeout (forget) }}) } }})
-S (last_app => {{
+			;clearTimeout (forget) }}) } })
+S (last_app => {
 	if (! L .isDefined (app_room) (last_app)) {
 		if (L .isDefined (app_room) (app_state ())) {
 			;lookbehind_state (lookbehind .nothing) } }

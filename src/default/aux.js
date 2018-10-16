@@ -352,7 +352,7 @@ var question_answer_matches = question => answer =>
 	where
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
 
-var student_app_board_viewer = _app => 
+var student_app_to_board_viewer = _app => 
 	so ((
 	take
 	, exists = maybe_all (T (_app) (L .get (L .pick ({
@@ -528,8 +528,8 @@ window .stuff = { ...window .stuff,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
 	teacher_app_get_ready_to_playing, 
-	student_app_get_ready_to_playing, student_app_next_playing,
-	student_app_board_viewer,
+	student_app_get_ready_to_playing, student_app_playing_to_next,
+	student_app_to_board_viewer,
 	question_answer_matches, 
 	board_viewer_current_question,
 	board_viewer_crossed_positions, board_viewer_bingoed_positions }
