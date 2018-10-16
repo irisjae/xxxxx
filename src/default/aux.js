@@ -62,7 +62,10 @@ var _ping_listeners = {}
 		return _x .json () }}) }}*/
 var api = (room, _x) => {;
   if (! api .sockets [room]) {
-    api .sockets [room] = new WebSocket ('ws://www.example.com/socketserver') } }
+    ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room) }
+	var begin = performance .now ()
+  exampleSocket.send("Here's some text that the server is urgently awaiting!");
+   }
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
@@ -70,6 +73,28 @@ var api = (room, _x) => {;
 	if (_ping_cache [room]) {
 		;fn (_ping_cache [room]) } }}
 ;api .sockets = []
+;api .continuations = {}
+;api .new_continuation = timeout => {;
+  if (timeout === undefined) {
+    ;timeout = 2000 }
+                                     
+  var resolve, reject
+  var continuation = new Promise ((_resolve, _reject) => {;
+    ;resolve = _resolve
+    ;reject = _reject })
+  
+  var id
+  while (! id || api .continuations [id]) {
+    ;id = Math .floor (1000000 * Math .random ()) }
+  ;api .continuations [id] = _x => {;
+    ;delete api .continuations [id]
+    ;resolve (_x) }
+  
+  ;setTimeout (_ => {;
+    ;resolve = _ => _
+    ;reject ({ error: 'timeout' }) } ,timeout)
+  
+  return continuation }
 
 
 
