@@ -349,9 +349,9 @@ var attempt_question = _position => {;
 			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just ])
 			var _board = T (_board_viewer) (L .get (board_viewer_board))
 			var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
-			if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
+			if (! L .get (lookbehind_blocked) (T .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
-        ;T (app_state ()) ([
+        ;T (S .sample (app_state)) ([
           L .set
             ([app_history, L .last, rendition_attempts, L .append])
             ([_position, latency]),
