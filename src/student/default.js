@@ -169,7 +169,7 @@ var get_ready_view = <get-ready-etc>
       , { _room, _student } = from_just (maybe_all ({ _room: room, _student: student })) )=>_))
 	} </get-ready-etc>
 
-var playing_view = _ => <playing-etc>
+var playing_view = <playing-etc>
 	{ T (student_app_to_board_viewer (app_state ())
 		) (Z_ .maybe ([]) (_board_viewer =>
 			so ((_=_=>
@@ -347,7 +347,7 @@ var attempt_question = _position => {;
 	T (S .sample (app_state)) ([ student_app_to_board_viewer,
 		Z_ .map (_board_viewer => {;
 		//Z_ .chain (board_viewer_current_question),
-			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just  ])
+			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just ])
 			var _board = T (_board_viewer) (L .get (board_viewer_board))
 			var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
 			if (! L .get (lookbehind_blocked) (lookbehind_state ())) {
