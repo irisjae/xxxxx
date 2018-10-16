@@ -323,9 +323,9 @@ var teacher_app_get_ready_to_playing = _app =>
 var student_app_get_ready_to_playing = _app => 
 	so ((
 	take
-	, exists = from_just (maybe_all (T (_app) (L .get (L .pick ({
+	, exists = maybe_all (T (_app) (L .get (L .pick ({
 			_student: L .get ([ app_student, as_maybe ]),
-			_setup: L .get ([ app_setup, as_maybe ]) }))))) ) =>
+			_setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
 	T (exists) (Z_ .map (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
@@ -420,7 +420,7 @@ var board_viewer_crossed_positions = _board_viewer =>
 	, attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
-	so ((_=_=>
+	so ((_=_=> so ((_=_=>
 	T (bingo_patterns) ([
 		Z_ .map (_pattern =>
 			!! (T (_pattern
@@ -429,7 +429,8 @@ var board_viewer_bingoed_positions = _board_viewer =>
 			: Z .Nothing),
 		Z .justs ]),
 	where
-	, bingo_patterns = size_patterns (_size)
+	, bingo_patterns = size_patterns (_size) )=>_),
+  where
 	, _board = T (_board_viewer) (L .get (board_viewer_board))
 	, _size = T (_board) (Z_ .size)
 	, _crossed_positions = T (_board_viewer) (board_viewer_crossed_positions) )=>_)
