@@ -92,7 +92,7 @@ var lookbehind_state = S .data (lookbehind .nothing)
 var clicking = ['click']
 
 
-var room_entry_view = so ((_=_=>
+var room_entry_view = _ => so ((_=_=>
   <room-entry-etc>
     <code fn={ room_entry_feedback }>
       <input placeholder="Enter a room code" />
@@ -117,7 +117,7 @@ var room_entry_view = so ((_=_=>
           ;_input .value = ''
           ;feedback_state (feedback .enter_room (value)) } )=>_))=>_)
 
-var name_entry_view = so ((_=_=>
+var name_entry_view = _ => so ((_=_=>
   <student-entry-etc>
     <name fn={ name_entry_feedback } >
       <input placeholder="Enter your name" />
@@ -149,7 +149,7 @@ var get_ready_view = <get-ready-etc>
       !! (L .isDefined (io_inert
       ) (io_state ()))
 			? room_entry_view
-			: !! (L .isDefined (io_connecting
+			: !! (L .isDefined (L .choice (io_connecting
       ) (io_state ()))
       ? 'Finding room...'
       : panic ('invalid io at get ready view')
@@ -203,8 +203,7 @@ var playing_view = <playing-etc>
             ;_dom .addEventListener (click, _ => {;
               ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }) }) } )=>_))) } </playing-etc>
 
-var game_over_view = _ =>
-	so ((_=_=>
+var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
 		<result-etc>
 			<tabs>

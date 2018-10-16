@@ -65,7 +65,7 @@ var feedback_state = temporal (feedback .nothing)
 
 var clicking = ['click']
 
-var init_view = so ((_=_=>
+var init_view = _ => so ((_=_=>
 	<init-etc> 
 		<div a-title>
 			Bingo Class Game
@@ -88,7 +88,7 @@ var init_view = so ((_=_=>
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .init) }) }) } )=>_)
 
-var get_ready_view = so ((_=_=>
+var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
 		<message> Room Code: { _room } </message>
 		<message> Number of students: { Z_ .size (_students) } </message>
@@ -109,8 +109,7 @@ var get_ready_view = so ((_=_=>
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .play) }) }) } )=>_)
 
-var playing_view = _ =>
-	so ((_=_=>
+var playing_view = _ => so ((_=_=>
 	<playing-etc>
 	</playing-etc>,
 	where
