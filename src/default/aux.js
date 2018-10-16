@@ -39,7 +39,7 @@ var uuid = _ =>
 var _ping_cache = {}
 var _ping_listeners = {}
 
-var api = (room, _x) => {;{
+/*var api = (room, _x) => {;{
 	var begin = performance .now ()
 	return fetch ('/room/' + room, _x) .then (_x => {;{
 		var end = performance .now ()
@@ -59,13 +59,17 @@ var api = (room, _x) => {;{
 					n: 2 })))
 			, carry = n / (n + 1) )=>_))
 		;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
-		return _x .json () }}) }}
+		return _x .json () }}) }}*/
+var api = (room, _x) => {;
+  if (! api .sockets [room]) {
+    api .sockets [room] = new WebSocket ('ws://www.example.com/socketserver') } }
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
 	;_ping_listeners [room] .push (fn)
 	if (_ping_cache [room]) {
 		;fn (_ping_cache [room]) } }}
+;api .sockets = []
 
 
 
