@@ -63,6 +63,14 @@ var _ping_listeners = {}
 var api = (room, _x) => {;
   if (! api .sockets [room]) {
     ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room) }
+  
+  var id
+  while (! id || api .continuations [id]) {
+    ;id = Math .floor (1000000 * Math .random ()) }
+  ;api .continuations [id] = _x => {;
+    ;delete api .continuations [id]
+    ;resolve (_x) }
+  
 	var begin = performance .now ()
    }
 ;api .listen_ping = room => fn => {{ 
@@ -81,13 +89,6 @@ var api = (room, _x) => {;
   var continuation = new Promise ((_resolve, _reject) => {;
     ;resolve = _resolve
     ;reject = _reject })
-  
-  var id
-  while (! id || api .continuations [id]) {
-    ;id = Math .floor (1000000 * Math .random ()) }
-  ;api .continuations [id] = _x => {;
-    ;delete api .continuations [id]
-    ;resolve (_x) }
   
   ;setTimeout (_ => {;
     ;resolve = _ => _
