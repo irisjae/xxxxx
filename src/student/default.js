@@ -323,12 +323,12 @@ var connect_room = _ => {;
 		.then (_ =>
 			io_state (io .connecting) && api (_room)
       .then (panic_on ([ [Z .equals ({}), 'empty room; expired code?'] ]))
-			.then ($ [
+			.then ($ ([
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
 				 _ensemble => {;
 					 var _questions = T (_ensemble) (L .get (ensemble_questions))
 					 var _rules = T (_ensemble) (L .get (ensemble_rules))
-					 ;_setup = setup .setup (_room, _questions, default_rules) }]) )
+					 ;_setup = setup .setup (_room, _questions, default_rules) } ])) )
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
