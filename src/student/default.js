@@ -203,7 +203,7 @@ var playing_view = <playing-etc>
             ;_dom .addEventListener (click, _ => {;
               ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }) }) } )=>_))) } </playing-etc>
 
-var game_over_view = _ => so ((_=_=>
+var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>
 		<result-etc>
 			<tabs>
@@ -230,9 +230,8 @@ var game_over_view = _ => so ((_=_=>
 	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' 
 	, student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png'
 	, _app = app_state ()
-	, _app_kind = data_kind (_app)
 	, _ensemble = ensemble_state ()
-	, all_students = T (_ensemble) (assemble_students (_app_kind))
+	, all_students = T (_ensemble) (assemble_students (data_kind (_app)))
 	, questions = T (_app) (L .collect ([ app_questions, L .elems, question_view ]))
 	, attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
@@ -243,7 +242,8 @@ var game_over_view = _ => so ((_=_=>
 				L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
-			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ])
+			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_),
+  where
 	, average = by (list => $ ([
 			Z .sum,
 			Z .div (Z .size (list)) ])) )=>_)
