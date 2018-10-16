@@ -61,23 +61,25 @@ var _ping_listeners = {}
 		;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
 		return _x .json () }}) }}*/
 var api = (room, _x) => {;
-  if (! api .sockets [room]) {
-    ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room)
-    ;api .sockets [room] .onmessage = $ (
-    [ L .get ([ 'data', L .reread (_x => JSON .parse (_x)) ])
-    
-    ]) event => {;
-      var _packet = JSON .parse (event .data)
-      } }
-  
-  var [ continuation, signal ] = api .new_continuation (_x)
+  var [ continuation, signal ] = api .new_continuation ()
                          
   while (! id || api .continuations [id]) {
     ;var id = Math .floor (1000000 * Math .random ()) }
-  ;api .continuations [id] = _x => {;
-    ;delete api .continuations [id]
-    ;signal (_x) }
+                         
+  ;api .continuations [id] = _x => {;signal (_x)}
+  ;continuation .catch (Z_ .I) .then (_ => {;delete api .continuations [id]})
   
+  if (! api .sockets [room]) {
+    ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room)
+    ;api .sockets [room] .onmessage = event => {;
+      var _packet = JSON .parse (event .data)
+      var id = sole (Z_ .keys (_packet))
+      var data = _packet [id]
+      if (api .continuations [id]) {;
+         ;api .continuations [id] (data) } } }
+  
+  ;api .sockets [room] .send (JSON .stringify ({ [id]: _x }))
+                                              
 	var begin = performance .now ()
   return continuation .then (_x => {;
 		var end = performance .now ()
@@ -105,10 +107,7 @@ var api = (room, _x) => {;
 		;fn (_ping_cache [room]) } }}
 ;api .sockets = []
 ;api .continuations = {}
-;api .new_continuation = (_x, timeout) => {;
-  if (timeout === undefined) {
-    ;timeout = 2000 }
-                                     
+;api .new_continuation = timeout => {;
   var resolve, reject
   var done = false
   var faux_resolve = _x => {
