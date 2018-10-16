@@ -62,17 +62,41 @@ var _ping_listeners = {}
 		return _x .json () }}) }}*/
 var api = (room, _x) => {;
   if (! api .sockets [room]) {
-    ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room) }
+    ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room)
+    ;api .sockets [room] .onmessage = $ (
+    [ L .get ([ 'data', L .reread (_x => JSON .parse (_x)) ])
+    
+    ]) event => {;
+      var _packet = JSON .parse (event .data)
+      } }
   
-  var id
+  var [ continuation, signal ] = api .new_continuation (_x)
+                         
   while (! id || api .continuations [id]) {
-    ;id = Math .floor (1000000 * Math .random ()) }
+    ;var id = Math .floor (1000000 * Math .random ()) }
   ;api .continuations [id] = _x => {;
     ;delete api .continuations [id]
-    ;resolve (_x) }
+    ;signal (_x) }
   
 	var begin = performance .now ()
-   }
+  return continuation .then (_x => {;
+		var end = performance .now ()
+		var sample = end - begin
+		if (! _ping_cache [room]) {
+			;_ping_cache [room] = [0, 0, 0, 0]}
+		;_ping_cache [room] = T (_ping_cache [room]) (_x => 
+			so ((_=_=>
+			[ mean * carry + sample / (n + 1)
+			, sqr_mean * carry + (sample * sample) / (n + 1)
+			, n + 1
+			, (new Date) .getTime () ],
+			where 
+			, {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
+					mean: 0,
+					sqr_mean: 1,
+					n: 2 })))
+			, carry = n / (n + 1) )=>_))
+		;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }) }
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
@@ -86,16 +110,17 @@ var api = (room, _x) => {;
     ;timeout = 2000 }
                                      
   var resolve, reject
-  var continuation = new Promise ((_resolve, _reject) => {;
+  var done = false
+  var faux_resolve = _x => {
+    if (! done) {
+      ;resolve (_x) } }
+  var continuation = (new Promise ((_resolve, _reject) => {;
     ;resolve = _resolve
-    ;reject = _reject })
+    ;reject = _reject })) .then (R .tap (_ => {;done = true}))
   
-  ;setTimeout (_ => {;
-    ;resolve = _ => _
-    ;reject ({ error: 'timeout' }) }
-  , timeout)
+  ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
   
-  return continuation }
+  return [continuation, faux_resolve] }
 
 
 
