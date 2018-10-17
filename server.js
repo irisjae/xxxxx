@@ -48,9 +48,14 @@ module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
 	.use (require ('koa-static') (static_path))
 	.use (require ('koa-router') ()
     .use ('/room/:room', (ctx, next) => {;
-      this.get("Connection") == "Upgrade"){
-      var connection = yield this.upgrade();
-      connection.send("Hello World!");
+      if (ctx .get ("Connection") == "Upgrade"){
+        ;var connection = ctx .upgrade ();
+        ;connection.send("Hello World!");
+      }
+      else{
+        ;ctx .status = 400;
+        ;ctx .body = 'A upgrade request was expected'
+      }
     })
     .post ('/room/:room', (ctx, next) => {;
       return go
