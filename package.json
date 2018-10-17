@@ -16,13 +16,13 @@
     "koa-qs": "^2.0.0",
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.3",
+    "koa-upgrade": "^1.0.1",
     "koa-websocket": "^5.0.1",
     "partial.lenses": "^14.9.1",
     "ramda": "^0.25.0",
     "s-js": "^0.4.9",
     "sanctuary": "^0.15.0",
-    "surplus": "^0.5.3",
-    "ws": "^6.1.0"
+    "surplus": "^0.5.3"
   },
   "engines": {
     "node": "8.x"

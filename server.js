@@ -29,7 +29,7 @@ var clean_rooms = _ => {{
 ;clean_rooms ()
 
 
-module .exports = require ('koa-qs') (new (require ('koa')))
+module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
 	.use (function (ctx, next) {
