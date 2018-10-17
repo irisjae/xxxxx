@@ -71,10 +71,7 @@ module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
       .then (_x => {;
         var id = ctx .params .room
 
-        ;rooms [id] =
-        { ... R .mergeDeepRight (rooms [id]) (_x)
-        , ref_time : (new Date) .getTime () }
-        })
+        ;post_room (id) (_x)
         /*if (! rooms [id]) {
           ;rooms [id] = { logs: [] } }
         ;rooms [id] .ref_time = (new Date) .getTime ()
@@ -89,9 +86,8 @@ module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
       return go
       .then (_ =>
         where ((
-          id = ctx .params .room) => (
-        { ...rooms [id]
-        , ref_time : undefined } )))
+          id = ctx .params .room) =>
+        get_room (id) ))
           //(rooms [id] || {}) .logs || [] ))
       .catch (_x => {;
         {;console .error (_x)}
