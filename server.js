@@ -27,6 +27,14 @@ var clean_rooms = _ => {;
 	;setTimeout (clean_rooms, 5 * 60 * 1000) }
 ;clean_rooms ()
 
+var post_room = room => _x => {;
+  ;rooms [room] =
+  { ... R .mergeDeepRight (rooms [room]) (_x)
+  , ref_time : (new Date) .getTime () } }
+var get_room = room =>0||
+  { ...rooms [room]
+  , ref_time : undefined }
+
 
 module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
 	.use (require ('koa-compress') ())
