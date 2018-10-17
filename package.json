@@ -21,7 +21,8 @@
     "ramda": "^0.25.0",
     "s-js": "^0.4.9",
     "sanctuary": "^0.15.0",
-    "surplus": "^0.5.3"
+    "surplus": "^0.5.3",
+    "ws": "^6.1.0"
   },
   "engines": {
     "node": "8.x"
