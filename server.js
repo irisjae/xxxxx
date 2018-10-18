@@ -36,7 +36,7 @@ var get_room = room =>0||
   , ref_time : undefined }
 
 
-module .exports = require ('koa-upgrade') (require ('koa-qs') (require ('koa')))
+module .exports = (app => require ('koa-upgrade') (app)) (require ('koa-qs') (new (require ('koa'))))
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
 	.use (function (ctx, next) {
@@ -58,7 +58,9 @@ module .exports = require ('koa-upgrade') (require ('koa-qs') (require ('koa')))
     .use ('/room/:room', (ctx, next) => {;
       if (ctx .get ('Connection') == 'Upgrade'){
         ;var connection = ctx .upgrade ()
-        ;connection .send ("Hello World!")
+        ;connection .on ('message', message => {
+          console .log ('received: %s', message);
+        });
       }
       else {
         ;ctx .status = 400;
