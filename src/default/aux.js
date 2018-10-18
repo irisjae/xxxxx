@@ -62,6 +62,10 @@ var _ping_listeners = {}
 		return _x .json () }}) }}*/
 //add retire code for sockets?
 var api = (room, _x) => {;
+  ;_x = _x || { method: 'GET' }
+  if (_x .body) {
+    ;_x .body = JSON .parse (_x .body) }
+
   var [ continuation, signal ] = api .new_continuation ()
                          
   while (! id || api .continuations [id]) {
@@ -79,7 +83,7 @@ var api = (room, _x) => {;
       if (api .continuations [id]) {;
          ;api .continuations [id] (data) } } }
   
-  ;api .sockets [room] .send (JSON .stringify ({ [id]: _x }))
+  ;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))
                                               
 	var begin = performance .now ()
   return continuation .then (_x => {;

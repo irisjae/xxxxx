@@ -56,15 +56,25 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
 	.use (require ('koa-static') (static_path))
 	.use (require ('koa-router') ()
     .use ('/room/:room', (ctx, next) => {;
+      var id = ctx .params .room
+      //TODO: add cleanup heartbeat code
+      //TODO: try catch
       if (ctx .get ('Connection') == 'Upgrade'){
         ;var connection = ctx .upgrade ()
         ;connection .on ('message', message => {
-          console .log ('received: %s', message);
-        }) }
+          ;message = JSON .parse (message)
+          var track_id = message .id
+          var method = message .method
+          var body = message .body
+          if (method === 'GET') {
+            ;ctx .body = get_room (id) }
+          else if (method === 'POST') {
+            ;post_room (id) (body)
+            ;ctx .body = { ok : true } } }) }
       else {
         var _error = 'A upgrade request was expected'
         {;console .error (_error)}
-        ;ctx .body = { error: _error } } })
+        ;ctx .body = { error : _error } } })
     .post ('/room/:room', (ctx, next) => {;
       return go
       .then (_ => ctx .request .body)
