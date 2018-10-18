@@ -71,7 +71,7 @@ var api = (room, _x) => {;
   while (! id || api .continuations [id]) {
     ;var id = '' + Math .floor (1000000 * Math .random ()) }
                          
-  ;api .continuations [id] = _x => {;signal (_x)}
+  ;api .continuations [id] = signal
   ;continuation .catch (Z_ .I) .then (_ => {;delete api .continuations [id]})
   
   if (! api .sockets [room]) {
@@ -91,7 +91,7 @@ var api = (room, _x) => {;
     ;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))
     ;begin = performance .now ()
     return continuation })
-  .then (_x => {;
+  .then (R .tap (_ => {;
     ;var end = performance .now ()
     var sample = end - begin
     if (! _ping_cache [room]) {
@@ -108,7 +108,7 @@ var api = (room, _x) => {;
           sqr_mean: 1,
           n: 2 })))
       , carry = n / (n + 1) )=>_))
-    ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }) }
+    ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) })) }
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
