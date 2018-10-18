@@ -118,6 +118,8 @@ var api = (room, _x) => {;
 ;api .sockets = []
 ;api .continuations = {}
 ;api .new_continuation = timeout => {;
+  ;timeout = timeout || 5000
+                                     
   var resolve, reject
   var done = false
   var faux_resolve = _x => {
