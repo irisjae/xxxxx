@@ -76,6 +76,8 @@ var api = (room, _x) => {;
   
   if (! api .sockets [room]) {
     ;api .sockets [room] = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+    ;api .sockets [room] .ok = new Promise ((resolve, reject) => {;
+      ;api .sockets [room] .onopen = _ => {;resolve ()} })
     ;api .sockets [room] .onmessage = _event => {;
       var _packet = JSON .parse (_event .data)
       var id = _packet .id
@@ -83,27 +85,28 @@ var api = (room, _x) => {;
       if (api .continuations [id]) {;
          ;api .continuations [id] (data) } } }
   
-  ;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))
-                                              
-	var begin = performance .now ()
-  return continuation .then (_x => {;
-		var end = performance .now ()
-		var sample = end - begin
-		if (! _ping_cache [room]) {
-			;_ping_cache [room] = [0, 0, 0, 0]}
-		;_ping_cache [room] = T (_ping_cache [room]) (_x => 
-			so ((_=_=>
-			[ mean * carry + sample / (n + 1)
-			, sqr_mean * carry + (sample * sample) / (n + 1)
-			, n + 1
-			, (new Date) .getTime () ],
-			where 
-			, {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
-					mean: 0,
-					sqr_mean: 1,
-					n: 2 })))
-			, carry = n / (n + 1) )=>_))
-		;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }) }
+  ;return api .sockets [room] .ok
+  .then (_ => {;
+    ;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))
+    var begin = performance .now ()
+    return continuation .then (_x => {;
+      var end = performance .now ()
+      var sample = end - begin
+      if (! _ping_cache [room]) {
+        ;_ping_cache [room] = [0, 0, 0, 0]}
+      ;_ping_cache [room] = T (_ping_cache [room]) (_x => 
+        so ((_=_=>
+        [ mean * carry + sample / (n + 1)
+        , sqr_mean * carry + (sample * sample) / (n + 1)
+        , n + 1
+        , (new Date) .getTime () ],
+        where 
+        , {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
+            mean: 0,
+            sqr_mean: 1,
+            n: 2 })))
+        , carry = n / (n + 1) )=>_))
+      ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }) }) }
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
