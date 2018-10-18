@@ -24,7 +24,7 @@ class Response extends WritableStream{
 		if(!this.headersSent) this.writeHead(this.statusCode,this.statusMessage,this.headers);
 		if(this.upgraded){
 			if(this.websocket && !chunk && this.websocket.readyState == ws.OPEN){
-				this.websocket.close(this.statusCode == 500 ?1011:1000);
+				//this.websocket.close(this.statusCode == 500 ?1011:1000);
 			}
 			callback();
 		}else{

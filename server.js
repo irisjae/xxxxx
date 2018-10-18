@@ -36,7 +36,7 @@ var get_room = room =>0||
   , ref_time : undefined }
 
 
-module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-qs') (new (require ('koa'))))
+module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa-qs') (new (require ('koa'))))
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
 	.use (function (ctx, next) {
@@ -64,10 +64,6 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
         ;console .log ('connection trying upgrade...')
         ;ctx .upgrade ()
         .then (connection => {;
-          ;connection .send ('testing')
-          ;console .log ('connection upgraded...')
-          ;console .log ('connection is ', connection)
-          //;setInterval (_ => connection .ping (), 500)
           ;connection .on ('message', message => {;
             ;console .log ('connection received message ' + message + '...')
             ;message = JSON .parse (message)
@@ -79,7 +75,6 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
             else if (method === 'POST') {
               ;post_room (id) (body)
               var _reply = { ok : true } }
-            ;console .log ('client state is ' + connection .readyState)
             ;connection .send (JSON .stringify ({ id : track_id, body : _reply }), _error => {;console .error (_error)})
             ;console .log ('connection replied ', _reply) }) }) }
       else {
