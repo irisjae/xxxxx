@@ -64,6 +64,7 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
         ;console .log ('connection trying upgrade...')
         ;ctx .upgrade ()
         .then (connection => {;
+          ;connection .send ('testing')
           ;console .log ('connection upgraded...')
           ;console .log ('connection is ', connection)
           //;setInterval (_ => connection .ping (), 500)
