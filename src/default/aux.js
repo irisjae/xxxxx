@@ -75,7 +75,7 @@ var api = (room, _x) => {;
   ;continuation .catch (Z_ .I) .then (_ => {;delete api .continuations [id]})
   
   if (! api .sockets [room]) {
-    ;api .sockets [room] = new WebSocket ('ws://' + window .location .host + '/room/' + room)
+    ;api .sockets [room] = new WebSocket ('wss://' + window .location .host + '/room/' + room)
     ;api .sockets [room] .onmessage = _event => {;
       var _packet = JSON .parse (_event .data)
       var id = sole (Z_ .keys (_packet))
