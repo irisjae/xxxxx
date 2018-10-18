@@ -36,7 +36,7 @@ var get_room = room =>0||
   , ref_time : undefined }
 
 
-module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
+module .exports = require ('koa-upgrade') (require ('koa-qs') (require ('koa')))
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
 	.use (function (ctx, next) {
@@ -60,7 +60,7 @@ module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
         ;var connection = ctx .upgrade ()
         ;connection .send ("Hello World!")
       }
-      else{
+      else {
         ;ctx .status = 400;
         ;ctx .body = 'A upgrade request was expected'
       }
@@ -80,8 +80,8 @@ module .exports = require('koa-upgrade') (require ('koa-qs') (require ('koa')))
       .catch (_x => {;
         {;console .error (_x)}
         
-        return ({ error: 'An unexpected error occured' }) })
-      .then (_x => {;ctx .body = _x})})
+        return { error: 'An unexpected error occured' } })
+      .then (_x => {;ctx .body = _x})}) })
     .get ('/room/:room', (ctx, next) => {;
       return go
       .then (_ =>
