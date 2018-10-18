@@ -65,7 +65,7 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
         ;ctx .upgrade ()
         .then (connection => {;
           ;console .log ('connection upgraded...')
-          //;console .log ('connection is ', connection)
+          ;console .log ('connection is ', connection)
           //;setInterval (_ => connection .ping (), 500)
           ;connection .on ('message', message => {;
             ;console .log ('connection received message ' + message + '...')
@@ -74,11 +74,12 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
             var method = message .method
             var body = message .body
             if (method === 'GET') {
-              ;connection .send (JSON .stringify ({ id : track_id, body : get_room (id) })) }
+              var _reply = get_room (id) }
             else if (method === 'POST') {
               ;post_room (id) (body)
-              ;connection .send (JSON .stringify ({ id : track_id, body : { ok : true } })) }
-            ;console .log ('connection replied...') }) }) }
+              var _reply = { ok : true } }
+            ;connection .send (JSON .stringify ({ id : track_id, body : _reply }), _error => {;console .error (_error)})
+            ;console .log ('connection replied ', _reply) }) }) }
       else {
         /*var _error = 'A upgrade request was expected'
         {;console .error (_error)}
