@@ -59,28 +59,22 @@ module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa
       var id = ctx .params .room
       //TODO: add cleanup heartbeat code
       //TODO: try catch
-      ;console .log ('websocket singing, connection is ' + ctx .get ('Connection'))
-      if (ctx .get ('Connection') == 'upgrade'){
-        ;console .log ('connection trying upgrade...')
-        ;ctx .upgrade ()
-        .then (connection => {;
-          ;connection .on ('message', message => {;
-            ;console .log ('connection received message ' + message + '...')
-            ;message = JSON .parse (message)
-            var track_id = message .id
-            var method = message .method
-            var body = message .body
-            if (method === 'GET') {
-              var _reply = get_room (id) }
-            else if (method === 'POST') {
-              ;post_room (id) (body)
-              var _reply = { ok : true } }
-            ;connection .send (JSON .stringify ({ id : track_id, body : _reply }), _error => {;console .error (_error)})
-            ;console .log ('connection replied ', _reply) }) }) }
-      else {
-        /*var _error = 'A upgrade request was expected'
-        {;console .error (_error)}
-        ;ctx .body = { error : _error }*/ } })
+      ;return go
+      .then (_ => {;
+        if (ctx .get ('Connection') == 'upgrade') {
+          ;return ctx .upgrade ()
+          .then (connection => {;
+            ;connection .on ('message', message => {;
+              ;message = JSON .parse (message)
+              var track_id = message .id
+              var method = message .method
+              var body = message .body
+              if (method === 'GET') {
+                var _reply = get_room (id) }
+              else if (method === 'POST') {
+                ;post_room (id) (body)
+                var _reply = { ok : true } }
+              ;connection .send (JSON .stringify ({ id : track_id, body : _reply })) }) }) } }) })
     .post ('/room/:room', (ctx, next) => {;
       return go
       .then (_ => ctx .request .body)
