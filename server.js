@@ -66,17 +66,17 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
         .then (connection => {;
           ;console .log ('connection upgraded...')
           //;console .log ('connection is ', connection)
-          ;connection .on ('message', message => {
+          ;connection .on ('message', message => {;
             ;console .log ('connection received message ' + message + '...')
             ;message = JSON .parse (message)
             var track_id = message .id
             var method = message .method
             var body = message .body
             if (method === 'GET') {
-              ;connection .send ({ id : track_id, body : get_room (id) }) }
+              ;connection .send (JSON .stringify ({ id : track_id, body : get_room (id) })) }
             else if (method === 'POST') {
               ;post_room (id) (body)
-              ;connection .send ({ id : track_id, body : { ok : true } }) }
+              ;connection .send (JSON .stringify ({ id : track_id, body : { ok : true } })) }
             ;console .log ('connection replied...') }) }) }
       else {
         /*var _error = 'A upgrade request was expected'
