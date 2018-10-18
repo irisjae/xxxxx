@@ -66,6 +66,7 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
         .then (connection => {;
           ;console .log ('connection upgraded...')
           //;console .log ('connection is ', connection)
+          //;setInterval (_ => connection .ping (), 500)
           ;connection .on ('message', message => {;
             ;console .log ('connection received message ' + message + '...')
             ;message = JSON .parse (message)
