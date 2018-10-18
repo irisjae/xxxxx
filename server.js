@@ -36,7 +36,7 @@ var get_room = room =>0||
   , ref_time : undefined }
 
 
-module .exports = (app => require ('koa-upgrade') (app)) (require ('koa-qs') (new (require ('koa'))))
+module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-qs') (new (require ('koa'))))
 	.use (require ('koa-compress') ())
 	.use (require ('koa-cors') ())
 	.use (function (ctx, next) {
@@ -60,13 +60,11 @@ module .exports = (app => require ('koa-upgrade') (app)) (require ('koa-qs') (ne
         ;var connection = ctx .upgrade ()
         ;connection .on ('message', message => {
           console .log ('received: %s', message);
-        });
-      }
+        }) }
       else {
-        ;ctx .status = 400;
-        ;ctx .body = 'A upgrade request was expected'
-      }
-    })
+        var _error = 'A upgrade request was expected'
+        {;console .error (_error)}
+        ;ctx .body = { error: _error } } })
     .post ('/room/:room', (ctx, next) => {;
       return go
       .then (_ => ctx .request .body)
