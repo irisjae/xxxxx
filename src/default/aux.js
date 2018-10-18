@@ -69,7 +69,7 @@ var api = (room, _x) => {;
   var [ continuation, signal ] = api .new_continuation ()
                          
   while (! id || api .continuations [id]) {
-    ;var id = Math .floor (1000000 * Math .random ()) }
+    ;var id = '' + Math .floor (1000000 * Math .random ()) }
                          
   ;api .continuations [id] = _x => {;signal (_x)}
   ;continuation .catch (Z_ .I) .then (_ => {;delete api .continuations [id]})
