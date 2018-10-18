@@ -59,22 +59,27 @@ module .exports = (app => (require ('koa-upgrade') (app), app)) (require ('koa-q
       var id = ctx .params .room
       //TODO: add cleanup heartbeat code
       //TODO: try catch
-      if (ctx .get ('Connection') == 'Upgrade'){
+      ;console .log ('websocket singing, connection is ' + ctx .get ('Connection'))
+      if (ctx .get ('Connection') == 'upgrade'){
+        ;console .log ('connection trying upgrade...')
         ;var connection = ctx .upgrade ()
+        ;console .log ('connection upgraded...')
         ;connection .on ('message', message => {
+          ;console .log ('connection received message ' + message + '...')
           ;message = JSON .parse (message)
           var track_id = message .id
           var method = message .method
           var body = message .body
           if (method === 'GET') {
-            ;ctx .body = get_room (id) }
+            ;connection .send ({ id : track_id, body : get_room (id) }) }
           else if (method === 'POST') {
             ;post_room (id) (body)
-            ;ctx .body = { ok : true } } }) }
+            ;connection .send ({ id : track_id, body : { ok : true } }) }
+          ;console .log ('connection replied...') }) }
       else {
-        var _error = 'A upgrade request was expected'
+        /*var _error = 'A upgrade request was expected'
         {;console .error (_error)}
-        ;ctx .body = { error : _error } } })
+        ;ctx .body = { error : _error }*/ } })
     .post ('/room/:room', (ctx, next) => {;
       return go
       .then (_ => ctx .request .body)

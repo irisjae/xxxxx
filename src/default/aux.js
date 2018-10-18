@@ -78,8 +78,8 @@ var api = (room, _x) => {;
     ;api .sockets [room] = new WebSocket ('wss://' + window .location .host + '/room/' + room)
     ;api .sockets [room] .onmessage = _event => {;
       var _packet = JSON .parse (_event .data)
-      var id = sole (Z_ .keys (_packet))
-      var data = _packet [id]
+      var id = _packet .id
+      var data = _packet .body
       if (api .continuations [id]) {;
          ;api .continuations [id] (data) } } }
   
