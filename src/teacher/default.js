@@ -111,6 +111,10 @@ var get_ready_view = _ => so ((_=_=>
 
 var playing_view = _ => so ((_=_=>
 	<playing-etc>
+    <question-etc>
+      <question-text>{ question }</question-text>
+      <countdown>{ time_left }</countdown>
+    </question-etc>
 	</playing-etc>,
 	where
 	, _students = T (app_state ()) (L .get (app_students)) )=>_)

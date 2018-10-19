@@ -506,7 +506,7 @@ S (last_ensemble => {;
 						;app_state (playing_app) }
 					, start - now) }
 
-				var _room = T (_app) (L .get (app_room))
+				var _room = T (_app) (L .get (app_room)),
 				var _student = T (_app) (L .get (app_student))
 				;io_state (io .messaging) && api (_room, post (
 					message_encoding (
