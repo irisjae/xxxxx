@@ -119,6 +119,27 @@ var playing_view = _ => so ((_=_=>
       { T (_students
         ) (Z_ .map (_student =>
         <student-etc>
+          { so ((_=_=>
+          <board> { T (_board) (Z_ .map (_row => 
+            <row> { T (_row) (Z_ .map (_cell =>
+              so ((_=_=>
+              !! (_cell_bingo)
+              ? <cell>{ bold_crossed (_cell_answer) }</cell>
+              :!! (_cell_crossed)
+              ? <cell>{ crossed (_cell_answer) }</cell>
+              : <cell>{ _cell_answer }</cell>,
+              where
+              , _cell_position = T (_cell) (L .get (cell_position))
+              , _cell_answer = T (_cell) (L .get (cell_answer))
+              , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
+              , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
+              , crossed = _x => <s>{ _x }</s>
+              , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
+              } </row> )) } </board>,
+          where
+          , _board = T (_board_viewer) (L .get (board_viewer_board))
+          , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
+          , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
         </student-etc>))
       }
     </students>
