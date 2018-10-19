@@ -115,6 +115,13 @@ var playing_view = _ => so ((_=_=>
       <question-text>{ question }</question-text>
       <countdown>{ time_left }</countdown>
     </question-etc>
+    <students>
+      { T (_students
+        ) (Z_ .map (_student =>
+        <student-etc>
+        </student-etc>))
+      }
+    </students>
 	</playing-etc>,
 	where
 	, _students = T (app_state ()) (L .get (app_students)) )=>_)
