@@ -508,9 +508,9 @@ S (last_ensemble => {;
 
 				var _room = T (_app) (L .get (app_room))
 				var _student = T (_app) (L .get (app_student))
-				;(io_state (io .messaging), api (_room, post (
+				;io_state (io .messaging) && api (_room, post (
 					message_encoding (
-						message .student_start (_student, start)))))
+						message .student_start (_student, start))))
 				.catch (_e => {;
 					;console .error (_e) })
 				.then (_ => {;

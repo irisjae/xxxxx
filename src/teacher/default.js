@@ -296,15 +296,13 @@ S (last_ensemble => {;
 	 
 	 
 S (_ => {;
-	;T (app_state ()
-  ) (
-  [ L .get (app_room)
-  , map_defined (_room => {;
+	;T (L .get (app_room) (app_state ())
+  ) (map_defined (_room => {;
 			var phase = heartbeat ()
 			var critical = phase === 1
 			go
 			.then (_ =>
-				!! critical && S .sample (connection) // why need && sample
+				!! critical //&& S .sample (connection) // why need && sample
 				? io_state (io .messaging) && api (_room,
 						post (message_encoding (message .teacher_ping (S .sample (connection)))))
 				: io_state (io .heartbeat) && api (_room)
@@ -322,4 +320,4 @@ S (_ => {;
 					;heartbeat (phase) }
 				, 300) })
 			.then (_ => {;
-				;io_state (io .inert) }) }) ]) })
+				;io_state (io .inert) }) })) })
