@@ -44,21 +44,8 @@ var _ping_listeners = {}
 	return fetch ('/room/' + room, _x) .then (_x => {;{
 		var end = performance .now ()
 		var sample = end - begin
-		if (! _ping_cache [room]) {
-			;_ping_cache [room] = [0, 0, 0, 0]}
-		;_ping_cache [room] = T (_ping_cache [room]) (_x => 
-			so ((_=_=>
-			[ mean * carry + sample / (n + 1)
-			, sqr_mean * carry + (sample * sample) / (n + 1)
-			, n + 1
-			, (new Date) .getTime () ],
-			where 
-			, {mean, sqr_mean, n} = T (_x) (L .get (L .pick ({
-					mean: 0,
-					sqr_mean: 1,
-					n: 2 })))
-			, carry = n / (n + 1) )=>_))
-		;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }})
+		;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
+		;(_ping_listeners [room] || []) .forEach (fn => {{;fn (_ping_cache [room])}})
 		return _x .json () }}) }}*/
 //add retire code for sockets?
 var api = so ((_=_=>
