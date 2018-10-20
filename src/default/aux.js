@@ -157,6 +157,7 @@ var v = (...types) => fiat
 
 var room = string
 var student = v (id, string)
+var choice = string
 var answer = string
 var question = v (string, list (choice))
 var timeinterval = number
@@ -167,7 +168,7 @@ var ping = v (timestamp, latency, latency)
 var attempt = v (position, timeinterval)
 var resolution = data ({ resolution: (attempts =~ list (attempt)) => resolution })
 
-var board = data ({ board: (answers =~ map (position) (answer)) => board })
+var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
 var rules = data ({ rules: (time_limit =~ number, size =~ nat) => rules })
 var setup = data ({ setup: ( room =~ room, questions =~ list (question), rules =~ rules ) => setup })
@@ -324,7 +325,7 @@ var question_view = [ 0 ]
 var question_answers = [ 1 ]
 
 var cell_position = L .reread (_x => [ _x [0], _x [1] ])
-var cell_answer = [ 2 ]
+var cell_choice = [ 2 ]
 
 var position_lens = ([x, y]) => [x - 1, y - 1]
 
@@ -410,9 +411,9 @@ var student_app_playing_to_next =
 		, board_size = T (_app) (L .get ([app_setup, setup_size]))
 		, history_size = T (_app) ([ L .get (app_history), Z_ .size ]) )=>_)) 
 				 
-var question_answer_matches = question => answer =>
+var question_choice_matches = question => choice =>
 	so ((_=_=>
-	Z .elem (answer) (correct_answers),
+	Z .elem (choice) (correct_answers),
 	where
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
 
@@ -473,14 +474,14 @@ var board_viewer_crossed_positions = _board_viewer =>
 		Z .map (pair =>
 			so ((_=_=>
 			T (attempt_answer_maybe) (Z .chain (attempt_answer =>
-				!! (question_answer_matches (question) (attempt_answer))
+				!! (question_choice_matches (question) (attempt_answer))
 				? Z .Just (position)
 				: Z .Nothing )),
 			where
 			, attempt_position_maybe = Z .fst (pair)
 			, position = from_just (attempt_position_maybe)
 			, attempt_answer_maybe = T (attempt_position_maybe) (Z .map (_position =>
-					T (board) (L .get ([ position_lens (_position), cell_answer ]))))
+					T (board) (L .get ([ position_lens (_position), cell_choice ]))))
 			, question = Z .snd (pair) )=>_)),
 		Z .justs ]),
 	where
