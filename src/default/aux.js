@@ -1,7 +1,7 @@
 var {
 	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, 
-	go, panic, panic_on,
+	go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
@@ -68,27 +68,13 @@ var api = so ((_=_=>
       ;_x .body = JSON .parse (_x .body) }
 
     var [ continuation, signal ] = api .new_continuation ()
-
-    while (! id || api .continuations [id]) {
-      ;var id = '' + Math .floor (1000000 * Math .random ()) }
+    var id = new_id ()
 
     ;api .continuations [id] = signal
-    ;continuation .catch (Z_ .I) .then (_ => {;delete api .continuations [id]})
+    ;continuation .catch (Z_ .I) .then (_=> {;delete api .continuations [id]})
 
     if (! api .sockets [room]) {
-      var _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
-      ;api .sockets [room] =
-      { ready: never
-      , send: _x => _socket .send (_x)
-      }  
-      ;api .sockets [room] .ready = new Promise ((resolve, reject) => {;
-        ;api .sockets [room] .onopen = _ => {;resolve ()} })
-      ;api .sockets [room] .onmessage = _event => {;
-        var _packet = JSON .parse (_event .data)
-        var id = _packet .id
-        var data = _packet .body
-        if (api .continuations [id]) {;
-           ;api .continuations [id] (data) } } }
+      ;api .sockets [room] = new_socket (id) }
 
     var begin, end
     go
@@ -104,6 +90,25 @@ var api = so ((_=_=>
     
     ;return continuation },
 where
+, new_id = _ => {
+    var id = '' + Math .floor (1000000 * Math .random ())
+    return !! Z_ .not (api .continuations [id])
+    ? id
+    : new_id () }
+, new_socket = id => so ((_=_=>_||
+    { ready: new Promise ((resolve, reject) => {;
+        ;api .sockets [room] .onopen = _ => {;resolve ()} })
+    , send: _x => _socket .send (_x) },
+    where
+    , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+    ,$=
+    _socket .onmessage = _event => {;
+        var _packet = JSON .parse (_event .data)
+        var id = _packet .id
+        var data = _packet .body
+        if (api .continuations [id]) {;
+           ;api .continuations [id] (data) } } )=>_)
+      
 , update_pings = sample =>
   $ (
   [ L .get (L .valueOr ([0, 0, 0, 0]))
