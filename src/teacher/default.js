@@ -113,11 +113,11 @@ var playing_view = _ => so ((_=_=>
 	<playing-etc>
     <question-etc>
       <question-text>{ question }</question-text>
-      <countdown>{ time_left }</countdown>
+      <countdown>{ 'time_left' }</countdown>
     </question-etc>
     <students>
       { T (_students
-        ) (Z_ .map (_student =>
+        ) (Z_ .map (([_board, _history]) =>
         <student-etc>
           { so ((_=_=>
           <board> { T (_board) (Z_ .map (_row => 
@@ -137,8 +137,7 @@ var playing_view = _ => so ((_=_=>
               , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
               } </row> )) } </board>,
           where
-          , _board_view = board_viewer .board_viewer
-          , _board = T (_board_viewer) (L .get (board_viewer_board))
+          , _board_viewer = board_viewer .board_viewer (_board, _questions, _history)
           , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
           , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
         </student-etc>))
