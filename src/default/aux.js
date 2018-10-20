@@ -494,26 +494,25 @@ var answered_positions = _questions => _board => _history => so ((_=_=>
   where
   , _resolutions = T (_history) (L .get (history_resolutions)) )=>_)
 
-var board_viewer_crossed_positions = _board_viewer => 
-	so ((_=_=>
-	T (Z .zip (attempted_positions) (questions)) (
-  [ Z .map (pair =>
-			so ((_=_=>
-			T (attempt_choice_maybe) (Z .chain (attempt_choice =>
-				!! (question_choice_matches (question) (attempt_choice))
-				? Z .Just (position)
-				: Z .Nothing )),
-			where
-			, attempt_position_maybe = Z .fst (pair)
-    , position = from_just (attempt_position_maybe)
-    , attempt_choice_maybe = T (attempt_position_maybe) (Z .map (_position =>
-					T (board) (L .get ([ position_lens (_position), cell_choice ]))))
-			, question = Z .snd (pair) )=>_))
-  , Z .justs ]),
+var board_viewer_answered_positions = _board_viewer =>
+  so ((_=_=>
+  answered_positions (_questions) (_board) (_history),
+  where
+  , _questions = T (_board_viewer) (board_viewer_questions)
+  , _board = T (_board_viewer) (board_viewer_board)
+  , _history = T (_board_viewer) (board_viewer_history) )=>_)
+
+var bingoed_positions = _questions => _board => _history => 
+	so ((_=_=> so ((_=_=>
+	T (bingo_patterns
+  ) (
+  Z_ .filter (R .all (T (_answered_positions) (Z .flip (Z_ .elem))))),
+//no need to expand patterns???? 
 	where
-	, board = T (_board_viewer) (L .get (board_viewer_board))
-	, questions = T (_board_viewer) (L .get (board_viewer_questions))
-	, attempted_positions = T (_board_viewer) (board_viewer_attempted_positions) )=>_)
+	, bingo_patterns = size_patterns (_size) )=>_),
+  where
+	, _size = T (_board) (Z_ .size)
+	, _answered_positions = answered_positions (_questions) (_board) (_history) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
 	so ((_=_=> so ((_=_=>
