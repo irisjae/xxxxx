@@ -60,6 +60,7 @@ var so = fn_form =>
 	: fn_form ()
 var by = _meta_fn => x => T (x) (_meta_fn (x))
 var go = Promise .resolve ()
+var never = new Promise
 
 
 

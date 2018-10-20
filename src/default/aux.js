@@ -76,8 +76,12 @@ var api = so ((_=_=>
     ;continuation .catch (Z_ .I) .then (_ => {;delete api .continuations [id]})
 
     if (! api .sockets [room]) {
-      ;api .sockets [room] = new WebSocket ('wss://' + window .location .host + '/room/' + room)
-      ;api .sockets [room] .ok = new Promise ((resolve, reject) => {;
+      var _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+      ;api .sockets [room] =
+      { ready: never
+      , send: _x => _socket .send (_x)
+      }  
+      ;api .sockets [room] .ready = new Promise ((resolve, reject) => {;
         ;api .sockets [room] .onopen = _ => {;resolve ()} })
       ;api .sockets [room] .onmessage = _event => {;
         var _packet = JSON .parse (_event .data)
@@ -86,28 +90,24 @@ var api = so ((_=_=>
         if (api .continuations [id]) {;
            ;api .continuations [id] (data) } } }
 
-    var begin
-    ;return api .sockets [room] .ok
-    .then (_ => {;
-      ;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))
-      ;begin = performance .now ()
-      return continuation })
+    var begin, end
+    go
+    .then (Z_ .K (api .sockets [room] .ready))
+    .then (R .tap (_ => {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))}))
+    .then (_=> {;begin = performance .now ()})
+    .then (Z_ .K (continuation))
+    .then (_=> {;end = performance .now ()})
     .then (R .tap (_ => {;
-      ;var end = performance .now ()
       var sample = end - begin
-      if (! _ping_cache [room]) {
-        ;_ping_cache [room] = [0, 0, 0, 0]}
       ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-      ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) })) },
+      ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }))
+    
+    ;return continuation },
 where
 , update_pings = sample =>
   $ (
-  [ L .get (
-    [ L .pick ({
-        mean: [0],
-        sqr_mean: [1],
-        n: [2] }) ])
-  , ({ mean, sqr_mean, n }) => so ((_=_=>
+  [ L .get (L .valueOr ([0, 0, 0, 0]))
+  , ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
     [ mean * carry + sample / (n + 1)
     , sqr_mean * carry + (sample * sample) / (n + 1)
     , n + 1
