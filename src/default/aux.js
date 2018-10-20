@@ -158,16 +158,15 @@ var v = (...types) => fiat
 var room = string
 var student = v (id, string)
 var answer = string
-var question = v (string, list (answer))
+var question = v (string, list (choice))
 var timeinterval = number
 var latency = timeinterval
 var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
+var resolution = data ({ resolution: (attempts =~ list (attempt)) => resolution })
 
-
-var rendition = data ({ rendition: (attempts =~ list (attempt)) => rendition })
 var board = data ({ board: (answers =~ map (position) (answer)) => board })
 
 var rules = data ({ rules: (time_limit =~ number, size =~ nat) => rules })
@@ -177,13 +176,13 @@ var setup = data ({ setup: ( room =~ room, questions =~ list (question), rules =
 var teacher_app = data ({
   nothing: () => teacher_app,
 	get_ready: ( setup =~ setup, students =~ list (student) ) => teacher_app,
-	playing: ( setup =~ setup, students =~ map (student) (board, list (rendition)) ) => teacher_app,
-	game_over: ( setup =~ setup, students =~ map (student) (board, list (rendition)) ) => teacher_app })
+	playing: ( setup =~ setup, students =~ map (student) (board, list (resolution)) ) => teacher_app,
+	game_over: ( setup =~ setup, students =~ map (student) (board, list (resolution)) ) => teacher_app })
 
 var student_app = data ({
 	get_ready: ( student =~ maybe (student), setup =~ maybe (setup) ) => student_app,
-	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ list (rendition) ) => student_app,
-	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ list (list (rendition)) ) => student_app })
+	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ list (resolution) ) => student_app,
+	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ list (list (resolution)) ) => student_app })
 
 /*
 var teacher_lookbehind = data ({
@@ -206,7 +205,7 @@ var message = data ({
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
-	student_update: ( student =~ student, history =~ list (rendition) ) => message })
+	student_update: ( student =~ student, history =~ list (resolution) ) => message })
 var ensemble = data ({
   nothing: () => ensemble,
 	ensemble: (
@@ -316,7 +315,7 @@ var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards
 var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
-var rendition_attempts = data_lens (rendition .rendition) .attempts
+var resolution_attempts = data_lens (resolution .resolution) .attempts
 		
 var rules_size = data_lens (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
@@ -397,13 +396,13 @@ var student_app_get_ready_to_playing = _app =>
 		where 
 		, _size = L .get (setup_size) (_setup)
 		, _questions = L .get (setup_questions) (_setup)
-		, fresh_history = [rendition .rendition ([])] )=>_))))
+		, fresh_history = [resolution .resolution ([])] )=>_))))
 
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
 		!! (history_size < board_size * board_size)
-		? L .set ([app_history, L .append]) (rendition .rendition ([]))
+		? L .set ([app_history, L .append]) (resolution .resolution ([]))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
@@ -466,7 +465,7 @@ var board_viewer_current_question = by (_board_viewer =>
 var board_viewer_attempted_positions = 
 	$ (
   [ L .get (board_viewer_history)
-  , Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
+  , Z_ .map (L .get ([resolution_attempts, L .last, 0, as_maybe])) ])
 
 var board_viewer_crossed_positions = _board_viewer => 
 	so ((_=_=>
@@ -575,7 +574,7 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v,
 	shuffle, uuid, api, post,
 	student, question, answer, latency, ping, position,
-	attempt, rendition, board, rules, setup,
+	attempt, resolution, board, rules, setup,
 	teacher_app, student_app,
 	board_viewer,
 	io, message, ensemble, 
@@ -591,7 +590,7 @@ window .stuff = { ...window .stuff,
 	ensemble_student_boards, ensemble_student_histories,
 	app_setup, app_student, app_students, app_room,
 	app_board, app_history, app_questions,
-	rendition_attempts,
+	resolution_attempts,
 	rules_size, setup_size,
 	question_view, question_answers,
 	cell_position, position_lens,
