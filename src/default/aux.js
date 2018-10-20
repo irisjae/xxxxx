@@ -317,6 +317,7 @@ var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
 var resolution_attempts = data_lens (resolution .resolution) .attempts
+var resolution_position = [ resolution_attempts, L .last, attempt_position ] 
 var history_resolutions = data_lens (history .history) .resolutions
 		
 var rules_size = data_lens (rules .rules) .size
@@ -467,7 +468,7 @@ var board_viewer_current_question = _board_viewer =>
 	, _history = T (_board_viewer) (L .get (board_viewer_history)) )=>_)
 
 var attempted_positions = by (_history =>
-  L .collect ([ history_resolutions, L .elems, resolution_attempts, L .last, attempt_position ]))
+  L .collect ([ history_resolutions, L .elems, resolution_position ]))
 
 var board_viewer_attempted_positions = by (_board_viewer =>
 	$ (
@@ -475,19 +476,18 @@ var board_viewer_attempted_positions = by (_board_viewer =>
   , attempted_positions ]))
 
 var answered_positions = _questions => _board => _history =>
-  T (Z .zip (attempted_positions) (_questions)) (
-  [ Z .map (pair =>
+  T (Z .zip (_resolutions) (_questions)) (
+  [ Z .map ($ ([ pair_to_v, ([_resolution, _question]) =>
 			so ((_=_=>
-			T (attempt_choice_maybe) (Z .chain (attempt_choice =>
-				!! (question_choice_matches (question) (attempt_choice))
-				? Z .Just (position)
-				: Z .Nothing )),
+      !! (question_choice_matches (_question) (_choice))
+      ? Z .Just (_position)
+      : Z .Nothing,
 			where
-			, attempt_position_maybe = Z .fst (pair)
-    , position = from_just (attempt_position_maybe)
-    , attempt_choice_maybe = T (attempt_position_maybe) (Z .map (_position =>
+			, _position = T (_resolution) (L .get (resolution_position))
+      , _choice = T (_position) (map_defined (_position =>
 					T (board) (L .get ([ position_lens (_position), cell_choice ]))))
-			, question = Z .snd (pair) )=>_))
+    , position = from_just (attempt_position_maybe)
+			, question = Z .snd (pair) )=>_) ]))
   , Z .justs ])
 
 var board_viewer_crossed_positions = _board_viewer => 
