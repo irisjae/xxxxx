@@ -167,7 +167,7 @@ var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
 var resolution = data ({ resolution: (attempts =~ list (attempt)) => resolution })
-var history = list (resolution)
+var history = data ({ history: (resolutions =~ list (resolution)) => history })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
@@ -317,6 +317,7 @@ var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
 var resolution_attempts = data_lens (resolution .resolution) .attempts
+var history_resolutions = data_lens (history .history) .resolutions
 		
 var rules_size = data_lens (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
@@ -339,6 +340,9 @@ var pair_as_list = L .cond (
 var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_mean = [ 1 ]
+
+var attempt_position = [ 0 ]
+var attempt_latency = [ 1 ]
 
 var students_mapping = 
 	[ L .keyed
@@ -397,7 +401,7 @@ var student_app_get_ready_to_playing = _app =>
 		where 
 		, _size = L .get (setup_size) (_setup)
 		, _questions = L .get (setup_questions) (_setup)
-		, fresh_history = [resolution .resolution ([])] )=>_))))
+		, fresh_history = history .history ([resolution .resolution ([])]) )=>_))))
 
 var student_app_playing_to_next = 
 	by (_app => 
@@ -463,12 +467,14 @@ var board_viewer_current_question = _board_viewer =>
 	, _history = T (_board_viewer) (L .get (board_viewer_history)) )=>_)
 
 var attempted_positions = by (_history =>
-  Z_ .map (L .get ([resolution_attempts, L .last, 0, as_maybe])))
+  L .collect ([ history_resolutions, L .elems, resolution_attempts, L .last, attempt_position ]))
 
-var board_viewer_attempted_positions = 
+var board_viewer_attempted_positions = by (_board_viewer =>
 	$ (
   [ L .get (board_viewer_history)
-  , Z_ .map (L .get ([resolution_attempts, L .last, 0, as_maybe])) ])
+  , attempted_positions ]))
+
+var answered_positions = _questions => _board => 
 
 var board_viewer_crossed_positions = _board_viewer => 
 	so ((_=_=>
@@ -481,8 +487,8 @@ var board_viewer_crossed_positions = _board_viewer =>
 				: Z .Nothing )),
 			where
 			, attempt_position_maybe = Z .fst (pair)
-			, position = from_just (attempt_position_maybe)
-			, attempt_choice_maybe = T (attempt_position_maybe) (Z .map (_position =>
+    , position = from_just (attempt_position_maybe)
+    , attempt_choice_maybe = T (attempt_position_maybe) (Z .map (_position =>
 					T (board) (L .get ([ position_lens (_position), cell_choice ]))))
 			, question = Z .snd (pair) )=>_))
   , Z .justs ]),
