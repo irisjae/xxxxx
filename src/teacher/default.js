@@ -114,34 +114,37 @@ var playing_view = _ => so ((_=_=>
 	<playing-etc>
     <question-etc>
       <question-text>{ _question }</question-text>
-      <countdown>{ 'time_left' }</countdown>
+      <countdown>{ ''/*time_left*/ }</countdown>
     </question-etc>
     <students>
       { T (_students
-        ) (Z_ .map (([_board, _history]) =>
-        <student-etc>
-          { so ((_=_=>
-          <board> { T (_board) (Z_ .map (_row => 
-            <row> { T (_row) (Z_ .map (_cell =>
-              so ((_=_=>
-              !! (_cell_bingo)
-              ? <cell>{ bold_crossed (_cell_answer) }</cell>
-              :!! (_cell_crossed)
-              ? <cell>{ crossed (_cell_answer) }</cell>
-              : <cell>{ _cell_answer }</cell>,
-              where
-              , _cell_position = T (_cell) (L .get (cell_position))
-              , _cell_answer = T (_cell) (L .get (cell_answer))
-              , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
-              , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
-              , crossed = _x => <s>{ _x }</s>
-              , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
-              } </row> )) } </board>,
-          where
-          , _board_viewer = board_viewer .board_viewer (_board, _questions, _history)
-          , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
-          , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
-        </student-etc>))
+        ) (Z_ .map (
+        $ ([
+        Z_ .snd
+        , ([_board, _history]) =>
+          <student-etc>
+            { so ((_=_=>
+            <board> { T (_board) (Z_ .map (_row => 
+              <row> { T (_row) (Z_ .map (_cell =>
+                so ((_=_=>
+                !! (_cell_bingo)
+                ? <cell>{ bold_crossed (_cell_answer) }</cell>
+                :!! (_cell_crossed)
+                ? <cell>{ crossed (_cell_answer) }</cell>
+                : <cell>{ _cell_answer }</cell>,
+                where
+                , _cell_position = T (_cell) (L .get (cell_position))
+                , _cell_answer = T (_cell) (L .get (cell_answer))
+                , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
+                , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
+                , crossed = _x => <s>{ _x }</s>
+                , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
+                } </row> )) } </board>,
+            where
+            , _board_viewer = board_viewer .board_viewer (_board, _questions, _history)
+            , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
+            , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
+          </student-etc> ])))
       }
     </students>
 	</playing-etc>,
