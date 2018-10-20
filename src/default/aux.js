@@ -222,7 +222,6 @@ var ensemble = data ({
 		student_histories =~ map (student) (history) ) => ensemble })
 
 
-//TODO: history is not a real type
 var board_viewer = data ({
 	board_viewer: (board =~ board, questions =~ list (question), history =~ history) => board_viewer })
 
