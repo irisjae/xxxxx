@@ -39,14 +39,14 @@ var uuid = _ =>
 var _ping_cache = {}
 var _ping_listeners = {}
 
-/*var api = (room, _x) => {;{
+/*var api = (room, _x) => {;
 	var begin = performance .now ()
 	return fetch ('/room/' + room, _x) .then (_x => {;{
 		var end = performance .now ()
 		var sample = end - begin
 		;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
 		;(_ping_listeners [room] || []) .forEach (fn => {{;fn (_ping_cache [room])}})
-		return _x .json () }}) }}*/
+		return _x .json () }}) }*/
 //add retire code for sockets?
 var api = so ((_=_=>
   (room, _x) => {;
@@ -449,11 +449,11 @@ var size_patterns = memoize (size =>
 			T (range) (Z .map (_x => [_x, (size - 1) - _x]))
 		] )=>_))
 
-var current_question = _history =>
+var current_question = _history => by (_questions =>
 	so ((_=_=>
 	L .get ([current_question_index, as_maybe]),
 	where
-	, current_question_index = Z_ .size (_history) - 1 )=>_)
+	, current_question_index = Z_ .size (_history) - 1 )=>_))
 
 var board_viewer_current_question = by (_board_viewer =>
 	so ((_=_=>
@@ -464,9 +464,9 @@ var board_viewer_current_question = by (_board_viewer =>
 	, history = T (_board_viewer) (L .get (board_viewer_history)) )=>_))
 
 var board_viewer_attempted_positions = 
-	$ ([
-		L .get (board_viewer_history),
-		Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
+	$ (
+  [ L .get (board_viewer_history)
+  , Z_ .map (L .get ([rendition_attempts, L .last, 0, as_maybe])) ])
 
 var board_viewer_crossed_positions = _board_viewer => 
 	so ((_=_=>
