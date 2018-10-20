@@ -1,6 +1,6 @@
 var {
 	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-	so, by, 
+	so, by, under,
 	go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
@@ -260,6 +260,10 @@ var to_maybe = default_fn => _x =>
 
 
 
+var pair_to_v = L .iso (
+  _pair => !! Z_ .is (Z .Pair) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
+  _v => !! Z .and (Z_ .is (Array) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
+
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
@@ -471,24 +475,22 @@ var attempted_positions = by (_history =>
   L .collect ([ history_resolutions, L .elems, resolution_position ]))
 
 var board_viewer_attempted_positions = by (_board_viewer =>
-	$ (
-  [ L .get (board_viewer_history)
-  , attempted_positions ]))
+	under (board_viewer_history
+  ) (
+  attempted_positions))
 
 var answered_positions = _questions => _board => _history => so ((_=_=>
   T (Z .zip (_resolutions) (_questions)
   ) (
-  Z .chain (
-  $ (
-  [ pair_to_v
-  , ([_resolution, _question]) => so ((_=_=>
+  Z .chain (under (pair_to_v
+  ) (([_resolution, _question]) => so ((_=_=>
     !! (question_choice_matches (_question) (_choice))
     ? [ _position ]
     : [],
     where
     , _position = T (_resolution) (L .get (resolution_position))
     , _choice = T (_position) (map_defined (_position =>
-        T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>_) ]))),
+        T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>_)))),
   where
   , _resolutions = T (_history) (L .get (history_resolutions)) )=>_)
 
