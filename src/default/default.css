@@ -112,7 +112,7 @@ footer {
 	border-top: 1px solid lightgrey;
 }
 
-name , code {
+name, code {
 	min-width: 50%;
 	position: absolute;
 	top: 50%;
