@@ -474,7 +474,21 @@ var board_viewer_attempted_positions = by (_board_viewer =>
   [ L .get (board_viewer_history)
   , attempted_positions ]))
 
-var answered_positions = _questions => _board => 
+var answered_positions = _questions => _board => _history =>
+  T (Z .zip (attempted_positions) (_questions)) (
+  [ Z .map (pair =>
+			so ((_=_=>
+			T (attempt_choice_maybe) (Z .chain (attempt_choice =>
+				!! (question_choice_matches (question) (attempt_choice))
+				? Z .Just (position)
+				: Z .Nothing )),
+			where
+			, attempt_position_maybe = Z .fst (pair)
+    , position = from_just (attempt_position_maybe)
+    , attempt_choice_maybe = T (attempt_position_maybe) (Z .map (_position =>
+					T (board) (L .get ([ position_lens (_position), cell_choice ]))))
+			, question = Z .snd (pair) )=>_))
+  , Z .justs ])
 
 var board_viewer_crossed_positions = _board_viewer => 
 	so ((_=_=>
