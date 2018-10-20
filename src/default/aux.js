@@ -449,19 +449,21 @@ var size_patterns = memoize (size =>
 			T (range) (Z .map (_x => [_x, (size - 1) - _x]))
 		] )=>_))
 
-var current_question = _history => by (_questions =>
+var current_question = by (_questions => _history =>
 	so ((_=_=>
 	L .get ([current_question_index, as_maybe]),
 	where
 	, current_question_index = Z_ .size (_history) - 1 )=>_))
 
-var board_viewer_current_question = by (_board_viewer =>
+var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
-	$ (
-  [ L .get (board_viewer_questions)
-  , current_question (history) ]),
+	current_question (_questions) (_history),
 	where
-	, history = T (_board_viewer) (L .get (board_viewer_history)) )=>_))
+	, _questions = T (_board_viewer) (L .get (board_viewer_questions))
+	, _history = T (_board_viewer) (L .get (board_viewer_history)) )=>_)
+
+var attempted_positions = by (_history =>
+  Z_ .map (L .get ([resolution_attempts, L .last, 0, as_maybe])))
 
 var board_viewer_attempted_positions = 
 	$ (
