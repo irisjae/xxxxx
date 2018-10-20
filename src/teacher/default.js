@@ -137,6 +137,7 @@ var playing_view = _ => so ((_=_=>
               , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
               } </row> )) } </board>,
           where
+          , _board_view = board_viewer .board_viewer
           , _board = T (_board_viewer) (L .get (board_viewer_board))
           , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
           , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
@@ -145,6 +146,7 @@ var playing_view = _ => so ((_=_=>
     </students>
 	</playing-etc>,
 	where
+	, _questions = T (app_state ()) (L .get (app_questions))
 	, _students = T (app_state ()) (L .get (app_students)) )=>_)
 													 
   
