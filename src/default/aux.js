@@ -167,6 +167,7 @@ var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
 var resolution = data ({ resolution: (attempts =~ list (attempt)) => resolution })
+var history = list (resolution)
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
@@ -177,13 +178,13 @@ var setup = data ({ setup: ( room =~ room, questions =~ list (question), rules =
 var teacher_app = data ({
   nothing: () => teacher_app,
 	get_ready: ( setup =~ setup, students =~ list (student) ) => teacher_app,
-	playing: ( setup =~ setup, students =~ map (student) (board, list (resolution)) ) => teacher_app,
-	game_over: ( setup =~ setup, students =~ map (student) (board, list (resolution)) ) => teacher_app })
+	playing: ( setup =~ setup, students =~ map (student) (board, history) ) => teacher_app,
+	game_over: ( setup =~ setup, students =~ map (student) (board, history) ) => teacher_app })
 
 var student_app = data ({
 	get_ready: ( student =~ maybe (student), setup =~ maybe (setup) ) => student_app,
-	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ list (resolution) ) => student_app,
-	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ list (list (resolution)) ) => student_app })
+	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ history ) => student_app,
+	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ history ) => student_app })
 
 /*
 var teacher_lookbehind = data ({
@@ -206,7 +207,7 @@ var message = data ({
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
-	student_update: ( student =~ student, history =~ list (resolution) ) => message })
+	student_update: ( student =~ student, history =~ history ) => message })
 var ensemble = data ({
   nothing: () => ensemble,
 	ensemble: (
@@ -470,20 +471,20 @@ var board_viewer_attempted_positions =
 
 var board_viewer_crossed_positions = _board_viewer => 
 	so ((_=_=>
-	T (Z .zip (attempted_positions) (questions)) ([
-		Z .map (pair =>
+	T (Z .zip (attempted_positions) (questions)) (
+  [ Z .map (pair =>
 			so ((_=_=>
-			T (attempt_answer_maybe) (Z .chain (attempt_answer =>
-				!! (question_choice_matches (question) (attempt_answer))
+			T (attempt_choice_maybe) (Z .chain (attempt_choice =>
+				!! (question_choice_matches (question) (attempt_choice))
 				? Z .Just (position)
 				: Z .Nothing )),
 			where
 			, attempt_position_maybe = Z .fst (pair)
 			, position = from_just (attempt_position_maybe)
-			, attempt_answer_maybe = T (attempt_position_maybe) (Z .map (_position =>
+			, attempt_choice_maybe = T (attempt_position_maybe) (Z .map (_position =>
 					T (board) (L .get ([ position_lens (_position), cell_choice ]))))
-			, question = Z .snd (pair) )=>_)),
-		Z .justs ]),
+			, question = Z .snd (pair) )=>_))
+  , Z .justs ]),
 	where
 	, board = T (_board_viewer) (L .get (board_viewer_board))
 	, questions = T (_board_viewer) (L .get (board_viewer_questions))
@@ -574,7 +575,7 @@ window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
 	list, map, maybe, nat, id, v,
 	shuffle, uuid, api, post,
-	student, question, answer, latency, ping, position,
+	student, question, choice, answer, latency, ping, position,
 	attempt, resolution, board, rules, setup,
 	teacher_app, student_app,
 	board_viewer,
@@ -595,7 +596,7 @@ window .stuff = { ...window .stuff,
 	rules_size, setup_size,
 	question_view, question_answers,
 	cell_position, position_lens,
-	cell_answer, student_name,
+	cell_choice, student_name,
 	history_stepped,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
@@ -603,6 +604,6 @@ window .stuff = { ...window .stuff,
 	student_app_get_ready_to_playing, student_app_playing_to_next,
 	student_app_to_board_viewer,
   current_question,
-	question_answer_matches, 
+	question_choice_matches, 
 	board_viewer_current_question,
 	board_viewer_crossed_positions, board_viewer_bingoed_positions }
