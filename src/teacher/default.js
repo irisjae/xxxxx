@@ -128,10 +128,10 @@ var playing_view = _ => so ((_=_=>
               <row> { T (_row) (Z_ .map (_cell =>
                 so ((_=_=>
                 !! (_cell_bingo)
-                ? <cell>{ bold_crossed (_cell_answer) }</cell>
+                ? <cell>x</cell>
                 :!! (_cell_crossed)
-                ? <cell>{ crossed (_cell_answer) }</cell>
-                : <cell>{ _cell_answer }</cell>,
+                ? <cell>x</cell>
+                : <cell></cell>,
                 where
                 , _cell_position = T (_cell) (L .get (cell_position))
                 , _cell_answer = T (_cell) (L .get (cell_answer))
