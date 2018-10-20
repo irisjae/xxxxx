@@ -387,26 +387,24 @@ var generate_board = size => questions =>
 				L .first ])) )=>_)
 
 
-var teacher_app_get_ready_to_playing = _app =>
-	T (_app) ([
-		L .get ([ app_setup, as_maybe ]),
-		Z_ .map (_setup  => 
-			teacher_app .playing (_setup, [])) ])
+var teacher_app_get_ready_to_playing = by (_app =>
+  under ([ app_setup, as_maybe ]
+  ) (
+  Z_ .map (_setup  => 
+    teacher_app .playing (_setup, []))))
 
 var student_app_get_ready_to_playing = _app => 
-	so ((
-	take
-	, exists = maybe_all (T (_app) (L .get (L .pick ({
-			_student: L .get ([ app_student, as_maybe ]),
-			_setup: L .get ([ app_setup, as_maybe ]) })))) ) =>
-	T (exists) (Z_ .map (({ _student, _setup }) =>
+  under ([ L .pick ({
+			_student: L .get (app_student),
+			_setup: L .get (app_setup) }), all_defined_lens ]
+  ) (Z_ .map (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_history),
 		where 
 		, _size = L .get (setup_size) (_setup)
 		, _questions = L .get (setup_questions) (_setup)
-		, fresh_history = history .history ([resolution .resolution ([])]) )=>_))))
+		, fresh_history = history .history ([resolution .resolution ([])]) )=>_)))
 
 var student_app_playing_to_next = 
 	by (_app => 
@@ -427,14 +425,12 @@ var question_choice_matches = question => choice =>
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
 
 var student_app_to_board_viewer = _app => 
-	so ((
-	take
-	, exists = maybe_all (T (_app) (L .get (L .pick ({
-			_board: [ app_board, as_maybe ],
-			_questions: [ app_questions, as_maybe ],
-			_history: [ app_history, as_maybe ] })))) ) =>
-	T (exists) (Z_ .map (({ _board , _questions , _history }) =>
-		board_viewer .board_viewer (_board, _questions, _history)) ))
+	under ([ L .pick ({
+    _board: [ app_board, as_maybe ],
+    _questions: [ app_questions, as_maybe ],
+    _history: [ app_history, as_maybe ] }), all_defined_lens ]
+  ) (Z_ .map (({ _board , _questions , _history }) =>
+		board_viewer .board_viewer (_board, _questions, _history)))
 
 
 var size_patterns = memoize (size =>
@@ -453,10 +449,9 @@ var size_patterns = memoize (size =>
 			T (range) (Z .map (y =>
 				T (range) (Z .map (x =>
 					[x, y] ))))
-	, diagonal_patterns = [
-			T (range) (Z .map (_x => [_x, _x])),
-			T (range) (Z .map (_x => [_x, (size - 1) - _x]))
-		] )=>_))
+	, diagonal_patterns =
+      [ T (range) (Z .map (_x => [_x, _x]))
+      , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
 var current_question = by (_questions => _history =>
 	so ((_=_=>
@@ -515,20 +510,12 @@ var bingoed_positions = _questions => _board => _history =>
 	, _answered_positions = answered_positions (_questions) (_board) (_history) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
-	so ((_=_=> so ((_=_=>
-	T (bingo_patterns) ([
-		Z_ .map (_pattern =>
-			!! (T (_pattern
-				) (R .all (_position => Z_ .elem (_position) (_crossed_positions))))
-			? Z .Just (_pattern)
-			: Z .Nothing),
-		Z .justs ]),
-	where
-	, bingo_patterns = size_patterns (_size) )=>_),
+  so ((_=_=>
+  bingoed_positions (_questions) (_board) (_history),
   where
-	, _board = T (_board_viewer) (L .get (board_viewer_board))
-	, _size = T (_board) (Z_ .size)
-	, _crossed_positions = T (_board_viewer) (board_viewer_crossed_positions) )=>_)
+  , _questions = T (_board_viewer) (board_viewer_questions)
+  , _board = T (_board_viewer) (board_viewer_board)
+  , _history = T (_board_viewer) (board_viewer_history) )=>_)
 
 
 var history_stepped = old => curr =>
