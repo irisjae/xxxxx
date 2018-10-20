@@ -475,22 +475,20 @@ var board_viewer_attempted_positions = by (_board_viewer =>
   [ L .get (board_viewer_history)
   , attempted_positions ]))
 
-var answered_positions = _questions => _board => _history =>
-  so ((_=_=>
+var answered_positions = _questions => _board => _history => so ((_=_=>
   T (Z .zip (_resolutions) (_questions)
   ) (
   Z .chain (
   $ (
   [ pair_to_v
-  , ([_resolution, _question]) =>
-    so ((
-    define
-    , _position = T (_resolution) (L .get (resolution_position))
-    , _choice = T (_position) (map_defined (_position =>
-        T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>
+  , ([_resolution, _question]) => so ((_=_=>
     !! (question_choice_matches (_question) (_choice))
     ? [ _position ]
-    : [] ) ]))),
+    : [],
+    where
+    , _position = T (_resolution) (L .get (resolution_position))
+    , _choice = T (_position) (map_defined (_position =>
+        T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>_) ]))),
   where
   , _resolutions = T (_history) (L .get (history_resolutions)) )=>_)
 
