@@ -37,6 +37,7 @@ assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
 student_app_get_ready_to_playing, student_app_playing_to_next,
 student_app_to_board_viewer,
+current_question,
 question_answer_matches, 
 board_viewer_current_question,
 board_viewer_crossed_positions, board_viewer_bingoed_positions

@@ -452,13 +452,19 @@ var size_patterns = memoize (size =>
 			T (range) (Z .map (_x => [_x, (size - 1) - _x]))
 		] )=>_))
 
+var current_question = by (_history =>
+	so ((_=_=>
+	L .get ([current_question_index, as_maybe]),
+	where
+	, current_question_index = Z_ .size (_history) - 1 )=>_))
 
 var board_viewer_current_question = by (_board_viewer =>
 	so ((_=_=>
-	L .get ([board_viewer_questions, current_question_index, as_maybe]),
+	$ (
+  [ L .get (board_viewer_questions)
+  , current_question (history) ]),
 	where
-	, history = T (_board_viewer) (L .get (board_viewer_history))
-	, current_question_index = Z_ .size (history) - 1 )=>_))
+	, history = T (_board_viewer) (L .get (board_viewer_history)) )=>_))
 
 var board_viewer_attempted_positions = 
 	$ ([
@@ -599,6 +605,7 @@ window .stuff = { ...window .stuff,
 	teacher_app_get_ready_to_playing, 
 	student_app_get_ready_to_playing, student_app_playing_to_next,
 	student_app_to_board_viewer,
+  current_question,
 	question_answer_matches, 
 	board_viewer_current_question,
 	board_viewer_crossed_positions, board_viewer_bingoed_positions }
