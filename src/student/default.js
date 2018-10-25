@@ -349,20 +349,20 @@ var attempt_question = _position => {;
 		//Z_ .chain (board_viewer_current_question),
 			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just ])
 			var _board = T (_board_viewer) (L .get (board_viewer_board))
-			var _answer = T (_board) (L .get ([ position_lens (_position), cell_answer ]))
+			var _choice = T (_board) (L .get ([ position_lens (_position), cell_choice ]))
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
-        if (question_answer_matches (_question) (_answer)) {
+        if (question_choice_matches (_question) (_choice)) {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_history, L .last, rendition_attempts, L .append])
+              ([app_history, L .last, resolution_attempts, L .append])
               ([_position, latency]),
             student_app_playing_to_next,
             _x => {;app_state (_x)} ]) }
         else {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_history, L .last, rendition_attempts, L .append])
+              ([app_history, L .last, resolution_attempts, L .append])
               ([_position, latency]),
             _x => {;app_state (_x)} ])
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } }) ]) }
