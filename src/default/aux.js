@@ -244,7 +244,7 @@ var board_viewer = data ({
 	['4/5', ['8/10', '12/15']] ])
 //*/
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
-var default_rules = rules .rules (10, 3)
+var default_rules = rules .rules (10, 4)
 
 
 
