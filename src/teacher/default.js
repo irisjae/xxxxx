@@ -134,11 +134,8 @@ var playing_view = _ => so ((_=_=>
                 : <cell></cell>,
                 where
                 , _cell_position = T (_cell) (L .get (cell_position))
-                , _cell_answer = T (_cell) (L .get (cell_answer))
                 , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
-                , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
-                , crossed = _x => <s>{ _x }</s>
-                , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
+                , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
                 } </row> )) } </board>,
             where
             , _board_viewer = board_viewer .board_viewer (_board, _questions, _history)

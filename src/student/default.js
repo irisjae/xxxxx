@@ -181,13 +181,13 @@ var playing_view = <playing-etc>
 					<row> { T (_row) (Z_ .map (_cell =>
 						so ((_=_=>
 						!! (_cell_bingo)
-						? <cell>{ bold_crossed (_cell_answer) }</cell>
+						? <cell>{ bold_crossed (_cell_choice) }</cell>
 						:!! (_cell_crossed)
-						? <cell>{ crossed (_cell_answer) }</cell>
-						: <cell fn={ cell_feedback (_cell) }>{ _cell_answer }</cell>,
+						? <cell>{ crossed (_cell_choice) }</cell>
+						: <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
 						where
 						, _cell_position = T (_cell) (L .get (cell_position))
-						, _cell_answer = T (_cell) (L .get (cell_answer))
+						, _cell_choice = T (_cell) (L .get (cell_choice))
 						, _cell_crossed = Z .elem (_cell_position) (crossed_positions)
 						, _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
 						, crossed = _x => <s>{ _x }</s>
