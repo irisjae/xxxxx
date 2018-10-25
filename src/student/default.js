@@ -234,13 +234,13 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, _ensemble = ensemble_state ()
 	, all_students = T (_ensemble) (assemble_students (data_kind (_app)))
 	, questions = T (_app) (L .collect ([ app_questions, L .elems, question_view ]))
-	, attempts = T (_app) ([ L .collect ([ app_history, L .elems, rendition_attempts ]), Z_ .map (Z_ .size) ])
+	, attempts = T (_app) ([ L .collect ([ app_history, L .elems, resolution_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
 	, average_time = T (_ensemble) ([
 			assemble_students (data_kind (_app)),
 			Z_ .map ($ ([
 				Z .snd,
-				L .collect ([ [1], L .elems, rendition_attempts, L .last, [1], as_maybe ]),
+				L .collect ([ [1], L .elems, resolution_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
 			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_),
