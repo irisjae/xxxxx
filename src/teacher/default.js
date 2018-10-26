@@ -10,7 +10,7 @@ bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, choice, answer, latency, ping, position,
-attempt, resolution, board, rules, setup,
+attempt, resolution, history, board, rules, setup,
 teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
@@ -40,7 +40,7 @@ student_app_to_board_viewer,
 current_question,
 question_choice_matches, 
 board_viewer_current_question,
-board_viewer_crossed_positions, board_viewer_bingoed_positions
+board_viewer_answered_positions, board_viewer_bingoed_positions
 } = window .stuff
 
 
