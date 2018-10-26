@@ -196,7 +196,7 @@ var playing_view = <playing-etc>
 			where
 			, _board = T (_board_viewer) (L .get (board_viewer_board))
 			, current_question = T (_board_viewer) (board_viewer_current_question)
-			, crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
+			, crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
 			, bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
 			, game_tick = game_tick_sampler ()
       , cell_feedback = cell => _dom => {;

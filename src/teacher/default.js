@@ -139,7 +139,7 @@ var playing_view = _ => so ((_=_=>
                 } </row> )) } </board>,
             where
             , _board_viewer = board_viewer .board_viewer (_board, _questions, _history)
-            , crossed_positions = T (_board_viewer) (board_viewer_crossed_positions)
+            , crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
             , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
           </student-etc> ])))
       }
