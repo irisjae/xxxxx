@@ -167,7 +167,7 @@ var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
 var opportunity = data ({ opportunity: (attempts =~ list (attempt)) => opportunity })
-var past = data ({ past: (opportunitys =~ list (opportunity)) => past })
+var past = data ({ past: (opportunities =~ list (opportunity)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
@@ -267,6 +267,10 @@ var pair_to_v = L .iso (
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
+var as_complete = [
+L .reread ()
+]
+
 
 var app_nothing = data_iso (teacher_app .nothing)
 var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
@@ -322,7 +326,7 @@ var ensemble_student_histories = data_iso (ensemble .ensemble) .student_historie
 
 var opportunity_attempts = data_lens (opportunity .opportunity) .attempts
 var opportunity_position = [ opportunity_attempts, L .last, attempt_position ] 
-var past_opportunitys = data_lens (past .past) .opportunitys
+var past_opportunities = data_lens (past .past) .opportunities
 		
 var rules_size = data_lens (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
@@ -467,7 +471,7 @@ var board_viewer_current_question = _board_viewer =>
 	, _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 var attempted_positions = by (_past =>
-  L .collect ([ past_opportunitys, L .elems, opportunity_position ]))
+  L .collect ([ past_opportunities, L .elems, opportunity_position ]))
 
 var board_viewer_attempted_positions = by (_board_viewer =>
 	under (board_viewer_past
@@ -475,7 +479,7 @@ var board_viewer_attempted_positions = by (_board_viewer =>
   attempted_positions))
 
 var answered_positions = _questions => _board => _past => so ((_=_=>
-  T (Z .zip (_opportunitys) (_questions)
+  T (Z .zip (_opportunities) (_questions)
   ) (
   Z .chain (under (pair_to_v
   ) (([_opportunity, _question]) => so ((_=_=>
@@ -487,17 +491,17 @@ var answered_positions = _questions => _board => _past => so ((_=_=>
     , _choice = T (_position) (map_defined (_position =>
         T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>_)))),
   where
-  , _opportunitys = T (_history) (L .get (history_opportunitys)) )=>_)
+  , _opportunities = T (_past) (L .get (past_opportunities)) )=>_)
 
 var board_viewer_answered_positions = _board_viewer =>
   so ((_=_=>
-  answered_positions (_questions) (_board) (_history),
+  answered_positions (_questions) (_board) (_past),
   where
   , _questions = T (_board_viewer) (board_viewer_questions)
   , _board = T (_board_viewer) (board_viewer_board)
-  , _history = T (_board_viewer) (board_viewer_history) )=>_)
+  , _past = T (_board_viewer) (board_viewer_past) )=>_)
 
-var bingoed_positions = _questions => _board => _history => 
+var bingoed_positions = _questions => _board => _past => 
 	so ((_=_=> so ((_=_=>
 	T (bingo_patterns
   ) (
@@ -507,18 +511,18 @@ var bingoed_positions = _questions => _board => _history =>
 	, bingo_patterns = size_patterns (_size) )=>_),
   where
 	, _size = T (_board) (Z_ .size)
-	, _answered_positions = answered_positions (_questions) (_board) (_history) )=>_)
+	, _answered_positions = answered_positions (_questions) (_board) (_past) )=>_)
 
 var board_viewer_bingoed_positions = _board_viewer =>
   so ((_=_=>
-  bingoed_positions (_questions) (_board) (_history),
+  bingoed_positions (_questions) (_board) (_past),
   where
   , _questions = T (_board_viewer) (board_viewer_questions)
   , _board = T (_board_viewer) (board_viewer_board)
-  , _history = T (_board_viewer) (board_viewer_history) )=>_)
+  , _past = T (_board_viewer) (board_viewer_past) )=>_)
 
 
-var history_stepped = old => curr =>
+var past_stepped = old => curr =>
 	Z_ .size (curr) > Z_ .size (old)
 
 
@@ -550,7 +554,7 @@ var message_encoding = by (message =>
         , [ message_student_start , 
             [ message_synchronization, L .getInverse ([ ensemble_student_starts, student ]) ] ]
         , [ message_student_update , 
-            [ message_history, L .getInverse ([ ensemble_student_histories, student ]) ] ] ] )=>_) )=>_))
+            [ message_past, L .getInverse ([ ensemble_student_histories, student ]) ] ] ] )=>_) )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
@@ -587,7 +591,7 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v,
 	shuffle, uuid, api, post,
 	student, question, choice, answer, latency, ping, position,
-	attempt, opportunity, history, board, rules, setup,
+	attempt, opportunity, past, board, rules, setup,
 	teacher_app, student_app,
 	board_viewer,
 	io, message, ensemble, 
@@ -595,20 +599,20 @@ window .stuff = { ...window .stuff,
 	as_maybe, from_maybe,
 	app_nothing, app_get_ready, app_playing, app_game_over,
 	setup_room, setup_questions, setup_rules,
-	board_viewer_board, board_viewer_questions, board_viewer_history,
+	board_viewer_board, board_viewer_questions, board_viewer_past,
 	io_inert, io_connecting, io_heartbeat,
 	ensemble_questions, ensemble_rules,
 	ensemble_ping, ensemble_start, ensemble_abort,
 	ensemble_student_pings, ensemble_student_starts,
 	ensemble_student_boards, ensemble_student_histories,
 	app_setup, app_student, app_students, app_room,
-	app_board, app_history, app_questions,
+	app_board, app_past, app_questions,
 	opportunity_attempts,
 	rules_size, setup_size,
 	question_view, question_answers,
 	cell_position, position_lens,
 	cell_choice, student_name,
-	history_stepped,
+	past_stepped,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
 	teacher_app_get_ready_to_playing, 
