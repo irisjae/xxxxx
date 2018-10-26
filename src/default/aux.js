@@ -267,9 +267,7 @@ var pair_to_v = L .iso (
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
-var as_complete = [
-L .reread ()
-]
+var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 
 
 var app_nothing = data_iso (teacher_app .nothing)
