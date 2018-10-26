@@ -166,8 +166,8 @@ var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
-var resolution = data ({ resolution: (attempts =~ list (attempt)) => resolution })
-var history = data ({ history: (resolutions =~ list (resolution)) => history })
+var opportunity = data ({ opportunity: (attempts =~ list (attempt)) => opportunity })
+var past = data ({ past: (opportunitys =~ list (opportunity)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
@@ -178,13 +178,13 @@ var setup = data ({ setup: ( room =~ room, questions =~ list (question), rules =
 var teacher_app = data ({
   nothing: () => teacher_app,
 	get_ready: ( setup =~ setup, students =~ list (student) ) => teacher_app,
-	playing: ( setup =~ setup, students =~ map (student) (board, history) ) => teacher_app,
-	game_over: ( setup =~ setup, students =~ map (student) (board, history) ) => teacher_app })
+	playing: ( setup =~ setup, students =~ map (student) (board, past) ) => teacher_app,
+	game_over: ( setup =~ setup, students =~ map (student) (board, past) ) => teacher_app })
 
 var student_app = data ({
 	get_ready: ( student =~ maybe (student), setup =~ maybe (setup) ) => student_app,
-	playing: ( student =~ student, setup =~ setup, board =~ board, history =~ history ) => student_app,
-	game_over: ( student =~ student, setup =~ setup, board =~ board, history =~ history ) => student_app })
+	playing: ( student =~ student, setup =~ setup, board =~ board, past =~ past ) => student_app,
+	game_over: ( student =~ student, setup =~ setup, board =~ board, past =~ past ) => student_app })
 
 /*
 var teacher_lookbehind = data ({
@@ -207,7 +207,7 @@ var message = data ({
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
-	student_update: ( student =~ student, history =~ history ) => message })
+	student_update: ( student =~ student, past =~ past ) => message })
 var ensemble = data ({
   nothing: () => ensemble,
 	ensemble: (
@@ -219,11 +219,11 @@ var ensemble = data ({
 		student_starts =~ map (student) (timestamp),
 		student_pings =~ map (student) (ping),
 		student_boards =~ map (student) (board),
-		student_histories =~ map (student) (history) ) => ensemble })
+		student_histories =~ map (student) (past) ) => ensemble })
 
 
 var board_viewer = data ({
-	board_viewer: (board =~ board, questions =~ list (question), history =~ history) => board_viewer })
+	board_viewer: (board =~ board, questions =~ list (question), past =~ past) => board_viewer })
 
 
 
@@ -276,14 +276,14 @@ var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (stu
 var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), L .choices (['student', from_maybe], 'student') ]
 var app_setup = [L .choices (app_get_ready, app_playing, app_game_over), L .choices ([ 'setup', from_maybe ], 'setup')]
 var app_board = [ L .choices (app_playing, app_game_over), 'board' ]
-var app_history = L .choices ( data_lens (student_app .playing) .history, data_lens (student_app .game_over) .history )
+var app_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
 
 var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
 
 
 var board_viewer_board = data_lens (board_viewer .board_viewer) .board
 var board_viewer_questions = data_lens (board_viewer .board_viewer) .questions
-var board_viewer_history = data_lens (board_viewer .board_viewer) .history
+var board_viewer_past = data_lens (board_viewer .board_viewer) .past
 
 var setup_room = data_lens (setup .setup) .room
 var setup_questions = data_lens (setup .setup) .questions
@@ -308,7 +308,7 @@ var message_student = [L .choices (message_student_ping, message_student_join, m
 var message_ping = [L .choices (message_teacher_ping, message_student_ping), 'ping']
 var message_synchronization = L .choices (message_teacher_start, message_teacher_abort, message_student_start .synchronization)
 var message_board = message_student_join .board
-var message_history = message_student_update .history
+var message_past = message_student_update .past
 	
 var ensemble_questions = data_iso (ensemble .ensemble) .questions 
 var ensemble_rules = data_iso (ensemble .ensemble) .rules 
@@ -320,9 +320,9 @@ var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards
 var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
-var resolution_attempts = data_lens (resolution .resolution) .attempts
-var resolution_position = [ resolution_attempts, L .last, attempt_position ] 
-var history_resolutions = data_lens (history .history) .resolutions
+var opportunity_attempts = data_lens (opportunity .opportunity) .attempts
+var opportunity_position = [ opportunity_attempts, L .last, attempt_position ] 
+var past_opportunitys = data_lens (past .past) .opportunitys
 		
 var rules_size = data_lens (rules .rules) .size
 var setup_size = [setup_rules, rules_size]
@@ -400,23 +400,23 @@ var student_app_get_ready_to_playing = _app =>
   ) (Z_ .map (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
-			(_student, _setup, generate_board (_size) (_questions), fresh_history),
+			(_student, _setup, generate_board (_size) (_questions), fresh_past),
 		where 
 		, _size = L .get (setup_size) (_setup)
 		, _questions = L .get (setup_questions) (_setup)
-		, fresh_history = history .history ([resolution .resolution ([])]) )=>_)))
+		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_)))
 
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
-		!! (history_size < board_size * board_size)
-		? L .set ([app_history, L .append]) (resolution .resolution ([]))
+		!! (past_size < board_size * board_size)
+		? L .set ([app_past, L .append]) (opportunity .opportunity ([]))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
 		, board_size = T (_app) (L .get ([app_setup, setup_size]))
-		, history_size = T (_app) ([ L .get (app_history), Z_ .size ]) )=>_)) 
+		, past_size = T (_app) ([ L .get (app_past), Z_ .size ]) )=>_)) 
 				 
 var question_choice_matches = question => choice =>
 	so ((_=_=>
@@ -428,9 +428,9 @@ var student_app_to_board_viewer = _app =>
 	under ([ L .pick ({
     _board: [ app_board, as_maybe ],
     _questions: [ app_questions, as_maybe ],
-    _history: [ app_history, as_maybe ] }), all_defined_lens ]
-  ) (Z_ .map (({ _board , _questions , _history }) =>
-		board_viewer .board_viewer (_board, _questions, _history)))
+    _past: [ app_past, as_maybe ] }), all_defined_lens ]
+  ) (Z_ .map (({ _board , _questions , _past }) =>
+		board_viewer .board_viewer (_board, _questions, _past)))
 
 
 var size_patterns = memoize (size =>
@@ -453,41 +453,41 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_question = by (_questions => _history =>
+var current_question = by (_questions => _past =>
 	so ((_=_=>
 	L .get ([current_question_index, as_maybe]),
 	where
-	, current_question_index = Z_ .size (_history) - 1 )=>_))
+	, current_question_index = Z_ .size (_past) - 1 )=>_))
 
 var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
-	current_question (_questions) (_history),
+	current_question (_questions) (_past),
 	where
 	, _questions = T (_board_viewer) (L .get (board_viewer_questions))
-	, _history = T (_board_viewer) (L .get (board_viewer_history)) )=>_)
+	, _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
-var attempted_positions = by (_history =>
-  L .collect ([ history_resolutions, L .elems, resolution_position ]))
+var attempted_positions = by (_past =>
+  L .collect ([ past_opportunitys, L .elems, opportunity_position ]))
 
 var board_viewer_attempted_positions = by (_board_viewer =>
-	under (board_viewer_history
+	under (board_viewer_past
   ) (
   attempted_positions))
 
-var answered_positions = _questions => _board => _history => so ((_=_=>
-  T (Z .zip (_resolutions) (_questions)
+var answered_positions = _questions => _board => _past => so ((_=_=>
+  T (Z .zip (_opportunitys) (_questions)
   ) (
   Z .chain (under (pair_to_v
-  ) (([_resolution, _question]) => so ((_=_=>
+  ) (([_opportunity, _question]) => so ((_=_=>
     !! (question_choice_matches (_question) (_choice))
     ? [ _position ]
     : [],
     where
-    , _position = T (_resolution) (L .get (resolution_position))
+    , _position = T (_opportunity) (L .get (opportunity_position))
     , _choice = T (_position) (map_defined (_position =>
         T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>_)))),
   where
-  , _resolutions = T (_history) (L .get (history_resolutions)) )=>_)
+  , _opportunitys = T (_history) (L .get (history_opportunitys)) )=>_)
 
 var board_viewer_answered_positions = _board_viewer =>
   so ((_=_=>
@@ -587,7 +587,7 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v,
 	shuffle, uuid, api, post,
 	student, question, choice, answer, latency, ping, position,
-	attempt, resolution, history, board, rules, setup,
+	attempt, opportunity, history, board, rules, setup,
 	teacher_app, student_app,
 	board_viewer,
 	io, message, ensemble, 
@@ -603,7 +603,7 @@ window .stuff = { ...window .stuff,
 	ensemble_student_boards, ensemble_student_histories,
 	app_setup, app_student, app_students, app_room,
 	app_board, app_history, app_questions,
-	resolution_attempts,
+	opportunity_attempts,
 	rules_size, setup_size,
 	question_view, question_answers,
 	cell_position, position_lens,
