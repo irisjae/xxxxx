@@ -400,23 +400,22 @@ var generate_board = size => questions =>
 
 
 var teacher_app_get_ready_to_playing = by (_app =>
-  under ([ app_setup, as_maybe ]
-  ) (
-  Z_ .map (_setup  => 
-    teacher_app .playing (_setup, []))))
+  under (app_setup
+  ) (_setup  => 
+    teacher_app .playing (_setup, [])))
 
 var student_app_get_ready_to_playing =
   under ([ L .pick ({
 			_student: L .get (app_student),
 			_setup: L .get (app_setup) }), as_complete ]
-  ) (map_defined (({ _student, _setup }) =>
+  ) (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_past),
 		where 
 		, _size = L .get (setup_size) (_setup)
 		, _questions = L .get (setup_questions) (_setup)
-		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_)))
+		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_))
 
 var student_app_playing_to_next = 
 	by (_app => 
@@ -441,8 +440,8 @@ var student_app_to_board_viewer =
     _board: [ app_board, as_maybe ],
     _questions: [ app_questions, as_maybe ],
     _past: [ app_past, as_maybe ] }), as_complete ]
-  ) (Z_ .map (({ _board , _questions , _past }) =>
-		board_viewer .board_viewer (_board, _questions, _past)))
+  ) (({ _board , _questions , _past }) =>
+		board_viewer .board_viewer (_board, _questions, _past))
 
 
 var size_patterns = memoize (size =>
