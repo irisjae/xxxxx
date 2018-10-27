@@ -271,8 +271,8 @@ var to_maybe = default_fn => _x =>
 
 
 var pair_to_v = L .iso (
-  _pair => !! Z_ .is (Z .Pair) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
-  _v => !! Z .and (Z_ .is (Array) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
+  _pair => !! Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
+  _v => !! Z .and (Z_ .is (Z$ .Array) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
@@ -332,6 +332,8 @@ var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards
 var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
+var attempt_position = [ 0 ]
+var attempt_latency = [ 1 ]
 var opportunity_attempts = data_lens (opportunity .opportunity) .attempts
 var opportunity_position = [ opportunity_attempts, L .last, attempt_position ] 
 var past_opportunities = data_lens (past .past) .opportunities
@@ -357,9 +359,6 @@ var pair_as_list = L .cond (
 var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_mean = [ 1 ]
-
-var attempt_position = [ 0 ]
-var attempt_latency = [ 1 ]
 
 var students_mapping = 
 	[ L .keyed
