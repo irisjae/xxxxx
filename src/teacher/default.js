@@ -319,7 +319,7 @@ S (last_ensemble => {;
 				var start = L .get (ensemble_start) (_ensemble)
 				var now = (new Date) .getTime ()
 
-				var playing_app = from_just (teacher_app_get_ready_to_playing (_app))
+				var playing_app = teacher_app_get_ready_to_playing (_app)
 				if (start > now) {
 					;app_state (playing_app) }
 				else {

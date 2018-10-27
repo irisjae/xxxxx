@@ -170,7 +170,7 @@ var get_ready_view = <get-ready-etc>
       , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_))
 	} </get-ready-etc>
 
-var playing_view = <playing-etc>
+var playing_view = _ => <playing-etc>
 	{ T (student_app_to_board_viewer (app_state ())
 		) (_board_viewer =>
 			so ((_=_=>
