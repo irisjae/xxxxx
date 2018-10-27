@@ -466,8 +466,9 @@ var size_patterns = memoize (size =>
 
 var current_question = by (_questions => _past =>
 	so ((_=_=>
-  !! current_question_index
-	L .get ([current_question_index, as_maybe]),
+  !! Z .gte (0) (current_question_index)
+	? L .get ([current_question_index, as_maybe])
+  : Z_ .K (undefined),
 	where
 	, current_question_index = Z_ .size (_past) - 1 )=>_))
 
@@ -505,9 +506,9 @@ var board_viewer_answered_positions = _board_viewer =>
   so ((_=_=>
   answered_positions (_questions) (_board) (_past),
   where
-  , _questions = T (_board_viewer) (board_viewer_questions)
-  , _board = T (_board_viewer) (board_viewer_board)
-  , _past = T (_board_viewer) (board_viewer_past) )=>_)
+  , _questions = T (_board_viewer) (L .get (board_viewer_questions))
+  , _board = T (_board_viewer) (L .get (board_viewer_board))
+  , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 var bingoed_positions = _questions => _board => _past => 
 	so ((_=_=> so ((_=_=>
@@ -525,9 +526,9 @@ var board_viewer_bingoed_positions = _board_viewer =>
   so ((_=_=>
   bingoed_positions (_questions) (_board) (_past),
   where
-  , _questions = T (_board_viewer) (board_viewer_questions)
-  , _board = T (_board_viewer) (board_viewer_board)
-  , _past = T (_board_viewer) (board_viewer_past) )=>_)
+  , _questions = T (_board_viewer) (L .get (board_viewer_questions))
+  , _board = T (_board_viewer) (L .get (board_viewer_board))
+  , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 
 var past_stepped = old => curr =>
