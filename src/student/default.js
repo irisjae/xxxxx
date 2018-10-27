@@ -312,13 +312,14 @@ var record_student = _name => {;
 			, _setup )) }
 
 var connect_room = _ => {;
-	;so ((
-	take
-	, exists = maybe_all (T (S .sample (app_state)) (
-			L .get (L .pick ({
-				_student: [ app_student, as_maybe ],
-				_room: [ app_room, as_maybe ] })))) )=>{;
-	;T (exists) (Z_ .map (({ _student, _room }) => {;
+	;T (S .sample (app_state)
+  ) (
+	under (
+    [ L .pick ({
+				_student: app_student,
+				_room: app_room })
+    , as_complete ]
+  ) (({ _student, _room }) => {;
 		var _setup
 		;return go 
 		.then (_ =>
@@ -341,11 +342,11 @@ var connect_room = _ => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
 		.then (_ => {;
-			;io_state (io .inert) }) })) } ) }
+			;io_state (io .inert) }) })) }
 
 var attempt_question = _position => {;
 	T (S .sample (app_state)) ([ student_app_to_board_viewer,
-		Z_ .map (_board_viewer => {;
+		_board_viewer => {;
 		//Z_ .chain (board_viewer_current_question),
 			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just ])
 			var _board = T (_board_viewer) (L .get (board_viewer_board))
@@ -365,7 +366,7 @@ var attempt_question = _position => {;
               ([app_past, L .last, opportunity_attempts, L .append])
               ([_position, latency]),
             _x => {;app_state (_x)} ])
-          ;lookbehind_state (lookbehind .attempting (latency, true)) } } }) ]) }
+          ;lookbehind_state (lookbehind .attempting (latency, true)) } } } ]) }
 
 var timesup_question = _ => {;
 	;app_state (student_app_playing_to_next (S .sample (app_state))) }
@@ -392,16 +393,15 @@ var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
 var connection = S (_ => {;
-	;return T (app_state ()) ([
-		L .get (app_room),
-		map_defined (_room => {;
+	;return T (app_state ()) (under (app_room
+    ) (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
 			return connection [_room] () && so ((_=_=>
 			[ timestamp, mean, Math .sqrt (variance) ],
 			where
-			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) }) ]) })
+			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) })) })
 
 
 
@@ -521,13 +521,14 @@ S (last_ensemble => {;
 
 
 S (_ => {;
-	;so ((
-	take
-	, exists = maybe_all (T (app_state ()
-			) (L .get (L .pick ({
-				_student: [ app_student, as_maybe ],
-				_room: [ app_room, as_maybe ] })) )) ) => {;
-	;T (exists) (Z_ .map (({ _student, _room }) => {;
+	;T (app_state ()
+  ) (
+  under (
+    [ L .pick ({
+				_student: app_student,
+				_room: app_room })
+    , as_complete ])
+	) (({ _student, _room }) => {;
 		var phase = heartbeat ()
 		var critical = phase === 1
 		go
@@ -562,4 +563,4 @@ S (_ => {;
 				;heartbeat (phase) }
 			, 300) })
 		.then (_ => {;
-			;io_state (io .inert) }) })) }) })
+			;io_state (io .inert) }) }) })
