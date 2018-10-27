@@ -172,7 +172,7 @@ var get_ready_view = <get-ready-etc>
 
 var playing_view = <playing-etc>
 	{ T (student_app_to_board_viewer (app_state ())
-		) (Z_ .maybe ([]) (_board_viewer =>
+		) (_board_viewer =>
 			so ((_=_=>
 			[ T (current_question
 				) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
@@ -202,7 +202,7 @@ var playing_view = <playing-etc>
       , cell_feedback = cell => _dom => {;
           ;clicking .forEach (click => {;
             ;_dom .addEventListener (click, _ => {;
-              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }) }) } )=>_))) } </playing-etc>
+              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }) }) } )=>_)) } </playing-etc>
 
 var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>
