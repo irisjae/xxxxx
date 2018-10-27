@@ -463,13 +463,16 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_question = by (_questions => _past =>
-	so ((_=_=>
-  !! Z .gte (0) (current_question_index)
-	? L .get ([current_question_index, as_maybe])
-  : Z_ .K (undefined),
-	where
-	, current_question_index = Z_ .size (L .get (past_opportunities) (_past)) - 1 )=>_))
+var current_question = by (_questions => 
+  $ (
+  [ past_opportunities
+  , _opportunities =>
+    so ((_=_=>
+    !! Z .gte (0) (current_question_index)
+    ? L .get ([current_question_index, as_maybe])
+    : Z_ .K (undefined),
+    where
+    , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ]))
 
 var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
