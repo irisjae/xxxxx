@@ -426,7 +426,7 @@ var student_app_playing_to_next =
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
 		, board_size = T (_app) (L .get ([app_setup, setup_size]))
-		, past_size = T (_app) ([ L .get (app_past), Z_ .size ]) )=>_)) 
+		, past_size = T (_app) ([ L .get ([app_past, past_opportunities]), Z_ .size ]) )=>_)) 
 				 
 var question_choice_matches = question => choice =>
 	so ((_=_=>
