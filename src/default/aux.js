@@ -9,7 +9,7 @@ var {
 	sole, every, delay	 
 } = window .stuff
 
-var tap = _fn => x => _fn (x), x
+var tap = _fn => x => (_fn (x), x)
 
 var shuffle = list => {
 	var array = []
@@ -123,13 +123,15 @@ where
   var faux_resolve = _x => {
     if (! done) {
       ;resolve (_x) } }
+  
   var continuation = (new Promise ((_resolve, _reject) => {;
     ;resolve = _resolve
-    ;reject = _reject })) .then (tap (_ => {;done = true}))
+    ;reject = _reject }))
+  ;continuation .catch (Z_ .I) .then (_ => {;done = true})
   
   ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
   
-  return [continuation, faux_resolve] }
+  return [ continuation, faux_resolve ] }
 
 
 
