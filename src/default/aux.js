@@ -63,7 +63,6 @@ var api = so ((_=_=>
 
     if (! api .sockets [room]) {
       ;api .sockets [room] = new_socket (room) }
-    api .sockets [room] .assign_id (id)
 
     var begin, end
     ;go
@@ -84,12 +83,12 @@ where
     return !! Z_ .not (api .continuations [id])
     ? id
     : new_id () }
-, new_socket = id => so ((_=_=>_||
+, new_socket = room => so ((_=_=>_||
     { ready: new Promise ((resolve, reject) => {;
         _socket .onopen = _ => {;resolve ()} })
     , send: _x => _socket .send (_x) },
     where
-    , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + id)
+    , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
     ,$=
     _socket .onmessage = _event => {;
         var _packet = JSON .parse (_event .data)
