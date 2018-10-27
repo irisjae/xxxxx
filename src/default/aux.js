@@ -420,7 +420,7 @@ var student_app_playing_to_next =
 	by (_app => 
 		so ((_=_=>
 		!! (past_size < board_size * board_size)
-		? L .set ([app_past, L .append]) (opportunity .opportunity ([]))
+		? L .set ([app_past, past_opportunities, L .append]) (opportunity .opportunity ([]))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
