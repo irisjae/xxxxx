@@ -469,7 +469,7 @@ var current_question = by (_questions => _past =>
 	? L .get ([current_question_index, as_maybe])
   : Z_ .K (undefined),
 	where
-	, current_question_index = Z_ .size (_past) - 1 )=>_))
+	, current_question_index = L .get ([ Z_ .size ]) (_past) - 1 )=>_))
 
 var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
