@@ -1,7 +1,7 @@
 var {
 	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, under,
-	go, never, panic, panic_on,
+	tap, go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
@@ -9,6 +9,7 @@ var {
 	sole, every, delay	 
 } = window .stuff
 
+var tap = _fn => x => _fn (x), x
 
 var shuffle = list => {
 	var array = []
@@ -66,11 +67,11 @@ var api = so ((_=_=>
     var begin, end
     go
     .then (Z_ .K (api .sockets [room] .ready))
-    .then (R .tap (_ => {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))}))
+    .then (tap (_ => {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))}))
     .then (_=> {;begin = performance .now ()})
     .then (Z_ .K (continuation))
     .then (_=> {;end = performance .now ()})
-    .then (R .tap (_ => {;
+    .then (tap (_ => {;
       var sample = end - begin
       ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
       ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }))
@@ -84,7 +85,7 @@ where
     : new_id () }
 , new_socket = id => so ((_=_=>_||
     { ready: new Promise ((resolve, reject) => {;
-        ;api .sockets [room] .onopen = _ => {;resolve ()} })
+        _socket .onopen = _ => {;resolve ()} })
     , send: _x => _socket .send (_x) },
     where
     , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
@@ -124,7 +125,7 @@ where
       ;resolve (_x) } }
   var continuation = (new Promise ((_resolve, _reject) => {;
     ;resolve = _resolve
-    ;reject = _reject })) .then (R .tap (_ => {;done = true}))
+    ;reject = _reject })) .then (tap (_ => {;done = true}))
   
   ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
   
@@ -398,7 +399,7 @@ var teacher_app_get_ready_to_playing = by (_app =>
 var student_app_get_ready_to_playing = _app => 
   under ([ L .pick ({
 			_student: L .get (app_student),
-			_setup: L .get (app_setup) }), all_defined_lens ]
+			_setup: L .get (app_setup) }), as_complete ]
   ) (Z_ .map (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
@@ -430,7 +431,7 @@ var student_app_to_board_viewer = _app =>
 	under ([ L .pick ({
     _board: [ app_board, as_maybe ],
     _questions: [ app_questions, as_maybe ],
-    _past: [ app_past, as_maybe ] }), all_defined_lens ]
+    _past: [ app_past, as_maybe ] }), as_complete ]
   ) (Z_ .map (({ _board , _questions , _past }) =>
 		board_viewer .board_viewer (_board, _questions, _past)))
 
