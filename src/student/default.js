@@ -167,7 +167,7 @@ var get_ready_view = <get-ready-etc>
       , 'Waiting for game to start...' ]
       .map (_x => <div>{ _x }</div>),
       where
-      , { _room, _student } = L .get (as_complete) ({ _room: room, _student: student }) )=>_))
+      , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_))
 	} </get-ready-etc>
 
 var playing_view = <playing-etc>
