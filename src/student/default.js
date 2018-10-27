@@ -15,7 +15,7 @@ teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
 default_questions, default_rules,
-as_maybe, from_maybe,
+as_maybe, from_maybe, as_complete,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
 board_viewer_board, board_viewer_questions, board_viewer_past,
@@ -167,7 +167,7 @@ var get_ready_view = <get-ready-etc>
       , 'Waiting for game to start...' ]
       .map (_x => <div>{ _x }</div>),
       where
-      , { _room, _student } = from_just (maybe_all ({ _room: room, _student: student })) )=>_))
+      , { _room, _student } = L .get (as_complete) ({ _room: room, _student: student }) )=>_))
 	} </get-ready-etc>
 
 var playing_view = <playing-etc>
@@ -499,7 +499,7 @@ S (last_ensemble => {;
 				var start = T (_ensemble) (L .get (ensemble_start))
 				var now = (new Date) .getTime ()
 
-				var playing_app = from_just (student_app_get_ready_to_playing (_app))
+				var playing_app = student_app_get_ready_to_playing (_app)
 				if (start > now) {
 					;app_state (playing_app) }
 				else {
