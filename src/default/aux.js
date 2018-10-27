@@ -466,6 +466,7 @@ var size_patterns = memoize (size =>
 
 var current_question = by (_questions => _past =>
 	so ((_=_=>
+  !! current_question_index
 	L .get ([current_question_index, as_maybe]),
 	where
 	, current_question_index = Z_ .size (_past) - 1 )=>_))
