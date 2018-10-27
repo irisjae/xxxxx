@@ -393,7 +393,8 @@ var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
 var connection = S (_ => {;
-	;return T (app_state ()) (under (app_room
+	;return T (app_state ()
+    ) (under (app_room
     ) (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
