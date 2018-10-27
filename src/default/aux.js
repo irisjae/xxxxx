@@ -463,7 +463,7 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_question = by (_questions => Z .K (by (_past =>
+var current_question = by (_questions => Z .flip (by (_past =>
   $ (
   [ L .get (past_opportunities)
   , _opportunities =>
