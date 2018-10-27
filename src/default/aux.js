@@ -398,11 +398,11 @@ var teacher_app_get_ready_to_playing = by (_app =>
   Z_ .map (_setup  => 
     teacher_app .playing (_setup, []))))
 
-var student_app_get_ready_to_playing = _app => 
+var student_app_get_ready_to_playing =
   under ([ L .pick ({
 			_student: L .get (app_student),
 			_setup: L .get (app_setup) }), as_complete ]
-  ) (Z_ .map (({ _student, _setup }) =>
+  ) (map_defined (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_past),
@@ -429,7 +429,7 @@ var question_choice_matches = question => choice =>
 	where
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
 
-var student_app_to_board_viewer = _app => 
+var student_app_to_board_viewer =
 	under ([ L .pick ({
     _board: [ app_board, as_maybe ],
     _questions: [ app_questions, as_maybe ],
