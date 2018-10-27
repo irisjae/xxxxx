@@ -463,14 +463,14 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_question = by (_questions => by (_past =>
+var current_question = by (_questions => Z .flip (by (_past =>
   $ (
   [ L .get (past_opportunities)
   , _opportunities =>
     so ((_=_=>
     L .get ([current_question_index, as_maybe]),
     where
-    , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ])))
+    , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ]))))
 
 var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
