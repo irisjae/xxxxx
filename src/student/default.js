@@ -10,7 +10,7 @@ bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, choice, answer, latency, ping, position,
-attempt, resolution, history, board, rules, setup,
+attempt, opportunity, past, board, rules, setup,
 teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
@@ -18,20 +18,20 @@ default_questions, default_rules,
 as_maybe, from_maybe,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
-board_viewer_board, board_viewer_questions, board_viewer_history,
+board_viewer_board, board_viewer_questions, board_viewer_past,
 io_inert, io_connecting, io_heartbeat,
 ensemble_questions, ensemble_rules,
 ensemble_ping, ensemble_start, ensemble_abort,
 ensemble_student_pings, ensemble_student_starts,
 ensemble_student_boards, ensemble_student_histories,
 app_setup, app_student, app_students, app_room,
-app_board, app_history, app_questions,
-resolution_attempts,
+app_board, app_past, app_questions,
+opportunity_attempts,
 rules_size, setup_size,
 question_view, question_answers,
 cell_position, position_lens,
 cell_choice, student_name,
-history_stepped,
+past_stepped,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
@@ -234,13 +234,13 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, _ensemble = ensemble_state ()
 	, all_students = T (_ensemble) (assemble_students (data_kind (_app)))
 	, questions = T (_app) (L .collect ([ app_questions, L .elems, question_view ]))
-	, attempts = T (_app) ([ L .collect ([ app_history, L .elems, resolution_attempts ]), Z_ .map (Z_ .size) ])
+	, attempts = T (_app) ([ L .collect ([ app_past, L .elems, opportunity_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
 	, average_time = T (_ensemble) ([
 			assemble_students (data_kind (_app)),
 			Z_ .map ($ ([
 				Z .snd,
-				L .collect ([ [1], L .elems, resolution_attempts, L .last, [1], as_maybe ]),
+				L .collect ([ [1], L .elems, opportunity_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
 			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_),
@@ -355,14 +355,14 @@ var attempt_question = _position => {;
         if (question_choice_matches (_question) (_choice)) {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_history, L .last, resolution_attempts, L .append])
+              ([app_past, L .last, opportunity_attempts, L .append])
               ([_position, latency]),
             student_app_playing_to_next,
             _x => {;app_state (_x)} ]) }
         else {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_history, L .last, resolution_attempts, L .append])
+              ([app_past, L .last, opportunity_attempts, L .append])
               ([_position, latency]),
             _x => {;app_state (_x)} ])
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } }) ]) }
@@ -454,10 +454,10 @@ S (last_app => {;
 	return app_state () }
 , app_state ())
 S (last_app => {;
-	var last_history = T (last_app) (L .get ([app_history])) || []
-	var history = T (app_state ()) (L .get ([app_history]))
+	var last_past = T (last_app) (L .get ([app_past])) || []
+	var past = T (app_state ()) (L .get ([app_past]))
 	if (L .isDefined (app_playing) (app_state ())) {
-		if (history_stepped (last_history) (history)) {
+		if (past_stepped (last_past) (past)) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -475,10 +475,10 @@ S (_ => {;
 	if (L .isDefined (app_get_ready) (app_state ())) {
 		;game_clock .pause () } })
 S (last_state => {;
-	var last_history = T (last_state) (L .get ([app_history, L .valueOr ([])]))
-	var history = T (app_state ()) (L .get ([app_history]))
+	var last_past = T (last_state) (L .get ([app_past, L .valueOr ([])]))
+	var past = T (app_state ()) (L .get ([app_past]))
 	if (L .isDefined (app_playing) (app_state ())) {
-		if (history_stepped (last_history) (history)) {
+		if (past_stepped (last_past) (past)) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
@@ -540,14 +540,14 @@ S (_ => {;
 						? [ message .student_ping (_student, S .sample (connection)) ]
 						: [ message .student_ping (_student, S .sample (connection))
 							, message .student_join (_student, _board)
-							, message .student_update (_student, _history) ],
+							, message .student_update (_student, _past) ],
 						where
-						, { _board, _history, not_playing } =
+						, { _board, _past, not_playing } =
 								$ (Z .fromMaybe
 								) ({ not_playing: 'not playing' }
                 ) (maybe_all (T (app_state ()) (L .get (L .pick ({
 										_board: [ app_board, as_maybe ],
-										_history: [ app_history, as_maybe ] })) ))) )=>_) ))) 
+										_past: [ app_past, as_maybe ] })) ))) )=>_) ))) 
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),

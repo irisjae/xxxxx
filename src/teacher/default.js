@@ -10,7 +10,7 @@ bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, choice, answer, latency, ping, position,
-attempt, resolution, history, board, rules, setup,
+attempt, opportunity, past, board, rules, setup,
 teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
@@ -18,20 +18,20 @@ default_questions, default_rules,
 as_maybe, from_maybe,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
-board_viewer_board, board_viewer_questions, board_viewer_history,
+board_viewer_board, board_viewer_questions, board_viewer_past,
 io_inert, io_connecting, io_heartbeat,
 ensemble_questions, ensemble_rules,
 ensemble_ping, ensemble_start, ensemble_abort,
 ensemble_student_pings, ensemble_student_starts,
 ensemble_student_boards, ensemble_student_histories,
 app_setup, app_student, app_students, app_room,
-app_board, app_history, app_questions,
-resolution_attempts,
+app_board, app_past, app_questions,
+opportunity_attempts,
 rules_size, setup_size,
 question_view, question_answers,
 cell_position, position_lens,
 cell_choice, student_name,
-history_stepped,
+past_stepped,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
@@ -121,7 +121,7 @@ var playing_view = _ => so ((_=_=>
         ) (Z_ .map (
         $ ([
         Z_ .snd
-        , ([_board, _history]) =>
+        , ([_board, _past]) =>
           <student-etc>
             { so ((_=_=>
             <board> { T (_board) (Z_ .map (_row => 
@@ -138,7 +138,7 @@ var playing_view = _ => so ((_=_=>
                 , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
                 } </row> )) } </board>,
             where
-            , _board_viewer = board_viewer .board_viewer (_board, _questions, _history)
+            , _board_viewer = board_viewer .board_viewer (_board, _questions, _past)
             , crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
             , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
           </student-etc> ])))
@@ -147,7 +147,7 @@ var playing_view = _ => so ((_=_=>
 	</playing-etc>,
 	where
 	, _questions = T (app_state ()) (L .get (app_questions))
-	, _question = T (app_state ()) (L .get (app_history), current_question, T (_questions))
+	, _question = T (app_state ()) (L .get (app_past), current_question, T (_questions))
 	, _students = T (app_state ()) (L .get (app_students)) )=>_)
 													 
   
