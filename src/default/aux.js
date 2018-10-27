@@ -437,9 +437,9 @@ var question_choice_matches = question => choice =>
 
 var student_app_to_board_viewer =
 	under ([ L .pick ({
-    _board: [ app_board, as_maybe ],
-    _questions: [ app_questions, as_maybe ],
-    _past: [ app_past, as_maybe ] }), as_complete ]
+    _board: app_board,
+    _questions: app_questions,
+    _past: app_past }), as_complete ]
   ) (({ _board , _questions , _past }) =>
 		board_viewer .board_viewer (_board, _questions, _past))
 
