@@ -65,18 +65,18 @@ var api = so ((_=_=>
       ;api .sockets [room] = new_socket (id) }
 
     var begin, end
-    go
+    ;go
     .then (Z_ .K (api .sockets [room] .ready))
-    .then (tap (_ => {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))}))
+    .then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
     .then (_=> {;begin = performance .now ()})
     .then (Z_ .K (continuation))
     .then (_=> {;end = performance .now ()})
-    .then (tap (_ => {;
+    .then (_=> {;
       var sample = end - begin
       ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-      ;(_ping_listeners [room] || []) .forEach (fn => {{ ;fn (_ping_cache [room]) }}) }))
+      ;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
     
-    ;return continuation },
+    return continuation },
 where
 , new_id = _ => {
     var id = '' + Math .floor (1000000 * Math .random ())
@@ -88,7 +88,7 @@ where
         _socket .onopen = _ => {;resolve ()} })
     , send: _x => _socket .send (_x) },
     where
-    , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+    , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + id)
     ,$=
     _socket .onmessage = _event => {;
         var _packet = JSON .parse (_event .data)
