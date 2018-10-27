@@ -62,7 +62,8 @@ var api = so ((_=_=>
     ;continuation .catch (Z_ .I) .then (_=> {;delete api .continuations [id]})
 
     if (! api .sockets [room]) {
-      ;api .sockets [room] = new_socket (id) }
+      ;api .sockets [room] = new_socket (room) }
+    api .sockets [room] .assign_id (id)
 
     var begin, end
     ;go
