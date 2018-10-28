@@ -285,7 +285,7 @@ var lookbehind_latency = _ => {
 			 
 			 
 var record_room = _room => {;
-	var _student = T (S .sample (app_state)) (L .get ([ app_student, as_maybe ]))
+	var _student_maybe = T (S .sample (app_state)) (L .get ([ app_student, as_maybe ]))
 	;go 
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
@@ -297,7 +297,7 @@ var record_room = _room => {;
 				var _rules = T (_ensemble) (L .get (ensemble_rules))
 				var _setup = setup .setup (_room, _questions, default_rules)
 				;app_state (
-					student_app .get_ready ( _student, _setup )) } ])) )
+					student_app .get_ready ( _student_maybe, Z .Just (_setup) )) } ])) )
 		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
@@ -305,11 +305,11 @@ var record_room = _room => {;
 			;io_state (io .inert) }) }
 
 var record_student = _name => {;
-	var _setup = T (S .sample (app_state)) (L .get ([ app_setup, as_maybe ]))
+	var _setup_maybe = T (S .sample (app_state)) (L .get ([ app_setup, as_maybe ]))
 	;app_state (
 		student_app .get_ready (
 			Z .Just ([ uuid (), _name ])
-			, _setup )) }
+			, _setup_maybe )) }
 
 var connect_room = _ => {;
 	;T (S .sample (app_state)
