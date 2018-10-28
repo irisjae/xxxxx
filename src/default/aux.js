@@ -540,11 +540,11 @@ var past_stepped = old => curr =>
 
 var message_encoding = by (message => 
 	so ((_=_=>
-	[ R .cond (cases)
+	[ L .get (apply (cases) (L .cond))
 	, L .get (data_iso (ensemble .ensemble)) 
 	, strip ],
 	where
-	, strip = Z_ .compose (JSON .parse) (JSON .stringify)
+	, strip = [ L .reread ($ ([ JSON .stringify, JSON .parse ])) ]
   , cases = so ((_=_=>
       T (encodings) (Z_ .map (([pattern, encoding]) =>
         [L .isDefined (pattern), encoding] )),
