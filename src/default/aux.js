@@ -285,8 +285,8 @@ var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (stu
 var app_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), L .ifElse (Z_ .is (Z .MaybeType (Z$ .Any))) ()L .choices (['student', from_maybe], 'student') ]
-var app_setup = [L .choices (app_get_ready, app_playing, app_game_over), L .choices ([ 'setup', from_maybe ], 'setup')]
+var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), 'student', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (from_maybe) (L .identity) ]
+var app_setup = [ L .choices (app_get_ready, app_playing, app_game_over), 'setup', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (from_maybe) (L .identity) ]
 var app_board = [ L .choices (app_playing, app_game_over), 'board' ]
 var app_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
 
