@@ -548,10 +548,11 @@ var message_encoding = by (message =>
 	where
 	, strip = [ L .reread ($ ([ JSON .stringify, JSON .parse ])) ]
   , cases = so ((_=_=>
-      T (L .cond) (Z .flip (apply (
-        T (([pattern, encoding]) =>
+      T (L .cond) (
+      [ apply
+      , T (([pattern, encoding]) =>
           [L .isDefined (pattern), encoding] 
-        ) (x => Z_ .map (x) (encodings))))),
+        ) (x => Z_ .map (x) (encodings)) ])),
       where
       , student = T (message) (L .get (message_student))
       , encodings = 
