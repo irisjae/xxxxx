@@ -279,7 +279,7 @@ var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
-  [ L .reread ($ ([Z_ .flip (T (lens_shape) (Z_ .map (L .get))), as_complete]))
+  [ L .reread ($ ([Z_ .flip (T (lens_shape) (Z_ .map (L .get))), L .get (as_complete)]))
   , L .identity // implement rewrite
   ]
 
@@ -612,7 +612,7 @@ window .stuff = { ...window .stuff,
 	board_viewer,
 	io, message, ensemble, 
 	default_questions, default_rules,
-	as_maybe, from_maybe, as_complete,
+	as_maybe, from_maybe, as_complete, complete_,
 	app_nothing, app_get_ready, app_playing, app_game_over,
 	setup_room, setup_questions, setup_rules,
 	board_viewer_board, board_viewer_questions, board_viewer_past,

@@ -15,7 +15,7 @@ teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
 default_questions, default_rules,
-as_maybe, from_maybe, as_complete,
+as_maybe, from_maybe, as_complete, complete_,
 app_nothing, app_get_ready, app_playing, app_game_over,
 setup_room, setup_questions, setup_rules,
 board_viewer_board, board_viewer_questions, board_viewer_past,
@@ -315,10 +315,9 @@ var connect_room = _ => {;
 	;T (S .sample (app_state)
   ) (
 	under (
-    [ L .pick ({
-				_student: app_student,
-				_room: app_room })
-    , as_complete ]
+    complete_ ({
+      _student: app_student,
+      _room: app_room })
   ) (({ _student, _room }) => {;
 		var _setup
 		;return go 
@@ -525,10 +524,9 @@ S (_ => {;
 	;T (app_state ()
   ) (
   under (
-    [ L .pick ({
-				_student: app_student,
-				_room: app_room })
-    , as_complete ])
+    complete_ ({
+      _student: app_student,
+      _room: app_room })
 	) (({ _student, _room }) => {;
 		var phase = heartbeat ()
 		var critical = phase === 1
@@ -564,4 +562,4 @@ S (_ => {;
 				;heartbeat (phase) }
 			, 300) })
 		.then (_ => {;
-			;io_state (io .inert) }) }) })
+			;io_state (io .inert) }) })) })
