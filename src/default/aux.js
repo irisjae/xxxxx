@@ -547,7 +547,7 @@ var message_encoding = by (message =>
 	, strip = Z_ .compose (JSON .parse) (JSON .stringify)
   , cases = so ((_=_=>
       T (encodings) (Z_ .map (([pattern, encoding]) =>
-        [L .isDefined (pattern), L .get (encoding)] )),
+        [L .isDefined (pattern), encoding] )),
       where
       , student = T (message) (L .get (message_student))
       , encodings = 
