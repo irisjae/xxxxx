@@ -278,8 +278,8 @@ var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Noth
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
 //var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
-var complete_ => lenses =>
-  [ L .reread (Z .flip () )
+var complete_ = lenses =>
+  [ L .reread (Z_ .flip (Z_ .map (L .get)))
   ]
 
 
