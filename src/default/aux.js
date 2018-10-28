@@ -540,14 +540,14 @@ var past_stepped = old => curr =>
 
 var message_encoding = by (message => 
 	so ((_=_=>
-	[ Z_ .flip (cases)
+	[ R .cond (cases)
 	, L .get (data_iso (ensemble .ensemble)) 
 	, strip ],
 	where
 	, strip = Z_ .compose (JSON .parse) (JSON .stringify)
   , cases = so ((_=_=>
-      Z_ .flip (encodings) (([pattern, encoding]) =>
-        under (pattern) (L .get (encoding))] ),
+      T (encodings) (Z_ .map (([pattern, encoding]) =>
+        [L .isDefined (pattern), L .get (encoding)] )),
       where
       , student = T (message) (L .get (message_student))
       , encodings = 
