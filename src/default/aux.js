@@ -550,9 +550,9 @@ var message_encoding = by (message =>
   , cases = so ((_=_=>
       T (L .cond) (
       [ apply
-      , T (([pattern, encoding]) =>
+      , T (T (([pattern, encoding]) =>
           [L .isDefined (pattern), encoding] 
-        ) (x => Z_ .map (x) (encodings)) ])),
+        ) (x => Z_ .map (x) (encodings))) ]),
       where
       , student = T (message) (L .get (message_student))
       , encodings = 
