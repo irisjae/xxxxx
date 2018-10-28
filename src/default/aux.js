@@ -277,9 +277,10 @@ var pair_to_v = L .iso (
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
-//var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
-var complete_ = lenses =>
-  [ L .reread (Z_ .flip (Z_ .map (L .get)))
+var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
+var complete_ = lens_shape =>
+  [ L .reread ($ ([Z_ .flip (T (lens_shape) (Z_ .map (L .get))), as_complete]))
+  , L .identity // implement rewrite
   ]
 
 
@@ -407,9 +408,9 @@ var teacher_app_get_ready_to_playing = by (_app =>
     teacher_app .playing (_setup, [])))
 
 var student_app_get_ready_to_playing =
-  under ([ L .pick ({
-			_student: L .get (app_student),
-			_setup: L .get (app_setup) }), as_complete ]
+  under (complete_ ({
+			_student: app_student,
+			_setup: app_setup })
   ) (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
@@ -438,10 +439,10 @@ var question_choice_matches = question => choice =>
 	, correct_answers = T (question) (L .get (question_answers)) )=>_)
 
 var student_app_to_board_viewer =
-	under ([ L .pick ({
+	under (complete_ ({
     _board: app_board,
     _questions: app_questions,
-    _past: app_past }), as_complete ]
+    _past: app_past })
   ) (({ _board , _questions , _past }) =>
 		board_viewer .board_viewer (_board, _questions, _past))
 
