@@ -277,7 +277,10 @@ var pair_to_v = L .iso (
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
-var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
+//var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
+var complete_ => lenses =>
+  [ L .reread (Z .flip () )
+  ]
 
 
 var app_nothing = data_iso (teacher_app .nothing)
@@ -537,14 +540,14 @@ var past_stepped = old => curr =>
 
 var message_encoding = by (message => 
 	so ((_=_=>
-	[ R .cond (cases)
+	[ Z_ .flip (cases)
 	, L .get (data_iso (ensemble .ensemble)) 
 	, strip ],
 	where
 	, strip = Z_ .compose (JSON .parse) (JSON .stringify)
   , cases = so ((_=_=>
-      T (encodings) (Z_ .map (([pattern, encoding]) =>
-        [L .isDefined (pattern), L .get (encoding)] )),
+      Z_ .flip (encodings) (([pattern, encoding]) =>
+        under (pattern) (L .get (encoding))] ),
       where
       , student = T (message) (L .get (message_student))
       , encodings = 
