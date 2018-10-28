@@ -355,7 +355,7 @@ document .addEventListener ('DOMContentLoaded', _ => {{
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, under,
 	go, never, panic, panic_on,
   just_now, temporal,

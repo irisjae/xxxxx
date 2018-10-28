@@ -1,5 +1,5 @@
 var {
-	T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 	so, by, under,
 	tap, go, never, panic, panic_on,
   just_now, temporary,
@@ -548,10 +548,10 @@ var message_encoding = by (message =>
 	where
 	, strip = [ L .reread ($ ([ JSON .stringify, JSON .parse ])) ]
   , cases = so ((_=_=>
-      T (L .cond) (T (apply (
+      T (L .cond) (Z .flip (apply (
         T (([pattern, encoding]) =>
-          [L .isDefined (pattern), encoding] )
-        ) (x => Z_ .map (x) (encodings)))),
+          [L .isDefined (pattern), encoding] 
+        ) (x => Z_ .map (x) (encodings))))),
       where
       , student = T (message) (L .get (message_student))
       , encodings = 
