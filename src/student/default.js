@@ -1,4 +1,4 @@
-var { T, $, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+var { T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 so, by, under,
 go, never, panic, panic_on,
 just_now, temporal,
@@ -24,6 +24,7 @@ ensemble_questions, ensemble_rules,
 ensemble_ping, ensemble_start, ensemble_abort,
 ensemble_student_pings, ensemble_student_starts,
 ensemble_student_boards, ensemble_student_histories,
+attempt_position, attempt_latency, opportunity_attempts, opportunity_position, past_opportunities,
 app_setup, app_student, app_students, app_room,
 app_board, app_past, app_questions,
 opportunity_attempts,
@@ -295,7 +296,7 @@ var record_room = _room => {;
 			_ensemble => {;
 				var _questions = T (_ensemble) (L .get (ensemble_questions))
 				var _rules = T (_ensemble) (L .get (ensemble_rules))
-				var _setup = setup .setup (_room, _questions, default_rules)
+				var _setup = setup .setup (_room, _questions, _rules)
 				;app_state (
 					student_app .get_ready ( _student_maybe, Z .Just (_setup) )) } ])) )
 		.catch (_e => {;
@@ -329,7 +330,7 @@ var connect_room = _ => {;
 				 _ensemble => {;
 					 var _questions = T (_ensemble) (L .get (ensemble_questions))
 					 var _rules = T (_ensemble) (L .get (ensemble_rules))
-					 ;_setup = setup .setup (_room, _questions, default_rules) } ])) )
+					 ;_setup = setup .setup (_room, _questions, _rules) } ])) )
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
@@ -362,7 +363,7 @@ var attempt_question = _position => {;
         else {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_past, L .last, opportunity_attempts, L .append])
+              ([app_past, past_opportunities, L .last, opportunity_attempts, L .append])
               ([_position, latency]),
             _x => {;app_state (_x)} ])
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } } ]) }
