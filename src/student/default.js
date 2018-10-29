@@ -457,8 +457,8 @@ S (last_app => {;
 S (last_app => {;
 	var last_past = T (last_app) (L .get (app_past))
 	var past = T (app_state ()) (L .get (app_past))
-	if (L .isDefined (app_playing) (app_state ()) && last_past && past) {
-		if (past_stepped (last_past) (past)) {
+	if (L .isDefined (app_playing) (app_state ())) {
+		if (last_past && past && past_stepped (last_past) (past)) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -478,8 +478,8 @@ S (_ => {;
 S (last_state => {;
 	var last_past = T (last_state) (L .get (app_past))
 	var past = T (app_state ()) (L .get (app_past))
-	if (L .isDefined (app_playing) (app_state ()) && last_past && past) {
-		if (past_stepped (last_past) (past)) {
+	if (L .isDefined (app_playing) (app_state ())) {
+		if (last_past && past && past_stepped (last_past) (past)) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
