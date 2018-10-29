@@ -1,6 +1,6 @@
 var {
 	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-	so, by, under,
+	so, by, and_by, under,
 	tap, go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
@@ -467,14 +467,14 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_question = by (_questions => Z .flip (by (_past =>
+var current_question = by (_questions => and_by (_past =>
   $ (
   [ L .get (past_opportunities)
   , _opportunities =>
     so ((_=_=>
     L .get ([current_question_index, as_maybe]),
     where
-    , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ]))))
+    , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ])))
 
 var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
@@ -535,9 +535,13 @@ var board_viewer_bingoed_positions = _board_viewer =>
   , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 
-var past_stepped = by (old => Z .flip (by) (curr =>
-  under (past_opportunities) (
-	Z_ .size (curr) > Z_ .size (old)))
+var past_stepped = by (old_past => and_by (curr_past =>
+  under (complete_ (L .pick (
+    { old: past_opportunities
+    , curr: past_opportunities } ))
+  ) (
+  ({ old, curr }) =>
+    Z_ .size (curr) > Z_ .size (old))))
 
 
 var message_encoding = by (message => 
