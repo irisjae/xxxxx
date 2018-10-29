@@ -59,7 +59,7 @@ var so = fn_form =>
 	? fn_form () ()
 	: fn_form ()
 var by = _meta_fn => x => T (x) (_meta_fn (x))
-var and_by = Z .flip (by)
+var and_by = $ ([ by, Z .flip ])
 var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
 var go = Promise .resolve ()
 var never = new Promise (_ => {})
@@ -234,10 +234,11 @@ var pair_projection = key_projection => val_projection =>
 	
 	
 	
-var map_defined = fn => _x =>
+var map_defined_ = default_ => fn => _x =>
 	!! (_x === undefined)
-	? undefined
+	? default_
 	: fn (_x)
+var map_defined = map_defined_ (undefined)
 var from_just = _x =>
 	Z_ .fromMaybe (undefined) (_x)
 /*var maybe_all_list = list =>
@@ -362,5 +363,5 @@ window .stuff = { ...window .stuff,
   just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
-	map_defined, from_just, maybe_all,
+	map_defined_, map_defined, from_just, maybe_all,
 	sole, every, delay }

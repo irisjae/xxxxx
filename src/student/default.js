@@ -177,7 +177,7 @@ var playing_view = _ => <playing-etc>
 			so ((_=_=>
 			[ T (current_question
 				) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
-			, <ticker>{ T (game_tick) (Z_ .maybe ('') (t => 10 - t)) }</ticker>
+			, <ticker>{ T (game_tick) (map_defined (t => 10 - t)) }</ticker>
 			, <board> { T (_board) (Z_ .map (_row => 
 					<row> { T (_row) (Z_ .map (_cell =>
 						so ((_=_=>

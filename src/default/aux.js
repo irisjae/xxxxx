@@ -5,7 +5,7 @@ var {
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
-	map_defined, from_just, maybe_all,
+	map_defined_, map_defined, from_just, maybe_all,
 	sole, every, delay	 
 } = window .stuff
 
