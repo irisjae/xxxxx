@@ -355,7 +355,7 @@ var attempt_question = _position => {;
         if (question_choice_matches (_question) (_choice)) {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_past, L .last, opportunity_attempts, L .append])
+              ([app_past, past_opportunities, L .last, opportunity_attempts, L .append])
               ([_position, latency]),
             student_app_playing_to_next,
             _x => {;app_state (_x)} ]) }
