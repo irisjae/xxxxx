@@ -535,13 +535,13 @@ var board_viewer_bingoed_positions = _board_viewer =>
   , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 
-var past_stepped = by (old_past => and_by (curr_past =>
-  under (complete_ (L .pick (
-    { old: past_opportunities
-    , curr: past_opportunities } ))
-  ) (
-  ({ old, curr }) =>
-    Z_ .size (curr) > Z_ .size (old))))
+var past_stepped = old_past => curr_past =>
+  so ((_=_=>
+  Z_ .size (curr) > Z_ .size (old),
+  where
+  , old = T (old_past) (L .get (past_opportunities))
+  , curr = T (curr_past) (L .get (past_opportunities)) )=>_)
+    
 
 
 var message_encoding = by (message => 
