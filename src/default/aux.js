@@ -348,10 +348,10 @@ var setup_size = [setup_rules, rules_size]
 var question_view = [ 0 ]
 var question_answers = [ 1 ]
 
-var cell_position = L .reread (_x => [ _x [0], _x [1] ])
+var cell_as_position = L .reread (_x => [ _x [0], _x [1] ])
 var cell_choice = [ 2 ]
 
-var position_lens = ([x, y]) => [x - 1, y - 1]
+var as_position = ([x, y]) => [x - 1, y - 1]
 
 var pair_as_list = L .cond (
 	[ _x => Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_x)
@@ -364,7 +364,7 @@ var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_mean = [ 1 ]
 
-var students_mapping = 
+var students_as_mapping = 
 	[ L .keyed
 	, L .reread (
 			Z_ .map (pair => so ((_=_=>
@@ -375,8 +375,8 @@ var students_mapping =
 				, name = R .head (inner_pair)
 				, val = R .last (inner_pair) )=>_)))
 	, L .elems ]
-var map_students = [ students_mapping, pair_as_list, L .first ]
-var mapping_students = [ students_mapping, pair_as_list, L .last ]
+var map_as_students = [ students_as_mapping, pair_as_list, L .first ]
+var mapping_as_students = [ students_as_mapping, pair_as_list, L .last ]
 
 
 
@@ -502,7 +502,7 @@ var answered_positions = _questions => _board => _past => so ((_=_=>
     where
     , _position = T (_opportunity) (L .get (opportunity_position))
     , _choice = T (_position) (map_defined (_position =>
-        T (_board) (L .get ([ position_lens (_position), cell_choice ]))))  )=>_)))),
+        T (_board) (L .get ([ as_position (_position), cell_choice ]))))  )=>_)))),
   where
   , _opportunities = T (_past) (L .get (past_opportunities)) )=>_)
 
@@ -584,15 +584,15 @@ var assemble_students = kind => ensemble =>
 	!! (kind === 'nothing')
   ? undefined
 	: !! (kind === 'get_ready')
-	? T (ensemble) (L .collect ([ ensemble_student_pings, map_students ]))
+	? T (ensemble) (L .collect ([ ensemble_student_pings, map_as_students ]))
 	: !! (kind === 'playing' || kind === 'game_over')
 	? so ((_=_=>
 		pair_zip (_a => _b => [_a, _b]) (boards) (histories),
 		where
 		, boards = T (ensemble
-        ) (L .collect ([ ensemble_student_boards, students_mapping ]))
+        ) (L .collect ([ ensemble_student_boards, students_as_mapping ]))
 		, histories = T (ensemble
-        ) (L .collect ([ ensemble_student_histories, students_mapping ])) )=>_)
+        ) (L .collect ([ ensemble_student_histories, students_as_mapping ])) )=>_)
 	: panic ('unknown student kind')
 
 var schedule_start = _ensemble =>
@@ -600,7 +600,7 @@ var schedule_start = _ensemble =>
 	(new Date) .getTime () + confidence_interval,
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_ping))
-	, student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_students ]))
+	, student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_as_students ]))
 	, pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_mean)))
 	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
@@ -632,7 +632,7 @@ window .stuff = { ...window .stuff,
 	opportunity_attempts,
 	rules_size, setup_size,
 	question_view, question_answers,
-	cell_position, position_lens,
+	cell_as_position, as_position,
 	cell_choice, student_name,
 	past_stepped,
 	message_encoding, messages_encoding,
