@@ -199,7 +199,7 @@ var playing_view = _ => <playing-etc>
 			, current_question = T (_board_viewer) (board_viewer_current_question)
 			, crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
 			, bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
-			, game_tick = game_tick_sampler ()
+			, game_tick = just_now (game_tick_sampler)
       , cell_feedback = cell => _dom => {;
           ;clicking .forEach (click => {;
             ;_dom .addEventListener (click, _ => {;
@@ -383,10 +383,10 @@ var timesup_question = _ => {;
 
 
 var game_clock = new TimelineMax
-var game_tick_sampler = S .data (Z .Nothing)
+var game_tick_sampler = temporal ()
 ;game_clock .add (timesup_question, 10)
 ;T (R .range (0, 10 + 1)) (
-	R .forEach (t => game_clock .add (_ => {;game_tick_sampler (Z .Just (t))}, t)))
+	R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t)))
 
 
 var reping_period = 3

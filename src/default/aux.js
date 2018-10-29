@@ -535,8 +535,8 @@ var board_viewer_bingoed_positions = _board_viewer =>
   , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 
-var past_stepped = old => curr =>
-	Z_ .size (curr) > Z_ .size (old)
+var past_stepped = under (past_opportunities) (old => under (past_opportunities) (curr =>
+	Z_ .size (curr) > Z_ .size (old)))
 
 
 var message_encoding = by (message => 
