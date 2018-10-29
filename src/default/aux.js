@@ -336,20 +336,20 @@ var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards
 var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
-var attempt_position = [ 0 ]
-var attempt_latency = [ 1 ]
-var opportunity_attempts = data_lens (opportunity .opportunity) .attempts
-var opportunity_position = [ opportunity_attempts, L .last, attempt_position ] 
-var past_opportunities = data_lens (past .past) .opportunities
+var attempt_as_position = [ 0 ]
+var attempt_as_latency = [ 1 ]
+var opportunity_as_attempts = data_lens (opportunity .opportunity) .attempts
+var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_position ] 
+var past_as_opportunities = data_lens (past .past) .opportunities
 		
-var rules_size = data_lens (rules .rules) .size
-var setup_size = [setup_rules, rules_size]
+var rules_as_size = data_lens (rules .rules) .size
+var setup_as_size = [setup_rules, rules_as_size]
 
-var question_view = [ 0 ]
-var question_answers = [ 1 ]
+var question_as_question = [ 0 ]
+var question_as_answers = [ 1 ]
 
 var cell_as_position = L .reread (_x => [ _x [0], _x [1] ])
-var cell_choice = [ 2 ]
+var cell_as_choice = [ 2 ]
 
 var as_position = ([x, y]) => [x - 1, y - 1]
 
@@ -362,7 +362,7 @@ var pair_as_list = L .cond (
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
 var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
-var ping_mean = [ 1 ]
+var ping_as_mean = [ 1 ]
 
 var students_as_mapping = 
 	[ L .keyed
@@ -397,7 +397,7 @@ var generate_board = size => questions =>
 	, cell = y => x =>
 			T (cells) (L .get ([
 				(x - 1) * size + (y - 1),
-				question_answers,
+				question_as_answers,
 				L .reread (shuffle),
 				L .first ])) )=>_)
 
@@ -416,7 +416,7 @@ var student_app_get_ready_to_playing =
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_past),
 		where 
-		, _size = L .get (setup_size) (_setup)
+		, _size = L .get (setup_as_size) (_setup)
 		, _questions = L .get (setup_questions) (_setup)
 		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_))
 
@@ -424,13 +424,13 @@ var student_app_playing_to_next =
 	by (_app => 
 		so ((_=_=>
 		!! (past_size < board_size * board_size)
-		? L .set ([ app_past, past_opportunities, L .append ]) (opportunity .opportunity ([]))
+		? L .set ([ app_past, past_as_opportunities, L .append ]) (opportunity .opportunity ([]))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
-		, board_size = T (_app) (L .get ([app_setup, setup_size]))
-		, past_size = T (_app) ([ L .get ([app_past, past_opportunities]), Z_ .size ]) )=>_)) 
+		, board_size = T (_app) (L .get ([app_setup, setup_as_size]))
+		, past_size = T (_app) ([ L .get ([app_past, past_as_opportunities]), Z_ .size ]) )=>_)) 
 				 
 var question_choice_matches = question => choice =>
 	so ((_=_=>
@@ -469,7 +469,7 @@ var size_patterns = memoize (size =>
 
 var current_question = by (_questions => and_by (_past =>
   $ (
-  [ L .get (past_opportunities)
+  [ L .get (past_as_opportunities)
   , _opportunities =>
     so ((_=_=>
     L .get ([current_question_index, as_maybe]),
@@ -484,7 +484,7 @@ var board_viewer_current_question = _board_viewer =>
 	, _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
 
 var attempted_positions = by (_past =>
-  L .collect ([ past_opportunities, L .elems, opportunity_position ]))
+  L .collect ([ past_as_opportunities, L .elems, opportunity_as_position ]))
 
 var board_viewer_attempted_positions = by (_board_viewer =>
 	under (board_viewer_past
@@ -500,11 +500,11 @@ var answered_positions = _questions => _board => _past => so ((_=_=>
     ? [ _position ]
     : [],
     where
-    , _position = T (_opportunity) (L .get (opportunity_position))
+    , _position = T (_opportunity) (L .get (opportunity_as_position))
     , _choice = T (_position) (map_defined (_position =>
-        T (_board) (L .get ([ as_position (_position), cell_choice ]))))  )=>_)))),
+        T (_board) (L .get ([ as_position (_position), cell_as_choice ]))))  )=>_)))),
   where
-  , _opportunities = T (_past) (L .get (past_opportunities)) )=>_)
+  , _opportunities = T (_past) (L .get (past_as_opportunities)) )=>_)
 
 var board_viewer_answered_positions = _board_viewer =>
   so ((_=_=>
@@ -539,8 +539,8 @@ var past_stepped = old_past => curr_past =>
   so ((_=_=>
   Z_ .size (curr) > Z_ .size (old),
   where
-  , old = T (old_past) (L .get (past_opportunities))
-  , curr = T (curr_past) (L .get (past_opportunities)) )=>_)
+  , old = T (old_past) (L .get (past_as_opportunities))
+  , curr = T (curr_past) (L .get (past_as_opportunities)) )=>_)
     
 
 
@@ -601,7 +601,7 @@ var schedule_start = _ensemble =>
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_ping))
 	, student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_as_students ]))
-	, pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_mean)))
+	, pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_as_mean)))
 	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
 
@@ -626,14 +626,14 @@ window .stuff = { ...window .stuff,
 	ensemble_ping, ensemble_start, ensemble_abort,
 	ensemble_student_pings, ensemble_student_starts,
 	ensemble_student_boards, ensemble_student_histories,
-  attempt_position, attempt_latency, opportunity_attempts, opportunity_position, past_opportunities,
+  attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 	app_setup, app_student, app_students, app_room,
 	app_board, app_past, app_questions,
-	opportunity_attempts,
-	rules_size, setup_size,
-	question_view, question_answers,
+	opportunity_as_attempts,
+	rules_as_size, setup_as_size,
+	question_as_question, question_as_answers,
 	cell_as_position, as_position,
-	cell_choice, student_name,
+	cell_as_choice, student_name,
 	past_stepped,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
