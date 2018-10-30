@@ -86,7 +86,8 @@ where
 , new_socket = room => so ((_=_=>_||
     { ready: new Promise ((resolve, reject) => {;
         _socket .onopen = _ => {;resolve ()} })
-    , send: _x => _socket .send (_x) },
+    , send: _x => _socket .send (_x)
+    , _socket: _socket },
     where
     , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
     ,$=
