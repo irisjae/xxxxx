@@ -307,34 +307,34 @@ var setup_rules = data_lens (setup .setup) .rules
 var app_room = [ app_setup, setup_room ]
 var app_questions = [ app_setup, setup_questions ]
 
-var io_inert = data_iso (io .inert)
-var io_connecting = data_iso (io .connecting)
-var io_heartbeat = data_iso (io .heartbeat)
+var io_as_inert = data_iso (io .inert)
+var io_as_connecting = data_iso (io .connecting)
+var io_as_heartbeat = data_iso (io .heartbeat)
 
-var message_teacher_setup = data_iso (message .teacher_setup)
-var message_teacher_ping = data_iso (message .teacher_ping) 
-var message_teacher_start = data_iso (message .teacher_start) 
-var message_teacher_abort = data_iso (message .teacher_abort) 
-var message_student_ping = data_iso (message .student_ping) 
-var message_student_join = data_iso (message .student_join) 
-var message_student_start = data_iso (message .student_start) 
-var message_student_update = data_iso (message .student_update) 
+var message_as_teacher_setup = data_iso (message .teacher_setup)
+var message_as_teacher_ping = data_iso (message .teacher_ping) 
+var message_as_teacher_start = data_iso (message .teacher_start) 
+var message_as_teacher_abort = data_iso (message .teacher_abort) 
+var message_as_student_ping = data_iso (message .student_ping) 
+var message_as_student_join = data_iso (message .student_join) 
+var message_as_student_start = data_iso (message .student_start) 
+var message_as_student_update = data_iso (message .student_update) 
 
-var message_student = [L .choices (message_student_ping, message_student_join, message_student_start, message_student_update), 'student']
-var message_ping = [L .choices (message_teacher_ping, message_student_ping), 'ping']
-var message_synchronization = L .choices (message_teacher_start, message_teacher_abort, message_student_start .synchronization)
-var message_board = message_student_join .board
-var message_past = message_student_update .past
+var message_as_student = [L .choices (message_as_student_ping, message_as_student_join, message_as_student_start, message_as_student_update), 'student']
+var message_as_ping = [L .choices (message_as_teacher_ping, message_as_student_ping), 'ping']
+var message_as_synchronization = L .choices (message_as_teacher_start, message_as_teacher_abort, message_as_student_start .synchronization)
+var message_as_board = message_as_student_join .board
+var message_as_past = message_as_student_update .past
 	
-var ensemble_questions = data_iso (ensemble .ensemble) .questions 
-var ensemble_rules = data_iso (ensemble .ensemble) .rules 
-var ensemble_ping = data_iso (ensemble .ensemble) .ping 
-var ensemble_start = data_iso (ensemble .ensemble) .start 
-var ensemble_abort = data_iso (ensemble .ensemble) .abort 
-var ensemble_student_pings = data_iso (ensemble .ensemble) .student_pings 
-var ensemble_student_boards = data_iso (ensemble .ensemble) .student_boards 
-var ensemble_student_starts = data_iso (ensemble .ensemble) .student_starts 
-var ensemble_student_histories = data_iso (ensemble .ensemble) .student_histories 
+var ensemble_as_questions = data_iso (ensemble .ensemble) .questions 
+var ensemble_as_rules = data_iso (ensemble .ensemble) .rules 
+var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
+var ensemble_as_start = data_iso (ensemble .ensemble) .start 
+var ensemble_as_abort = data_iso (ensemble .ensemble) .abort 
+var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings 
+var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
+var ensemble_as_student_starts = data_iso (ensemble .ensemble) .student_starts 
+var ensemble_as_student_histories = data_iso (ensemble .ensemble) .student_histories 
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
@@ -558,24 +558,24 @@ var message_encoding = by (message =>
           [L .isDefined (pattern), encoding] 
         ) (x => Z_ .map (x) (encodings)) ),
       where
-      , student = T (message) (L .get (message_student))
+      , student = T (message) (L .get (message_as_student))
       , encodings = 
-        [ [ message_teacher_setup , 
-            under (message_teacher_setup) (L .getInverse (data_iso (ensemble .ensemble))) ]
-        , [ message_teacher_ping , 
-            under (message_ping) (L .getInverse (ensemble_ping)) ]
-        , [ message_teacher_start , 
-            under (message_synchronization) (L .getInverse (ensemble_start)) ]
-        , [ message_teacher_abort , 
-            under (message_synchronization) (L .getInverse (ensemble_abort)) ]
-        , [ message_student_ping , 
-            under (message_ping) (L .getInverse ([ ensemble_student_pings, student ])) ]
-        , [ message_student_join , 
-            under (message_board) (L .getInverse ([ ensemble_student_boards, student ])) ]
-        , [ message_student_start , 
-            under (message_synchronization) (L .getInverse ([ ensemble_student_starts, student ])) ]
-        , [ message_student_update , 
-            under (message_past) (L .getInverse ([ ensemble_student_histories, student ])) ] ] )=>_) )=>_))
+        [ [ message_as_teacher_setup , 
+            under (message_as_teacher_setup) (L .getInverse (data_iso (ensemble .ensemble))) ]
+        , [ message_as_teacher_ping , 
+            under (message_as_ping) (L .getInverse (ensemble_as_ping)) ]
+        , [ message_as_teacher_start , 
+            under (message_as_synchronization) (L .getInverse (ensemble_as_start)) ]
+        , [ message_as_teacher_abort , 
+            under (message_as_synchronization) (L .getInverse (ensemble_as_abort)) ]
+        , [ message_as_student_ping , 
+            under (message_as_ping) (L .getInverse ([ ensemble_as_student_pings, student ])) ]
+        , [ message_as_student_join , 
+            under (message_as_board) (L .getInverse ([ ensemble_as_student_boards, student ])) ]
+        , [ message_as_student_start , 
+            under (message_as_synchronization) (L .getInverse ([ ensemble_as_student_starts, student ])) ]
+        , [ message_as_student_update , 
+            under (message_as_past) (L .getInverse ([ ensemble_as_student_histories, student ])) ] ] )=>_) )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
@@ -584,23 +584,23 @@ var assemble_students = kind => ensemble =>
 	!! (kind === 'nothing')
   ? undefined
 	: !! (kind === 'get_ready')
-	? T (ensemble) (L .collect ([ ensemble_student_pings, map_as_students ]))
+	? T (ensemble) (L .collect ([ ensemble_as_student_pings, map_as_students ]))
 	: !! (kind === 'playing' || kind === 'game_over')
 	? so ((_=_=>
 		pair_zip (_a => _b => [_a, _b]) (boards) (histories),
 		where
 		, boards = T (ensemble
-        ) (L .collect ([ ensemble_student_boards, students_as_mapping ]))
+        ) (L .collect ([ ensemble_as_student_boards, students_as_mapping ]))
 		, histories = T (ensemble
-        ) (L .collect ([ ensemble_student_histories, students_as_mapping ])) )=>_)
+        ) (L .collect ([ ensemble_as_student_histories, students_as_mapping ])) )=>_)
 	: panic ('unknown student kind')
 
 var schedule_start = _ensemble =>
 	so ((_=_=>
 	(new Date) .getTime () + confidence_interval,
 	where
-	, teacher_ping = T (_ensemble) (L .get (ensemble_ping))
-	, student_pings = T (_ensemble) (L .collect ([ ensemble_student_pings, mapping_as_students ]))
+	, teacher_ping = T (_ensemble) (L .get (ensemble_as_ping))
+	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_student_pings, mapping_as_students ]))
 	, pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_as_mean)))
 	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
@@ -621,11 +621,11 @@ window .stuff = { ...window .stuff,
 	app_nothing, app_get_ready, app_playing, app_game_over,
 	setup_room, setup_questions, setup_rules,
 	board_viewer_board, board_viewer_questions, board_viewer_past,
-	io_inert, io_connecting, io_heartbeat,
-	ensemble_questions, ensemble_rules,
-	ensemble_ping, ensemble_start, ensemble_abort,
-	ensemble_student_pings, ensemble_student_starts,
-	ensemble_student_boards, ensemble_student_histories,
+	io_as_inert, io_as_connecting, io_as_heartbeat,
+	ensemble_as_questions, ensemble_as_rules,
+	ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
+	ensemble_as_student_pings, ensemble_as_student_starts,
+	ensemble_as_student_boards, ensemble_as_student_histories,
   attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 	app_setup, app_student, app_students, app_room,
 	app_board, app_past, app_questions,
