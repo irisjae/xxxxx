@@ -233,12 +233,12 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, student_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fimage18.png'
 	, _app = app_state ()
 	, _ensemble = ensemble_state ()
-	, all_students = T (_ensemble) (assemble_students (data_kind (_app)))
+	, all_students = T (_ensemble) (assemble_students (_app))
 	, questions = T (_app) (L .collect ([ app_as_questions, L .elems, question_as_question ]))
 	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, opportunity_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
 	, average_time = T (_ensemble) ([
-			assemble_students (data_kind (_app)),
+			assemble_students (_app),
 			Z_ .map ($ ([
 				Z .snd,
 				L .collect ([ [1], L .elems, opportunity_as_attempts, L .last, [1], as_maybe ]),

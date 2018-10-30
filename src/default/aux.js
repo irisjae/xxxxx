@@ -519,52 +519,56 @@ var message_encoding = by (message =>
 	so ((_=_=>
 	$ (
   [ Z .flip (cases)
+  , L .collect (L .elems)
   , sole
 	, L .get (data_iso (ensemble .ensemble))
 	, strip ]),
 	where
 	, strip = $ ([ JSON .stringify, JSON .parse ]) 
-  , cases = so ((_=_=>
-      R .cond (
-        T (([pattern, encoding]) =>
-          [L .isDefined (pattern), encoding] 
-        ) (x => Z_ .map (x) (encodings)) ),
-      where
-      , encodings = 
-        [ under (message_as_teacher_setup
-          ) (L .getInverse (data_iso (ensemble .ensemble))) 
-        , under (message_as_teacher_ping
-          ) (L .getInverse (ensemble_as_ping))
-        , under (message_as_teacher_start
-          ) (L .getInverse (ensemble_as_start))
-        , under (message_as_teacher_abort
-          ) (L .getInverse (ensemble_as_abort)) 
-        , under (message_as_student_ping. ping
-          ) (L .getInverse ([ ensemble_as_student_pings, student ]))
-        , under (message_as_student_join. board
-          ) (L .getInverse ([ ensemble_as_student_boards, student ]))
-        , under (message_as_student_start .synchronization
-          ) (L .getInverse ([ ensemble_as_student_starts, student ]))
-        , under (message_as_student_update .past
-          ) (L .getInverse ([ ensemble_as_student_histories, student ])) ] )=>_) )=>_))
+  , student = T (message) (L .get (message_as_student))
+  , cases = 
+      [ under (message_as_teacher_setup
+        ) (L .getInverse (data_iso (ensemble .ensemble))) 
+      , under (message_as_teacher_ping
+        ) (L .getInverse (ensemble_as_ping))
+      , under (message_as_teacher_start
+        ) (L .getInverse (ensemble_as_start))
+      , under (message_as_teacher_abort
+        ) (L .getInverse (ensemble_as_abort)) 
+      , under (message_as_student_ping. ping
+        ) (L .getInverse ([ ensemble_as_student_pings, student ]))
+      , under (message_as_student_join. board
+        ) (L .getInverse ([ ensemble_as_student_boards, student ]))
+      , under (message_as_student_start .synchronization
+        ) (L .getInverse ([ ensemble_as_student_starts, student ]))
+      , under (message_as_student_update .past
+        ) (L .getInverse ([ ensemble_as_student_histories, student ])) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
-var assemble_students = kind => ensemble =>
+var assemble_students = by (_app => and_by (_ensemble =>
+  so ((_=_=>
+  $ ([ Z .flip (cases), L .collect (L .elems), sole ]),
+  where
+  , cases =
+      [ under (app_as_get_ready
+        ) (
+        L .collect ([ ensemble_as_student_pings, map_as_students ]))
+      , under () ]
 	!! (kind === 'nothing')
   ? undefined
 	: !! (kind === 'get_ready')
-	? T (ensemble) (L .collect ([ ensemble_as_student_pings, map_as_students ]))
+	? T (_ensemble) (L .collect ([ ensemble_as_student_pings, map_as_students ]))
 	: !! (kind === 'playing' || kind === 'game_over')
 	? so ((_=_=>
 		pair_zip (_a => _b => [_a, _b]) (boards) (histories),
 		where
-		, boards = T (ensemble
+		, boards = T (_ensemble
         ) (L .collect ([ ensemble_as_student_boards, students_as_mapping ]))
-		, histories = T (ensemble
+		, histories = T (_ensemble
         ) (L .collect ([ ensemble_as_student_histories, students_as_mapping ])) )=>_)
-	: panic ('unknown student kind')
+	: panic ('unknown student kind') ))
 
 var schedule_start = _ensemble =>
 	so ((_=_=>
