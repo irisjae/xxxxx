@@ -347,7 +347,7 @@ S (_ => {;
 						_x => {;
 							;ensemble_state (_x) } ])) )
       .catch ($ (
-      [ panic_on ([])
+      [ panic_on ([under ('error') (x => x !== 'timeout'), 'rethrow'])
       , ]))
 			.then (_ => {;
 				;setTimeout (_ => {;
