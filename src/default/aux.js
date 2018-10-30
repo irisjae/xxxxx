@@ -86,10 +86,19 @@ where
     : new_id () }
 , new_socket = room => so ((_=_=>
     rec =
-    { ready: _
-    , refresh: _ => {;
-        if (_socket .readyState === WebSocket .CLOSED
+    { _socket: _
+    , ready: _
+    , refresh: refresh
+    , send: _x => _socket .send (_x) },
+    where
+    , rec = _
+    , _socket = _
+    , refresh = _ => {;
+        if (! _socket
+        || _socket .readyState === WebSocket .CLOSED
         || _socket .readyState === WebSocket .CLOSING) {
+          _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+          rec ._socket = _socket
           rec .ready = new Promise ((resolve, reject) => {;
             _socket .onopen = _ => {;resolve ()} })
           _socket .onmessage = _event => {;
@@ -97,15 +106,9 @@ where
             var id = _packet .id
             var data = _packet .body
             if (api .continuations [id]) {;
-               ;api .continuations [id] (data) } }
-        } }
-    , send: _x => _socket .send (_x)
-    , _socket: _socket },
-    where
-    , rec = _
-    , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+               ;api .continuations [id] (data) } } } }
     ,$=
-    rec .refresh () )=>_)
+    refresh () )=>_)
       
 , update_pings = sample =>
   $ (
