@@ -554,21 +554,16 @@ var assemble_students = by (_app => and_by (_ensemble =>
   , cases =
       [ under (app_as_get_ready
         ) (
-        L .collect ([ ensemble_as_student_pings, map_as_students ]))
-      , under () ]
-	!! (kind === 'nothing')
-  ? undefined
-	: !! (kind === 'get_ready')
-	? T (_ensemble) (L .collect ([ ensemble_as_student_pings, map_as_students ]))
-	: !! (kind === 'playing' || kind === 'game_over')
-	? so ((_=_=>
-		pair_zip (_a => _b => [_a, _b]) (boards) (histories),
-		where
-		, boards = T (_ensemble
-        ) (L .collect ([ ensemble_as_student_boards, students_as_mapping ]))
-		, histories = T (_ensemble
-        ) (L .collect ([ ensemble_as_student_histories, students_as_mapping ])) )=>_)
-	: panic ('unknown student kind') ))
+        Z_ .K (L .collect ([ ensemble_as_student_pings, map_as_students ])))
+      , under (L .choice (app_as_playing, app_as_game_over)
+        ) (
+        //collect this instead of get!
+        Z_ .K (
+        under (L .pick (
+          { boards: [ ensemble_as_student_boards, students_as_mapping ]
+          , histories: [ ensemble_as_student_histories, students_as_mapping ] })
+        ) (({ boards, histories }) =>
+          pair_zip (_a => _b => [_a, _b]) (boards) (histories) ))) ] )=>_)))
 
 var schedule_start = _ensemble =>
 	so ((_=_=>
