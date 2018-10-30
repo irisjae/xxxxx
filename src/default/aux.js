@@ -84,25 +84,28 @@ where
     return !! Z_ .not (api .continuations [id])
     ? id
     : new_id () }
-, new_socket = room => so ((_=_=>_||
-    { ready: new Promise ((resolve, reject) => {;
-        _socket .onopen = _ => {;resolve ()} })
+, new_socket = room => so ((_=_=>
+    rec =
+    { ready: _
     , refresh: _ => {;
         if (_socket .readyState === WebSocket .CLOSED
         || _socket .readyState === WebSocket .CLOSING) {
-          
+          rec .ready = new Promise ((resolve, reject) => {;
+            _socket .onopen = _ => {;resolve ()} })
+          _socket .onmessage = _event => {;
+            var _packet = JSON .parse (_event .data)
+            var id = _packet .id
+            var data = _packet .body
+            if (api .continuations [id]) {;
+               ;api .continuations [id] (data) } }
         } }
     , send: _x => _socket .send (_x)
     , _socket: _socket },
     where
+    , rec = _
     , _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
     ,$=
-    _socket .onmessage = _event => {;
-        var _packet = JSON .parse (_event .data)
-        var id = _packet .id
-        var data = _packet .body
-        if (api .continuations [id]) {;
-           ;api .continuations [id] (data) } } )=>_)
+    rec .refresh () )=>_)
       
 , update_pings = sample =>
   $ (
