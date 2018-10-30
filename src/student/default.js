@@ -15,23 +15,23 @@ teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
 default_questions, default_rules,
-as_maybe, from_maybe, as_complete, complete_,
-app_nothing, app_get_ready, app_playing, app_game_over,
-setup_room, setup_questions, setup_rules,
-board_viewer_board, board_viewer_questions, board_viewer_past,
-io_inert, io_connecting, io_heartbeat,
-ensemble_questions, ensemble_rules,
-ensemble_ping, ensemble_start, ensemble_abort,
-ensemble_student_pings, ensemble_student_starts,
-ensemble_student_boards, ensemble_student_histories,
-attempt_position, attempt_latency, opportunity_attempts, opportunity_position, past_opportunities,
-app_setup, app_student, app_students, app_room,
-app_board, app_past, app_questions,
-opportunity_attempts,
-rules_size, setup_size,
-question_view, question_answers,
-cell_position, position_lens,
-cell_choice, student_name,
+as_maybe, as_defined, as_complete, complete_,
+app_as_nothing, app_as_get_ready, app_as_playing, app_as_game_over,
+setup_as_room, setup_as_questions, setup_as_rules,
+board_viewer_as_board, board_viewer_as_questions, board_viewer_as_past,
+io_as_inert, io_as_connecting, io_as_heartbeat,
+ensemble_as_questions, ensemble_as_rules,
+ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
+ensemble_as_student_pings, ensemble_as_student_starts,
+ensemble_as_student_boards, ensemble_as_student_histories,
+attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
+app_as_setup, app_as_student, app_as_students, app_as_room,
+app_as_board, app_as_past, app_as_questions,
+opportunity_as_attempts,
+rules_as_size, setup_as_size,
+question_as_question, question_as_answers,
+cell_as_position, as_position,
+cell_as_choice, student_name,
 past_stepped,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
@@ -145,21 +145,21 @@ var name_entry_view = _ => so ((_=_=>
 var get_ready_view = <get-ready-etc>
 	{ so ((
 		take
-		, room = T (app_state ()) (L .get ([ app_room, as_maybe ]))
-		, student = T (app_state ()) (L .get ([ app_student, as_maybe ])) ) =>
+		, room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
+		, student = T (app_state ()) (L .get ([ app_as_student, as_maybe ])) ) =>
 		!! Z .isNothing (room) ?
-      !! (L .isDefined (io_inert
+      !! (L .isDefined (io_as_inert
       ) (io_state ()))
 			? room_entry_view
-			: !! (L .isDefined (L .choice (io_connecting, io_heartbeat)
+			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
       ) (io_state ()))
       ? 'Finding room...'
       : panic ('invalid io at get ready view')
 		:!! Z .isNothing (student) ?
-      !! (L .isDefined (io_inert
+      !! (L .isDefined (io_as_inert
       ) (io_state ()))
 			? name_entry_view
-			: !! (L .isDefined (L .choice (io_connecting, io_heartbeat)
+			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
       ) (io_state ()))
       ? 'Trying to join room...'
       : panic ('invalid io at get ready view')
@@ -176,7 +176,7 @@ var playing_view = _ => <playing-etc>
 		) (_board_viewer =>
 			so ((_=_=>
 			[ T (current_question
-				) (Z_ .maybe ('') (_x => <question>{ L .get (question_view) (_x) }</question>))
+				) (Z_ .maybe ('') (_x => <question>{ L .get (question_as_question) (_x) }</question>))
 			, <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
 			, <board> { T (_board) (Z_ .map (_row => 
 					<row> { T (_row) (Z_ .map (_cell =>
@@ -187,15 +187,15 @@ var playing_view = _ => <playing-etc>
 						? <cell>{ crossed (_cell_choice) }</cell>
 						: <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
 						where
-						, _cell_position = T (_cell) (L .get (cell_position))
-						, _cell_choice = T (_cell) (L .get (cell_choice))
+						, _cell_position = T (_cell) (L .get (cell_as_position))
+						, _cell_choice = T (_cell) (L .get (cell_as_choice))
 						, _cell_crossed = Z .elem (_cell_position) (crossed_positions)
 						, _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
 						, crossed = _x => <s>{ _x }</s>
 						, bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
 						} </row> )) } </board> ],
 			where
-			, _board = T (_board_viewer) (L .get (board_viewer_board))
+			, _board = T (_board_viewer) (L .get (board_viewer_as_board))
 			, current_question = T (_board_viewer) (board_viewer_current_question)
 			, crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
 			, bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
@@ -203,7 +203,7 @@ var playing_view = _ => <playing-etc>
       , cell_feedback = cell => _dom => {;
           ;clicking .forEach (click => {;
             ;_dom .addEventListener (click, _ => {;
-              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_position)))) }) }) } )=>_)) } </playing-etc>
+              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_as_position)))) }) }) } )=>_)) } </playing-etc>
 
 var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>
@@ -234,14 +234,14 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, _app = app_state ()
 	, _ensemble = ensemble_state ()
 	, all_students = T (_ensemble) (assemble_students (data_kind (_app)))
-	, questions = T (_app) (L .collect ([ app_questions, L .elems, question_view ]))
-	, attempts = T (_app) ([ L .collect ([ app_past, L .elems, opportunity_attempts ]), Z_ .map (Z_ .size) ])
+	, questions = T (_app) (L .collect ([ app_as_questions, L .elems, question_as_question ]))
+	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, opportunity_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
 	, average_time = T (_ensemble) ([
 			assemble_students (data_kind (_app)),
 			Z_ .map ($ ([
 				Z .snd,
-				L .collect ([ [1], L .elems, opportunity_attempts, L .last, [1], as_maybe ]),
+				L .collect ([ [1], L .elems, opportunity_as_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
 			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_),
@@ -252,11 +252,11 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 
 
 window .view = <student-app>
-	{ !! (L .isDefined (app_get_ready) (app_state ()))
+	{ !! (L .isDefined (app_as_get_ready) (app_state ()))
 		? get_ready_view
-		: !! (L .isDefined (app_playing) (app_state ()))
+		: !! (L .isDefined (app_as_playing) (app_state ()))
 		? playing_view
-		: !! (L .isDefined (app_game_over) (app_state ()))
+		: !! (L .isDefined (app_as_game_over) (app_state ()))
 		? game_over_view
 		: panic ('undefined app state in view') } </student-app>
 
@@ -286,7 +286,7 @@ var lookbehind_latency = _ => {
 			 
 			 
 var record_room = _room => {;
-	var _student_maybe = T (S .sample (app_state)) (L .get ([ app_student, as_maybe ]))
+	var _student_maybe = T (S .sample (app_state)) (L .get ([ app_as_student, as_maybe ]))
 	;go 
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
@@ -294,8 +294,8 @@ var record_room = _room => {;
 		.then ($ ([
 			L .get (L .inverse (data_iso (ensemble .ensemble))),
 			_ensemble => {;
-				var _questions = T (_ensemble) (L .get (ensemble_questions))
-				var _rules = T (_ensemble) (L .get (ensemble_rules))
+				var _questions = T (_ensemble) (L .get (ensemble_as_questions))
+				var _rules = T (_ensemble) (L .get (ensemble_as_rules))
 				var _setup = setup .setup (_room, _questions, _rules)
 				;app_state (
 					student_app .get_ready ( _student_maybe, Z .Just (_setup) )) } ])) )
@@ -306,7 +306,7 @@ var record_room = _room => {;
 			;io_state (io .inert) }) }
 
 var record_student = _name => {;
-	var _setup_maybe = T (S .sample (app_state)) (L .get ([ app_setup, as_maybe ]))
+	var _setup_maybe = T (S .sample (app_state)) (L .get ([ app_as_setup, as_maybe ]))
 	;app_state (
 		student_app .get_ready (
 			Z .Just ([ uuid (), _name ])
@@ -317,8 +317,8 @@ var connect_room = _ => {;
   ) (
 	under (
     complete_ ({
-      _student: app_student,
-      _room: app_room })
+      _student: app_as_student,
+      _room: app_as_room })
   ) (({ _student, _room }) => {;
 		var _setup
 		;return go 
@@ -328,8 +328,8 @@ var connect_room = _ => {;
 			.then ($ ([
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
 				 _ensemble => {;
-					 var _questions = T (_ensemble) (L .get (ensemble_questions))
-					 var _rules = T (_ensemble) (L .get (ensemble_rules))
+					 var _questions = T (_ensemble) (L .get (ensemble_as_questions))
+					 var _rules = T (_ensemble) (L .get (ensemble_as_rules))
 					 ;_setup = setup .setup (_room, _questions, _rules) } ])) )
 		.then (_ =>
 			api (_room, post (message_encoding (
@@ -349,21 +349,21 @@ var attempt_question = _position => {;
 		_board_viewer => {;
 		//Z_ .chain (board_viewer_current_question),
 			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just ])
-			var _board = T (_board_viewer) (L .get (board_viewer_board))
-			var _choice = T (_board) (L .get ([ position_lens (_position), cell_choice ]))
+			var _board = T (_board_viewer) (L .get (board_viewer_as_board))
+			var _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
         if (question_choice_matches (_question) (_choice)) {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_past, past_opportunities, L .last, opportunity_attempts, L .append])
+              ([app_as_past, past_as_opportunities, L .last, opportunity_as_attempts, L .append])
               ([_position, latency]),
             student_app_playing_to_next,
             _x => {;app_state (_x)} ]) }
         else {
           ;T (S .sample (app_state)) ([
             L .set
-              ([app_past, past_opportunities, L .last, opportunity_attempts, L .append])
+              ([app_as_past, past_as_opportunities, L .last, opportunity_as_attempts, L .append])
               ([_position, latency]),
             _x => {;app_state (_x)} ])
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } } ]) }
@@ -394,7 +394,7 @@ var heartbeat = S .data (reping_period)
 
 var connection = S (_ => {;
 	;return T (app_state ()
-    ) (under (app_room
+    ) (under (app_as_room
     ) (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
@@ -449,15 +449,15 @@ S (_ => {;
 		;S .cleanup (_ => {;
 			;clearTimeout (forget) }) } })
 S (last_app => {;
-	if (! L .isDefined (app_room) (last_app)) {
-		if (L .isDefined (app_room) (app_state ())) {
+	if (! L .isDefined (app_as_room) (last_app)) {
+		if (L .isDefined (app_as_room) (app_state ())) {
 			;lookbehind_state (lookbehind .nothing) } }
 	return app_state () }
 , app_state ())
 S (last_app => {;
-	var last_past = T (last_app) (L .get (app_past))
-	var past = T (app_state ()) (L .get (app_past))
-	if (L .isDefined (app_playing) (app_state ())) {
+	var last_past = T (last_app) (L .get (app_as_past))
+	var past = T (app_state ()) (L .get (app_as_past))
+	if (L .isDefined (app_as_playing) (app_state ())) {
 		if (last_past && past && past_stepped (last_past) (past)) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
@@ -473,19 +473,19 @@ S (_ => {;
 
 
 S (_ => {;
-	if (L .isDefined (app_get_ready) (app_state ())) {
+	if (L .isDefined (app_as_get_ready) (app_state ())) {
 		;game_clock .pause () } })
 S (last_state => {;
-	var last_past = T (last_state) (L .get (app_past))
-	var past = T (app_state ()) (L .get (app_past))
-	if (L .isDefined (app_playing) (app_state ())) {
+	var last_past = T (last_state) (L .get (app_as_past))
+	var past = T (app_state ()) (L .get (app_as_past))
+	if (L .isDefined (app_as_playing) (app_state ())) {
 		if (last_past && past && past_stepped (last_past) (past)) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
 , app_state ())
 S (_ => {;
-	if (L .isDefined (app_game_over) (app_state ())) {
+	if (L .isDefined (app_as_game_over) (app_state ())) {
 		;game_clock .pause () } })
 
 
@@ -494,10 +494,10 @@ S (last_ensemble => {;
 	take
 	, _app = S .sample (app_state)
 	, _ensemble = ensemble_state () ) => {;
-	if (L .isDefined (app_get_ready) (_app)) { //c change unready get readies to setup state?
-		if (! L .isDefined (ensemble_start) (last_ensemble)) {
-			if (L .isDefined (ensemble_start) (_ensemble)) {
-				var start = T (_ensemble) (L .get (ensemble_start))
+	if (L .isDefined (app_as_get_ready) (_app)) { //c change unready get readies to setup state?
+		if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
+			if (L .isDefined (ensemble_as_start) (_ensemble)) {
+				var start = T (_ensemble) (L .get (ensemble_as_start))
 				var now = (new Date) .getTime ()
 
 				var playing_app = student_app_get_ready_to_playing (_app)
@@ -508,8 +508,8 @@ S (last_ensemble => {;
 						;app_state (playing_app) }
 					, start - now) }
 
-				var _room = T (_app) (L .get (app_room))
-				var _student = T (_app) (L .get (app_student))
+				var _room = T (_app) (L .get (app_as_room))
+				var _student = T (_app) (L .get (app_as_student))
 				;io_state (io .messaging) && api (_room, post (
 					message_encoding (
 						message .student_start (_student, start))))
@@ -526,8 +526,8 @@ S (_ => {;
   ) (
   under (
     complete_ ({
-      _student: app_student,
-      _room: app_room })
+      _student: app_as_student,
+      _room: app_as_room })
 	) (({ _student, _room }) => {;
 		var phase = heartbeat ()
 		var critical = phase === 1
@@ -547,8 +547,8 @@ S (_ => {;
 								$ (Z .fromMaybe
 								) ({ not_playing: 'not playing' }
                 ) (maybe_all (T (app_state ()) (L .get (L .pick ({
-										_board: [ app_board, as_maybe ],
-										_past: [ app_past, as_maybe ] })) ))) )=>_) ))) 
+										_board: [ app_as_board, as_maybe ],
+										_past: [ app_as_past, as_maybe ] })) ))) )=>_) ))) 
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),

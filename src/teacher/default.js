@@ -15,23 +15,23 @@ teacher_app, student_app,
 board_viewer,
 io, message, ensemble, 
 default_questions, default_rules,
-as_maybe, from_maybe, as_complete, complete_,
-app_nothing, app_get_ready, app_playing, app_game_over,
-setup_room, setup_questions, setup_rules,
-board_viewer_board, board_viewer_questions, board_viewer_past,
-io_inert, io_connecting, io_heartbeat,
-ensemble_questions, ensemble_rules,
-ensemble_ping, ensemble_start, ensemble_abort,
-ensemble_student_pings, ensemble_student_starts,
-ensemble_student_boards, ensemble_student_histories,
-attempt_position, attempt_latency, opportunity_attempts, opportunity_position, past_opportunities,
-app_setup, app_student, app_students, app_room,
-app_board, app_past, app_questions,
-opportunity_attempts,
-rules_size, setup_size,
-question_view, question_answers,
-cell_position, position_lens,
-cell_choice, student_name,
+as_maybe, as_defined, as_complete, complete_,
+app_as_nothing, app_as_get_ready, app_as_playing, app_as_game_over,
+setup_as_room, setup_as_questions, setup_as_rules,
+board_viewer_as_board, board_viewer_as_questions, board_viewer_as_past,
+io_as_inert, io_as_connecting, io_as_heartbeat,
+ensemble_as_questions, ensemble_as_rules,
+ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
+ensemble_as_student_pings, ensemble_as_student_starts,
+ensemble_as_student_boards, ensemble_as_student_histories,
+attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
+app_as_setup, app_as_student, app_as_students, app_as_room,
+app_as_board, app_as_past, app_as_questions,
+opportunity_as_attempts,
+rules_as_size, setup_as_size,
+question_as_question, question_as_answers,
+cell_as_position, as_position,
+cell_as_choice, student_name,
 past_stepped,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
@@ -78,7 +78,7 @@ var init_view = _ => so ((_=_=>
 		<button fn={ feedback_init }> Start </button>
 		{ T (io_state ()
       ) (
-			[ L .get ([io_connecting, as_maybe])
+			[ L .get ([io_as_connecting, as_maybe])
       , Z_ .maybe ([]) (Z .K ('Generating Code...')) ]) }
 		</init-etc>,
   where
@@ -103,9 +103,9 @@ var get_ready_view = _ => so ((_=_=>
 				? <button play fn={ feedback_play }> play </button>
 				: [] ] } </get-ready-etc>,
 	where
-	, _room = T (app_state ()) (L .get (app_room))
+	, _room = T (app_state ()) (L .get (app_as_room))
 	, _students = T (app_state ()
-		) (L .get ([ app_students, L .valueOr ([]) ]))
+		) (L .get ([ app_as_students, L .valueOr ([]) ]))
   , feedback_play = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
@@ -134,7 +134,7 @@ var playing_view = _ => so ((_=_=>
                 ? <cell>x</cell>
                 : <cell></cell>,
                 where
-                , _cell_position = T (_cell) (L .get (cell_position))
+                , _cell_position = T (_cell) (L .get (cell_as_position))
                 , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
                 , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
                 } </row> )) } </board>,
@@ -147,19 +147,19 @@ var playing_view = _ => so ((_=_=>
     </students>
 	</playing-etc>,
 	where
-	, _questions = T (app_state ()) (L .get (app_questions))
-	, _question = T (app_state ()) (L .get (app_past), current_question, T (_questions))
-	, _students = T (app_state ()) (L .get (app_students)) )=>_)
+	, _questions = T (app_state ()) (L .get (app_as_questions))
+	, _question = T (app_state ()) (L .get (app_as_past), current_question, T (_questions))
+	, _students = T (app_state ()) (L .get (app_as_students)) )=>_)
 													 
   
 window .view = <teacher-app>
-  { !! (L .isDefined (app_nothing) (app_state ()))
+  { !! (L .isDefined (app_as_nothing) (app_state ()))
     ? init_view
-    :!! (L .isDefined (app_get_ready) (app_state ()))
+    :!! (L .isDefined (app_as_get_ready) (app_state ()))
     ? get_ready_view
-    :!! (L .isDefined (app_playing) (app_state ()))
+    :!! (L .isDefined (app_as_playing) (app_state ()))
     ? playing_view
-    :!! (L .isDefined (app_game_over) (app_state ()))
+    :!! (L .isDefined (app_as_game_over) (app_state ()))
     ? panic ('unimplemented')
     : panic ('undefined app state in view')  } </teacher-app>
 												 
@@ -203,7 +203,7 @@ var start_playing = _ => {;
 	take
 	, exists = maybe_all ({
 			_ensemble: T (S .sample (ensemble_state)) (L .get (as_maybe)),
-			_room: T (S .sample (app_state)) (L .get ([ app_room, as_maybe ])) }) ) => {;
+			_room: T (S .sample (app_state)) (L .get ([ app_as_room, as_maybe ])) }) ) => {;
 	;T (exists) (Z_ .map (({ _ensemble, _room }) => {;
 		;go
 		.then (_ =>
@@ -239,7 +239,7 @@ var heartbeat = S .data (reping_period)
 	
 var connection = S (_ => {;
 	;return T (app_state ()) ([
-		L .get (app_room),
+		L .get (app_as_room),
 		map_defined (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
@@ -292,8 +292,8 @@ S (_ => {;
 */
 S (last_app => {;
 	var _app = app_state ()
-		if (! L .isDefined (app_playing) (last_app)) {
-			if (L .isDefined (app_playing) (_app)) {
+		if (! L .isDefined (app_as_playing) (last_app)) {
+			if (L .isDefined (app_as_playing) (_app)) {
 			}
 		}
 	return _app }
@@ -305,19 +305,19 @@ S (_ => {;
 	var _ensemble = ensemble_state ()
 	
 	var _app_kind = T (_app) (data_kind)
-	var _app_students = T (_app) (L .get (app_students))
+	var _app_students = T (_app) (L .get (app_as_students))
 	var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
 	if (! Z_ .equals (_ensemble_students) (_app_students)) {
 		;app_state (
 			T (_app
-			) (L .set (app_students) (_ensemble_students))) } })
+			) (L .set (app_as_students) (_ensemble_students))) } })
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
-	if (L .isDefined (app_get_ready) (_app)) {
-		if (! L .isDefined (ensemble_start) (last_ensemble)) {
-			if (L .isDefined (ensemble_start) (_ensemble)) {
-				var start = L .get (ensemble_start) (_ensemble)
+	if (L .isDefined (app_as_get_ready) (_app)) {
+		if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
+			if (L .isDefined (ensemble_as_start) (_ensemble)) {
+				var start = L .get (ensemble_as_start) (_ensemble)
 				var now = (new Date) .getTime ()
 
 				var playing_app = teacher_app_get_ready_to_playing (_app)
@@ -332,7 +332,7 @@ S (last_ensemble => {;
 	 
 	 
 S (_ => {;
-	;T (L .get (app_room) (app_state ())
+	;T (L .get (app_as_room) (app_state ())
   ) (map_defined (_room => {;
 			var phase = heartbeat ()
 			var critical = phase === 1
