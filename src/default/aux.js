@@ -328,7 +328,6 @@ var message_as_student_update = data_iso (message .student_update)
 
 var message_as_student = [L .choices (message_as_student_ping, message_as_student_join, message_as_student_start, message_as_student_update), 'student']
 var message_as_ping = [L .choices (message_as_teacher_ping, message_as_student_ping), 'ping']
-var message_as_synchronization = L .choices (message_as_teacher_start, message_as_teacher_abort, message_as_student_start .synchronization)
 var message_as_board = message_as_student_join .board
 var message_as_past = message_as_student_update .past
 	
@@ -519,7 +518,8 @@ var past_stepped = old_past => curr_past =>
 var message_encoding = by (message => 
 	so ((_=_=>
 	$ (
-  [ cases
+  [ Z .flip (cases)
+  , sole
 	, L .get (data_iso (ensemble .ensemble))
 	, strip ]),
 	where
@@ -530,24 +530,23 @@ var message_encoding = by (message =>
           [L .isDefined (pattern), encoding] 
         ) (x => Z_ .map (x) (encodings)) ),
       where
-      , student = T (message) (L .get (message_as_student))
       , encodings = 
-        [ [ message_as_teacher_setup 
-          , under (message_as_teacher_setup) (L .getInverse (data_iso (ensemble .ensemble))) ]
-        , [ message_as_teacher_ping 
-          , under (message_as_ping) (L .getInverse (ensemble_as_ping)) ]
-        , [ message_as_teacher_start 
-          , under (message_as_synchronization) (L .getInverse (ensemble_as_start)) ]
-        , [ message_as_teacher_abort 
-          , under (message_as_synchronization) (L .getInverse (ensemble_as_abort)) ]
-        , [ message_as_student_ping 
-          , under (message_as_ping) (L .getInverse ([ ensemble_as_student_pings, student ])) ]
-        , [ message_as_student_join 
-          , under (message_as_board) (L .getInverse ([ ensemble_as_student_boards, student ])) ]
-        , [ message_as_student_start 
-          , under (message_as_synchronization) (L .getInverse ([ ensemble_as_student_starts, student ])) ]
-        , [ message_as_student_update 
-          , under (message_as_past) (L .getInverse ([ ensemble_as_student_histories, student ])) ] ] )=>_) )=>_))
+        [ under (message_as_teacher_setup
+          ) (L .getInverse (data_iso (ensemble .ensemble))) 
+        , under (message_as_teacher_ping
+          ) (L .getInverse (ensemble_as_ping))
+        , under (message_as_teacher_start
+          ) (L .getInverse (ensemble_as_start))
+        , under (message_as_teacher_abort
+          ) (L .getInverse (ensemble_as_abort)) 
+        , under (message_as_student_ping. ping
+          ) (L .getInverse ([ ensemble_as_student_pings, student ]))
+        , under (message_as_student_join. board
+          ) (L .getInverse ([ ensemble_as_student_boards, student ]))
+        , under (message_as_student_start .synchronization
+          ) (L .getInverse ([ ensemble_as_student_starts, student ]))
+        , under (message_as_student_update .past
+          ) (L .getInverse ([ ensemble_as_student_histories, student ])) ] )=>_) )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
