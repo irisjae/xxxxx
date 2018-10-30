@@ -346,6 +346,9 @@ S (_ => {;
 						L .get (L .inverse (data_iso (ensemble .ensemble))),
 						_x => {;
 							;ensemble_state (_x) } ])) )
+      .catch ($ (
+      [ panic_on ([])
+      , ]))
 			.then (_ => {;
 				;setTimeout (_ => {;
 					;heartbeat (!! critical ? reping_period : phase - 1) }
