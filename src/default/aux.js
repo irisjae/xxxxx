@@ -63,6 +63,7 @@ var api = so ((_=_=>
 
     if (! api .sockets [room]) {
       ;api .sockets [room] = new_socket (room) }
+    ;api .sockets [room] .refresh ()
 
     var begin, end
     ;go
@@ -86,6 +87,11 @@ where
 , new_socket = room => so ((_=_=>_||
     { ready: new Promise ((resolve, reject) => {;
         _socket .onopen = _ => {;resolve ()} })
+    , refresh: _ => {;
+        if (_socket .readyState === WebSocket .CLOSED
+        || _socket .readyState === WebSocket .CLOSING) {
+          
+        } }
     , send: _x => _socket .send (_x)
     , _socket: _socket },
     where
