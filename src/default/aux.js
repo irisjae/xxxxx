@@ -270,12 +270,12 @@ var to_maybe = default_fn => _x =>
 
 
 
-var pair_to_v = L .iso (
+var pair_as_v = L .iso (
   _pair => !! Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
   _v => !! Z .and (Z_ .is (Z$ .Array) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
-var from_maybe = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
+var as_defined = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
@@ -284,28 +284,28 @@ var complete_ = lens_shape =>
   ]
 
 
-var app_nothing = data_iso (teacher_app .nothing)
-var app_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
-var app_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
-var app_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
+var app_as_nothing = data_iso (teacher_app .nothing)
+var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
+var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
+var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_student = [ L .choices (app_get_ready, app_playing, app_game_over), 'student', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (from_maybe) (L .identity) ]
-var app_setup = [ L .choices (app_get_ready, app_playing, app_game_over), 'setup', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (from_maybe) (L .identity) ]
-var app_board = [ L .choices (app_playing, app_game_over), 'board' ]
-var app_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
+var app_as_student = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'student', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
+var app_as_setup = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'setup', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
+var app_as_board = [ L .choices (app_as_playing, app_as_game_over), 'board' ]
+var app_as_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
 
-var app_students = [L .choices (app_get_ready, app_playing, app_game_over), 'students']
+var app_as_students = [L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'students']
 
 
-var board_viewer_board = data_lens (board_viewer .board_viewer) .board
-var board_viewer_questions = data_lens (board_viewer .board_viewer) .questions
-var board_viewer_past = data_lens (board_viewer .board_viewer) .past
+var board_viewer_as_board = data_lens (board_viewer .board_viewer) .board
+var board_viewer_as_questions = data_lens (board_viewer .board_viewer) .questions
+var board_viewer_as_past = data_lens (board_viewer .board_viewer) .past
 
-var setup_room = data_lens (setup .setup) .room
-var setup_questions = data_lens (setup .setup) .questions
-var setup_rules = data_lens (setup .setup) .rules
-var app_room = [ app_setup, setup_room ]
-var app_questions = [ app_setup, setup_questions ]
+var setup_as_room = data_lens (setup .setup) .room
+var setup_as_questions = data_lens (setup .setup) .questions
+var setup_as_rules = data_lens (setup .setup) .rules
+var app_as_room = [ app_as_setup, setup_as_room ]
+var app_as_questions = [ app_as_setup, setup_as_questions ]
 
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
@@ -343,7 +343,7 @@ var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_pos
 var past_as_opportunities = data_lens (past .past) .opportunities
 		
 var rules_as_size = data_lens (rules .rules) .size
-var setup_as_size = [setup_rules, rules_as_size]
+var setup_as_size = [setup_as_rules, rules_as_size]
 
 var question_as_question = [ 0 ]
 var question_as_answers = [ 1 ]
@@ -403,46 +403,46 @@ var generate_board = size => questions =>
 
 
 var teacher_app_get_ready_to_playing = by (_app =>
-  under (app_setup
+  under (app_as_setup
   ) (_setup  => 
     teacher_app .playing (_setup, [])))
 
 var student_app_get_ready_to_playing =
   under (complete_ ({
-			_student: app_student,
-			_setup: app_setup })
+			_student: app_as_student,
+			_setup: app_as_setup })
   ) (({ _student, _setup }) =>
 		so ((_=_=>
 		student_app .playing
 			(_student, _setup, generate_board (_size) (_questions), fresh_past),
 		where 
 		, _size = L .get (setup_as_size) (_setup)
-		, _questions = L .get (setup_questions) (_setup)
+		, _questions = L .get (setup_as_questions) (_setup)
 		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_))
 
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
 		!! (past_size < board_size * board_size)
-		? L .set ([ app_past, past_as_opportunities, L .append ]) (opportunity .opportunity ([]))
+		? L .set ([ app_as_past, past_as_opportunities, L .append ]) (opportunity .opportunity ([]))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
-		, board_size = T (_app) (L .get ([app_setup, setup_as_size]))
-		, past_size = T (_app) ([ L .get ([app_past, past_as_opportunities]), Z_ .size ]) )=>_)) 
+		, board_size = T (_app) (L .get ([app_as_setup, setup_as_size]))
+		, past_size = T (_app) ([ L .get ([app_as_past, past_as_opportunities]), Z_ .size ]) )=>_)) 
 				 
 var question_choice_matches = question => choice =>
 	so ((_=_=>
 	Z .elem (choice) (correct_answers),
 	where
-	, correct_answers = T (question) (L .get (question_answers)) )=>_)
+	, correct_answers = T (question) (L .get (question_as_answers)) )=>_)
 
 var student_app_to_board_viewer =
 	under (complete_ ({
-    _board: app_board,
-    _questions: app_questions,
-    _past: app_past })
+    _board: app_as_board,
+    _questions: app_as_questions,
+    _past: app_as_past })
   ) (({ _board , _questions , _past }) =>
 		board_viewer .board_viewer (_board, _questions, _past))
 
@@ -480,21 +480,21 @@ var board_viewer_current_question = _board_viewer =>
 	so ((_=_=>
 	current_question (_questions) (_past),
 	where
-	, _questions = T (_board_viewer) (L .get (board_viewer_questions))
-	, _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
+	, _questions = T (_board_viewer) (L .get (board_viewer_as_questions))
+	, _past = T (_board_viewer) (L .get (board_viewer_as_past)) )=>_)
 
 var attempted_positions = by (_past =>
   L .collect ([ past_as_opportunities, L .elems, opportunity_as_position ]))
 
 var board_viewer_attempted_positions = by (_board_viewer =>
-	under (board_viewer_past
+	under (board_viewer_as_past
   ) (
   attempted_positions))
 
 var answered_positions = _questions => _board => _past => so ((_=_=>
   T (Z .zip (_opportunities) (_questions)
   ) (
-  Z .chain (under (pair_to_v
+  Z .chain (under (pair_as_v
   ) (([_opportunity, _question]) => so ((_=_=>
     !! (question_choice_matches (_question) (_choice))
     ? [ _position ]
@@ -510,9 +510,9 @@ var board_viewer_answered_positions = _board_viewer =>
   so ((_=_=>
   answered_positions (_questions) (_board) (_past),
   where
-  , _questions = T (_board_viewer) (L .get (board_viewer_questions))
-  , _board = T (_board_viewer) (L .get (board_viewer_board))
-  , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
+  , _questions = T (_board_viewer) (L .get (board_viewer_as_questions))
+  , _board = T (_board_viewer) (L .get (board_viewer_as_board))
+  , _past = T (_board_viewer) (L .get (board_viewer_as_past)) )=>_)
 
 var bingoed_positions = _questions => _board => _past => 
 	so ((_=_=> so ((_=_=>
@@ -530,9 +530,9 @@ var board_viewer_bingoed_positions = _board_viewer =>
   so ((_=_=>
   bingoed_positions (_questions) (_board) (_past),
   where
-  , _questions = T (_board_viewer) (L .get (board_viewer_questions))
-  , _board = T (_board_viewer) (L .get (board_viewer_board))
-  , _past = T (_board_viewer) (L .get (board_viewer_past)) )=>_)
+  , _questions = T (_board_viewer) (L .get (board_viewer_as_questions))
+  , _board = T (_board_viewer) (L .get (board_viewer_as_board))
+  , _past = T (_board_viewer) (L .get (board_viewer_as_past)) )=>_)
 
 
 var past_stepped = old_past => curr_past =>
@@ -617,18 +617,18 @@ window .stuff = { ...window .stuff,
 	board_viewer,
 	io, message, ensemble, 
 	default_questions, default_rules,
-	as_maybe, from_maybe, as_complete, complete_,
-	app_nothing, app_get_ready, app_playing, app_game_over,
-	setup_room, setup_questions, setup_rules,
-	board_viewer_board, board_viewer_questions, board_viewer_past,
+	as_maybe, as_defined, as_complete, complete_,
+	app_as_nothing, app_as_get_ready, app_as_playing, app_as_game_over,
+	setup_as_room, setup_as_questions, setup_as_rules,
+	board_viewer_as_board, board_viewer_as_questions, board_viewer_as_past,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_questions, ensemble_as_rules,
 	ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,
 	ensemble_as_student_boards, ensemble_as_student_histories,
   attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
-	app_setup, app_student, app_students, app_room,
-	app_board, app_past, app_questions,
+	app_as_setup, app_as_student, app_as_students, app_as_room,
+	app_as_board, app_as_past, app_as_questions,
 	opportunity_as_attempts,
 	rules_as_size, setup_as_size,
 	question_as_question, question_as_answers,
