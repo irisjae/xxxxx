@@ -46,18 +46,17 @@ board_viewer_answered_positions, board_viewer_bingoed_positions
 
 
 var feedback = data ({
-  nothing: () => feedback,
-  init: () => feedback,
+  start: () => feedback,
   play: () => feedback })
 
 
-var app_state = S .data (teacher_app .nothing)
+var app_state = S .data (teacher_app .setup)
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (ensemble .nothing)
 
-var feedback_state = temporal (feedback .nothing)
-//var feedback_state = S .data (temporal (feedback .nothing))
+var feedback_state = temporal ()
+//var feedback_state = S .data (temporal ())
 
 
 
@@ -88,7 +87,7 @@ var init_view = _ => so ((_=_=>
   , feedback_init = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .init) }) }) } )=>_)
+          ;feedback_state (feedback .start) }) }) } )=>_)
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
@@ -257,7 +256,7 @@ S (_ => {;
   ;so ((
   take
   , cases = 
-      [ [ data_iso (feedback .init)
+      [ [ data_iso (feedback .start)
         , _ => {;
             ;get_room (T (Math .random ()) ([
               _x => _x * 100000000,

@@ -192,7 +192,7 @@ var setup = data ({ setup: ( room =~ room, questions =~ list (question), rules =
 
 
 var teacher_app = data ({
-  nothing: () => teacher_app,
+  setup: ( setup =~ setup ) => teacher_app,
 	get_ready: ( setup =~ setup, students =~ list (student) ) => teacher_app,
 	playing: ( setup =~ setup, students =~ map (student) (board, past) ) => teacher_app,
 	game_over: ( setup =~ setup, students =~ map (student) (board, past) ) => teacher_app })
