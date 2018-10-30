@@ -297,7 +297,6 @@ var complete_ = lens_shape =>
   ]
 
 
-var app_as_nothing = data_iso (teacher_app .nothing)
 var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
@@ -631,7 +630,7 @@ window .stuff = { ...window .stuff,
 	io, message, ensemble, 
 	default_questions, default_rules,
 	as_maybe, as_defined, as_complete, complete_,
-	app_as_nothing, app_as_get_ready, app_as_playing, app_as_game_over,
+	app_as_get_ready, app_as_playing, app_as_game_over,
 	setup_as_room, setup_as_questions, setup_as_rules,
 	board_viewer_as_board, board_viewer_as_questions, board_viewer_as_past,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
