@@ -187,7 +187,9 @@ var get_room = _room => {;
 				so ((_=_=>
 				message .teacher_setup (questions, rules),
 				where
-				, {questions, rules} = T (_setup) (L .get (data_iso (setup .setup))) )=>_) ) ))
+				, {questions, rules} = T (_setup
+          ) (L .get (L .pick ({
+          }))) )=>_) ) ))
 		.then (panic_on ([
 			[ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
 	.then (_ => {;

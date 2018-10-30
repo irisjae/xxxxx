@@ -297,6 +297,7 @@ var complete_ = lens_shape =>
   ]
 
 
+var app_as_setup = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
 var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
