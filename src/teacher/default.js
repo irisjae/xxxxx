@@ -15,7 +15,7 @@ teacher_app, student_app,
 io, message, ensemble, 
 default_questions, default_rules, default_settings,
 as_maybe, as_defined, as_complete, complete_,
-app_as_get_ready, app_as_playing, app_as_game_over,
+app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
 settings_as_questions, settings_as_rules,
 io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_questions, ensemble_as_rules,
@@ -61,8 +61,8 @@ var feedback_state = temporal ()
 
 var clicking = ['click']
 
-var init_view = _ => so ((_=_=>
-	<init-etc> 
+var setup_view = _ => so ((_=_=>
+	<setup-etc> 
 		<div a-title>
 			Bingo Class Game
 			<img src={ bingo_img } /> </div>
@@ -74,7 +74,7 @@ var init_view = _ => so ((_=_=>
       ) (
 			[ L .get ([io_as_connecting, as_maybe])
       , Z_ .maybe ([]) (Z .K ('Generating Code...')) ]) }
-		</init-etc>,
+		</setup-etc>,
   where
 	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
 	, board_sizes_img =
@@ -134,7 +134,7 @@ var playing_view = _ => so ((_=_=>
                 } </row> )) } </board>,
             where
             , crossed_positions = answered_positions (_questions) (_board) (_past)
-            , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
+            , bingoed_positions = bingoed_positions (_questions) (_board) (_past) )=>_) }              
           </student-etc> ])))
       }
     </students>
@@ -146,8 +146,8 @@ var playing_view = _ => so ((_=_=>
 													 
   
 window .view = <teacher-app>
-  { !! (L .isDefined (app_as_nothing) (app_state ()))
-    ? init_view
+  { !! (L .isDefined (app_as_setup) (app_state ()))
+    ? setup_view
     :!! (L .isDefined (app_as_get_ready) (app_state ()))
     ? get_ready_view
     :!! (L .isDefined (app_as_playing) (app_state ()))
@@ -169,7 +169,7 @@ window .view = <teacher-app>
 												 
 												 
 var get_room = _room => {;
-	var _setup = setup .setup ( _room, default_questions, default_rules )
+	var _settings = T (S .sample (app_state ())) (L .get (app_as_settings))
 
 	;return go
 	.then (_ =>
@@ -179,28 +179,27 @@ var get_room = _room => {;
 		api (_room,
 			post (message_encoding (
 				so ((_=_=>
-				message .teacher_setup (questions, rules),
+				message .teacher_setup (_questions, _rules),
 				where
-				, {questions, rules} = T (_setup
+				, { _questions, _rules } = T (_settings
           ) (L .get (L .pick (
-            { questions: setup_as_questions
-            , rules: setup_as_rules }))) )=>_) ) ))
+            { _questions: settings_as_questions
+            , _rules: settings_as_rules }))) )=>_) ) ))
 		.then (panic_on ([
 			[ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
 	.then (_ => {;
-		;app_state (teacher_app .get_ready (_setup, [])) })
+		;app_state (teacher_app .get_ready (_room, _settings, [])) })
 	.catch (_e => {;
 		;console .error (_e) })
 	.then (_ => {;
 		;io_state (io .inert) }) }
 
 var start_playing = _ => {;
-	;so ((
-	take
-	, exists = maybe_all ({
-			_ensemble: T (S .sample (ensemble_state)) (L .get (as_maybe)),
-			_room: T (S .sample (app_state)) (L .get ([ app_as_room, as_maybe ])) }) ) => {;
-	;T (exists) (Z_ .map (({ _ensemble, _room }) => {;
+	T (
+  { _ensemble: S .sample (ensemble_state)
+  , _room: T (S .sample (app_state)) (app_as_room) }
+  ) (
+  under (as_complete) (({ _ensemble, _room }) => {;
 		;go
 		.then (_ =>
 			io_state (io .messaging) && api (_room,
@@ -210,7 +209,7 @@ var start_playing = _ => {;
 		.catch (_e => {;
 			;console .error (_e) })
 		.then (_ => {;
-			;io_state (io .inert) }) })) }) }
+			;io_state (io .inert) }) })) }
 
 var timesup_question = _ => {;
 	//;app_state (student_app_next_playing (app_state ()))
@@ -234,9 +233,8 @@ var reping_period = 3
 var heartbeat = S .data (reping_period) 
 	
 var connection = S (_ => {;
-	;return T (app_state ()) ([
-		L .get (app_as_room),
-		map_defined (_room => {;
+	;return T (app_state ()) (
+		under (app_as_room) (_room => {;
 			if (! connection [_room]) {
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
@@ -244,7 +242,7 @@ var connection = S (_ => {;
 				return so ((_=()=>
 				[ timestamp, mean, Math .sqrt (variance) ],
 				where
-				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } } ) ]) }) 
+				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } } ) ) }) 
 
 
 
@@ -300,9 +298,8 @@ S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	
-	var _app_kind = T (_app) (data_kind)
 	var _app_students = T (_app) (L .get (app_as_students))
-	var _ensemble_students = T (_ensemble) (assemble_students (_app_kind))
+	var _ensemble_students = T (_ensemble) (assemble_students (_app))
 	if (! Z_ .equals (_ensemble_students) (_app_students)) {
 		;app_state (
 			T (_app
