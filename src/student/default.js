@@ -46,7 +46,6 @@ board_viewer_answered_positions, board_viewer_bingoed_positions
 
 
 var feedback = data ({
-  nothing: () => feedback,
   enter_room: (room =~ room) => feedback,
   enter_name: (name =~ string) => feedback,
   attempt_question: (position =~ position) => feedback })
@@ -57,7 +56,6 @@ var lookbehind = data ({
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind })
 
 
-var feedback_nothing = data_iso (feedback .nothing)
 var feedback_enter_room = data_iso (feedback .enter_room)
 var feedback_enter_name = data_iso (feedback .enter_name)
 var feedback_attempt_question = data_iso (feedback .attempt_question)
@@ -80,7 +78,7 @@ var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (undefined)
 
-var feedback_state = temporal (feedback .nothing)
+var feedback_state = temporal ()
 var lookbehind_state = S .data (lookbehind .nothing)
 
 

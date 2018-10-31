@@ -50,7 +50,7 @@ var feedback = data ({
   play: () => feedback })
 
 
-var app_state = S .data (teacher_app .setup)
+var app_state = S .data (teacher_app .setup ())
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (ensemble .nothing)

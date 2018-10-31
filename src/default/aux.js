@@ -225,7 +225,6 @@ var message = data ({
 	student_join: ( student =~ student, board =~ board ) => message,
 	student_update: ( student =~ student, past =~ past ) => message })
 var ensemble = data ({
-  nothing: () => ensemble,
 	ensemble: (
 		ping =~ ping,
 		questions =~ list (question),
@@ -266,6 +265,8 @@ var ensemble = data ({
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
 var default_rules = rules .rules (10, 4)
 
+var default_setup = setup .setup (default_questions, default_rules)
+
 
 
 var to_maybe = default_fn => _x => 
@@ -299,25 +300,24 @@ var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
+var app_as_room = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'room' ]
 var app_as_student = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'student', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
-var app_as_setup = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'setup', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
+var app_as_settings = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'settings', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
 var app_as_board = [ L .choices (app_as_playing, app_as_game_over), 'board' ]
 var app_as_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
 
 var app_as_students = [L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'students']
 
 
-var setup_as_room = data_lens (setup .setup) .room
-var setup_as_questions = data_lens (setup .setup) .questions
-var setup_as_rules = data_lens (setup .setup) .rules
-var app_as_room = [ app_as_setup, setup_as_room ]
-var app_as_questions = [ app_as_setup, setup_as_questions ]
+var settings_as_questions = data_lens (settings .settings) .questions
+var settings_as_rules = data_lens (settings .settings) .rules
+var app_as_questions = [ app_as_settings, settings_as_questions ]
 
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
 var io_as_heartbeat = data_iso (io .heartbeat)
 
-var message_as_teacher_setup = data_iso (message .teacher_setup)
+var message_as_teacher_settings = data_iso (message .teacher_settings)
 var message_as_teacher_ping = data_iso (message .teacher_ping) 
 var message_as_teacher_start = data_iso (message .teacher_start) 
 var message_as_teacher_abort = data_iso (message .teacher_abort) 
@@ -348,7 +348,7 @@ var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_pos
 var past_as_opportunities = data_lens (past .past) .opportunities
 		
 var rules_as_size = data_lens (rules .rules) .size
-var setup_as_size = [setup_as_rules, rules_as_size]
+var settings_as_size = [settings_as_rules, rules_as_size]
 
 var question_as_question = [ 0 ]
 var question_as_answers = [ 1 ]
@@ -408,21 +408,21 @@ var generate_board = size => questions =>
 
 
 var teacher_app_get_ready_to_playing = by (_app =>
-  under (app_as_setup
-  ) (_setup  => 
-    teacher_app .playing (_setup, [])))
+  under (app_as_settings
+  ) (_settings  => 
+    teacher_app .playing (_settings, [])))
 
 var student_app_get_ready_to_playing =
   under (complete_ ({
 			_student: app_as_student,
-			_setup: app_as_setup })
-  ) (({ _student, _setup }) =>
+			_settings: app_as_settings })
+  ) (({ _student, _settings }) =>
 		so ((_=_=>
 		student_app .playing
-			(_student, _setup, generate_board (_size) (_questions), fresh_past),
+			(_student, _settings, generate_board (_size) (_questions), fresh_past),
 		where 
-		, _size = L .get (setup_as_size) (_setup)
-		, _questions = L .get (setup_as_questions) (_setup)
+		, _size = L .get (settings_as_size) (_settings)
+		, _questions = L .get (settings_as_questions) (_settings)
 		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_))
 
 var student_app_playing_to_next = 
@@ -434,7 +434,7 @@ var student_app_playing_to_next =
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
-		, board_size = T (_app) (L .get ([app_as_setup, setup_as_size]))
+		, board_size = T (_app) (L .get ([app_as_settings, settings_as_size]))
 		, past_size = T (_app) ([ L .get ([app_as_past, past_as_opportunities]), Z_ .size ]) )=>_)) 
 				 
 var question_choice_matches = question => choice =>
@@ -527,7 +527,7 @@ var message_encoding = by (message =>
 	, strip = $ ([ JSON .stringify, JSON .parse ]) 
   , student = T (message) (L .get (message_as_student))
   , cases = 
-      [ under (message_as_teacher_setup
+      [ under (message_as_teacher_settings
         ) (L .getInverse (data_iso (ensemble .ensemble))) 
       , under (message_as_teacher_ping
         ) (L .getInverse (ensemble_as_ping))
@@ -583,13 +583,13 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v,
 	shuffle, uuid, api, post,
 	student, question, choice, answer, latency, ping, position,
-	attempt, opportunity, past, board, rules, setup,
+	attempt, opportunity, past, board, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
-	default_questions, default_rules,
+	default_questions, default_rules, default_settings,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_get_ready, app_as_playing, app_as_game_over,
-	setup_as_room, setup_as_questions, setup_as_rules,
+	settings_as_room, settings_as_questions, setup_as_rules,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_questions, ensemble_as_rules,
 	ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
