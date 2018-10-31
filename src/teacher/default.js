@@ -10,38 +10,33 @@ bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
 student, question, choice, answer, latency, ping, position,
-attempt, opportunity, past, board, rules, setup,
+attempt, opportunity, past, board, rules, settings,
 teacher_app, student_app,
-board_viewer,
 io, message, ensemble, 
-default_questions, default_rules,
+default_questions, default_rules, default_settings,
 as_maybe, as_defined, as_complete, complete_,
 app_as_get_ready, app_as_playing, app_as_game_over,
-setup_as_room, setup_as_questions, setup_as_rules,
-board_viewer_as_board, board_viewer_as_questions, board_viewer_as_past,
+settings_as_questions, settings_as_rules,
 io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_questions, ensemble_as_rules,
 ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
 ensemble_as_student_pings, ensemble_as_student_starts,
 ensemble_as_student_boards, ensemble_as_student_histories,
 attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
-app_as_setup, app_as_student, app_as_students, app_as_room,
+app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_questions,
 opportunity_as_attempts,
-rules_as_size, setup_as_size,
+rules_as_size, settings_as_size,
 question_as_question, question_as_answers,
 cell_as_position, as_position,
 cell_as_choice, student_name,
-past_stepped,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
 student_app_get_ready_to_playing, student_app_playing_to_next,
-student_app_to_board_viewer,
-current_question,
-question_choice_matches, 
-board_viewer_current_question,
-board_viewer_answered_positions, board_viewer_bingoed_positions
+past_stepped,
+current_question, question_choice_matches,
+attempted_positions, answered_positions, bingoed_positions
 } = window .stuff
 
 
@@ -50,7 +45,7 @@ var feedback = data ({
   play: () => feedback })
 
 
-var app_state = S .data (teacher_app .setup ())
+var app_state = S .data (teacher_app .setup (default_settings))
 
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (ensemble .nothing)
@@ -138,8 +133,7 @@ var playing_view = _ => so ((_=_=>
                 , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
                 } </row> )) } </board>,
             where
-            , _board_viewer = board_viewer .board_viewer (_board, _questions, _past)
-            , crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
+            , crossed_positions = answered_positions (_questions) (_board) (_past)
             , bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions) )=>_) }              
           </student-etc> ])))
       }

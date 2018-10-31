@@ -287,6 +287,7 @@ var pair_as_v = L .iso (
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var as_defined = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
+var as_defined_ = L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity)
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
@@ -300,13 +301,13 @@ var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_as_settings = [ L .choices (app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over), 'settings', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
+var app_as_settings = [ L .choices (app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over), 'settings', as_defined_ ]
+var app_as_student = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'student', as_defined_ ]
+var app_as_students = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'students' ]
 var app_as_room = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'room' ]
-var app_as_student = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'student', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
 var app_as_board = [ L .choices (app_as_playing, app_as_game_over), 'board' ]
-var app_as_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
+var app_as_past = [ L .choices (app_as_playing, app_as_game_over), 'past' ]
 
-var app_as_students = [L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'students']
 
 
 var settings_as_questions = data_lens (settings .settings) .questions
@@ -420,13 +421,13 @@ var student_app_get_ready_to_playing =
 		{	_room: app_as_room
     , _student: app_as_student
 		,	_settings: app_as_settings })
-  ) (({ __student, _settings }) =>
+  ) (({ _room, _student, _settings }) =>
 		so ((_=_=>
-		student_app .playing
-			(_student, _settings, generate_board (_size) (_questions), fresh_past),
+		student_app .playing (_room, _student, _settings, random_board, fresh_past),
 		where 
 		, _size = L .get (settings_as_size) (_settings)
 		, _questions = L .get (settings_as_questions) (_settings)
+    , random_board = generate_board (_size) (_questions)
 		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_))
 
 var student_app_playing_to_next = 
@@ -607,10 +608,10 @@ window .stuff = { ...window .stuff,
 	question_as_question, question_as_answers,
 	cell_as_position, as_position,
 	cell_as_choice, student_name,
-	past_stepped,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
 	teacher_app_get_ready_to_playing, 
 	student_app_get_ready_to_playing, student_app_playing_to_next,
-  current_question,
-	question_choice_matches }
+	past_stepped,
+  current_question, question_choice_matches,
+  attempted_positions, answered_positions, bingoed_positions }
