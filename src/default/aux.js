@@ -553,9 +553,9 @@ var message_encoding = by (message =>
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
-var assemble_students = by (_app => and_by (_ensemble =>
+var assemble_students = by (_app => _ensemble =>
   so ((_=_=>
-  $ ([ Z .flip (cases), L .collect (L .elems), R .tryCatch (sole) (undefined) ]),
+  $ ([ Z .flip (cases), L .collect (L .elems), R .tryCatch (sole) (Z_ .K (undefined)) ]),
   where
   , cases =
       [ under (app_as_get_ready
@@ -579,7 +579,7 @@ var assemble_students = by (_app => and_by (_ensemble =>
             , histories: [ ensemble_as_student_histories, students_as_mapping ] })
           ) (({ boards, histories }) =>
             pair_zip (_a => _b => [_a, _b]) (boards) (histories) )*/
-           ))) ] )=>_)))
+           ))) ] )=>_))
 
 var schedule_start = _ensemble =>
 	so ((_=_=>

@@ -341,7 +341,7 @@ S (_ => {;
 							;ensemble_state (_x) } ])) )
       .catch ($ (
       [ panic_on ([under ('error') (x => x !== 'timeout'), 'rethrow'])
-      , ]))
+      , _ => {;console .warn ('Room timed out')} ]))
 			.then (_ => {;
 				;setTimeout (_ => {;
 					;heartbeat (!! critical ? reping_period : phase - 1) }
