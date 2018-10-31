@@ -555,7 +555,7 @@ var messages_encoding = list =>
 
 var assemble_students = by (_app => and_by (_ensemble =>
   so ((_=_=>
-  $ ([ Z .flip (cases), L .collect (L .elems), sole ]),
+  $ ([ Z .flip (cases), L .collect (L .elems), R .tryCatch (sole) (undefined) ]),
   where
   , cases =
       [ under (app_as_get_ready

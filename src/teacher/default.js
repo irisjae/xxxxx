@@ -300,7 +300,7 @@ S (_ => {;
 	
 	var _app_students = T (_app) (L .get (app_as_students))
 	var _ensemble_students = T (_ensemble) (assemble_students (_app))
-	if (! Z_ .equals (_ensemble_students) (_app_students)) {
+	if (Z .not (Z_ .equals (_ensemble_students) (_app_students))) {
 		;app_state (
 			T (_app
 			) (L .set (app_as_students) (_ensemble_students))) } })
