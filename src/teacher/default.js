@@ -5,7 +5,7 @@ just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 n_reducer, pair_zip_n, pair_zip, pair_projection,
 map_defined_, map_defined, from_just, maybe_all,
-sole, every, delay,
+as_sole, sole, every, delay,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v,
 shuffle, uuid, api, post,
@@ -169,7 +169,7 @@ window .view = <teacher-app>
 												 
 												 
 var get_room = _room => {;
-	var _settings = T (S .sample (app_state ())) (L .get (app_as_settings))
+	var _settings = T (S .sample (app_state)) (L .get (app_as_settings))
 
 	;return go
 	.then (_ =>

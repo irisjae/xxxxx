@@ -24,6 +24,7 @@ var apply = fn => arg_list =>
 
 
 
+var as_sole = [ L .elems, L .reread (list => !! (list .length === 1) ? list [0] : undefined) ]
 var sole = list =>
   !! (list .length === 1) ? list [0]
   : panic (list + ' is not sole')
@@ -364,4 +365,4 @@ window .stuff = { ...window .stuff,
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
-	sole, every, delay }
+	as_sole, sole, every, delay }

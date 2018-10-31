@@ -6,7 +6,7 @@ var {
 	fiat, data, data_lens, data_iso, data_kind,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
-	sole, every, delay	 
+	as_sole, sole, every, delay	 
 } = window .stuff
 
 var tap = _fn => x => (_fn (x), x)
@@ -94,10 +94,10 @@ where
     , rec = _
     , _socket = _
     , refresh = _ => {;
-        if (! _socket
+        if (_socket === rec
         || _socket .readyState === WebSocket .CLOSED
         || _socket .readyState === WebSocket .CLOSING) {
-          _socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+          ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
           rec ._socket = _socket
           rec .ready = new Promise ((resolve, reject) => {;
             _socket .onopen = _ => {;resolve ()} })
@@ -555,7 +555,7 @@ var messages_encoding = list =>
 
 var assemble_students = by (_app => _ensemble =>
   so ((_=_=>
-  $ ([ Z .flip (cases), L .collect (L .elems), R .tryCatch (sole) (Z_ .K (undefined)) ]),
+  $ ([ Z .flip (cases), L .collect (L .elems), L .get (as_sole) ]),
   where
   , cases =
       [ under (app_as_get_ready
