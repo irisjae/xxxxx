@@ -325,8 +325,8 @@ S (last_ensemble => {;
 	 
 	 
 S (_ => {;
-	;T (L .get (app_as_room) (app_state ())
-  ) (map_defined (_room => {;
+	;T (app_state ()
+  ) (under (app_as_room) (_room => {;
 			var phase = heartbeat ()
 			var critical = phase === 1
 			go

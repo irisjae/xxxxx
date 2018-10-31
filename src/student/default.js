@@ -68,7 +68,7 @@ var lookbehind_blocked = data_lens (lookbehind .attempting) .blocked
 
 
 
-var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing))
+var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing, Z .Nothing))
  
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (undefined)
@@ -165,38 +165,38 @@ var get_ready_view = <get-ready-etc>
 	} </get-ready-etc>
 
 var playing_view = _ => <playing-etc>
-	{ T (student_app_to_board_viewer (app_state ())
-		) (_board_viewer =>
-			so ((_=_=>
-			[ T (current_question
-				) (Z_ .maybe ('') (_x => <question>{ L .get (question_as_question) (_x) }</question>))
-			, <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
-			, <board> { T (_board) (Z_ .map (_row => 
-					<row> { T (_row) (Z_ .map (_cell =>
-						so ((_=_=>
-						!! (_cell_bingo)
-						? <cell>{ bold_crossed (_cell_choice) }</cell>
-						:!! (_cell_crossed)
-						? <cell>{ crossed (_cell_choice) }</cell>
-						: <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
-						where
-						, _cell_position = T (_cell) (L .get (cell_as_position))
-						, _cell_choice = T (_cell) (L .get (cell_as_choice))
-						, _cell_crossed = Z .elem (_cell_position) (crossed_positions)
-						, _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
-						, crossed = _x => <s>{ _x }</s>
-						, bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
-						} </row> )) } </board> ],
-			where
-			, _board = T (_board_viewer) (L .get (board_viewer_as_board))
-			, current_question = T (_board_viewer) (board_viewer_current_question)
-			, crossed_positions = T (_board_viewer) (board_viewer_answered_positions)
-			, bingoed_positions = T (_board_viewer) (board_viewer_bingoed_positions)
-			, game_tick = just_now (game_tick_sampler)
-      , cell_feedback = cell => _dom => {;
-          ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;
-              ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_as_position)))) }) }) } )=>_)) } </playing-etc>
+	{ so ((_=_=>
+    [ T (current_question
+      ) (Z_ .maybe ('') (_x => <question>{ L .get (question_as_question) (_x) }</question>))
+    , <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
+    , <board> { T (_board) (Z_ .map (_row => 
+        <row> { T (_row) (Z_ .map (_cell =>
+          so ((_=_=>
+          !! (_cell_bingo)
+          ? <cell>{ bold_crossed (_cell_choice) }</cell>
+          :!! (_cell_answered)
+          ? <cell>{ crossed (_cell_choice) }</cell>
+          : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
+          where
+          , _cell_position = T (_cell) (L .get (cell_as_position))
+          , _cell_choice = T (_cell) (L .get (cell_as_choice))
+          , _cell_answered = Z .elem (_cell_position) (answered_positions)
+          , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
+          , crossed = _x => <s>{ _x }</s>
+          , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
+          } </row> )) } </board> ],
+    where
+    , _board = T (app_state ()) (L .get (app_as_board))
+    , _questions = T (app_state ()) (L .get (app_as_questions))
+    , _past = T (app_state ()) (L .get (app_as_past))
+    , current_question = current_question (_questions) (_past)
+    , answered_positions = answered_positions (_questions) (_board) (_past)
+    , bingoed_positions = bingoed_positions (_questions) (_board) (_past)
+    , game_tick = just_now (game_tick_sampler)
+    , cell_feedback = cell => _dom => {;
+        ;clicking .forEach (click => {;
+          ;_dom .addEventListener (click, _ => {;
+            ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) } </playing-etc>
 
 var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>
@@ -279,7 +279,6 @@ var lookbehind_latency = _ => {
 			 
 			 
 var record_room = _room => {;
-	var _student_maybe = T (S .sample (app_state)) (L .get ([ app_as_student, as_maybe ]))
 	;go 
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
@@ -289,9 +288,9 @@ var record_room = _room => {;
 			_ensemble => {;
 				var _questions = T (_ensemble) (L .get (ensemble_as_questions))
 				var _rules = T (_ensemble) (L .get (ensemble_as_rules))
-				var _setup = setup .setup (_room, _questions, _rules)
+				var _settings = settings .settings (_questions, _rules)
 				;app_state (
-					student_app .get_ready ( _student_maybe, Z .Just (_setup) )) } ])) )
+					student_app .get_ready (Z_ .Just (_room), _student_maybe, Z .Just (_settings))) } ])) )
 		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
@@ -299,11 +298,11 @@ var record_room = _room => {;
 			;io_state (io .inert) }) }
 
 var record_student = _name => {;
-	var _setup_maybe = T (S .sample (app_state)) (L .get ([ app_as_setup, as_maybe ]))
+	var _settings_maybe = T (S .sample (app_state)) (L .get ([ app_as_settings, as_maybe ]))
 	;app_state (
 		student_app .get_ready (
 			Z .Just ([ uuid (), _name ])
-			, _setup_maybe )) }
+			, _settings_maybe )) }
 
 var connect_room = _ => {;
 	;T (S .sample (app_state)
