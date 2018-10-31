@@ -25,7 +25,7 @@ ensemble_as_student_boards, ensemble_as_student_histories,
 attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_questions,
-opportunity_as_attempts,
+app_as_opportunity, opportunity_as_attempts,
 rules_as_size, settings_as_size,
 question_as_question, question_as_answers,
 cell_as_position, as_position,
@@ -353,19 +353,19 @@ var attempt_question = _position => {;
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
         if (question_choice_matches (_question) (_choice)) {
-          ;T (S .sample (app_state)) ([
-            L .set
-              ([app_as_past, past_as_opportunities, L .last, opportunity_as_attempts, L .append])
-              ([_position, latency]),
-            student_app_playing_to_next,
+          ;T (S .sample (app_state)) (
+            [ $ (L .set
+              ) ([app_as_opportunity, opportunity_as_attempts, L .append]
+              ) ([_position, latency])
+            , student_app_playing_to_next,
             _x => {;app_state (_x)} ]) }
         else {
-          ;T (S .sample (app_state)) ([
-            L .set
-              ([app_as_past, past_as_opportunities, L .last, opportunity_as_attempts, L .append])
-              ([_position, latency]),
-            _x => {;app_state (_x)} ])
-          ;lookbehind_state (lookbehind .attempting (latency, true)) } } } ) }
+          ;T (S .sample (app_state)) (
+            [ $ (L .set
+              ) ([app_as_opportunity, opportunity_as_attempts, L .append]
+              ) ([_position, latency])
+            , _x => {;app_state (_x)} ])
+          ;lookbehind_state (lookbehind .attempting (latency, true)) } } })) }
 
 var timesup_question = _ => {;
 	;app_state (student_app_playing_to_next (S .sample (app_state))) }
@@ -543,11 +543,14 @@ S (_ => {;
 							, message .student_update (_student, _past) ],
 						where
 						, { _board, _past, not_playing } =
-								$ (Z .fromMaybe
-								) ({ not_playing: 'not playing' }
-                ) (maybe_all (T (app_state ()) (L .get (L .pick ({
-										_board: [ app_as_board, as_maybe ],
-										_past: [ app_as_past, as_maybe ] })) ))) )=>_) ))) 
+								T (app_state ()
+                ) (
+                L .get (
+                [ complete_ (
+                  { _board: app_as_board
+                  , _past: app_as_past })
+                , L .valueOr (
+                  { not_playing: 'not playing' }) ])) )=>_) ))) 
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),

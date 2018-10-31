@@ -313,6 +313,7 @@ var app_as_past = [ L .choices (app_as_playing, app_as_game_over), 'past' ]
 var settings_as_questions = data_lens (settings .settings) .questions
 var settings_as_rules = data_lens (settings .settings) .rules
 var app_as_questions = [ app_as_settings, settings_as_questions ]
+var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
 
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
@@ -603,7 +604,7 @@ window .stuff = { ...window .stuff,
   attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_questions,
-	opportunity_as_attempts,
+  app_as_opportunity, opportunity_as_attempts,
 	rules_as_size, settings_as_size,
 	question_as_question, question_as_answers,
 	cell_as_position, as_position,
