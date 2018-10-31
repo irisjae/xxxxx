@@ -95,7 +95,7 @@ where
     , rec = _
     , _socket = _
     , refresh = _ => {;
-        if (Object .getPrototypeOf (_socket) !== WebSocket
+        if (! (_socket instanceof WebSocket)
         || _socket .readyState === WebSocket .CLOSED
         || _socket .readyState === WebSocket .CLOSING) {
           ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
