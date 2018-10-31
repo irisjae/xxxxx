@@ -188,19 +188,19 @@ var past = data ({ past: (opportunities =~ list (opportunity)) => past })
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
 var rules = data ({ rules: (time_limit =~ number, size =~ nat) => rules })
-var setup = data ({ setup: ( questions =~ list (question), rules =~ rules ) => setup })
+var settings = data ({ settings: ( questions =~ list (question), rules =~ rules ) => settings })
 
 
 var teacher_app = data ({
-  setup: ( setup =~ setup ) => teacher_app,
-	get_ready: ( room =~ room, setup =~ setup, students =~ list (student) ) => teacher_app,
-	playing: ( room =~ room, setup =~ setup, students =~ map (student) (board, past) ) => teacher_app,
-	game_over: ( room =~ room, setup =~ setup, students =~ map (student) (board, past) ) => teacher_app })
+  setup: ( settings =~ settings ) => teacher_app,
+	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
+	playing: ( room =~ room, settings =~ settings, students =~ map (student) (board, past) ) => teacher_app,
+	game_over: ( room =~ room, settings =~ settings, students =~ map (student) (board, past) ) => teacher_app })
 
 var student_app = data ({
-	get_ready: ( room =~ maybe (room), setup =~ maybe (setup), student =~ maybe (student) ) => student_app,
-	playing: ( room =~ room, setup =~ setup, student =~ student, board =~ board, past =~ past ) => student_app,
-	game_over: ( room =~ room, setup =~ setup, student =~ student, board =~ board, past =~ past ) => student_app })
+	get_ready: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
+	playing: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past ) => student_app,
+	game_over: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past ) => student_app })
 
 /*
 var teacher_lookbehind = data ({
@@ -216,7 +216,7 @@ var io = data ({
 
 
 var message = data ({
-	teacher_setup: ( setup =~ setup ) => message,
+	teacher_settings: ( settings =~ settings ) => message,
 	teacher_ping: ( ping =~ ping ) => message,
 	teacher_start: ( synchronization =~ timestamp ) => message,
 	teacher_abort: ( synchronization =~ timestamp ) => message,
@@ -265,7 +265,7 @@ var ensemble = data ({
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
 var default_rules = rules .rules (10, 4)
 
-var default_setup = setup .setup (default_questions, default_rules)
+var default_settings = settings .settings (default_questions, default_rules)
 
 
 
@@ -295,14 +295,14 @@ var complete_ = lens_shape =>
   ]
 
 
-var app_as_setup = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
+var app_as_setup = data_iso (teacher_app .setup)
 var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
+var app_as_settings = [ L .choices (app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over), 'settings', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
 var app_as_room = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'room' ]
 var app_as_student = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'student', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
-var app_as_settings = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'settings', L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity) ]
 var app_as_board = [ L .choices (app_as_playing, app_as_game_over), 'board' ]
 var app_as_past = L .choices ( data_lens (student_app .playing) .past, data_lens (student_app .game_over) .past )
 
@@ -408,15 +408,19 @@ var generate_board = size => questions =>
 
 
 var teacher_app_get_ready_to_playing = by (_app =>
-  under (app_as_settings
-  ) (_settings  => 
-    teacher_app .playing (_settings, [])))
+  under (complete_ (
+    { _room: app_as_room
+    , _settings: app_as_settings
+    , _students: app_as_students })
+  ) (({ _room, _settings, _students }) => 
+    teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x, undefined)) )))
 
 var student_app_get_ready_to_playing =
-  under (complete_ ({
-			_student: app_as_student,
-			_settings: app_as_settings })
-  ) (({ _student, _settings }) =>
+  under (complete_ (
+		{	_room: app_as_room
+    , _student: app_as_student
+		,	_settings: app_as_settings })
+  ) (({ __student, _settings }) =>
 		so ((_=_=>
 		student_app .playing
 			(_student, _settings, generate_board (_size) (_questions), fresh_past),
@@ -589,17 +593,17 @@ window .stuff = { ...window .stuff,
 	default_questions, default_rules, default_settings,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_get_ready, app_as_playing, app_as_game_over,
-	settings_as_room, settings_as_questions, setup_as_rules,
+	settings_as_questions, settings_as_rules,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_questions, ensemble_as_rules,
 	ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,
 	ensemble_as_student_boards, ensemble_as_student_histories,
   attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
-	app_as_setup, app_as_student, app_as_students, app_as_room,
+	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_questions,
 	opportunity_as_attempts,
-	rules_as_size, setup_as_size,
+	rules_as_size, settings_as_size,
 	question_as_question, question_as_answers,
 	cell_as_position, as_position,
 	cell_as_choice, student_name,
