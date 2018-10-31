@@ -290,7 +290,10 @@ var record_room = _room => {;
 				var _rules = T (_ensemble) (L .get (ensemble_as_rules))
 				var _settings = settings .settings (_questions, _rules)
 				;app_state (
-					student_app .get_ready (Z_ .Just (_room), _student_maybe, Z .Just (_settings))) } ])) )
+					T (S .sample (app_state)
+          ) (
+          [ L .set (app_as_room) (Z_ .Just (_room))
+          , L .set (app_as_settings) (Z_ .Just (_settings)) ])) } ])) )
 		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
@@ -298,11 +301,10 @@ var record_room = _room => {;
 			;io_state (io .inert) }) }
 
 var record_student = _name => {;
-	var _settings_maybe = T (S .sample (app_state)) (L .get ([ app_as_settings, as_maybe ]))
-	;app_state (
-		student_app .get_ready (
-			Z .Just ([ uuid (), _name ])
-			, _settings_maybe )) }
+  ;app_state (
+    T (S .sample (app_state)
+    ) (
+    L .set (app_as_student) (Z_ .Just ([ uuid (), _name ])) )) } 
 
 var connect_room = _ => {;
 	;T (S .sample (app_state)
@@ -312,7 +314,7 @@ var connect_room = _ => {;
       _student: app_as_student,
       _room: app_as_room })
   ) (({ _student, _room }) => {;
-		var _setup
+		var latest_settings
 		;return go 
 		.then (_ =>
 			io_state (io .connecting) && api (_room)
@@ -322,14 +324,16 @@ var connect_room = _ => {;
 				 _ensemble => {;
 					 var _questions = T (_ensemble) (L .get (ensemble_as_questions))
 					 var _rules = T (_ensemble) (L .get (ensemble_as_rules))
-					 ;_setup = setup .setup (_room, _questions, _rules) } ])) )
+           ;latest_settings = settings .settings (_questions, _rules) } ])) )
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
 			.then (panic_on ([ [_x => ! _x .ok, 'not ok'] ])) )
 		.then (_ => {; 
-			;app_state (
-				student_app .get_ready (Z .Just (_student), Z .Just (_setup))) })
+      ;app_state (
+        T (S .sample (app_state)
+        ) (
+        L .set (app_as_settings) (Z_ .Just (latest_settings)) ))  })
 		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
@@ -337,11 +341,14 @@ var connect_room = _ => {;
 			;io_state (io .inert) }) })) }
 
 var attempt_question = _position => {;
-	T (S .sample (app_state)) ([ student_app_to_board_viewer,
-		_board_viewer => {;
+	T (S .sample (app_state)) (
+    under (complete_ (
+      { _questions: app_as_questions
+      , _board: app_as_board
+      , _past: app_as_past } )
+    ) (({ _questions, _board, _past }) => {;
 		//Z_ .chain (board_viewer_current_question),
-			var _question = T (_board_viewer) ([ board_viewer_current_question, from_just ])
-			var _board = T (_board_viewer) (L .get (board_viewer_as_board))
+			var _question = current_question (_questions) (_past)
 			var _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
@@ -358,7 +365,7 @@ var attempt_question = _position => {;
               ([app_as_past, past_as_opportunities, L .last, opportunity_as_attempts, L .append])
               ([_position, latency]),
             _x => {;app_state (_x)} ])
-          ;lookbehind_state (lookbehind .attempting (latency, true)) } } } ]) }
+          ;lookbehind_state (lookbehind .attempting (latency, true)) } } } ) }
 
 var timesup_question = _ => {;
 	;app_state (student_app_playing_to_next (S .sample (app_state))) }
