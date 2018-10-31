@@ -84,17 +84,18 @@ where
     return !! Z_ .not (api .continuations [id])
     ? id
     : new_id () }
-, new_socket = room => so ((_=_=>
+//TODO: make this more elegant
+, new_socket = room => so ((_=_=>(
     rec =
     { _socket: _
     , ready: _
     , refresh: refresh
-    , send: _x => _socket .send (_x) },
+    , send: _x => _socket .send (_x) } , refresh (), rec),
     where
     , rec = _
     , _socket = _
     , refresh = _ => {;
-        if (_socket === rec
+        if (Object .getPrototypeOf (_socket) !== WebSocket
         || _socket .readyState === WebSocket .CLOSED
         || _socket .readyState === WebSocket .CLOSING) {
           ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
@@ -106,9 +107,7 @@ where
             var id = _packet .id
             var data = _packet .body
             if (api .continuations [id]) {;
-               ;api .continuations [id] (data) } } } }
-    ,$=
-    refresh () )=>_)
+               ;api .continuations [id] (data) } } } } )=>_)
       
 , update_pings = sample =>
   $ (
