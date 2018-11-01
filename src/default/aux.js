@@ -552,9 +552,9 @@ var message_encoding = by (message =>
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
-var assemble_students = by (_app => _ensemble =>
+var assemble_students = by (_app => //and_by (_ensemble =>
   so ((_=_=>
-  $ ([ Z .flip (cases), L .collect (L .elems), L .get (as_sole) ]),
+  $ ([ Z .flip (cases), L .collect (L .elems), L .get ([ as_sole, L .valueOr (Z_ .K (undefined)) ]) ]),
   where
   , cases =
       [ under (app_as_get_ready
