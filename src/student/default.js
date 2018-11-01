@@ -555,9 +555,11 @@ S (_ => {;
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
 					_x => {;ensemble_state (_x)} ])) )
-    .catch ($ (
-      [ panic_on ([under ('error') (x => x !== 'timeout'), 'rethrow'])
-      , _ => {;console .warn ('Room timed out')} ]))
+    .catch (_x => {;
+      if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
+        ;console .warn ('Room timed out') }
+      else {;
+        ;throw _x }})
  		.then (_ => {;
 			;setTimeout (_ => {;
 				;heartbeat (!! critical ? reping_period : phase - 1) }
