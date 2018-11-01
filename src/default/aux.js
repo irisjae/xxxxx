@@ -364,6 +364,10 @@ var pair_as_list = L .cond (
 	, [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
 		, L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] /**/, [L .zero]/**/)
 
+//var pair_as_first = [ L .ifElse ($ (Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)))) (L .reread (Z_ .fst)) (L .zero),  ]
+var pair_as_first = [ pair_as_list, L .first ]
+var pair_as_second = [ pair_as_list, L .last ]
+
 //report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
 var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
