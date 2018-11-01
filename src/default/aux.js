@@ -418,9 +418,9 @@ var teacher_app_get_ready_to_playing = by (_app =>
     , _settings: app_as_settings
     , _students: app_as_students })
   ) (({ _room, _settings, _students }) => 
-    teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x, undefined)) )))
+    teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x) (undefined)) )))
 
-var student_app_get_ready_to_playing =
+var student_app_get_ready_to_playing = by (_app =>
   under (complete_ (
 		{	_room: app_as_room
     , _student: app_as_student
@@ -432,7 +432,7 @@ var student_app_get_ready_to_playing =
 		, _size = L .get (settings_as_size) (_settings)
 		, _questions = L .get (settings_as_questions) (_settings)
     , random_board = generate_board (_size) (_questions)
-		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_))
+		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_)))
 
 var student_app_playing_to_next = 
 	by (_app => 
