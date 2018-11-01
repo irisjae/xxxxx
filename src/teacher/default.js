@@ -197,7 +197,7 @@ var get_room = _room => {;
 var start_playing = _ => {;
 	T (
   { _ensemble: S .sample (ensemble_state)
-  , _room: T (S .sample (app_state)) (app_as_room) }
+  , _room: T (S .sample (app_state)) (L .get (app_as_room)) }
   ) (
   under (as_complete) (({ _ensemble, _room }) => {;
 		;go
