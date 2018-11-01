@@ -300,12 +300,12 @@ var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_as_settings = [ L .choices (app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over), 'settings', as_defined_ ]
-var app_as_student = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'student', as_defined_ ]
-var app_as_room = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'room', as_defined_ ]
-var app_as_students = [ L .choices (app_as_get_ready, app_as_playing, app_as_game_over), 'students' ]
-var app_as_board = [ L .choices (app_as_playing, app_as_game_over), 'board' ]
-var app_as_past = [ L .choices (app_as_playing, app_as_game_over), 'past' ]
+var app_as_settings = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'settings', as_defined_ ]
+var app_as_student = [ L .choices ('get_ready', 'playing', 'game_over'), 'student', as_defined_ ]
+var app_as_room = [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
+var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
+var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
+var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
 
 
 
