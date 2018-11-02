@@ -129,12 +129,12 @@ var playing_view = _ => so ((_=_=>
                 : <cell></cell>,
                 where
                 , _cell_position = T (_cell) (L .get (cell_as_position))
-                , _cell_crossed = Z .elem (_cell_position) (crossed_positions)
-                , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions) )=>_)))
+                , _cell_crossed = Z .elem (_cell_position) (_crossed_positions)
+                , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
                 } </row> )) } </board>,
             where
-            , crossed_positions = answered_positions (_questions) (_board) (_past)
-            , bingoed_positions = bingoed_positions (_questions) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>,
+            , _crossed_positions = answered_positions (_questions) (_board) (_past)
+            , _bingoed_positions = bingoed_positions (_questions) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>,
 	where
 	, _questions = T (app_state ()) (L .get (app_as_questions))
 	, _question = T (app_state ()) (L .get (app_as_past), current_question, T (_questions))

@@ -425,7 +425,7 @@ var student_app_get_ready_to_playing = by (_app =>
 		,	_settings: app_as_settings })
   ) (({ _room, _student, _settings }) =>
 		so ((_=_=>
-		student_app .playing (_student, _room, _settings, random_board, fresh_past),
+		student_app .playing (_room, _settings, _student, random_board, fresh_past),
 		where 
 		, _size = L .get (settings_as_size) (_settings)
 		, _questions = L .get (settings_as_questions) (_settings)
