@@ -71,9 +71,34 @@ var setup_view = _ => so ((_=_=>
       ) (
 			[ L .get ([io_as_connecting, as_maybe])
       , Z_ .maybe ([]) (Z .K ('Generating Code...')) ]) }
+    <setup-etc>
+      <div class="left-pane">
+        <a-title>Bingo</a-title>
+        <sub-title>除法（一</sub-title>
+        <settings for="game-mode time-limit" style="margin-top: 20px;">
+        <setting of="game-mode">
+          <label>遊戲模式：</label>
+          <control>
+            <prev><img src={ prev_img } /></prev>
+            <counter><img src=" /></counter>
+            <next><img src={ next_img } /></next></control></setting>
+        <setting of="time-limit">
+          <label>各題作答時限：</label><control>
+          <prev><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486" /></prev>
+          <counter><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288" /></counter>
+          <next><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950" /></next></control></setting></settings>
+        <button custom for="preview" style="margin-top: 25px"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936" /></button>
+        <button custom for="start"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879" /></button></div>
+      <div class="right-pane">
+        <settings for="board-size">
+          <setting of="board-size" be="3x3"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588" /></setting>
+          <setting of="board-size" be="4x4"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274" /></setting>
+          <setting of="board-size" be="5x5"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962" /></setting></settings></div></setup-etc>
 		</setup-etc>,
   where
 	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
+	, prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
+	, next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
   , feedback_init = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
