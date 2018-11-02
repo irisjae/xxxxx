@@ -89,9 +89,9 @@ var clicking = ['click']
 
 var setup_room_view = _ => so ((_=_=>
   <setup-room-etc>
-    <code fn={ setup_room_feedback }>
+    <room fn={ setup_room_feedback }>
       <input placeholder="Enter a room code" />
-      <button> Go </button> </code>
+      <button> Go </button> </room>
       { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
         ? <message>{ bad_room } is not a valid room</message>
         : [] } </setup-room-etc>,

@@ -5,22 +5,57 @@ body {
   background-size: cover;
   color: white; }
 
-setup-etc, get-ready-etc, teacher-app playing-etc, result-etc {
+%page-etc {
 	width: 80%;
 	height: 80%;
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-}
-get-ready-etc, teacher-app playing-etc, result-etc{
-	flex-direction: column;
-}
-student-app playing-etc{
+	transform: translateX(-50%) translateY(-50%); }
+
+teacher-app > setup-etc {
+  @extends %page-etc; }
+teacher-app > get-ready-etc {
+  @extends %page-etc;
+  player {
+    padding: 5px;
+    margin: 1px;
+    background-color: #F5C3C2;
+    border-style: solid;
+    border-width: 1px;
+    width: 25vw;
+    box-shadow: 2px 2px #224D34; }
+  name, room {
+    min-width: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%); } }
+teacher-app > playing-etc {
+  @extends %page-etc; }
+teacher-app > result-etc {
+  @extends %result-etc; }
+student-app > setup-etc {
+  @extends %page-etc; }
+student-app > get-ready-etc {
+  @extends %page-etc; }
+student-app > playing-etc {
 	background-color: #53D7FF;
 	display: block;
 	padding: 20px;
-}
+  question, ticker {
+    margin: 2em;
+    background-color: #9464A3;
+    color: white;
+    width: 25%;
+    padding: 5px; }
+  question {
+    float: left; }
+  ticker {
+    float :right; } }
+student-app > result-etc {
+  @extends %result-etc; }
+
 board-etc {
 	height: 100%;
 	width: 100%;
@@ -41,58 +76,37 @@ game-over-etc{
 	background-color: #9464A3;
 	display: block;
 }
-[a-title] { 
-	font-size: 42px;
-}
-[a-title], size, get-ready-etc, teacher-app playing-etc, result-etc{
+/*get-ready-etc, teacher-app playing-etc, result-etc{
 	display: flex;
   align-items: center;
 	justify-content: center;
-}
+}*/
 
 board {
 	width: 60%;
 	height: 80%;
-/*	 display: inline-block; */
 	background-color: #9464A3;
 	margin:0 auto;
-/*	 font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-}
-row{
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 28%;
-	margin:1%;
-	width: 100%;
-	clear: left;
-}
-question, ticker{
-	margin: 2em;
-	background-color: #9464A3;
-	color: white;
-	width: 25%;
-	padding: 5px;
-}
-question{
-	float: left;
-}
-ticker{
-	float :right;
-}
-cell {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-	background-color: #E2BD4B;
-	padding: 2px;
-	border: 3px solid white;
-	width: 28%;
-	height: 95%;
-	display: inline-block;
-}
+  row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28%;
+    margin:1%;
+    width: 100%;
+    clear: left;
+    cell {
+      font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+      background-color: #E2BD4B;
+      padding: 2px;
+      border: 3px solid white;
+      width: 28%;
+      height: 95%;
+      display: inline-block; } } }
 
 input {
 	display: block;
@@ -104,13 +118,6 @@ input {
 	font-size: 16px;
 }
 
-name, code {
-	min-width: 50%;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-}
 button:not([custom]) {
 	font-size: 16px;
 	border-radius: 3px;
@@ -130,16 +137,6 @@ button:not([custom]) {
   }
 }
 
-player {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-	padding: 5px;
-	margin: 1px;
-	background-color: #F5C3C2;
-	border-style: solid;
-	border-width: 1px;
-	width: 25vw;
-	box-shadow: 2px 2px #224D34;
-}
 
 
 room {
@@ -152,6 +149,7 @@ room {
     margin:auto;
   }
 }
+
 timer{
 	background-color: #D48A88;
 	float: left;
