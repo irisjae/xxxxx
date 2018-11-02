@@ -24,21 +24,28 @@ teacher-app > get-ready-etc {
     border-style: solid;
     border-width: 1px;
     width: 25vw;
-    box-shadow: 2px 2px #224D34; }
+    box-shadow: 2px 2px #224D34; } }
+teacher-app > playing-etc {
+  @extends %page-etc; }
+
+student-app > setup-etc {
+  @extends %page-etc;
+  room {
+    background-color: #D48A88;
+    padding: 2%;
+    margin: 2%;
+    display: block;
+    width: 40vw;
+    & button{
+      margin:auto; } } }
+student-app > get-ready-etc {
+  @extends %page-etc;
   name, room {
     min-width: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%); } }
-teacher-app > playing-etc {
-  @extends %page-etc; }
-teacher-app > result-etc {
-  @extends %result-etc; }
-student-app > setup-etc {
-  @extends %page-etc; }
-student-app > get-ready-etc {
-  @extends %page-etc; }
+    transform: translateX(-50%) translateY(-50%); }}
 student-app > playing-etc {
 	background-color: #53D7FF;
 	display: block;
@@ -53,40 +60,23 @@ student-app > playing-etc {
     float: left; }
   ticker {
     float :right; } }
-student-app > result-etc {
-  @extends %result-etc; }
-
-board-etc {
-	height: 100%;
-	width: 100%;
-	text-align: center;
-	background-color: #80DAFB;
-	display: block;
-}
-result-etc{
-	background-color: #9464A3;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-game-over-etc{
+student-app > game-over-etc {
+  @extends %page-etc;
 	position: relative;
 	height: 100%;
 	width: 100%;
 	background-color: #9464A3;
 	display: block;
-}
-/*get-ready-etc, teacher-app playing-etc, result-etc{
-	display: flex;
-  align-items: center;
-	justify-content: center;
-}*/
+  result-etc {
+    display: flex;
+    align-items: center;
+    justify-content: center; } }
 
 board {
 	width: 60%;
 	height: 80%;
 	background-color: #9464A3;
-	margin:0 auto;
+	margin: 0 auto;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -96,11 +86,10 @@ board {
     align-items: center;
     justify-content: center;
     height: 28%;
-    margin:1%;
+    margin: 1%;
     width: 100%;
     clear: left;
     cell {
-      font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
       background-color: #E2BD4B;
       padding: 2px;
       border: 3px solid white;
@@ -137,42 +126,6 @@ button:not([custom]) {
   }
 }
 
-
-
-room {
-	background-color: #D48A88;
-	padding: 2%;
-	margin: 2%;
-	display: block;
-	width: 40vw;
-  & button{
-    margin:auto;
-  }
-}
-
-timer{
-	background-color: #D48A88;
-	float: left;
-	margin: 2em;
-}
-
 message {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	color: red;
-	margin: 10px;
-}
-
-
-id {
-	background-color: #4576B5;
-	border-color: #32547E;
-	border-style: solid;
-	border-width: 3px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 5px;
-  & img{
-    max-width: 20%
-  }
-}
+	margin: 10px; }
