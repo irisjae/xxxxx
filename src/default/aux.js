@@ -331,8 +331,7 @@ var message_as_ping = [L .choices (message_as_teacher_ping, message_as_student_p
 var message_as_board = message_as_student_join .board
 var message_as_past = message_as_student_update .past
 	
-var ensemble_as_questions = data_iso (ensemble .ensemble) .questions 
-var ensemble_as_rules = data_iso (ensemble .ensemble) .rules 
+var ensemble_as_settings = data_iso (ensemble .ensemble) .settings 
 var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
 var ensemble_as_start = data_iso (ensemble .ensemble) .start 
 var ensemble_as_abort = data_iso (ensemble .ensemble) .abort 
@@ -608,8 +607,7 @@ window .stuff = { ...window .stuff,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
 	settings_as_questions, settings_as_rules,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
-	ensemble_as_questions, ensemble_as_rules,
-	ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
+	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,
 	ensemble_as_student_boards, ensemble_as_student_histories,
   attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,

@@ -10,8 +10,7 @@ as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
 settings_as_questions, settings_as_rules,
 io_as_inert, io_as_connecting, io_as_heartbeat,
-ensemble_as_questions, ensemble_as_rules,
-ensemble_as_ping, ensemble_as_start, ensemble_as_abort,
+ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 ensemble_as_student_pings, ensemble_as_student_starts,
 ensemble_as_student_boards, ensemble_as_student_histories,
 attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
@@ -287,9 +286,7 @@ var record_room = _room => {;
 		.then ($ ([
 			L .get (L .inverse (data_iso (ensemble .ensemble))),
 			_ensemble => {;
-				var _questions = T (_ensemble) (L .get (ensemble_as_questions))
-				var _rules = T (_ensemble) (L .get (ensemble_as_rules))
-				var _settings = settings .settings (_questions, _rules)
+				var _settings = T (_ensemble) (L .get (ensemble_as_settings))
 				;app_state (
 					T (S .sample (app_state)
           ) (
@@ -323,9 +320,7 @@ var connect_room = _ => {;
 			.then ($ ([
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
 				 _ensemble => {;
-					 var _questions = T (_ensemble) (L .get (ensemble_as_questions))
-					 var _rules = T (_ensemble) (L .get (ensemble_as_rules))
-           ;latest_settings = settings .settings (_questions, _rules) } ])) )
+           ;latest_settings = T (_ensemble) (L .get (ensemble_as_settings)) } ])) )
 		.then (_ =>
 			api (_room, post (message_encoding (
 				message .student_ping (_student, [0, 0, 0]) )))
