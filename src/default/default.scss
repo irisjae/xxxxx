@@ -1,10 +1,13 @@
 body {
 	margin: 0;
-  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541159680034);
-  background-position: center; }
+  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541179491753);
+  background-position: center;
+  background-size: cover;
+  color: white; }
 
 setup-etc, get-ready-etc, teacher-app playing-etc, result-etc {
-	min-width: 80%;
+	width: 80%;
+	height: 80%;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -38,15 +41,12 @@ game-over-etc{
 	background-color: #9464A3;
 	display: block;
 }
-setup-etc button{
-	margin: 0 auto;
-	display: block;
-}
 [a-title] { 
 	font-size: 42px;
 }
 [a-title], size, get-ready-etc, teacher-app playing-etc, result-etc{
 	display: flex;
+  align-items: center;
 	justify-content: center;
 }
 
@@ -111,7 +111,7 @@ name, code {
 	left: 50%;
 	transform: translateX(-50%) translateY(-50%);
 }
-button {
+button:not([custom]) {
 	font-size: 16px;
 	border-radius: 3px;
 	background-color: #00A746;
