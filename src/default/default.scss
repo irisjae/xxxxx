@@ -1,6 +1,7 @@
 body {
 	margin: 0;
-  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2FAsset%202.png?1541151789527); }
+  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2FAsset%202.png?1541151789527);
+  background-position: center; }
 
 setup-etc, get-ready-etc, teacher-app playing-etc, result-etc {
 	min-width: 80%;
@@ -36,6 +37,21 @@ game-over-etc{
 	width: 100%;
 	background-color: #9464A3;
 	display: block;
+}
+setup-etc button{
+	margin: 0 auto;
+	display: block;
+}
+[a-title] , [a-topic] { 
+	font-size: 42px;
+}
+[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc, result-etc{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+[a-title] img{
+	width: 15%;
 }
 
 board {
@@ -82,10 +98,6 @@ cell {
 	display: inline-block;
 }
 
-p {
-	max-width: 600px;
-}
-
 input {
 	display: block;
 	margin-bottom: 10px;
@@ -95,7 +107,6 @@ input {
 	border-radius: 3px;
 	font-size: 16px;
 }
-
 
 name, code {
 	min-width: 50%;
@@ -141,6 +152,9 @@ room {
 	margin: 2%;
 	display: block;
 	width: 40vw;
+  & button{
+    margin:auto;
+  }
 }
 timer{
 	background-color: #D48A88;
@@ -154,31 +168,6 @@ message {
 	margin: 10px;
 }
 
-room button{
-	margin:auto;
-}
-
-setup-etc button{
-	margin: 0 auto;
-	display: block;
-}
-[a-title] , [a-topic] { 
-	font-size: 42px;
-}
-[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc, result-etc{
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-[a-title] img{
-	width: 15%;
-}
-
-student-app table{
-	width: 100%;
-	margin: 10px;
-}
 
 id {
 	background-color: #4576B5;
