@@ -8,16 +8,33 @@ setup-etc, get-ready-etc, result-etc, teacher-app playing-etc{
 	left: 50%;
 	transform: translateX(-50%) translateY(-50%);
 }
+student-app playing-etc{
+	background-color: #53D7FF;
+	display: block;
+	padding: 20px;
+}
 board-etc {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	height: 100%;
 	width: 100%;
 	text-align: center;
 	background-color: #80DAFB;
 	display: block;
 }
+result-etc{
+	background-color: #9464A3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+game-over-etc{
+	position: relative;
+	height: 100%;
+	width: 100%;
+	background-color: #9464A3;
+	display: block;
+}
+
 board {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	width: 60%;
 	height: 80%;
 /*	 display: inline-block; */
@@ -60,23 +77,9 @@ cell {
 	height: 95%;
 	display: inline-block;
 }
-h1 {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-	color: black;
-}
 
 p {
 	max-width: 600px;
-}
-
-form {
-	margin-bottom: 25px;
-	padding: 15px;
-	background-color: cyan;
-	display: inline-block;
-	width: 100%;
-	max-width: 340px;
-	border-radius: 3px;
 }
 
 input {
@@ -87,23 +90,6 @@ input {
 	border: 1px solid lightgrey;
 	border-radius: 3px;
 	font-size: 16px;
-}
-
-button {
-	font-size: 16px;
-	border-radius: 3px;
-	background-color: lightgrey;
-	border: 1px solid grey;
-	box-shadow: 2px 2px teal;
-	cursor: pointer;
-}
-
-button:hover {
-	background-color: yellow;
-}
-
-button:active {
-	box-shadow: none;
 }
 
 li {
@@ -141,23 +127,7 @@ button {
     box-shadow: none;
   }
 }
-buttonresult{
-	font-size: 16px;
-	border-radius: 3px;
-	background-color: white;
-	border: 1px solid grey;
-	box-shadow: 2px 2px #224D34;
-	cursor: pointer;
-	width: 20%;
-}
-cellresult {
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-	color: white;
-	padding: 2px;
-	width: 30%;
-/*	 height: 95%; */ 
-	display: inline-block;
-}
+
 player {
 	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	padding: 5px;
@@ -168,20 +138,8 @@ player {
 	width: 25vw;
 	box-shadow: 2px 2px #224D34;
 }
-.rowresult {
-	margin:1%;
-	width: 100%;
-	clear: left;
-}
-#result{
-	width: 100%;
-	text-align: center;
-}
-columnplayer {
-	width: 30vw;
-	display: inline-block;
-	margin: 1vw;
-}
+
+
 room {
 	background-color: #D48A88;
 	padding: 2%;
@@ -194,20 +152,17 @@ timer{
 	float: left;
 	margin: 2em;
 }
+
 message {
 	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	color: red;
 	margin: 10px;
 }
+
 room button{
 	margin:auto;
 }
-student-app playing-etc{
-	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-	background-color: #53D7FF;
-	display: block;
-	padding: 20px;
-}
+
 setup-etc button{
 	margin: 0 auto;
 	display: block;
@@ -227,23 +182,12 @@ get-ready-etc, teacher-app playing-etc, result-etc{
 [a-title] img{
 	width: 15%;
 }
-result-etc{
-	background-color: #9464A3;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-game-over-etc{
-	position: relative;
-	height: 100%;
-	width: 100%;
-	background-color: #9464A3;
-	display: block;
-}
+
 student-app table{
 	width: 100%;
 	margin: 10px;
 }
+
 id {
 	background-color: #4576B5;
 	border-color: #32547E;
