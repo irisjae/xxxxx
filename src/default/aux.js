@@ -76,6 +76,7 @@ var api = so ((_=_=>
       var sample = end - begin
       ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
       ;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
+    .catch (_ => {})
     
     return continuation },
 where
