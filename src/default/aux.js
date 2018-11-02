@@ -306,13 +306,6 @@ var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'stude
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
 
-
-
-var settings_as_questions = data_lens (settings .settings) .questions
-var settings_as_rules = data_lens (settings .settings) .rules
-var app_as_questions = [ app_as_settings, settings_as_questions ]
-var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
-
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
 var io_as_heartbeat = data_iso (io .heartbeat)
@@ -346,6 +339,11 @@ var opportunity_as_attempts = data_lens (opportunity .opportunity) .attempts
 var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_position ] 
 var past_as_opportunities = data_lens (past .past) .opportunities
 		
+var settings_as_questions = data_lens (settings .settings) .questions
+var settings_as_rules = data_lens (settings .settings) .rules
+var app_as_questions = [ app_as_settings, settings_as_questions ]
+var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
+
 var rules_as_size = data_lens (rules .rules) .size
 var settings_as_size = [settings_as_rules, rules_as_size]
 
