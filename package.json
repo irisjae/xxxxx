@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Boo-yea!",
   "scripts": {
-    "start": "./bundle.sh && node host.js"
+    "start": "./scripts/bundle.sh && node server/host.js"
   },
   "dependencies": {
     "fast-memoize": "^2.4.0",

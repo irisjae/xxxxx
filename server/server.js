@@ -2,7 +2,7 @@ var R = require ('ramda')
 
 var debug = true
 
-var static_path = require ('path') .join (__dirname, 'static')
+var static_path = require ('path') .join (__dirname, '../static')
 
 
 
