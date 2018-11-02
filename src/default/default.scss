@@ -1,6 +1,13 @@
 body {
 	margin: 0; }
 
+setup-etc, get-ready-etc, result-etc, teacher-app playing-etc{
+	min-width: 80%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
 board-etc {
 	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	height: 100%;
@@ -31,7 +38,7 @@ row{
 	width: 100%;
 	clear: left;
 }
-question,ticker{
+question, ticker{
 	margin: 2em;
 	background-color: #9464A3;
 	color: white;
@@ -56,9 +63,6 @@ cell {
 h1 {
 	font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
 	color: black;
-}
-.bold {
-	font-weight: bold;
 }
 
 p {
@@ -129,13 +133,13 @@ button {
 	cursor: pointer;
 	min-width: 20%;
 	margin: 4px;
-}
-button:hover {
-	background-color: #26F07B;
-}
-
-button:active {
-	box-shadow: none;
+  
+  &:hover {
+    background-color: #26F07B;
+  }
+  &:active {
+    box-shadow: none;
+  }
 }
 buttonresult{
 	font-size: 16px;
@@ -204,13 +208,6 @@ student-app playing-etc{
 	display: block;
 	padding: 20px;
 }
-setup-etc, get-ready-etc, result-etc, teacher-app playing-etc{
-	min-width: 80%;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-}
 setup-etc button{
 	margin: 0 auto;
 	display: block;
@@ -247,10 +244,7 @@ student-app table{
 	width: 100%;
 	margin: 10px;
 }
-id img{
-	max-width: 20%
-}
-id{
+id {
 	background-color: #4576B5;
 	border-color: #32547E;
 	border-style: solid;
@@ -259,6 +253,7 @@ id{
 	align-items: center;
 	justify-content: center;
 	margin: 5px;
+  & img{
+    max-width: 20%
+  }
 }
-
-	
