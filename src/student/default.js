@@ -41,8 +41,8 @@ as_sole, sole, every, delay
 
 
 var feedback = data ({
-  enter_room: (room =~ room) => feedback,
-  enter_name: (name =~ string) => feedback,
+  setup_room: (room =~ room) => feedback,
+  setup_student: (name =~ string) => feedback,
   attempt_question: (position =~ position) => feedback })
 
 var lookbehind = data ({
@@ -51,8 +51,8 @@ var lookbehind = data ({
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind })
 
 
-var feedback_enter_room = data_iso (feedback .enter_room)
-var feedback_enter_name = data_iso (feedback .enter_name)
+var feedback_setup_room = data_iso (feedback .setup_room)
+var feedback_setup_student = data_iso (feedback .setup_student)
 var feedback_attempt_question = data_iso (feedback .attempt_question)
 
 var lookbehind_nothing = data_iso (lookbehind .nothing)
@@ -87,17 +87,17 @@ var lookbehind_state = S .data (lookbehind .nothing)
 var clicking = ['click']
 
 
-var room_entry_view = _ => so ((_=_=>
-  <room-entry-etc>
-    <code fn={ room_entry_feedback }>
+var setup_room_view = _ => so ((_=_=>
+  <setup-room-etc>
+    <code fn={ setup_room_feedback }>
       <input placeholder="Enter a room code" />
       <button> Go </button> </code>
-      { !! (L .isDefined (lookbehind_bad_room) (lookbehind_state ()))
+      { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
         ? <message>{ bad_room } is not a valid room</message>
-        : [] } </room-entry-etc>,
+        : [] } </setup-room-etc>,
   where
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
-  , room_entry_feedback = _dom => so ((_=_=>
+  , setup_room_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
           ;let_room_enter () } }),
@@ -110,16 +110,15 @@ var room_entry_view = _ => so ((_=_=>
       , let_room_enter = _ => {;
           var value = _input .value
           ;_input .value = ''
-          ;feedback_state (feedback .enter_room (value)) } )=>_))=>_)
+          ;feedback_state (feedback .setup_room (value)) } )=>_))=>_)
 
-var name_entry_view = _ => so ((_=_=>
-  <student-entry-etc>
-    <name fn={ name_entry_feedback } >
+var setup_student_view = _ => so ((_=_=>
+  <setup-student-etc>
+    <name fn={ setup_student_feedback } >
       <input placeholder="Enter your name" />
-      <button> Go </button>
-    </name> </student-entry-etc>,
+      <button> Go </button> </name> </setup-student-etc>,
   where
-  , name_entry_feedback = _dom => so ((_=_=>
+  , setup_student_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
           ;let_name_enter () } }),
@@ -132,7 +131,7 @@ var name_entry_view = _ => so ((_=_=>
       , let_name_enter = _ => {;
           var value = _input .value
           ;_input .value = ''
-          ;feedback_state (feedback .enter_name (value)) } )=>_))=>_)
+          ;feedback_state (feedback .setup_student (value)) } )=>_))=>_)
 
 
 var get_ready_view = <get-ready-etc>
@@ -143,7 +142,7 @@ var get_ready_view = <get-ready-etc>
 		!! Z .isNothing (room) ?
       !! (L .isDefined (io_as_inert
       ) (io_state ()))
-			? room_entry_view
+			? setup_room_view
 			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
       ) (io_state ()))
       ? 'Finding room...'
@@ -151,7 +150,7 @@ var get_ready_view = <get-ready-etc>
 		:!! Z .isNothing (student) ?
       !! (L .isDefined (io_as_inert
       ) (io_state ()))
-			? name_entry_view
+			? setup_student_view
 			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
       ) (io_state ()))
       ? 'Trying to join room...'
@@ -161,8 +160,7 @@ var get_ready_view = <get-ready-etc>
       , 'Waiting for game to start...' ]
       .map (_x => <div>{ _x }</div>),
       where
-      , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_))
-	} </get-ready-etc>
+      , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_)) } </get-ready-etc>
 
 var playing_view = _ => <playing-etc>
 	{ so ((_=_=>
@@ -277,7 +275,7 @@ var lookbehind_latency = _ => {
 			 
 			 
 			 
-var record_room = _room => {;
+var setup_room = _room => {;
 	;go 
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
@@ -297,7 +295,7 @@ var record_room = _room => {;
 		.then (_ => {;
 			;io_state (io .inert) }) }
 
-var record_student = _name => {;
+var setup_student = _name => {;
   ;app_state (
     T (S .sample (app_state)
     ) (
@@ -405,13 +403,13 @@ S (_ => {;
   ;so ((
   take
   , cases = 
-      [ [ feedback_enter_room
+      [ [ feedback_setup_room
         , ({ room: _room }) => {;
-            ;record_room (_room) } ]
-      , [ feedback_enter_name
+            ;setup_room (_room) } ]
+      , [ feedback_setup_student
         , ({ name: _name }) => {;
             ;go
-            .then (_ => record_student (_name))
+            .then (_ => setup_student (_name))
             .then (_ => connect_room ()) } ]
       , [ feedback_attempt_question
         , ({ position: _position }) => {;

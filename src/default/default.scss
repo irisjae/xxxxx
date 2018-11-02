@@ -42,16 +42,13 @@ setup-etc button{
 	margin: 0 auto;
 	display: block;
 }
-[a-title] , [a-topic] { 
+[a-title] { 
 	font-size: 42px;
 }
-[a-title], [a-topic], size, get-ready-etc, teacher-app playing-etc, result-etc{
+[a-title], size, get-ready-etc, teacher-app playing-etc,result-etc{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-}
-[a-title] img{
-	width: 15%;
 }
 
 board {

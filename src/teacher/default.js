@@ -63,10 +63,7 @@ var clicking = ['click']
 
 var setup_view = _ => so ((_=_=>
 	<setup-etc> 
-		<div a-title>
-			Bingo Class Game
-			<img src={ bingo_img } /> </div>
-		<div a-topic> Equivalent Fractions </div>
+		<div a-title> Bingo Class Game </div>
 		<rules>
 			<size> <img src={ board_sizes_img } /> </size> </rules>
 		<button fn={ feedback_init }> Start </button>
