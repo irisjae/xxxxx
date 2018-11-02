@@ -4,7 +4,7 @@ var Response = require("./response");
 module.exports = function(app){
 	var listen = app.listen;
 	var createContext = app.createContext;
-	var server = new ws.Server({noServer:true});
+	//var server = new ws.Server({noServer:true});
 	app.listen = function(){
 		var server = listen.apply(app,arguments);
 		server.on("upgrade",function(req,sock,head){
