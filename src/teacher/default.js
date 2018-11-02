@@ -109,14 +109,14 @@ var playing_view = _ => so ((_=_=>
 	<playing-etc>
     <question-etc>
       <question-text>{ _question }</question-text>
-      <countdown>{ ''/*time_left*/ }</countdown>
-    </question-etc>
+      <countdown>{ ''/*time_left*/ }</countdown> </question-etc>
     <students>
       { T (_students
-        ) (L .collect (
-        [ L .elems
-        , pair_as_second
-        , ([_board, _past]) =>
+        ) (
+        [ L .collect (
+          [ L .elems
+          , pair_as_second ])
+        , Z_ .map (([_board, _past]) =>
           <student-etc>
             { so ((_=_=>
             <board> { T (_board) (Z_ .map (_row => 
@@ -134,11 +134,7 @@ var playing_view = _ => so ((_=_=>
                 } </row> )) } </board>,
             where
             , crossed_positions = answered_positions (_questions) (_board) (_past)
-            , bingoed_positions = bingoed_positions (_questions) (_board) (_past) )=>_) }              
-          </student-etc> ]))
-      }
-    </students>
-	</playing-etc>,
+            , bingoed_positions = bingoed_positions (_questions) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>,
 	where
 	, _questions = T (app_state ()) (L .get (app_as_questions))
 	, _question = T (app_state ()) (L .get (app_as_past), current_question, T (_questions))
