@@ -569,10 +569,10 @@ var assemble_students = by (_app => //and_by (_ensemble =>
         Z_ .K (
         by (_ensemble =>
           $ (
-          [ L .collect (complete_ (
-            { boards: [ ensemble_as_student_boards, students_as_mapping ]
-            , histories: [ ensemble_as_student_histories, students_as_mapping ] }))
-          , map_defined (({ boards, histories }) =>
+          [ Z_ .flip (
+            { boards: L .collect ([ ensemble_as_student_boards, students_as_mapping ])
+            , histories: L .collect ([ ensemble_as_student_histories, students_as_mapping ]) })
+          , /*under (as_complete)*/ (({ boards, histories }) =>
             pair_zip (_a => _b => [_a, _b]) (boards) (histories) ) ])
         //collect this instead of get!
           /*under (L .pick (

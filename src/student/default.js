@@ -166,7 +166,7 @@ var get_ready_view = <get-ready-etc>
 
 var playing_view = _ => <playing-etc>
 	{ so ((_=_=>
-    [ T (current_question
+    [ T (_current_question
       ) (Z_ .maybe ('') (_x => <question>{ L .get (question_as_question) (_x) }</question>))
     , <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
     , <board> { T (_board) (Z_ .map (_row => 
@@ -180,8 +180,8 @@ var playing_view = _ => <playing-etc>
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
-          , _cell_answered = Z .elem (_cell_position) (answered_positions)
-          , _cell_bingo = R .any (Z .elem (_cell_position)) (bingoed_positions)
+          , _cell_answered = Z .elem (_cell_position) (_answered_positions)
+          , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions)
           , crossed = _x => <s>{ _x }</s>
           , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
           } </row> )) } </board> ],
@@ -189,9 +189,9 @@ var playing_view = _ => <playing-etc>
     , _board = T (app_state ()) (L .get (app_as_board))
     , _questions = T (app_state ()) (L .get (app_as_questions))
     , _past = T (app_state ()) (L .get (app_as_past))
-    , current_question = current_question (_questions) (_past)
-    , answered_positions = answered_positions (_questions) (_board) (_past)
-    , bingoed_positions = bingoed_positions (_questions) (_board) (_past)
+    , _current_question = current_question (_questions) (_past)
+    , _answered_positions = answered_positions (_questions) (_board) (_past)
+    , _bingoed_positions = bingoed_positions (_questions) (_board) (_past)
     , game_tick = just_now (game_tick_sampler)
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
