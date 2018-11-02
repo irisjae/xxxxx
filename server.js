@@ -57,11 +57,11 @@ module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa
 	.use (require ('koa-router') ()
     .use ('/room/:room', (ctx, next) => {;
       var id = ctx .params .room
-      //TODO: add cleanup heartbeat code
+      //TODO: add cleanup heartbeat code (necessary? maybe not)
       //TODO: try catch
-      ;return go
-      .then (_ => {;
-        if (ctx .get ('Connection') == 'upgrade') {
+      if (ctx .get ('Connection') == 'upgrade') {
+        ;return go
+        .then (_ => {;
           ;return ctx .upgrade ()
           .then (connection => {;
             ;connection .on ('message', message => {;
@@ -74,7 +74,7 @@ module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa
               else if (method === 'POST') {
                 ;post_room (id) (body)
                 var _reply = { ok : true } }
-              ;connection .send (JSON .stringify ({ id : track_id, body : _reply })) }) }) } }) })
+              ;connection .send (JSON .stringify ({ id : track_id, body : _reply })) }) }) }) } })
     .post ('/room/:room', (ctx, next) => {;
       return go
       .then (_ => ctx .request .body)
