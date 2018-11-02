@@ -166,8 +166,7 @@ var get_ready_view = <get-ready-etc>
 
 var playing_view = _ => <playing-etc>
 	{ so ((_=_=>
-    [ T (_current_question
-      ) (Z_ .maybe ('') (_x => <question>{ L .get (question_as_question) (_x) }</question>))
+    [ <question>{ L .get (question_as_question) (_current_question) }</question>
     , <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
     , <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>

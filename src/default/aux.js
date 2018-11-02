@@ -474,9 +474,10 @@ var size_patterns = memoize (size =>
 var current_question = by (_questions => and_by (_past =>
   $ (
   [ L .get (past_as_opportunities)
+  // convert into lens
   , _opportunities =>
     so ((_=_=>
-    L .get ([current_question_index, as_maybe]),
+    L .get (current_question_index),
     where
     , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ])))
 
