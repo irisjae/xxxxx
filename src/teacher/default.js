@@ -65,7 +65,7 @@ var setup_view = _ => so ((_=_=>
 	<setup-etc> 
 		<div a-title> Bingo Class Game </div>
 		<rules>
-			<size> <img src={ board_sizes_img } /> </size> </rules>
+			<size>  </size> </rules>
 		<button fn={ feedback_init }> Start </button>
 		{ T (io_state ()
       ) (
@@ -74,8 +74,6 @@ var setup_view = _ => so ((_=_=>
 		</setup-etc>,
   where
 	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081'
-	, board_sizes_img =
-			'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2FScreen%20Shot%202018-06-20%20at%206.53.17%20PM.png?1529492353674'
   , feedback_init = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
