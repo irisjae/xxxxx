@@ -9,6 +9,11 @@ find ~/static/ -type f | grep -v default/ | grep \\.js | while read f; do
   echo "$(node -e "var fs = require ('fs'); var compiler = require ('surplus/compiler'); console .log (compiler .compile (fs .readFileSync ('$f') .toString (), { sourcemap: 'append' }));")" > "$f"
 done
 
+find ~/static/ -type f | grep \\.scss | while read f; do
+  pnpx sass "$f" "${f%.*}.css"
+  rm "$f"
+done
+
 
 pnpx browserify ~/static/default/default.js -o ~/static/default.bundle.js
 echo ';' >> ~/static/default.js
