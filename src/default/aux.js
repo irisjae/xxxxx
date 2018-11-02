@@ -226,12 +226,11 @@ var message = data ({
 var ensemble = data ({
 	ensemble: (
 		ping =~ ping,
-		questions =~ list (question),
-		rules =~ rules,
+		settings =~ settings,
 		start =~ timestamp,
 		abort =~ maybe (timestamp),
-		student_starts =~ map (student) (timestamp),
 		student_pings =~ map (student) (ping),
+		student_starts =~ map (student) (timestamp),
 		student_boards =~ map (student) (board),
 		student_histories =~ map (student) (past) ) => ensemble })
 

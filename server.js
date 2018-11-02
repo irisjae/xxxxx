@@ -74,7 +74,10 @@ module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa
               else if (method === 'POST') {
                 ;post_room (id) (body)
                 var _reply = { ok : true } }
-              ;connection .send (JSON .stringify ({ id : track_id, body : _reply })) }) }) }) } })
+              ;connection .send (JSON .stringify ({ id : track_id, body : _reply })) }) }) }) }
+      else {
+        ;return go
+        .then (next) } })
     .post ('/room/:room', (ctx, next) => {;
       return go
       .then (_ => ctx .request .body)

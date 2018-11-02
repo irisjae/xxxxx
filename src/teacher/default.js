@@ -180,7 +180,7 @@ var get_room = _room => {;
 		api (_room,
 			post (message_encoding (
 				so ((_=_=>
-				message .teacher_settings (_questions, _rules),
+				message .teacher_settings (settings .settings (_questions, _rules)),
 				where
 				, { _questions, _rules } = T (_settings
           ) (L .get (L .pick (
