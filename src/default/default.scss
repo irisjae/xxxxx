@@ -14,7 +14,87 @@ body {
 	transform: translateX(-50%) translateY(-50%); }
 
 teacher-app > setup-etc {
-  @extend %page-etc; }
+  @extend %page-etc;
+  setting {
+    &[of=game-mode], &[of=time-limit] {
+      & prev, & next {
+        @extend %clickable; } }
+    &[of=board-size] {
+      & img {
+        @extend %clickable; } } }
+  button {
+    &[for=preview], &[for=start] {
+      & img {
+        @extend %clickable; } } }
+
+  .left-pane {
+    height: 100%;
+    width: 66%;
+    left: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    & a-title {
+      width: 100%;
+      display: block;
+      text-align: center;
+      font-size: 100px; }
+    & sub-title {
+      width: 100%;
+      display: block;
+      text-align: center;
+      font-size: 40px; }
+    & settings {
+      width: 100%;
+      height: 150px;
+      display: flex;
+      & setting {
+        width: 50%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        & label {
+          text-align: center;
+          display: block;
+          width: 100%;
+          flex-grow: 0; }
+        & control {
+          display: flex;
+          width: 100%;
+          flex-grow: 1;
+          & > * {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            &counter {
+              flex-grow: 2;
+              flex-basis: 40%; }
+            &prev, &next {
+              flex-grow: 1;
+              flex-basis: 20%; }
+            & counter {
+              flex-grow: 2;
+              flex-basis: 40%; }
+            & img {
+              width: 100%; } } } } } }
+
+  .right-pane {
+    height: 100%;
+    width: 33%;
+    right: 0;
+    position: absolute;
+    & settings {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-evenly;
+      & setting {
+        display: block;
+        & img {
+          max-width: 100%;
+          max-height: 33%; } } } } }
 teacher-app > get-ready-etc {
   @extend %page-etc;
   player {
@@ -72,6 +152,9 @@ student-app > game-over-etc {
     align-items: center;
     justify-content: center; } }
 
+%clickable {
+  cursor: pointer; }
+
 board {
 	width: 60%;
 	height: 80%;
@@ -123,91 +206,11 @@ button {
     &:active {
       box-shadow: none; } }
   &[custom] {
-      background: unset;
-      border: unset;
-      color: unset;
-      padding: unset; } }
+    background: unset;
+    border: unset;
+    color: unset;
+    padding: unset; } }
 
 message {
 	color: red;
 	margin: 10px; }
-
-.left-pane {
-  height: 100%;
-  width: 66%;
-  left: 0;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  & a-title {
-    width: 100%;
-    display: block;
-    text-align: center;
-    font-size: 100px; }
-
-  & sub-title {
-    width: 100%;
-    display: block;
-    text-align: center;
-    font-size: 40px; }
-
-  & settings {
-    width: 100%;
-    height: 150px;
-    display: flex;
-    & setting {
-      width: 50%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      & label {
-        text-align: center;
-        display: block;
-        width: 100%;
-        flex-grow: 0; }
-      & control {
-        display: flex;
-        width: 100%;
-        flex-grow: 1;
-        & > * {
-          flex-grow: 1;
-          flex-basis: 20%;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          & counter {
-            flex-grow: 2;
-            flex-basis: 40%; }
-
-          & img {
-            width: 100%; } } } } } }
-
-setting[of=board-size] img, setting[of=game-mode] prev, setting[of=game-mode] next, setting[of=time-limit] prev, setting[of=time-limit] next {
-  cursor: pointer;
-}
-
-button:not([custom]) {
-  cursor: pointer;
-}
-
-button[for=preview] img, button[for=start] img {
-  cursor: pointer;
-}
-
-.right-pane {
-  height: 100%;
-  width: 33%;
-  right: 0;
-  position: absolute;
-  & settings {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-evenly;
-    & setting {
-      display: block;
-      & img {
-          max-width: 100%;
-          max-height: 33%; } } } }
