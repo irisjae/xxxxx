@@ -112,6 +112,13 @@ teacher-app > get-ready-etc {
     box-shadow: 2px 2px #224D34; } }
 teacher-app > playing-etc {
   @extend %page-etc; }
+teacher-app > game-over-etc {
+  @extend %page-etc;
+	display: flex;
+  flex-direction: column;
+  align-items: center;
+  & > * {
+    margin: 10px; } }
 
 student-app > setup-etc {
   @extend %page-etc;

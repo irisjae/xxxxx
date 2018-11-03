@@ -162,6 +162,7 @@ var playing_view = _ => so ((_=_=>
 	, _question = T (app_state ()) (L .get (app_as_past), current_question, T (_questions))
 	, _students = T (app_state ()) (L .get (app_as_students)) )=>_)
 													 
+var game_over_view = <game-over-etc> <message>Game Over!</message> </game-over-etc>
   
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))
@@ -171,7 +172,7 @@ window .view = <teacher-app>
     :!! (L .isDefined (app_as_playing) (app_state ()))
     ? playing_view
     :!! (L .isDefined (app_as_game_over) (app_state ()))
-    ? panic ('unimplemented')
+    ? game_over_view
     : panic ('undefined app state in view')  } </teacher-app>
 												 
 												 

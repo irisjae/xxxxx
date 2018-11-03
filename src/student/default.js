@@ -205,7 +205,6 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 				<button> Overview </button>
 				<button> Question </button>
 				</tabs>
-			<div a-logo> <img src={ bingo_img } /> </div>
 			<table a-result>
 				<tr>
 					<th>Question</th>
@@ -221,7 +220,6 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 					</result-etc>
 					</game-over-etc>,
 	where							
-	, bingo_img = 'https://cdn.glitch.com/5a2d172b-0714-405a-b94f-6c906d8839cc%2Fimage5.png?1529492559081' 
 	, _app = app_state ()
 	, _ensemble = ensemble_state ()
 	, all_students = T (_ensemble) (assemble_students (_app))
