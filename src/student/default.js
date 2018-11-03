@@ -162,11 +162,13 @@ var get_ready_view = <get-ready-etc>
       where
       , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_)) } </get-ready-etc>
 
-var playing_view = _ => <playing-etc>
-	{ so ((_=_=>
-    [ <question>{ L .get (question_as_question) (_current_question) }</question>
-    , <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
-    , <board> { T (_board) (Z_ .map (_row => 
+var playing_view = _ => so ((_=_=>
+  <playing-etc>
+    <div class="left-pane">
+      <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
+      <question>{ L .get (question_as_question) (_current_question) }</question> </div>
+    <div class="right-pane">
+      <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
           so ((_=_=>
           !! (_cell_bingo)
@@ -181,7 +183,7 @@ var playing_view = _ => <playing-etc>
           , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions)
           , crossed = _x => <s>{ _x }</s>
           , bold_crossed = _x => <s><b>{ _x }</b></s> )=>_)))
-          } </row> )) } </board> ],
+          } </row> )) } </board> </div> </playing-etc>,
     where
     , _board = T (app_state ()) (L .get (app_as_board))
     , _questions = T (app_state ()) (L .get (app_as_questions))
@@ -193,7 +195,7 @@ var playing_view = _ => <playing-etc>
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
           ;_dom .addEventListener (click, _ => {;
-            ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) } </playing-etc>
+            ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) 
 
 var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>

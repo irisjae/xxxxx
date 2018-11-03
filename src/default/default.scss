@@ -97,6 +97,11 @@ teacher-app > setup-etc {
           max-height: 33%; } } } } }
 teacher-app > get-ready-etc {
   @extend %page-etc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  & > * {
+    margin: 10px; }
   player {
     padding: 5px;
     margin: 1px;
@@ -126,6 +131,7 @@ student-app > get-ready-etc {
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%); }}
+
 student-app > playing-etc {
   display: flex;
   justify-content: space-between;
@@ -134,7 +140,39 @@ student-app > playing-etc {
   left: 10%;
   top: 10%;
   position: absolute;
-   }
+  .left-pane {
+    height: 100%;
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > * {
+      margin: 10px; }
+    ticker {
+      background-color: #4b71d4;
+      width: 80px;
+      height: 80px;
+      font-size: 25px;
+      text-align: center;
+      line-height: 80px;
+      border-radius: 50px;
+      flex-grow: 0; }
+    question {
+      flex-grow: 1;
+      background: #fae383;
+      border-radius: 20px;
+      text-align: center;
+      color: black;
+      font-size: 20px;
+      padding: 40px;
+      min-width: calc(100% - 100px); } }
+  .right-pane {
+    width: 66%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; } }
+
 student-app > game-over-etc {
   @extend %page-etc;
 	position: relative;
