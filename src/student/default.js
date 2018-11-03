@@ -199,6 +199,7 @@ var playing_view = _ => so ((_=_=>
 
 var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>
+    <message>Game Over!</message>
 		<result-etc>
 			<tabs>
 				<button> Overview </button>

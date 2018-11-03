@@ -175,15 +175,16 @@ student-app > playing-etc {
 
 student-app > game-over-etc {
   @extend %page-etc;
-	position: relative;
-	height: 100%;
-	width: 100%;
-	background-color: #9464A3;
-	display: block;
-  result-etc {
+	display: flex;
+  flex-direction: column;
+  align-items: center;
+  & > * {
+    margin: 10px; }
+  & result-etc {
     display: flex;
     align-items: center;
-    justify-content: center; } }
+    justify-content: center;
+    visibility: hidden; } }
 
 %clickable {
   cursor: pointer; }
