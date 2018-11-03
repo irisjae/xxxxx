@@ -16,14 +16,14 @@ body {
 teacher-app > setup-etc {
   @extend %page-etc;
   setting {
-    &[of=game-mode], &[of=time-limit] {
+    &[x-of=game-mode], &[x-of=time-limit] {
       & prev, & next {
         @extend %clickable; } }
-    &[of=board-size] {
+    &[x-of=board-size] {
       & img {
         @extend %clickable; } } }
   button {
-    &[for=preview], &[for=start] {
+    &[x-for=preview], &[x-for=start] {
       & img {
         @extend %clickable; } } }
 
@@ -67,10 +67,10 @@ teacher-app > setup-etc {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            &counter {
+            counter#{&} {
               flex-grow: 2;
               flex-basis: 40%; }
-            &prev, &next {
+            prev#{&}, next#{&} {
               flex-grow: 1;
               flex-basis: 20%; }
             & counter {
@@ -190,7 +190,7 @@ input {
 	font-size: 16px; }
 
 button {
-  &:not([custom]) {
+  &:not([x-custom]) {
     font-size: 16px;
     border-radius: 3px;
     background-color: #00A746;
@@ -205,7 +205,7 @@ button {
       background-color: #26F07B; }
     &:active {
       box-shadow: none; } }
-  &[custom] {
+  &[x-custom] {
     background: unset;
     border: unset;
     color: unset;

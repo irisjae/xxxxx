@@ -65,31 +65,31 @@ var setup_view = _ => so ((_=_=>
   <setup-etc>
     <div class="left-pane">
       <a-title>Bingo</a-title>
-      <sub-title>除法（一</sub-title>
-      <settings for="game-mode time-limit" style={{ marginTop: '20px' }}>
-      <setting of="game-mode">
+      <sub-title>除法（一）</sub-title>
+      <settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
+      <setting x-of="game-mode">
         <label>遊戲模式：</label>
         <control>
           <prev><img src={ prev_img } /></prev>
           <counter><img src={ play_to_win_img } /></counter>
           <next><img src={ next_img } /></next></control></setting>
-      <setting of="time-limit">
+      <setting x-of="time-limit">
         <label>各題作答時限：</label><control>
         <prev><img src={ prev_img } /></prev>
         <counter><img src={ ten_secs_img } /></counter>
         <next><img src={ next_img } /></next></control></setting></settings>
-      <button custom="true" for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
-      <button custom="true" for="start" fn={ feedback_init }>
+      <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
+      <button x-custom="true" x-for="start" fn={ feedback_init }>
         <img src={ start_img } />
         { T (io_state ()
           ) (
           [ L .get ([io_as_connecting, as_maybe])
           , Z_ .maybe ([]) (Z .K ('Generating Code...')) ]) } </button></div>
     <div class="right-pane">
-      <settings for="board-size">
-        <setting of="board-size" be="3x3"><img src={ three_by_three_img } /></setting>
-        <setting of="board-size" be="4x4"><img src={ four_by_four_img } /></setting>
-        <setting of="board-size" be="5x5"><img src={ five_by_five_img } /></setting></settings></div></setup-etc>,
+      <settings x-for="board-size">
+        <setting x-of="board-size" x-be="3x3"><img src={ three_by_three_img } /></setting>
+        <setting x-of="board-size" x-be="4x4"><img src={ four_by_four_img } /></setting>
+        <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting></settings></div></setup-etc>,
   where
 	, prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
 	, next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
