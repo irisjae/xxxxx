@@ -73,14 +73,13 @@ var setup_view = _ => so ((_=_=>
           <prev><img src={ prev_img } /></prev>
           <counter><img src={ play_to_win_img } /></counter>
           <next><img src={ next_img } /></next></control></setting>
-        
       <setting of="time-limit">
         <label>各題作答時限：</label><control>
         <prev><img src={ prev_img } /></prev>
         <counter><img src={ ten_secs_img } /></counter>
         <next><img src={ next_img } /></next></control></setting></settings>
-      <button custom for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
-      <button custom for="start" fn={ feedback_init }>
+      <button custom="true" for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
+      <button custom="true" for="start" fn={ feedback_init }>
         <img src={ start_img } />
         { T (io_state ()
           ) (

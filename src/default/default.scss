@@ -14,9 +14,9 @@ body {
 	transform: translateX(-50%) translateY(-50%); }
 
 teacher-app > setup-etc {
-  @extends %page-etc; }
+  @extend %page-etc; }
 teacher-app > get-ready-etc {
-  @extends %page-etc;
+  @extend %page-etc;
   player {
     padding: 5px;
     margin: 1px;
@@ -26,10 +26,10 @@ teacher-app > get-ready-etc {
     width: 25vw;
     box-shadow: 2px 2px #224D34; } }
 teacher-app > playing-etc {
-  @extends %page-etc; }
+  @extend %page-etc; }
 
 student-app > setup-etc {
-  @extends %page-etc;
+  @extend %page-etc;
   room {
     background-color: #D48A88;
     padding: 2%;
@@ -39,7 +39,7 @@ student-app > setup-etc {
     & button{
       margin:auto; } } }
 student-app > get-ready-etc {
-  @extends %page-etc;
+  @extend %page-etc;
   name, room {
     min-width: 50%;
     position: absolute;
@@ -61,7 +61,7 @@ student-app > playing-etc {
   ticker {
     float :right; } }
 student-app > game-over-etc {
-  @extends %page-etc;
+  @extend %page-etc;
 	position: relative;
 	height: 100%;
 	width: 100%;
@@ -104,155 +104,110 @@ input {
 	width: 100%;
 	border: 1px solid lightgrey;
 	border-radius: 3px;
-	font-size: 16px;
-}
+	font-size: 16px; }
 
-button:not([custom]) {
-	font-size: 16px;
-	border-radius: 3px;
-	background-color: #00A746;
-	color: white;
-	border: 1px solid grey;
-	box-shadow: 2px 2px #224D34;
-	cursor: pointer;
-	min-width: 20%;
-	margin: 4px;
-  
-  &:hover {
-    background-color: #26F07B;
-  }
-  &:active {
-    box-shadow: none;
-  }
-}
+button {
+  &:not([custom]) {
+    font-size: 16px;
+    border-radius: 3px;
+    background-color: #00A746;
+    color: white;
+    border: 1px solid grey;
+    box-shadow: 2px 2px #224D34;
+    cursor: pointer;
+    min-width: 20%;
+    margin: 4px;
+
+    &:hover {
+      background-color: #26F07B; }
+    &:active {
+      box-shadow: none; } }
+  &[custom] {
+      background: unset;
+      border: unset;
+      color: unset;
+      padding: unset; } }
 
 message {
 	color: red;
 	margin: 10px; }
 
-settings[for=board-size] {
+.left-pane {
+  height: 100%;
+  width: 66%;
+  left: 0;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  & a-title {
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 100px; }
+
+  & sub-title {
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 40px; }
+
+  & settings {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    & setting {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      & label {
+        text-align: center;
+        display: block;
+        width: 100%;
+        flex-grow: 0; }
+      & control {
+        display: flex;
+        width: 100%;
+        flex-grow: 1;
+        & > * {
+          flex-grow: 1;
+          flex-basis: 20%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          & counter {
+            flex-grow: 2;
+            flex-basis: 40%; }
+
+          & img {
+            width: 100%; } } } } } }
+
+setting[of=board-size] img, setting[of=game-mode] prev, setting[of=game-mode] next, setting[of=time-limit] prev, setting[of=time-limit] next {
+  cursor: pointer;
+}
+
+button:not([custom]) {
+  cursor: pointer;
+}
+
+button[for=preview] img, button[for=start] img {
+  cursor: pointer;
+}
+
+.right-pane {
+  height: 100%;
+  width: 33%;
+  right: 0;
+  position: absolute;
+  & settings {
     display: flex;
     width: 100%;
     height: 100%;
     flex-direction: column;
     justify-content: space-evenly;
-}
-
-.right-pane setting {
-    display: block;
-}
-
-a-title {
-    width: 100%;
-    display: block;
-    text-align: center;
-    font-size: 100px;
-}
-
-sub-title {
-    width: 100%;
-    display: block;
-    text-align: center;
-    font-size: 40px;
-}
-
-.left-pane settings {
-    width: 100%;
-    height: 150px;
-    display: flex;
-}
-
-.left-pane setting {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.left-pane {
-    height: 100%;
-    width: 66%;
-    left: 0;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.left-pane setting label {
-    text-align: center;
-    display: block;
-    width: 100%;
-    flex-grow: 0;
-}
-
-.left-pane setting control {
-    display: flex;
-    width: 100%;
-    flex-grow: 1;
-}
-
-setting[of=game-mode] control > * {
-    flex-grow: 1;
-    flex-basis: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
-
-setting[of=game-mode] control counter {
-    flex-grow: 2;
-    flex-basis: 40%;
-}
-
-setting[of=game-mode] control img {
-    width: 100%;
-}
-
-setting[of=time-limit] control > * {
-    flex-grow: 1;
-    flex-basis: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
-
-setting[of=time-limit] control counter {
-    flex-grow: 2;
-    flex-basis: 40%;
-}
-
-setting[of=time-limit] control img {
-    width: 100%;
-}
-
-button[custom] {
-    background: unset;
-    border: unset;
-    color: unset;
-    padding: unset;
-}
-
-setting[of=board-size] img, setting[of=game-mode] prev, setting[of=game-mode] next, setting[of=time-limit] prev, setting[of=time-limit] next {
-    cursor: pointer;
-}
-
-button:not([custom]) {
-    cursor: pointer;
-}
-
-button[for=preview] img, button[for=start] img {
-    cursor: pointer;
-}
-
-.right-pane {
-    height: 100%;
-    width: 33%;
-    right: 0;
-    position: absolute;
-}
-
-.right-pane setting img {
-    max-width: 100%;
-    max-height: 33%;
-}
+    & setting {
+      display: block;
+      & img {
+          max-width: 100%;
+          max-height: 33%; } } } }
