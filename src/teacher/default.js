@@ -17,7 +17,7 @@ attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_questions,
 app_as_opportunity, opportunity_as_attempts,
-rules_as_size, settings_as_size,
+rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 question_as_question, question_as_answers,
 cell_as_position, as_position,
 cell_as_choice, student_name,
@@ -77,13 +77,13 @@ var setup_view = _ => so ((_=_=>
       <setting x-of="time-limit">
         <label>各題作答時限：</label><control>
         <prev><img src={ prev_img } /></prev>
-        <counter><img src={
-          so ((_=_=>
-          ten_secs_img,
+        <counter> { so ((_=_=>
+          !! Z_ .equals (time_limit) (10) ? <img src={ ten_secs_img } />
+          :!! Z_ .equals (time_limit) (20) ? twenty_secs_img
+          :!! Z_ .equals (time_limit) (30) ? thirty_secs_img
+          : panic ('undefined time_limit'),
           where
-          , time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
-          )=>_)
-           } /></counter>
+          , time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ])) )=>_) </counter>
         <next><img src={ next_img } /></next></control></setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_init }>
