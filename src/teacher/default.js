@@ -75,14 +75,15 @@ var setup_view = _ => so ((_=_=>
           <counter><img src={ play_to_win_img } /></counter>
           <next><img src={ next_img } /></next></control></setting>
       <setting x-of="time-limit">
-        <label>各題作答時限：</label><control>
-        <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
-        <counter><img src={ 
-          !! Z_ .equals (_time_limit) (10) ? ten_secs_img
-          :!! Z_ .equals (_time_limit) (20) ? twenty_secs_img
-          :!! Z_ .equals (_time_limit) (30) ? thirty_secs_img
-          : panic ('undefined time_limit') } /></counter>
-        <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control></setting></settings>
+        <label>各題作答時限：</label>
+        <control>
+          <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
+          <counter><img src={ 
+            !! Z_ .equals (_time_limit) (10) ? ten_secs_img
+            :!! Z_ .equals (_time_limit) (20) ? twenty_secs_img
+            :!! Z_ .equals (_time_limit) (30) ? thirty_secs_img
+            : panic ('undefined time_limit') } /></counter>
+          <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control></setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_start }>
         <img src={ start_img } />
@@ -114,6 +115,16 @@ var setup_view = _ => so ((_=_=>
       var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
       }
   , feedback_time_limit_next = _dom => {;}
+  , counter_setting => label => case_v_label_list => _data => (
+      <label>{ label }</label>
+      <control>
+        <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
+        <counter><img src={ 
+          T (_data
+          ) (
+           L .get ([ L .find (under (pair_as_first) (Z_ .equals (data))), pair_as_second ]) ])
+           } /></counter>
+        <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control> )
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
