@@ -93,7 +93,7 @@ var setup_view = _ => so ((_=_=>
           ) (
           [ L .get ([io_as_connecting, as_maybe])
           , Z_ .maybe ([]) (Z .K (
-              <div style={{ height: 0 }}>Generating Code...</div>)) ]) } </button></div>
+              <div style={{ height: 0 }}>遊戲正在開始…</div>)) ]) } </button></div>
     <div class="right-pane">
       <settings x-for="board-size">
         <setting x-of="board-size" x-be="3x3"><img src={ three_by_three_img } /></setting>
