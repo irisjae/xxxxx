@@ -73,8 +73,8 @@ var setup_view = _ => so ((_=_=>
           ) ('遊戲模式：'
           ) (_game_mode => {}
           ) (
-          [ Z_ .Pair (piece) (play_to_win_img) ]
-          ) (piece) } </setting>
+          [ Z_ .Pair (fiat) (play_to_win_img) ]
+          ) (fiat) } </setting>
       <setting x-of="time-limit">
         { (counter_setting
           ) ('各題作答時限：'
@@ -308,7 +308,14 @@ S (_ => {;
               _x => Math .floor (_x) ])) .catch (_ => {}) } ]
       , [ data_iso (feedback .play)
         , _ => {;
-            ;start_playing () } ] ] )=>
+            ;start_playing () } ]
+      , [ data_lens (feedback .setup_settings) .settings_piece
+        , _piece => {;
+            var cleansed_piece = JSON .parse (JSON .stringify (_piece))
+            ;app_state (
+              T (S .sample (app_state)
+              ) (
+              L .modify (app_as_settings) (R .mergeDeepRight (cleansed_piece)) )) } ] ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (

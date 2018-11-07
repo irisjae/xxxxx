@@ -81,7 +81,7 @@ var never = new Promise (_ => {})
 
 
 
-var fiat
+var fiat = {}
 var data = cons_definitions =>
 	T (cons_definitions
 	) (R .mapObjIndexed ((def_fn, cons_label) => 
