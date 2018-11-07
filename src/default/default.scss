@@ -25,7 +25,7 @@ teacher-app > setup-etc {
   button {
     &[x-for=preview], &[x-for=start] {
       &:focus {
-        outlime: none; }
+        outline: none; }
       & img {
         @extend %clickable; } } }
 
@@ -104,6 +104,13 @@ teacher-app > setup-etc {
           max-height: 33%; } } } } }
 teacher-app > get-ready-etc {
   @extend %page-etc;
+  button {
+    &[x-for=play] {
+      &:focus {
+        outline: none; }
+      & img {
+        @extend %clickable; } } }
+  
   display: flex;
   flex-direction: column;
   align-items: center;

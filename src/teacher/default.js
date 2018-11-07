@@ -142,12 +142,12 @@ var get_ready_view = _ => so ((_=_=>
 		<room>遊戲室編號：{ _room }</room>
     <students-etc>
       <label>人數：{ Z_ .size (_students) }</label>
-      <students></students>
-      { T (_students
-        ) (
-        Z_ .map ($ (
-        [ L .get (student_name)
-        , _x => <student>{ _x }</student> ]))) } </students-etc>
+      <students>
+        { T (_students
+          ) (
+          Z_ .map ($ (
+          [ L .get (student_name)
+          , _x => <student>{ _x }</student> ]))) }</students> </students-etc>
     { !! Z .not (Z_ .size (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
 				: [] } </get-ready-etc>,
