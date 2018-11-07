@@ -24,6 +24,8 @@ teacher-app > setup-etc {
         @extend %clickable; } } }
   button {
     &[x-for=preview], &[x-for=start] {
+      &:focus {
+        outlime: none; }
       & img {
         @extend %clickable; } } }
 
