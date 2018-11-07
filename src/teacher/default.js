@@ -125,7 +125,12 @@ var setup_view = _ => so ((_=_=>
       , data_label = T (_case
           ) (
           L .get ([ L .find (under (pair_as_first) (Z_ .equals (data))), pair_as_second ]))
-      , prev_case = 
+      , data_index = T (_case
+          ) (
+          L .getAs ((_, i) => i) (L .find (under (pair_as_first) (Z_ .equals (data)))))
+      , case_list_length = Z_ .size (case_v_label_list)
+      , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
+      , prev_case = T () wrap_case_index (data_index - 1)
       )=>_)
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
