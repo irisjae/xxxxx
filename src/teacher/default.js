@@ -112,19 +112,21 @@ var setup_view = _ => so ((_=_=>
 	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
 	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
   , feedback_time_limit_prev = _dom => {;
-      var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
+//      var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
       }
   , feedback_time_limit_next = _dom => {;}
-  , counter_setting => label => case_v_label_list => _data => (
-      <label>{ label }</label>
-      <control>
-        <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
-        <counter><img src={ 
-          T (_data
+  , counter_setting = label => case_feedback => case_v_label_list => _case => so ((_=_=>
+      [ <label>{ label }</label>
+      , <control>
+          <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
+          <counter><img src={  data_label } /></counter>
+          <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control> ],
+      where
+      , data_label = T (_case
           ) (
-           L .get ([ L .find (under (pair_as_first) (Z_ .equals (data))), pair_as_second ]) ])
-           } /></counter>
-        <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control> )
+          L .get ([ L .find (under (pair_as_first) (Z_ .equals (data))), pair_as_second ]))
+      , prev_case = 
+      )=>_)
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
