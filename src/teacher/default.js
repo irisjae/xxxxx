@@ -69,19 +69,18 @@ var setup_view = _ => so ((_=_=>
       <sub-title>除法（一）</sub-title>
       <settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
       <setting x-of="game-mode">
-        <label>遊戲模式：</label>
-        <control>
-          <prev><img src={ prev_img } /></prev>
-          <counter><img src={ play_to_win_img } /></counter>
-          <next><img src={ next_img } /></next></control></setting>
+        { (counter_setting
+          ) ('遊戲模式：'
+          ) (_game_mode => {}
+          ) (
+          [ Z_ .Pair (piece) (play_to_win_img) ]
+          ) (piece) } </setting>
       <setting x-of="time-limit">
         { (counter_setting
           ) ('各題作答時限：'
           ) (_time_limit => {;
-              var detting_de
-              ;feedback (feedback .setup_settings ())
-//      var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
-               }
+              var setting_delta = T (_time_limit) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
+              ;feedback_state (feedback .setup_settings (setting_delta)) }
           ) (
           [ Z_ .Pair (10) (ten_secs_img)
           , Z_ .Pair (20) (twenty_secs_img)
@@ -103,8 +102,6 @@ var setup_view = _ => so ((_=_=>
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
-	, prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
-	, next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
   , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
   , twenty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F20-secs.png?1541563332669'
@@ -127,6 +124,8 @@ var setup_view = _ => so ((_=_=>
       , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (pair_as_first) (Z_ .equals (_case)))))
       , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), pair_as_first ]))
       , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), pair_as_first ]))
+      , prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
+      , next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
       , feedback_prev = _dom => {;
           ;clicking .forEach (click => {;
             ;_dom .addEventListener (click, _ => {;case_feedback (prev_case)}) }) }

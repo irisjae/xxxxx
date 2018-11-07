@@ -64,6 +64,7 @@ teacher-app > setup-etc {
           display: flex;
           width: 100%;
           flex-grow: 1;
+          justify-content: space-evenly;
           & > * {
             display: flex;
             flex-direction: column;
