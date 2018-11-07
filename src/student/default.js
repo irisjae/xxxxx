@@ -348,14 +348,14 @@ var attempt_question = _position => {;
         if (question_choice_matches (_question) (_choice)) {
           ;T (S .sample (app_state)) (
             [ $ (L .set
-              ) ([app_as_opportunity, opportunity_as_attempts, L .append]
+              ) ([app_as_opportunity, opportunity_as_attempts, L .appendTo]
               ) ([_position, latency])
             , student_app_playing_to_next,
             _x => {;app_state (_x)} ]) }
         else {
           ;T (S .sample (app_state)) (
             [ $ (L .set
-              ) ([app_as_opportunity, opportunity_as_attempts, L .append]
+              ) ([app_as_opportunity, opportunity_as_attempts, L .appendTo]
               ) ([_position, latency])
             , _x => {;app_state (_x)} ])
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } })) }

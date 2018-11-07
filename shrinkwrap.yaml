@@ -11,7 +11,7 @@ dependencies:
   koa-router: 7.4.0
   koa-static: 4.0.3
   koa-websocket: 5.0.1
-  partial.lenses: 14.9.1
+  partial.lenses: 14.17.0
   ramda: 0.25.0
   s-js: 0.4.9
   sanctuary: 0.15.0
@@ -454,12 +454,12 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-/CidTtiZMRlGDBViUyYs3I3mW/M=
-  /partial.lenses/14.9.1:
+  /partial.lenses/14.17.0:
     dependencies:
       infestines: 0.4.11
     dev: false
     resolution:
-      integrity: sha512-WRKxbWcTywVSeidLiiLSQPYHnG+3VJhqNpfcIJD0miptENVMsfaQRTh6tbnZjWI5marxdnC8e3z4yMJiVTY8Ug==
+      integrity: sha512-Iq+wDw5b5iwmn7b9MO+//buOqF0YoAC2Hsj+HoeG88BGeT3NkL/YwHNGDrySyX7xZSqj0LFEWwfgGSj4cSFmXQ==
   /path-is-absolute/1.0.1:
     dev: false
     engines:
@@ -692,7 +692,7 @@ specifiers:
   koa-router: ^7.4.0
   koa-static: ^4.0.3
   koa-websocket: ^5.0.1
-  partial.lenses: ^14.9.1
+  partial.lenses: ^14.17.0
   ramda: ^0.25.0
   s-js: ^0.4.9
   sanctuary: ^0.15.0
