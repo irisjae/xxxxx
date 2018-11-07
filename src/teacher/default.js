@@ -139,7 +139,7 @@ var setup_view = _ => so ((_=_=>
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<message> Room Code: { _room } </message>
+		<room> Room Code: { _room } </room>
 		<message> Number of students: { Z_ .size (_students) } </message>
 		{ [ T (_students
         ) (
