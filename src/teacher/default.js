@@ -111,6 +111,7 @@ var setup_view = _ => so ((_=_=>
 	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
 	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
   , feedback_time_limit_prev = _dom => {;
+      var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
       }
   , feedback_time_limit_next = _dom => {;}
   , feedback_start = _dom => {;
