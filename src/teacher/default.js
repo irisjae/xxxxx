@@ -42,6 +42,8 @@ as_sole, sole, every, delay
 
 var feedback = data ({
   start: () => feedback,
+  setup_settings_rules_time_limit_prev: () => feedback,
+  setup_settings_rules_time_limit_next: () => feedback,
   play: () => feedback })
 
 
