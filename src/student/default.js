@@ -165,7 +165,7 @@ var get_ready_view = <get-ready-etc>
 var playing_view = _ => so ((_=_=>
   <playing-etc>
     <div class="left-pane">
-      <ticker>{ T (game_tick) (map_defined_ ([]) (t => 10 - t)) }</ticker>
+      <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
       <question>{ L .get (question_as_question) (_current_question) }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 
@@ -191,6 +191,7 @@ var playing_view = _ => so ((_=_=>
     , _current_question = current_question (_questions) (_past)
     , _answered_positions = answered_positions (_questions) (_board) (_past)
     , _bingoed_positions = bingoed_positions (_questions) (_board) (_past)
+    , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , game_tick = just_now (game_tick_sampler)
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
@@ -375,9 +376,6 @@ var timesup_question = _ => {;
 
 var game_clock = new TimelineMax
 var game_tick_sampler = temporal ()
-;game_clock .add (timesup_question, 10)
-;T (R .range (0, 10 + 1)) (
-	R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t)))
 
 
 var reping_period = 3
@@ -492,6 +490,13 @@ S (last_ensemble => {;
 				var now = (new Date) .getTime ()
 
 				var playing_app = student_app_get_ready_to_playing (_app)
+        
+        var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+        game_clock .clear ()
+        ;game_clock .add (timesup_question, time_limit)
+        ;T (R .range (0, time_limit + 1)) (
+          R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t)))
+        
 				if (start > now) {
 					;app_state (playing_app) }
 				else {
