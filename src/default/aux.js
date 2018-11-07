@@ -170,6 +170,7 @@ var maybe = a => fiat
 var nat = fiat
 var id = string
 var v = (...types) => fiat
+var piece = (...types) => fia
 
 var room = string
 var student = v (id, string)
