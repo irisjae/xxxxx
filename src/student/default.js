@@ -17,7 +17,7 @@ attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_questions,
 app_as_opportunity, opportunity_as_attempts,
-rules_as_size, settings_as_size,
+rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 question_as_question, question_as_answers,
 cell_as_position, as_position,
 cell_as_choice, student_name,

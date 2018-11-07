@@ -81,7 +81,7 @@ var setup_view = _ => so ((_=_=>
           so ((_=_=>
           ten_secs_img,
           where
-          , time_limit = T (_settings) (L .get ([ settings_as ]))
+          , time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
           )=>_)
            } /></counter>
         <next><img src={ next_img } /></next></control></setting></settings>

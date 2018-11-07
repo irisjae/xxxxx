@@ -347,7 +347,9 @@ var app_as_questions = [ app_as_settings, settings_as_questions ]
 var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
+var rules_as_time_limit = data_lens (rules .rules) .time_limit
 var settings_as_size = [settings_as_rules, rules_as_size]
+var settings_as_time_limit = [settings_as_rules, rules_as_time_limit]
 
 var question_as_question = [ 0 ]
 var question_as_answers = [ 1 ]
@@ -615,7 +617,7 @@ window .stuff = { ...window .stuff,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_questions,
   app_as_opportunity, opportunity_as_attempts,
-	rules_as_size, settings_as_size,
+	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	question_as_question, question_as_answers,
 	cell_as_position, as_position,
 	cell_as_choice, student_name,
