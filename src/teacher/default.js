@@ -1,5 +1,5 @@
 var { bool, number, timestamp, string,
-list, map, maybe, nat, id, v,
+list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
 student, question, choice, answer, latency, ping, position,
 attempt, opportunity, past, board, rules, settings,
@@ -42,8 +42,7 @@ as_sole, sole, every, delay
 
 var feedback = data ({
   start: () => feedback,
-  setup_settings_rules_time_limit_prev: () => feedback,
-  setup_settings_rules_time_limit_next: () => feedback,
+  setup_settings: ( settings_piece =~ piece (settings) ) => feedback,
   play: () => feedback })
 
 
@@ -78,7 +77,13 @@ var setup_view = _ => so ((_=_=>
       <setting x-of="time-limit">
         <label>各題作答時限：</label><control>
         <prev><img src={ prev_img } /></prev>
-        <counter><img src={ ten_secs_img } /></counter>
+        <counter><img src={
+          so ((_=_=>
+          ten_secs_img,
+          where
+          , time_limit = T (_settings) (L .get ([ settings_as ]))
+          )=>_)
+           } /></counter>
         <next><img src={ next_img } /></next></control></setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_init }>
@@ -94,10 +99,13 @@ var setup_view = _ => so ((_=_=>
         <setting x-of="board-size" x-be="4x4"><img src={ four_by_four_img } /></setting>
         <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting></settings></div></setup-etc>,
   where
+  , _settings = T (app_state ()) (L .get (app_as_settings))
 	, prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
 	, next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
   , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
+  , twenty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F20-secs.png?1541563332669'
+  , thirty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F30-secs.png?1541563332968'
 	, preview_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936'
 	, start_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
 	, three_by_three_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588'

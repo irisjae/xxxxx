@@ -1,5 +1,5 @@
 var { bool, number, timestamp, string,
-list, map, maybe, nat, id, v,
+list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
 student, question, choice, answer, latency, ping, position,
 attempt, opportunity, past, board, rules, settings,

@@ -170,7 +170,7 @@ var maybe = a => fiat
 var nat = fiat
 var id = string
 var v = (...types) => fiat
-var piece = (...types) => fia
+var piece = (...types) => fiat
 
 var room = string
 var student = v (id, string)
@@ -597,7 +597,7 @@ var schedule_start = _ensemble =>
 
 window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
-	list, map, maybe, nat, id, v,
+	list, map, maybe, nat, id, v, piece,
 	shuffle, uuid, api, post,
 	student, question, choice, answer, latency, ping, position,
 	attempt, opportunity, past, board, rules, settings,
