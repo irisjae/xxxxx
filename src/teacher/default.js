@@ -75,15 +75,18 @@ var setup_view = _ => so ((_=_=>
           <counter><img src={ play_to_win_img } /></counter>
           <next><img src={ next_img } /></next></control></setting>
       <setting x-of="time-limit">
-        <label>各題作答時限：</label>
-        <control>
-          <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
-          <counter><img src={ 
-            !! Z_ .equals (_time_limit) (10) ? ten_secs_img
-            :!! Z_ .equals (_time_limit) (20) ? twenty_secs_img
-            :!! Z_ .equals (_time_limit) (30) ? thirty_secs_img
-            : panic ('undefined time_limit') } /></counter>
-          <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control></setting></settings>
+        { (counter_setting
+          ) ('各題作答時限：'
+          ) (_time_limit => {;
+              var detting_de
+              ;feedback (feedback .setup_settings ())
+//      var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
+               }
+          ) (
+          [ Z_ .Pair (10) (ten_secs_img)
+          , Z_ .Pair (20) (twenty_secs_img)
+          , Z_ .Pair (30) (thirty_secs_img) ]
+          ) (_time_limit) } </setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_start }>
         <img src={ start_img } />
@@ -111,27 +114,25 @@ var setup_view = _ => so ((_=_=>
 	, three_by_three_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588'
 	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
 	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
-  , feedback_time_limit_prev = _dom => {;
-//      var time T (20) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
-      }
-  , feedback_time_limit_next = _dom => {;}
-  , counter_setting = label => case_feedback => case_v_label_list => _case => so ((_=_=>
+  , counter_setting = label => case_feedback => case_v_img_list => _case => so ((_=_=>
       [ <label>{ label }</label>
       , <control>
-          <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
-          <counter><img src={  data_label } /></counter>
-          <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control> ],
+          <prev fn={ feedback_prev }><img src={ prev_img } /></prev>
+          <counter><img src={ data_img } /></counter>
+          <next fn={ feedback_next }><img src={ next_img } /></next></control> ],
       where
-      , data_label = T (_case
-          ) (
-          L .get ([ L .find (under (pair_as_first) (Z_ .equals (data))), pair_as_second ]))
-      , data_index = T (_case
-          ) (
-          L .getAs ((_, i) => i) (L .find (under (pair_as_first) (Z_ .equals (data)))))
-      , case_list_length = Z_ .size (case_v_label_list)
+      , case_list_length = Z_ .size (case_v_img_list)
       , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
-      , prev_case = T () wrap_case_index (data_index - 1)
-      )=>_)
+      , data_img = T (case_v_img_list) (L .get ([ L .find (under (pair_as_first) (Z_ .equals (_case))), pair_as_second ]))
+      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (pair_as_first) (Z_ .equals (_case)))))
+      , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), pair_as_first ]))
+      , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), pair_as_first ]))
+      , feedback_prev = _dom => {;
+          ;clicking .forEach (click => {;
+            ;_dom .addEventListener (click, _ => {;case_feedback (prev_case)}) }) }
+      , feedback_next = _dom => {;
+          ;clicking .forEach (click => {;
+            ;_dom .addEventListener (click, _ => {;case_feedback (next_case)}) }) } )=>_)
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
