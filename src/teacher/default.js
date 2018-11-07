@@ -315,7 +315,7 @@ S (_ => {;
             ;app_state (
               T (S .sample (app_state)
               ) (
-              L .modify (app_as_settings) (R .mergeDeepRight (cleansed_piece)) )) } ] ] )=>
+              L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ] ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (
