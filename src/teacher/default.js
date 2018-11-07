@@ -76,17 +76,15 @@ var setup_view = _ => so ((_=_=>
           <next><img src={ next_img } /></next></control></setting>
       <setting x-of="time-limit">
         <label>各題作答時限：</label><control>
-        <prev><img src={ prev_img } /></prev>
-        <counter> { so ((_=_=>
-          !! Z_ .equals (time_limit) (10) ? <img src={ ten_secs_img } />
-          :!! Z_ .equals (time_limit) (20) ? twenty_secs_img
-          :!! Z_ .equals (time_limit) (30) ? thirty_secs_img
-          : panic ('undefined time_limit'),
-          where
-          , time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ])) )=>_) </counter>
-        <next><img src={ next_img } /></next></control></setting></settings>
+        <prev fn={ feedback_time_limit_prev }><img src={ prev_img } /></prev>
+        <counter><img src={ 
+          !! Z_ .equals (_time_limit) (10) ? ten_secs_img
+          :!! Z_ .equals (_time_limit) (20) ? twenty_secs_img
+          :!! Z_ .equals (_time_limit) (30) ? thirty_secs_img
+          : panic ('undefined time_limit') } /></counter>
+        <next fn={ feedback_time_limit_next }><img src={ next_img } /></next></control></setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
-      <button x-custom="true" x-for="start" fn={ feedback_init }>
+      <button x-custom="true" x-for="start" fn={ feedback_start }>
         <img src={ start_img } />
         { T (io_state ()
           ) (
@@ -100,6 +98,7 @@ var setup_view = _ => so ((_=_=>
         <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting></settings></div></setup-etc>,
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
+  , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
 	, prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
 	, next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
@@ -111,7 +110,10 @@ var setup_view = _ => so ((_=_=>
 	, three_by_three_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588'
 	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
 	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
-  , feedback_init = _dom => {;
+  , feedback_time_limit_prev = _dom => {;
+      }
+  , feedback_time_limit_next = _dom => {;}
+  , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .start) }) }) } )=>_)
