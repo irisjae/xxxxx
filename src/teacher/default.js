@@ -139,20 +139,23 @@ var setup_view = _ => so ((_=_=>
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<room> Room Code: { _room } </room>
-		<message> Number of students: { Z_ .size (_students) } </message>
-		{ [ T (_students
+		<room>遊戲室編號：{ _room }</room>
+    <students-etc>
+      <label>人數：{ Z_ .size (_students) }</label>
+      <students></students>
+      { T (_students
         ) (
         Z_ .map ($ (
         [ L .get (student_name)
-        , _x => <player>{ 'Name: '+ _x }</player> ])))
-			, !! Z .not (Z_ .size (_students) === 0)
-				? <button play fn={ feedback_play }> play </button>
-				: [] ] } </get-ready-etc>,
+        , _x => <student>{ _x }</student> ]))) } </students-etc>
+    { !! Z .not (Z_ .size (_students) === 0)
+				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
+				: [] } </get-ready-etc>,
 	where
 	, _room = T (app_state ()) (L .get (app_as_room))
 	, _students = T (app_state ()
 		) (L .get ([ app_as_students, L .valueOr ([]) ]))
+  , play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
   , feedback_play = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
