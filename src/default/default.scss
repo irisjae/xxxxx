@@ -147,7 +147,7 @@ teacher-app > get-ready-etc {
         text-indent: 40px;
         font-size: 0.8em; } } } }
 teacher-app > playing-etc {
-  @extend %page-etc; }
+   }
 teacher-app > game-over-etc {
   @extend %page-etc;
 	display: flex;
