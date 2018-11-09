@@ -111,6 +111,7 @@ var setup_view = _ => so ((_=_=>
 	, three_by_three_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588'
 	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
 	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
+// TODO: fix layout of unloaded imgs
   , counter_setting = label => case_feedback => case_v_img_list => _case => so ((_=_=>
       [ <label>{ label }</label>
       , <control>
