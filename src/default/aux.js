@@ -176,7 +176,7 @@ var room = string
 var student = v (id, string)
 var choice = string
 var answer = string
-var question = v (string, list (choice))
+var problem = v (string, list (choice))
 var timeinterval = number
 var latency = timeinterval
 var position = v (nat, nat)
@@ -189,7 +189,7 @@ var past = data ({ past: (opportunities =~ list (opportunity)) => past })
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
 var rules = data ({ rules: (time_limit =~ number, size =~ nat) => rules })
-var settings = data ({ settings: ( questions =~ list (question), rules =~ rules ) => settings })
+var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
 
 
 var teacher_app = data ({
@@ -243,8 +243,8 @@ var ensemble = data ({
 
 
 
-/*/var default_questions = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-/*/ var default_questions = shuffle ([
+/*/var default_problems = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+/*/ var default_problems = shuffle ([
 	['1/2', ['2/4', '3/6']],
 	['1/3', ['2/6', '3/9']],
 	['2/3', ['4/6', '6/9']],
@@ -265,7 +265,7 @@ var ensemble = data ({
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
 var default_rules = rules .rules (10, 4)
 
-var default_settings = settings .settings (default_questions, default_rules)
+var default_settings = settings .settings (default_problems, default_rules)
 
 
 
@@ -341,7 +341,7 @@ var opportunity_as_attempts = data_lens (opportunity .opportunity) .attempts
 var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_position ] 
 var past_as_opportunities = data_lens (past .past) .opportunities
 		
-var settings_as_questions = data_lens (settings .settings) .questions
+var settings_as_problems = data_lens (settings .settings) .questions
 var settings_as_rules = data_lens (settings .settings) .rules
 var app_as_questions = [ app_as_settings, settings_as_questions ]
 var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
