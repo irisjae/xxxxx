@@ -162,11 +162,23 @@ var get_ready_view = _ => so ((_=_=>
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .play) }) }) } )=>_)
 
-var playing_view = _ => so ((_=_=>
+var playing_view =
+    <playing-etc>
+      <title-etc>
+        <a-title>Bingo</a-title>
+        <problem-number>第2題</problem-number></title-etc>
+      <problem-etc>
+        <ticker>2</ticker>
+        <question>question stuff here</question></problem-etc>
+      <options-etc>
+        <button x-custom="" x-for="view-students"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642" /></button>
+        <button x-custom="" x-for="end-game"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772" /></button></options-etc></playing-etc>
+    
+/*_ => so ((_=_=>
 	<playing-etc>
     <problem-etc>
       <problem-text>{ _problem }</problem-text>
-      <countdown>{ ''/*time_left*/ }</countdown> </problem-etc>
+      <countdown>{ time_left }</countdown> </problem-etc>
     <students>
       { T (_students
         ) (
@@ -195,7 +207,7 @@ var playing_view = _ => so ((_=_=>
 	where
 	, _problems = T (app_state ()) (L .get (app_as_problems))
 	, _problem = T (app_state ()) (L .get (app_as_past), current_problem)
-	, _students = T (app_state ()) (L .get (app_as_students)) )=>_)
+	, _students = T (app_state ()) (L .get (app_as_students)) )=>_)*/
 													 
 var game_over_view = <game-over-etc> <message>Game Over!</message> </game-over-etc>
   
