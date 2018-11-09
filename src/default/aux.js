@@ -345,7 +345,7 @@ var past_as_points = data_lens (past .past) .points
 var settings_as_problems = data_lens (settings .settings) .problems
 var settings_as_rules = data_lens (settings .settings) .rules
 var app_as_problems = [ app_as_settings, settings_as_problems ]
-var app_as_point = [ app_as_past, past_as_points, L .last ]
+var app_as_last_point = [ app_as_past, past_as_points, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
 var rules_as_time_limit = data_lens (rules .rules) .time_limit
@@ -620,7 +620,7 @@ window .stuff = { ...window .stuff,
   attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,
-  app_as_point, point_as_attempts,
+  app_as_last_point, point_as_attempts,
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position,

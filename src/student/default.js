@@ -16,7 +16,7 @@ ensemble_as_student_boards, ensemble_as_student_histories,
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_problems,
-app_as_point, point_as_attempts,
+app_as_last_point, point_as_attempts,
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position,
@@ -225,13 +225,13 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, _ensemble = ensemble_state ()
 	, all_students = T (_ensemble) (assemble_students (_app))
 	, questions = T (_app) (L .collect ([ app_as_problems, L .elems, problem_as_question ]))
-	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, opportunity_as_attempts ]), Z_ .map (Z_ .size) ])
+	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, point_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
 	, average_time = T (_ensemble) ([
 			assemble_students (_app),
 			Z_ .map ($ ([
 				Z .snd,
-				L .collect ([ [1], L .elems, opportunity_as_attempts, L .last, [1], as_maybe ]),
+				L .collect ([ [1], L .elems, point_as_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
 			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_),
@@ -346,18 +346,20 @@ var attempt_problem = _position => {;
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
         if (problem_choice_matches (_problem) (_choice)) {
-          ;T (S .sample (app_state)) (
+          ;app_state (
+            T (S .sample (app_state)
+            ) (
             [ $ (L .set
-              ) ([app_as_opportunity, opportunity_as_attempts, L .appendTo]
+              ) ([app_as_last_point, point_as_attempts, L .appendTo]
               ) ([_position, latency])
-            , student_app_playing_to_next,
-            _x => {;app_state (_x)} ]) }
+            , student_app_playing_to_next ])) }
         else {
-          ;T (S .sample (app_state)) (
-            [ $ (L .set
-              ) ([app_as_opportunity, opportunity_as_attempts, L .appendTo]
-              ) ([_position, latency])
-            , _x => {;app_state (_x)} ])
+          ;app_state (
+            T (S .sample (app_state)
+            ) (
+            $ (L .set
+            ) ([app_as_last_point, point_as_attempts, L .appendTo]
+            ) ([_position, latency]) ))
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } })) }
 
 var timesup_problem = _ => {;
