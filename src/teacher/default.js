@@ -45,6 +45,23 @@ var feedback = data ({
   setup_settings: ( settings_piece =~ piece (settings) ) => feedback,
   play: () => feedback })
 
+var lookbehind = data ({
+	nothing: () => lookbehind,
+	bad_room: (room =~ room) => lookbehind,
+	attempting: (since =~ latency, blocked =~ bool) => lookbehind })
+
+var feedback_start = data_iso (feedback .start)
+var feedback_setup_settings = data_iso (feedback .setup_settings)
+var feedback_play = data_iso (feedback .play)
+
+var lookbehind_nothing = data_iso (lookbehind .nothing)
+var lookbehind_bad_room = data_iso (lookbehind .bad_room)
+var lookbehind_attempting = data_iso (lookbehind .attempting)
+
+var lookbehind_room = data_lens (lookbehind .bad_room) .room
+var lookbehind_since = data_lens (lookbehind .attempting) .since
+var lookbehind_blocked = data_lens (lookbehind .attempting) .blocked
+
 
 var app_state = S .data (teacher_app .setup (default_settings))
 
@@ -169,13 +186,14 @@ var playing_view = _ => so ((_=_=>
       <problem-number>第{ problem_number }題</problem-number></title-etc>
     <problem-etc>
       <ticker>{ time_left }</ticker>
-      <question>question stuff here</question></problem-etc>
+      <question>{ question }</question></problem-etc>
     <options-etc>
       <button x-custom x-for="view-students"><img src={ view_students_img } /></button>
       <button x-custom x-for="end-game"><img src={ end_game_img } /></button></options-etc></playing-etc>,
   where
   , problem_number = '' // TODO: define this
   , time_left = '' // TODO: define this
+  , question = '' // TODO: define this
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   )=>_)
