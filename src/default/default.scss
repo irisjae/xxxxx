@@ -14,7 +14,6 @@ body {
 	transform: translateX(-50%) translateY(-50%); }
 
 teacher-app > setup-etc {
-  @extend %page-etc;
   setting {
     &[x-of=game-mode], &[x-of=time-limit] {
       & prev, & next {
@@ -29,6 +28,7 @@ teacher-app > setup-etc {
       & img {
         @extend %clickable; } } }
 
+  @extend %page-etc;
   .left-pane {
     height: 100%;
     width: 66%;
@@ -103,7 +103,6 @@ teacher-app > setup-etc {
           max-width: 100%;
           max-height: 33%; } } } } }
 teacher-app > get-ready-etc {
-  @extend %page-etc;
   button {
     &[x-for=play] {
       &:focus {
@@ -111,6 +110,7 @@ teacher-app > get-ready-etc {
       & img {
         @extend %clickable; } } }
   
+  @extend %page-etc;
   display: flex;
   flex-direction: column;
   align-items: center;
