@@ -341,9 +341,9 @@ var opportunity_as_attempts = data_lens (opportunity .opportunity) .attempts
 var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_position ] 
 var past_as_opportunities = data_lens (past .past) .opportunities
 		
-var settings_as_problems = data_lens (settings .settings) .questions
+var settings_as_problems = data_lens (settings .settings) .problems
 var settings_as_rules = data_lens (settings .settings) .rules
-var app_as_questions = [ app_as_settings, settings_as_questions ]
+var app_as_problems = [ app_as_settings, settings_as_problems ]
 var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
@@ -351,8 +351,8 @@ var rules_as_time_limit = data_lens (rules .rules) .time_limit
 var settings_as_size = [settings_as_rules, rules_as_size]
 var settings_as_time_limit = [settings_as_rules, rules_as_time_limit]
 
-var question_as_question = [ 0 ]
-var question_as_answers = [ 1 ]
+var problem_as_question = [ 0 ]
+var problem_as_answers = [ 1 ]
 
 var cell_as_position = L .reread (_x => [ _x [0], _x [1] ])
 var cell_as_choice = [ 2 ]
@@ -397,17 +397,17 @@ var mapping_as_students = [ students_as_mapping, pair_as_list, L .last ]
 
 
 
-var generate_board = size => questions =>
+var generate_board = size => problems =>
 	so ((_=_=>
 	T (Z .range (1) (size + 1)) (
 		Z_ .map (row => T (Z .range (1) (size + 1)) (
 			Z_ .map (column => [row, column, cell (row) (column)] )))),
 	where 
-	, cells = shuffle (questions .slice (0, size * size))
+	, cells = shuffle (problems .slice (0, size * size))
 	, cell = y => x =>
 			T (cells) (L .get ([
 				(x - 1) * size + (y - 1),
-				question_as_answers,
+				problem_as_answers,
 				L .reread (shuffle),
 				L .first ])) )=>_)
 
@@ -430,8 +430,8 @@ var student_app_get_ready_to_playing = by (_app =>
 		student_app .playing (_room, _settings, _student, random_board, fresh_past),
 		where 
 		, _size = L .get (settings_as_size) (_settings)
-		, _questions = L .get (settings_as_questions) (_settings)
-    , random_board = generate_board (_size) (_questions)
+		, _problems = L .get (settings_as_problems) (_settings)
+    , random_board = generate_board (_size) (_problems)
 		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_)))
 
 var student_app_playing_to_next = 
@@ -446,11 +446,11 @@ var student_app_playing_to_next =
 		, board_size = T (_app) (L .get ([app_as_settings, settings_as_size]))
 		, past_size = T (_app) ([ L .get ([app_as_past, past_as_opportunities]), Z_ .size ]) )=>_)) 
 				 
-var question_choice_matches = question => choice =>
+var problem_choice_matches = problem => choice =>
 	so ((_=_=>
 	Z .elem (choice) (correct_answers),
 	where
-	, correct_answers = T (question) (L .get (question_as_answers)) )=>_)
+	, correct_answers = T (problem) (L .get (problem_as_answers)) )=>_)
 
 
 var size_patterns = memoize (size =>
@@ -473,26 +473,26 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_question = by (_questions => and_by (_past =>
+var current_problem = by (_problems => and_by (_past =>
   $ (
   [ L .get (past_as_opportunities)
   // convert into lens
   , _opportunities =>
     so ((_=_=>
-    L .get (current_question_index),
+    L .get (current_problem_index),
     where
-    , current_question_index = Z_ .size (_opportunities) - 1 )=>_) ])))
+    , current_problem_index = Z_ .size (_opportunities) - 1 )=>_) ])))
 
 var attempted_positions = by (_past =>
   L .collect ([ past_as_opportunities, L .elems, opportunity_as_position ]))
 
 
-var answered_positions = _questions => _board => _past => so ((_=_=>
-  T (Z .zip (_opportunities) (_questions)
+var answered_positions = _problems => _board => _past => so ((_=_=>
+  T (Z .zip (_opportunities) (_problems)
   ) (
   Z .chain (under (pair_as_v
-  ) (([_opportunity, _question]) => so ((_=_=>
-    !! (question_choice_matches (_question) (_choice))
+  ) (([_opportunity, _problem]) => so ((_=_=>
+    !! (problem_choice_matches (_problem) (_choice))
     ? [ _position ]
     : [],
     where
@@ -502,7 +502,7 @@ var answered_positions = _questions => _board => _past => so ((_=_=>
   where
   , _opportunities = T (_past) (L .get (past_as_opportunities)) )=>_)
 
-var bingoed_positions = _questions => _board => _past => 
+var bingoed_positions = _problems => _board => _past => 
 	so ((_=_=> so ((_=_=>
 	T (bingo_patterns
   ) (
@@ -512,7 +512,7 @@ var bingoed_positions = _questions => _board => _past =>
 	, bingo_patterns = size_patterns (_size) )=>_),
   where
 	, _size = T (_board) (Z_ .size)
-	, _answered_positions = answered_positions (_questions) (_board) (_past) )=>_)
+	, _answered_positions = answered_positions (_problems) (_board) (_past) )=>_)
 
 
 
@@ -601,24 +601,24 @@ window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
 	list, map, maybe, nat, id, v, piece,
 	shuffle, uuid, api, post,
-	student, question, choice, answer, latency, ping, position,
+	student, problem, choice, answer, latency, ping, position,
 	attempt, opportunity, past, board, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
-	default_questions, default_rules, default_settings,
+	default_problems, default_rules, default_settings,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
-	settings_as_questions, settings_as_rules,
+	settings_as_problems, settings_as_rules,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,
 	ensemble_as_student_boards, ensemble_as_student_histories,
   attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
-	app_as_board, app_as_past, app_as_questions,
+	app_as_board, app_as_past, app_as_problems,
   app_as_opportunity, opportunity_as_attempts,
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
-	question_as_question, question_as_answers,
+	problem_as_question, problem_as_answers,
 	cell_as_position, as_position,
 	cell_as_choice, student_name,
   pair_as_list, pair_as_first, pair_as_second,
@@ -627,5 +627,5 @@ window .stuff = { ...window .stuff,
 	teacher_app_get_ready_to_playing, 
 	student_app_get_ready_to_playing, student_app_playing_to_next,
 	past_stepped,
-  current_question, question_choice_matches,
+  current_problem, problem_choice_matches,
   attempted_positions, answered_positions, bingoed_positions }

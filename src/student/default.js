@@ -1,24 +1,24 @@
 var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
-student, question, choice, answer, latency, ping, position,
+student, problem, choice, answer, latency, ping, position,
 attempt, opportunity, past, board, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
-default_questions, default_rules, default_settings,
+default_problems, default_rules, default_settings,
 as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
-settings_as_questions, settings_as_rules,
+settings_as_problems, settings_as_rules,
 io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 ensemble_as_student_pings, ensemble_as_student_starts,
 ensemble_as_student_boards, ensemble_as_student_histories,
 attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 app_as_settings, app_as_student, app_as_students, app_as_room,
-app_as_board, app_as_past, app_as_questions,
+app_as_board, app_as_past, app_as_problems,
 app_as_opportunity, opportunity_as_attempts,
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
-question_as_question, question_as_answers,
+problem_as_question, problem_as_answers,
 cell_as_position, as_position,
 cell_as_choice, student_name,
 pair_as_list, pair_as_first, pair_as_second,
@@ -27,7 +27,7 @@ assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
 student_app_get_ready_to_playing, student_app_playing_to_next,
 past_stepped,
-current_question, question_choice_matches,
+current_problem, problem_choice_matches,
 attempted_positions, answered_positions, bingoed_positions,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 so, by, and_by, under,
@@ -43,7 +43,7 @@ as_sole, sole, every, delay
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
   setup_student: (name =~ string) => feedback,
-  attempt_question: (position =~ position) => feedback })
+  attempt_problem: (position =~ position) => feedback })
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
@@ -53,7 +53,7 @@ var lookbehind = data ({
 
 var feedback_setup_room = data_iso (feedback .setup_room)
 var feedback_setup_student = data_iso (feedback .setup_student)
-var feedback_attempt_question = data_iso (feedback .attempt_question)
+var feedback_attempt_problem = data_iso (feedback .attempt_problem)
 
 var lookbehind_nothing = data_iso (lookbehind .nothing)
 var lookbehind_bad_room = data_iso (lookbehind .bad_room)
@@ -166,7 +166,7 @@ var playing_view = _ => so ((_=_=>
   <playing-etc>
     <div class="left-pane">
       <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
-      <question>{ L .get (question_as_question) (_current_question) }</question> </div>
+      <question>{ L .get (problem_as_question) (_current_question) }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
@@ -186,17 +186,17 @@ var playing_view = _ => so ((_=_=>
           } </row> )) } </board> </div> </playing-etc>,
     where
     , _board = T (app_state ()) (L .get (app_as_board))
-    , _questions = T (app_state ()) (L .get (app_as_questions))
+    , _problems = T (app_state ()) (L .get (app_as_problems))
     , _past = T (app_state ()) (L .get (app_as_past))
-    , _current_question = current_question (_questions) (_past)
-    , _answered_positions = answered_positions (_questions) (_board) (_past)
-    , _bingoed_positions = bingoed_positions (_questions) (_board) (_past)
+    , _current_question = T (current_problem (_problems) (_past)) (L .get (problem_as_question))
+    , _answered_positions = answered_positions (_problems) (_board) (_past)
+    , _bingoed_positions = bingoed_positions (_problems) (_board) (_past)
     , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , game_tick = just_now (game_tick_sampler)
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
           ;_dom .addEventListener (click, _ => {;
-            ;feedback_state (feedback .attempt_question (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) 
+            ;feedback_state (feedback .attempt_problem (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) 
 
 var game_over_view = _ => so ((_=_=> so ((_=_=>
 	<game-over-etc>
@@ -204,11 +204,11 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 		<result-etc>
 			<tabs>
 				<button> Overview </button>
-				<button> Question </button>
+				<button> problem </button>
 				</tabs>
 			<table a-result>
 				<tr>
-					<th>Question</th>
+					<th>problem</th>
 					<th>Attempts</th>
 					<th>Avg. Time</th>
 					</tr>
@@ -224,7 +224,7 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, _app = app_state ()
 	, _ensemble = ensemble_state ()
 	, all_students = T (_ensemble) (assemble_students (_app))
-	, questions = T (_app) (L .collect ([ app_as_questions, L .elems, question_as_question ]))
+	, questions = T (_app) (L .collect ([ app_as_problems, L .elems, problem_as_question ]))
 	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, opportunity_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
 	, average_time = T (_ensemble) ([
@@ -333,19 +333,19 @@ var connect_room = _ => {;
 		.then (_ => {;
 			;io_state (io .inert) }) })) }
 
-var attempt_question = _position => {;
+var attempt_problem = _position => {;
 	T (S .sample (app_state)) (
     under (complete_ (
-      { _questions: app_as_questions
+      { _problems: app_as_problems
       , _board: app_as_board
       , _past: app_as_past } )
-    ) (({ _questions, _board, _past }) => {;
-		//Z_ .chain (board_viewer_current_question),
-			var _question = current_question (_questions) (_past)
+    ) (({ _problems, _board, _past }) => {;
+		//Z_ .chain (board_viewer_current_problem),
+			var _problem = current_problem (_problems) (_past)
 			var _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
-        if (question_choice_matches (_question) (_choice)) {
+        if (problem_choice_matches (_problem) (_choice)) {
           ;T (S .sample (app_state)) (
             [ $ (L .set
               ) ([app_as_opportunity, opportunity_as_attempts, L .appendTo]
@@ -360,7 +360,7 @@ var attempt_question = _position => {;
             , _x => {;app_state (_x)} ])
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } })) }
 
-var timesup_question = _ => {;
+var timesup_problem = _ => {;
 	;app_state (student_app_playing_to_next (S .sample (app_state))) }
 
 
@@ -408,9 +408,9 @@ S (_ => {;
             ;go
             .then (_ => setup_student (_name))
             .then (_ => connect_room ()) } ]
-      , [ feedback_attempt_question
+      , [ feedback_attempt_problem
         , ({ position: _position }) => {;
-            ;attempt_question (_position) } ] ] )=>
+            ;attempt_problem (_position) } ] ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (
@@ -493,7 +493,7 @@ S (last_ensemble => {;
         
         var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
         game_clock .clear ()
-        ;game_clock .add (timesup_question, time_limit)
+        ;game_clock .add (timesup_problem, time_limit)
         ;T (R .range (0, time_limit + 1)) (
           R .forEach (t => game_clock .add (_ => {;game_tick_sampler (t)}, t)))
         

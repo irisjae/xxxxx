@@ -1,24 +1,24 @@
 var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
-student, question, choice, answer, latency, ping, position,
+student, problem, choice, answer, latency, ping, position,
 attempt, opportunity, past, board, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
-default_questions, default_rules, default_settings,
+default_problems, default_rules, default_settings,
 as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
-settings_as_questions, settings_as_rules,
+settings_as_problems, settings_as_rules,
 io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 ensemble_as_student_pings, ensemble_as_student_starts,
 ensemble_as_student_boards, ensemble_as_student_histories,
 attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
 app_as_settings, app_as_student, app_as_students, app_as_room,
-app_as_board, app_as_past, app_as_questions,
+app_as_board, app_as_past, app_as_problems,
 app_as_opportunity, opportunity_as_attempts,
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
-question_as_question, question_as_answers,
+problem_as_question, problem_as_answers,
 cell_as_position, as_position,
 cell_as_choice, student_name,
 pair_as_list, pair_as_first, pair_as_second,
@@ -27,7 +27,7 @@ assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, 
 student_app_get_ready_to_playing, student_app_playing_to_next,
 past_stepped,
-current_question, question_choice_matches,
+current_problem, problem_choice_matches,
 attempted_positions, answered_positions, bingoed_positions,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 so, by, and_by, under,
@@ -164,9 +164,9 @@ var get_ready_view = _ => so ((_=_=>
 
 var playing_view = _ => so ((_=_=>
 	<playing-etc>
-    <question-etc>
-      <question-text>{ _question }</question-text>
-      <countdown>{ ''/*time_left*/ }</countdown> </question-etc>
+    <problem-etc>
+      <problem-text>{ _problem }</problem-text>
+      <countdown>{ ''/*time_left*/ }</countdown> </problem-etc>
     <students>
       { T (_students
         ) (
@@ -190,11 +190,11 @@ var playing_view = _ => so ((_=_=>
                 , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
                 } </row> )) } </board>,
             where
-            , _crossed_positions = answered_positions (_questions) (_board) (_past)
-            , _bingoed_positions = bingoed_positions (_questions) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>,
+            , _crossed_positions = answered_positions (_problems) (_board) (_past)
+            , _bingoed_positions = bingoed_positions (_problems) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>,
 	where
-	, _questions = T (app_state ()) (L .get (app_as_questions))
-	, _question = T (app_state ()) (L .get (app_as_past), current_question, T (_questions))
+	, _problems = T (app_state ()) (L .get (app_as_problems))
+	, _problem = T (app_state ()) (L .get (app_as_past), current_problem, T (_problems))
 	, _students = T (app_state ()) (L .get (app_as_students)) )=>_)
 													 
 var game_over_view = <game-over-etc> <message>Game Over!</message> </game-over-etc>
@@ -233,11 +233,11 @@ var get_room = _room => {;
 		api (_room,
 			post (message_encoding (
 				so ((_=_=>
-				message .teacher_settings (settings .settings (_questions, _rules)),
+				message .teacher_settings (settings .settings (_problems, _rules)),
 				where
-				, { _questions, _rules } = T (_settings
+				, { _problems, _rules } = T (_settings
           ) (L .get (L .pick (
-            { _questions: settings_as_questions
+            { _problems: settings_as_problems
             , _rules: settings_as_rules }))) )=>_) ) ))
 		.then (panic_on ([
 			[ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
@@ -265,7 +265,7 @@ var start_playing = _ => {;
 		.then (_ => {;
 			;io_state (io .inert) }) })) }
 
-var timesup_question = _ => {;
+var timesup_problem = _ => {;
 	//;app_state (student_app_next_playing (app_state ()))
 }
 
@@ -278,7 +278,7 @@ var timesup_question = _ => {;
 				
 var game_clock = new TimelineMax
 var game_tick_sampler = S .data (Z .Nothing)
-;game_clock .add (timesup_question, 10)
+;game_clock .add (timesup_problem, 10)
 ;T (Z .range (0) (10 + 1)) (R .forEach (t => {;
 	;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }))
 
