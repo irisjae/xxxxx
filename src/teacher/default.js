@@ -166,7 +166,7 @@ var playing_view = _ => so ((_=_=>
   <playing-etc>
     <title-etc>
       <a-title>Bingo</a-title>
-      <problem-number>第2題</problem-number></title-etc>
+      <problem-number>第{ problem_number }題</problem-number></title-etc>
     <problem-etc>
       <ticker>{ time_left }</ticker>
       <question>question stuff here</question></problem-etc>
@@ -174,6 +174,7 @@ var playing_view = _ => so ((_=_=>
       <button x-custom x-for="view-students"><img src={ view_students_img } /></button>
       <button x-custom x-for="end-game"><img src={ end_game_img } /></button></options-etc></playing-etc>,
   where
+  , problem_number = '' // TODO: define this
   , time_left = '' // TODO: define this
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
