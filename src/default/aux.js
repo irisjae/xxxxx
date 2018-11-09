@@ -477,15 +477,8 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_problem = by (_problems => and_by (_past =>
-  $ (
-  [ L .get (past_as_points)
-  // convert into lens
-  , _points =>
-    so ((_=_=>
-    L .get (current_problem_index),
-    where
-    , current_problem_index = Z_ .size (_points) - 1 )=>_) ])))
+var current_problem = by (_past =>
+    L .get ([ past_as_points, L .last, point_as_problem ]))
 
 var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))

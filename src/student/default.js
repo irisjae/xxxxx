@@ -188,7 +188,7 @@ var playing_view = _ => so ((_=_=>
     , _board = T (app_state ()) (L .get (app_as_board))
     , _problems = T (app_state ()) (L .get (app_as_problems))
     , _past = T (app_state ()) (L .get (app_as_past))
-    , _current_question = T (current_problem (_problems) (_past)) (L .get (problem_as_question))
+    , _current_question = T (_past) ([ current_problem, L .get (problem_as_question) ])
     , _answered_positions = answered_positions (_problems) (_board) (_past)
     , _bingoed_positions = bingoed_positions (_problems) (_board) (_past)
     , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
@@ -341,7 +341,7 @@ var attempt_problem = _position => {;
       , _past: app_as_past } )
     ) (({ _problems, _board, _past }) => {;
 		//Z_ .chain (board_viewer_current_problem),
-			var _problem = current_problem (_problems) (_past)
+			var _problem = current_problem (_past)
 			var _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()

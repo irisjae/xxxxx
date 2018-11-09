@@ -194,7 +194,7 @@ var playing_view = _ => so ((_=_=>
             , _bingoed_positions = bingoed_positions (_problems) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>,
 	where
 	, _problems = T (app_state ()) (L .get (app_as_problems))
-	, _problem = T (app_state ()) (L .get (app_as_past), current_problem, T (_problems))
+	, _problem = T (app_state ()) (L .get (app_as_past), current_problem)
 	, _students = T (app_state ()) (L .get (app_as_students)) )=>_)
 													 
 var game_over_view = <game-over-etc> <message>Game Over!</message> </game-over-etc>
