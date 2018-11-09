@@ -183,8 +183,8 @@ var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
-var opportunity = data ({ opportunity: (problem =~ problem, attempts =~ list (attempt)) => opportunity })
-var past = data ({ past: (opportunities =~ list (opportunity)) => past })
+var point = data ({ point: (problem =~ problem, attempts =~ list (attempt)) => point })
+var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
@@ -337,15 +337,15 @@ var ensemble_as_student_histories = data_iso (ensemble .ensemble) .student_histo
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
-var opportunity_as_problem = data_lens (opportunity .opportunity) .problem
-var opportunity_as_attempts = data_lens (opportunity .opportunity) .attempts
-var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_position ] 
-var past_as_opportunities = data_lens (past .past) .opportunities
+var point_as_problem = data_lens (point .point) .problem
+var point_as_attempts = data_lens (point .point) .attempts
+var point_as_position = [ point_as_attempts, L .last, attempt_as_position ] 
+var past_as_points = data_lens (past .past) .points
 		
 var settings_as_problems = data_lens (settings .settings) .problems
 var settings_as_rules = data_lens (settings .settings) .rules
 var app_as_problems = [ app_as_settings, settings_as_problems ]
-var app_as_opportunity = [ app_as_past, past_as_opportunities, L .last ]
+var app_as_point = [ app_as_past, past_as_points, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
 var rules_as_time_limit = data_lens (rules .rules) .time_limit
@@ -434,22 +434,21 @@ var student_app_get_ready_to_playing = by (_app =>
 		, _problems = L .get (settings_as_problems) (_settings)
     , random_board = generate_board (_size) (_problems)
     , first_problem = L .get (L .first) (_problems)
-		, fresh_past = past .past ([opportunity .opportunity (first_problem, [])]) )=>_)))
+		, fresh_past = past .past ([point .point (first_problem, [])]) )=>_)))
 
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
-		!! (past_size < board_size * board_size)
-		? L .set ([ app_as_past, past_as_opportunities, L .appendTo ]) (opportunity .opportunity (next_problem, []))
+		!! Z .not (game_over_ok)
+		? L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, []))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
 		, board_size = T (_app) (L .get ([app_as_settings, settings_as_size]))
-		, past_size = T (_app) ([ L .get ([app_as_past, past_as_opportunities]), Z_ .size ])
+		, past_size = T (_app) ([ L .get ([app_as_past, past_as_points]), Z_ .size ])
     , next_problem = T (_app) (L .get ([ app_as_problems, L .index (past_size) ]))
-    , game_over_ = 
-        )=>_)) 
+    , game_over_ok = false || Z_ .equals (next_problem) (undefined) )=>_)) 
 				 
 var problem_choice_matches = problem => choice =>
 	so ((_=_=>
@@ -480,32 +479,32 @@ var size_patterns = memoize (size =>
 
 var current_problem = by (_problems => and_by (_past =>
   $ (
-  [ L .get (past_as_opportunities)
+  [ L .get (past_as_points)
   // convert into lens
-  , _opportunities =>
+  , _points =>
     so ((_=_=>
     L .get (current_problem_index),
     where
-    , current_problem_index = Z_ .size (_opportunities) - 1 )=>_) ])))
+    , current_problem_index = Z_ .size (_points) - 1 )=>_) ])))
 
 var attempted_positions = by (_past =>
-  L .collect ([ past_as_opportunities, L .elems, opportunity_as_position ]))
+  L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 
 var answered_positions = _problems => _board => _past => so ((_=_=>
-  T (Z .zip (_opportunities) (_problems)
+  T (Z .zip (_points) (_problems)
   ) (
   Z .chain (under (pair_as_v
-  ) (([_opportunity, _problem]) => so ((_=_=>
+  ) (([_point, _problem]) => so ((_=_=>
     !! (problem_choice_matches (_problem) (_choice))
     ? [ _position ]
     : [],
     where
-    , _position = T (_opportunity) (L .get (opportunity_as_position))
+    , _position = T (_point) (L .get (point_as_position))
     , _choice = T (_position) (map_defined (_position =>
         T (_board) (L .get ([ as_position (_position), cell_as_choice ]))))  )=>_)))),
   where
-  , _opportunities = T (_past) (L .get (past_as_opportunities)) )=>_)
+  , _points = T (_past) (L .get (past_as_points)) )=>_)
 
 var bingoed_positions = _problems => _board => _past => 
 	so ((_=_=> so ((_=_=>
@@ -525,8 +524,8 @@ var past_stepped = old_past => curr_past =>
   so ((_=_=>
   Z_ .size (curr) > Z_ .size (old),
   where
-  , old = T (old_past) (L .get (past_as_opportunities))
-  , curr = T (curr_past) (L .get (past_as_opportunities)) )=>_)
+  , old = T (old_past) (L .get (past_as_points))
+  , curr = T (curr_past) (L .get (past_as_points)) )=>_)
     
 
 
@@ -607,7 +606,7 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v, piece,
 	shuffle, uuid, api, post,
 	student, problem, choice, answer, latency, ping, position,
-	attempt, opportunity, past, board, rules, settings,
+	attempt, point, past, board, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
@@ -618,10 +617,10 @@ window .stuff = { ...window .stuff,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,
 	ensemble_as_student_boards, ensemble_as_student_histories,
-  attempt_as_position, attempt_as_latency, opportunity_as_attempts, opportunity_as_position, past_as_opportunities,
+  attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,
-  app_as_opportunity, opportunity_as_attempts,
+  app_as_point, point_as_attempts,
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position,
