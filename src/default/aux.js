@@ -183,7 +183,7 @@ var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
 var attempt = v (position, timeinterval)
-var opportunity = data ({ opportunity: (attempts =~ list (attempt)) => opportunity })
+var opportunity = data ({ opportunity: (problem =~ problem, attempts =~ list (attempt)) => opportunity })
 var past = data ({ past: (opportunities =~ list (opportunity)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
@@ -337,6 +337,7 @@ var ensemble_as_student_histories = data_iso (ensemble .ensemble) .student_histo
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
+var opportunity_as_problem = data_lens (opportunity .opportunity) .problem
 var opportunity_as_attempts = data_lens (opportunity .opportunity) .attempts
 var opportunity_as_position = [ opportunity_as_attempts, L .last, attempt_as_position ] 
 var past_as_opportunities = data_lens (past .past) .opportunities
@@ -432,19 +433,23 @@ var student_app_get_ready_to_playing = by (_app =>
 		, _size = L .get (settings_as_size) (_settings)
 		, _problems = L .get (settings_as_problems) (_settings)
     , random_board = generate_board (_size) (_problems)
-		, fresh_past = past .past ([opportunity .opportunity ([])]) )=>_)))
+    , first_problem = L .get (L .first) (_problems)
+		, fresh_past = past .past ([opportunity .opportunity (first_problem, [])]) )=>_)))
 
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
 		!! (past_size < board_size * board_size)
-		? L .set ([ app_as_past, past_as_opportunities, L .appendTo ]) (opportunity .opportunity ([]))
+		? L .set ([ app_as_past, past_as_opportunities, L .appendTo ]) (opportunity .opportunity (next_problem, []))
 		: L .get (
 				[ data_iso (student_app .playing)
 				, L .inverse (data_iso (student_app .game_over)) ]),
 		where
 		, board_size = T (_app) (L .get ([app_as_settings, settings_as_size]))
-		, past_size = T (_app) ([ L .get ([app_as_past, past_as_opportunities]), Z_ .size ]) )=>_)) 
+		, past_size = T (_app) ([ L .get ([app_as_past, past_as_opportunities]), Z_ .size ])
+    , next_problem = T (_app) (L .get ([ app_as_problems, L .index (past_size) ]))
+    , game_over_ = 
+        )=>_)) 
 				 
 var problem_choice_matches = problem => choice =>
 	so ((_=_=>
