@@ -426,8 +426,8 @@ var teacher_app_get_ready_to_playing = by (_app =>
 
 var teacher_app_playing_to_game_over =  by (_app => 
   L .get (
-      [ data_iso (teacher_app .playing)
-      , L .inverse (data_iso (teacher_app .game_over)) ])) 
+    [ data_iso (teacher_app .playing)
+    , L .inverse (data_iso (teacher_app .game_over)) ])) 
 
 var student_app_get_ready_to_playing = by (_app =>
   under (complete_ (
@@ -449,15 +449,19 @@ var student_app_playing_to_next =
 		so ((_=_=>
 		!! Z .not (game_over_ok)
 		? L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, []))
-		: L .get (
-				[ data_iso (student_app .playing)
-				, L .inverse (data_iso (student_app .game_over)) ]),
+		: student_app_playing_to_game_over,
 		where
 		, board_size = T (_app) (L .get ([app_as_settings, settings_as_size]))
 		, past_size = T (_app) ([ L .get ([app_as_past, past_as_points]), Z_ .size ])
     , next_problem = T (_app) (L .get ([ app_as_problems, L .index (past_size) ]))
     , game_over_ok = false || Z_ .equals (next_problem) (undefined) )=>_)) 
 				 
+var student_app_playing_to_game_over =  by (_app => 
+  L .get (
+    [ data_iso (student_app .playing)
+    , L .inverse (data_iso (student_app .game_over)) ]))
+				 
+
 var problem_choice_matches = problem => choice =>
 	so ((_=_=>
 	Z .elem (choice) (correct_answers),
@@ -631,7 +635,7 @@ window .stuff = { ...window .stuff,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
-	student_app_get_ready_to_playing, student_app_playing_to_next,
+	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 	past_stepped,
   current_problem, problem_choice_matches,
   attempted_positions, solved_positions, bingoed_positions }

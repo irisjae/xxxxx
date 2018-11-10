@@ -26,7 +26,7 @@ pair_as_list, pair_as_first, pair_as_second,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
-student_app_get_ready_to_playing, student_app_playing_to_next,
+student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 past_stepped,
 current_problem, problem_choice_matches,
 attempted_positions, solved_positions, bingoed_positions,
@@ -511,6 +511,20 @@ S (last_ensemble => {;
 					;console .error (_e) })
 				.then (_ => {;
 					;io_state (io .inert) }) } } } })
+	return ensemble_state () }
+, ensemble_state ())
+
+//TODO make implementation more sophisticated
+S (last_ensemble => {;
+	;so ((
+	take
+	, _app = S .sample (app_state)
+	, _ensemble = ensemble_state () ) => {;
+	if (L .isDefined (app_as_playing) (_app)) {
+		if (! L .isDefined (ensemble_as_abort) (last_ensemble)) {
+			if (L .isDefined (ensemble_as_abort) (_ensemble)) {
+				;app_state (
+          T (_app) (student_app_playing_to_game_over)) } } } })
 	return ensemble_state () }
 , ensemble_state ())
 
