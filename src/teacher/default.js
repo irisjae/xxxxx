@@ -29,7 +29,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next,
 past_stepped,
 current_problem, problem_choice_matches,
-attempted_positions, answered_positions, bingoed_positions,
+attempted_positions, solved_positions, bingoed_positions,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 so, by, and_by, under,
 go, never, panic, panic_on,
@@ -207,15 +207,15 @@ var playing_view = _ => so ((_=_=>
                   <row> { T (_row) (Z_ .map (_cell =>
                     so ((_=_=>
                     !! (_cell_bingo) ? <cell x-bingoed></cell>
-                    :!! (_cell_answered) ? <cell x-answered></cell>
+                    :!! (_cell_solved) ? <cell x-solved></cell>
                     : <cell></cell>,
                     where
                     , _cell_position = T (_cell) (L .get (cell_as_position))
-                    , _cell_answered = Z .elem (_cell_position) (_answered_positions)
+                    , _cell_solved = Z .elem (_cell_position) (_solved_positions)
                     , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
                     } </row> )) } </board>,
                 where
-                , _answered_positions = answered_positions (_board) (_past)
+                , _solved_positions = solved_positions (_board) (_past)
                 , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
     :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
     ? <playing-etc></playing-etc>

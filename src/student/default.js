@@ -29,7 +29,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next,
 past_stepped,
 current_problem, problem_choice_matches,
-attempted_positions, answered_positions, bingoed_positions,
+attempted_positions, solved_positions, bingoed_positions,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 so, by, and_by, under,
 go, never, panic, panic_on,
@@ -173,19 +173,19 @@ var playing_view = _ => so ((_=_=>
         <row> { T (_row) (Z_ .map (_cell =>
           so ((_=_=>
           !! (_cell_bingo) ? <cell x-bingoed>{ _cell_choice }</cell>
-          :!! (_cell_answered) ? <cell x-answered>{ _cell_choice }</cell>
+          :!! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
           : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
-          , _cell_answered = Z .elem (_cell_position) (_answered_positions)
+          , _cell_solved = Z .elem (_cell_position) (_solved_positions)
           , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
           } </row> )) } </board> </div> </playing-etc>,
     where
     , _board = T (app_state ()) (L .get (app_as_board))
     , _past = T (app_state ()) (L .get (app_as_past))
     , _current_question = T (_past) ([ current_problem, L .get (problem_as_question) ])
-    , _answered_positions = answered_positions (_board) (_past)
+    , _solved_positions = solved_positions (_board) (_past)
     , _bingoed_positions = bingoed_positions (_board) (_past)
     , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , game_tick = just_now (game_tick_sampler)

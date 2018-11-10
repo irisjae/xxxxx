@@ -333,7 +333,27 @@ board {
       font-size: 25px;
       flex-grow: 1;
       flex-shrink: 1;
-      flex-basis: 0; } } }
+      flex-basis: 0;
+      position: relative;
+      &[x-solved]:after {
+        content: ' ';
+        background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center; }
+      &[x-bingoed]:after {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: peachpuff; } } } }
 
 input {
 	display: block;

@@ -492,7 +492,7 @@ var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 
-var answered_positions = _board => _past => so ((_=_=>
+var solved_positions = _board => _past => so ((_=_=>
   T (_points
   ) (
   Z .chain (_point => so ((_=_=>
@@ -511,13 +511,13 @@ var bingoed_positions = _board => _past =>
 	so ((_=_=> so ((_=_=>
 	T (bingo_patterns
   ) (
-  Z_ .filter (R .all (T (_answered_positions) (Z .flip (Z_ .elem))))),
+  Z_ .filter (R .all (T (_solved_positions) (Z .flip (Z_ .elem))))),
 //no need to expand patterns???? 
 	where
 	, bingo_patterns = size_patterns (_size) )=>_),
   where
 	, _size = T (_board) (Z_ .size)
-	, _answered_positions = answered_positions (_board) (_past) )=>_)
+	, _solved_positions = solved_positions (_board) (_past) )=>_)
 
 
 
@@ -634,4 +634,4 @@ window .stuff = { ...window .stuff,
 	student_app_get_ready_to_playing, student_app_playing_to_next,
 	past_stepped,
   current_problem, problem_choice_matches,
-  attempted_positions, answered_positions, bingoed_positions }
+  attempted_positions, solved_positions, bingoed_positions }
