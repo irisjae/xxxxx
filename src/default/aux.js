@@ -188,7 +188,7 @@ var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
-var rules = data ({ rules: (time_limit =~ number, size =~ nat) => rules })
+var rules = data ({ rules: (time_limit =~ number, size =~ nat, ) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
 
 
