@@ -350,8 +350,10 @@ var app_as_last_point = [ app_as_past, past_as_points, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
 var rules_as_time_limit = data_lens (rules .rules) .time_limit
+var rules_as_win_rule = data_lens (rules .rules) .win_rule
 var settings_as_size = [settings_as_rules, rules_as_size]
 var settings_as_time_limit = [settings_as_rules, rules_as_time_limit]
+var settings_as_win_rule = [settings_as_rules, rules_as_win_rule]
 
 var problem_as_question = [ 0 ]
 var problem_as_answers = [ 1 ]
@@ -600,13 +602,14 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v, piece,
 	shuffle, uuid, api, post,
 	student, problem, choice, answer, latency, ping, position,
-	attempt, point, past, board, rules, settings,
+	attempt, point, past, board, win_rule, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
 	settings_as_problems, settings_as_rules,
+  settings_as_size, settings_as_time_limit, settings_as_win_rule,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,

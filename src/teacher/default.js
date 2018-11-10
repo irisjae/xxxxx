@@ -2,13 +2,14 @@ var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
 student, problem, choice, answer, latency, ping, position,
-attempt, point, past, board, rules, settings,
+attempt, point, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
 as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
 settings_as_problems, settings_as_rules,
+settings_as_size, settings_as_time_limit, settings_as_win_rule,
 io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 ensemble_as_student_pings, ensemble_as_student_starts,
@@ -432,8 +433,8 @@ so ((_=_=>
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
-	if (L .isDefined (app_as_playing) (_app)) {
-		if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
+	if (L .isDefined (app_as_playing) (_app) && Z_ .equals (win_rule .first_bingo) (L .get ([ app_as_settings, settings_as_win_rule ]) (_app))) {
+		if (! ensemble_bingoed_positions (last_ensemble)) {
 			if (L .isDefined (ensemble_as_start) (_ensemble)) {
 				var start = L .get (ensemble_as_start) (_ensemble)
 				var now = (new Date) .getTime ()
@@ -451,7 +452,8 @@ where
 , ensemble_bingoed_positions = by (_ensemble =>
     $ (
     [ assemble_students (S .sample (app_state))
-    , L .collect ([ L .elems, pair_as_second ]) ])) )=>_)
+    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past) ])
+    , Z_ .join ])) )=>_)
 
 S (_ => {;
 	;T (app_state ()
