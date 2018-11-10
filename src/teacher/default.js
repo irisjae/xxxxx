@@ -218,12 +218,14 @@ var playing_view = _ => so ((_=_=>
                   where
                   , _crossed_positions = answered_positions (_problems) (_board) (_past)
                   , _bingoed_positions = bingoed_positions (_problems) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
-    }
+      :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
+      ? <playing-etc></playing-etc>
+      : panic ('unknown lookbehind state') },
   where
   , _lookbehind = lookbehind_state () 
-    , _problems = T (app_state ()) (L .get (app_as_problems))
-    , _problem = T (app_state ()) (L .get (app_as_past), current_problem)
-    , _students = T (app_state ()) (L .get (app_as_students)) )=>_)
+  , _problems = T (app_state ()) (L .get (app_as_problems))
+  , _problem = T (app_state ()) (L .get (app_as_past), current_problem)
+  , _students = T (app_state ()) (L .get (app_as_students)) 
   , problem_number = '' // TODO: define this
   , time_left = '' // TODO: define this
   , question = '' // TODO: define this
