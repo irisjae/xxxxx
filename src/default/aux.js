@@ -235,7 +235,7 @@ var ensemble = data ({
 		student_pings =~ map (student) (ping),
 		student_starts =~ map (student) (timestamp),
 		student_boards =~ map (student) (board),
-		student_histories =~ map (student) (past) ) => ensemble })
+		student_pasts =~ map (student) (past) ) => ensemble })
 
 
 
@@ -334,7 +334,7 @@ var ensemble_as_abort = data_iso (ensemble .ensemble) .abort
 var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings 
 var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
 var ensemble_as_student_starts = data_iso (ensemble .ensemble) .student_starts 
-var ensemble_as_student_histories = data_iso (ensemble .ensemble) .student_histories 
+var ensemble_as_student_pasts = data_iso (ensemble .ensemble) .student_pasts 
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
@@ -550,7 +550,7 @@ var message_encoding = by (message =>
       , under (message_as_student_start .synchronization
         ) (L .getInverse ([ ensemble_as_student_starts, student ]))
       , under (message_as_student_update .past
-        ) (L .getInverse ([ ensemble_as_student_histories, student ])) ] )=>_))
+        ) (L .getInverse ([ ensemble_as_student_pasts, student ])) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
@@ -572,15 +572,15 @@ var assemble_students = by (_app => //and_by (_ensemble =>
           $ (
           [ Z_ .flip (
             { boards: L .collect ([ ensemble_as_student_boards, students_as_mapping ])
-            , histories: L .collect ([ ensemble_as_student_histories, students_as_mapping ]) })
-          , /*under (as_complete)*/ (({ boards, histories }) =>
-            pair_zip (_a => _b => [_a, _b]) (boards) (histories) ) ])
+            , pasts: L .collect ([ ensemble_as_student_pasts, students_as_mapping ]) })
+          , /*under (as_complete)*/ (({ boards, pasts }) =>
+            pair_zip (_a => _b => [_a, _b]) (boards) (pasts) ) ])
         //collect this instead of get!
           /*under (L .pick (
             { boards: [ ensemble_as_student_boards, students_as_mapping ]
-            , histories: [ ensemble_as_student_histories, students_as_mapping ] })
-          ) (({ boards, histories }) =>
-            pair_zip (_a => _b => [_a, _b]) (boards) (histories) )*/
+            , pasts: [ ensemble_as_student_pasts, students_as_mapping ] })
+          ) (({ boards, pasts }) =>
+            pair_zip (_a => _b => [_a, _b]) (boards) (pasts) )*/
            ))) ] )=>_))
 
 var schedule_start = _ensemble =>
@@ -610,7 +610,7 @@ window .stuff = { ...window .stuff,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 	ensemble_as_student_pings, ensemble_as_student_starts,
-	ensemble_as_student_boards, ensemble_as_student_histories,
+	ensemble_as_student_boards, ensemble_as_student_pasts,
   attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,

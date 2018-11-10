@@ -12,7 +12,7 @@ settings_as_problems, settings_as_rules,
 io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_abort,
 ensemble_as_student_pings, ensemble_as_student_starts,
-ensemble_as_student_boards, ensemble_as_student_histories,
+ensemble_as_student_boards, ensemble_as_student_pasts,
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_problems,
@@ -427,6 +427,7 @@ S (last_ensemble => {;
 					, start - now) } } } }
 	return _ensemble }
 , ensemble_state ())
+so ((_=_=>
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
@@ -444,8 +445,10 @@ S (last_ensemble => {;
 						;app_state (playing_app) }
 					, start - now) } } } }
 	return _ensemble }
-, ensemble_state ())
-	 
+, ensemble_state ()),
+where
+, ensemble_bingoed_positions = by (_ensemble =>
+    L .collect ()) )=>_)
 	 
 S (_ => {;
 	;T (app_state ()
