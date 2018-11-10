@@ -380,7 +380,8 @@ S (_ => {;
             ;app_state (
               T (S .sample (app_state)
               ) (
-              L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ] ] )=>
+              L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ]
+      ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (
@@ -398,24 +399,6 @@ S (_ => {;
 
 
 
-/*
-S (_ => {;
-	if (Z_ .isNothing (app_state ())) {
-		if (L .isDefined (io_inert) (io_state ())) {
-			;get_room (T (Math .random ()) ([
-				_x => _x * 100000000,
-				_x => Math .floor (_x) ])) .catch (_ => {}) } } }})
-*/
-S (last_app => {;
-	var _app = app_state ()
-		if (! L .isDefined (app_as_playing) (last_app)) {
-			if (L .isDefined (app_as_playing) (_app)) {
-			}
-		}
-	return _app }
-, app_state ())
-	 
-	 
 S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
