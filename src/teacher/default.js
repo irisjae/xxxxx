@@ -206,9 +206,9 @@ var playing_view = _ => so ((_=_=>
                     <row> { T (_row) (Z_ .map (_cell =>
                       so ((_=_=>
                       !! (_cell_bingo)
-                      ? <cell>x</cell>
+                      ? <cell x-bingoed></cell>
                       :!! (_cell_crossed)
-                      ? <cell>x</cell>
+                      ? <cell x-crossed></cell>
                       : <cell></cell>,
                       where
                       , _cell_position = T (_cell) (L .get (cell_as_position))
@@ -448,8 +448,8 @@ S (last_ensemble => {;
 , ensemble_state ()),
 where
 , ensemble_bingoed_positions = by (_ensemble =>
-    L .collect ()) )=>_)
-	 
+    assemble_students (S .sample (app_state)), L .collect ([ L .elems, pair_as_second ])) )=>_)
+
 S (_ => {;
 	;T (app_state ()
   ) (under (app_as_room) (_room => {;
