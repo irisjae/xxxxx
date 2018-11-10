@@ -206,18 +206,16 @@ var playing_view = _ => so ((_=_=>
                 <board> { T (_board) (Z_ .map (_row => 
                   <row> { T (_row) (Z_ .map (_cell =>
                     so ((_=_=>
-                    !! (_cell_bingo)
-                    ? <cell x-bingoed></cell>
-                    :!! (_cell_crossed)
-                    ? <cell x-crossed></cell>
+                    !! (_cell_bingo) ? <cell x-bingoed></cell>
+                    :!! (_cell_answered) ? <cell x-answered></cell>
                     : <cell></cell>,
                     where
                     , _cell_position = T (_cell) (L .get (cell_as_position))
-                    , _cell_crossed = Z .elem (_cell_position) (_crossed_positions)
+                    , _cell_answered = Z .elem (_cell_position) (_answered_positions)
                     , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
                     } </row> )) } </board>,
                 where
-                , _crossed_positions = answered_positions (_board) (_past)
+                , _answered_positions = answered_positions (_board) (_past)
                 , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
     :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
     ? <playing-etc></playing-etc>

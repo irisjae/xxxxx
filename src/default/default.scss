@@ -29,7 +29,7 @@ teacher-app > setup-etc {
         @extend %clickable; } } }
 
   @extend %page-etc;
-  .left-pane {
+  & .left-pane {
     height: 100%;
     width: 66%;
     left: 0;
@@ -86,7 +86,7 @@ teacher-app > setup-etc {
               max-width: 100%;
               max-height: 100%; } } } } } }
 
-  .right-pane {
+  & .right-pane {
     height: 100%;
     width: 33%;
     right: 0;
@@ -116,26 +116,26 @@ teacher-app > get-ready-etc {
   align-items: center;
   & > * {
     margin: 10px; }
-  room {
+  & room {
     background: #f5b54c;
     padding: 0.5em 1.5em;
     border-radius: 1.5em; }
-  students-etc {
+  & students-etc {
     width: 100%;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    label {
+    & label {
       text-align: left;
       display: block; }
-    students {
+    & students {
       flex-grow: 1;
       padding: 20px;
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
       overflow: scroll;
-      student {
+      & student {
         width: 100px;
         height: 1.5em;
         overflow: scroll;
