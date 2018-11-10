@@ -429,6 +429,7 @@ S (last_ensemble => {;
 					, start - now) } } } }
 	return _ensemble }
 , ensemble_state ())
+//TODO: rethink this part structure
 so ((_=_=>
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
@@ -438,15 +439,15 @@ S (last_ensemble => {;
 		if (! Z_ .size (ensemble_bingoed_positions) (last_ensemble)) {
 			if (Z_ .size (ensemble_bingoed_positions) (ensemble)) {
 				var now = (new Date) .getTime ()
+        var _room = T (_app) (app_as_room)
 
-				var game_over_app = teacher_app_playing_to_game_over (_app)
-        
         ;go
         .then (_ =>
           io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_abort (schedule_start (_ensemble)))))
+            post (message_encoding (message .teacher_abort (now))))
           .then (panic_on ([
             [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+        .then (_ => {;app_state (teacher_app_playing_to_game_over (_app))})
         .catch (_e => {;
           ;console .error (_e) })
         .then (_ => {;
