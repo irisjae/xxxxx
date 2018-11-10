@@ -178,50 +178,50 @@ var get_ready_view = _ => so ((_=_=>
           ;feedback_state (feedback .play) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
-    { !! L .isDefined (lookbehind_nothing) (_lookbehind)
-      ? <playing-etc>
-          <title-etc>
-            <a-title>Bingo</a-title>
-            <problem-number>第{ problem_number }題</problem-number></title-etc>
-          <problem-etc>
-            <ticker>{ time_left }</ticker>
-            <question>{ question }</question></problem-etc>
-          <options-etc>
-            <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
-            <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button></options-etc></playing-etc>
-      :!! L .isDefined (lookbehind_view_students) (_lookbehind)
-      ? <playing-etc>
-          <problem-etc>
-            <problem-text>{ _problem }</problem-text>
-            <countdown>{ time_elapsed }</countdown> </problem-etc>
-          <students>
-            { T (_students
-              ) (
-              [ L .collect (
-                [ L .elems
-                , pair_as_second ])
-              , Z_ .map (([_board, _past]) =>
-                <student-etc>
-                  { so ((_=_=>
-                  <board> { T (_board) (Z_ .map (_row => 
-                    <row> { T (_row) (Z_ .map (_cell =>
-                      so ((_=_=>
-                      !! (_cell_bingo)
-                      ? <cell x-bingoed></cell>
-                      :!! (_cell_crossed)
-                      ? <cell x-crossed></cell>
-                      : <cell></cell>,
-                      where
-                      , _cell_position = T (_cell) (L .get (cell_as_position))
-                      , _cell_crossed = Z .elem (_cell_position) (_crossed_positions)
-                      , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
-                      } </row> )) } </board>,
-                  where
-                  , _crossed_positions = answered_positions (_board) (_past)
-                  , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
-      :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
-      ? <playing-etc></playing-etc>
-      : panic ('unknown lookbehind state') },
+    !! L .isDefined (lookbehind_nothing) (_lookbehind)
+    ? <playing-etc>
+        <title-etc>
+          <a-title>Bingo</a-title>
+          <problem-number>第{ problem_number }題</problem-number></title-etc>
+        <problem-etc>
+          <ticker>{ time_left }</ticker>
+          <question>{ question }</question></problem-etc>
+        <options-etc>
+          <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
+          <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button></options-etc></playing-etc>
+    :!! L .isDefined (lookbehind_view_students) (_lookbehind)
+    ? <playing-etc>
+        <problem-etc>
+          <problem-text>{ _problem }</problem-text>
+          <countdown>{ time_elapsed }</countdown> </problem-etc>
+        <students>
+          { T (_students
+            ) (
+            [ L .collect (
+              [ L .elems
+              , pair_as_second ])
+            , Z_ .map (([_board, _past]) =>
+              <student-etc>
+                { so ((_=_=>
+                <board> { T (_board) (Z_ .map (_row => 
+                  <row> { T (_row) (Z_ .map (_cell =>
+                    so ((_=_=>
+                    !! (_cell_bingo)
+                    ? <cell x-bingoed></cell>
+                    :!! (_cell_crossed)
+                    ? <cell x-crossed></cell>
+                    : <cell></cell>,
+                    where
+                    , _cell_position = T (_cell) (L .get (cell_as_position))
+                    , _cell_crossed = Z .elem (_cell_position) (_crossed_positions)
+                    , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
+                    } </row> )) } </board>,
+                where
+                , _crossed_positions = answered_positions (_board) (_past)
+                , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
+    :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
+    ? <playing-etc></playing-etc>
+    : panic ('unknown lookbehind state'),
   where
   , _lookbehind = lookbehind_state () 
   , _problems = T (app_state ()) (L .get (app_as_problems))
@@ -436,8 +436,8 @@ S (last_ensemble => {;
 	var _ensemble = ensemble_state ()
 	if (L .isDefined (app_as_playing) (_app)
   && T (_app) ([ L .get ([ app_as_settings, settings_as_win_rule ]), Z_ .equals (win_rule .first_bingo) ]) ) {
-		if (! Z_ .size (ensemble_bingoed_positions) (last_ensemble)) {
-			if (Z_ .size (ensemble_bingoed_positions) (ensemble)) {
+		if (! Z_ .size (ensemble_bingoed_positions (last_ensemble))) {
+			if (Z_ .size (ensemble_bingoed_positions (ensemble))) {
 				var now = (new Date) .getTime ()
         var _room = T (_app) (app_as_room)
 
