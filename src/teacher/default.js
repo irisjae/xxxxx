@@ -456,7 +456,7 @@ S (last_ensemble => {;
   if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
       if (! Z_ .size (ensemble_bingoed_positions (last_ensemble))) {
-        if (Z_ .size (ensemble_bingoed_positions (ensemble))) {
+        if (Z_ .size (ensemble_bingoed_positions (_ensemble))) {
           ;end_game () } } } }
 	return _ensemble }
 , ensemble_state ()),
