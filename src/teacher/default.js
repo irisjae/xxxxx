@@ -192,7 +192,7 @@ var playing_view = _ => so ((_=_=>
       ? <playing-etc>
           <problem-etc>
             <problem-text>{ _problem }</problem-text>
-            <countdown>{ time_left }</countdown> </problem-etc>
+            <countdown>{ time_elapsed }</countdown> </problem-etc>
           <students>
             { T (_students
               ) (
@@ -228,6 +228,7 @@ var playing_view = _ => so ((_=_=>
   , _students = T (app_state ()) (L .get (app_as_students)) 
   , problem_number = '' // TODO: define this
   , time_left = '' // TODO: define this
+  , time_elapsed = '' // TODO: define this
   , question = '' // TODO: define this
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
@@ -448,7 +449,9 @@ S (last_ensemble => {;
 , ensemble_state ()),
 where
 , ensemble_bingoed_positions = by (_ensemble =>
-    assemble_students (S .sample (app_state)), L .collect ([ L .elems, pair_as_second ])) )=>_)
+    $ (
+    [ assemble_students (S .sample (app_state))
+    , L .collect ([ L .elems, pair_as_second ]) ])) )=>_)
 
 S (_ => {;
 	;T (app_state ()
