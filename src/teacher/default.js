@@ -330,6 +330,23 @@ var timesup_problem = _ => {;
 	//;app_state (student_app_next_playing (app_state ()))
 }
 
+var end_game = _ => {;
+  var now = (new Date) .getTime ()
+  
+  var _app = S .sample (app_state) 
+  var _room = T (_app) (L .get (app_as_room))
+
+  ;go
+  .then (_ =>
+    io_state (io .messaging) && api (_room,
+      post (message_encoding (message .teacher_abort (now))))
+    .then (panic_on ([
+      [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+  .then (_ => {;app_state (teacher_app_playing_to_game_over (_app))})
+  .catch (_e => {;
+    ;console .error (_e) })
+  .then (_ => {;
+    ;io_state (io .inert) }) } 
 				
 				
 				
@@ -366,7 +383,15 @@ S (_ => {;
   ;so ((
   take
   , cases = 
-      [ [ data_iso (feedback .start)
+      [ [ data_lens (feedback .setup_settings) .settings_piece
+        , _piece => {;
+            //TODO: tidy this up
+            var cleansed_piece = JSON .parse (JSON .stringify (_piece))
+            ;app_state (
+              T (S .sample (app_state)
+              ) (
+              L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ]
+      , [ data_iso (feedback .start)
         , _ => {;
             ;get_room (T (Math .random ()) ([
               _x => _x * 100000000,
@@ -374,14 +399,9 @@ S (_ => {;
       , [ data_iso (feedback .play)
         , _ => {;
             ;start_playing () } ]
-      , [ data_lens (feedback .setup_settings) .settings_piece
-        , _piece => {;
-            var cleansed_piece = JSON .parse (JSON .stringify (_piece))
-            ;app_state (
-              T (S .sample (app_state)
-              ) (
-              L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ]
-      ] )=>
+      , [ data_iso (feedback .end)
+        , _ => {;
+            ;end_game () } ] ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (
@@ -427,29 +447,17 @@ S (last_ensemble => {;
 					, start - now) } } } }
 	return _ensemble }
 , ensemble_state ())
-//TODO: rethink this part structure
+//TODO: tidy this up
 so ((_=_=>
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
-	if (L .isDefined (app_as_playing) (_app)
-  && T (_app) ([ L .get ([ app_as_settings, settings_as_win_rule ]), Z_ .equals (win_rule .first_bingo) ]) ) {
-		if (! Z_ .size (ensemble_bingoed_positions (last_ensemble))) {
-			if (Z_ .size (ensemble_bingoed_positions (ensemble))) {
-				var now = (new Date) .getTime ()
-        var _room = T (_app) (app_as_room)
-
-        ;go
-        .then (_ =>
-          io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_abort (now))))
-          .then (panic_on ([
-            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-        .then (_ => {;app_state (teacher_app_playing_to_game_over (_app))})
-        .catch (_e => {;
-          ;console .error (_e) })
-        .then (_ => {;
-          ;io_state (io .inert) }) } } }
+  var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
+  if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
+    if (L .isDefined (app_as_playing) (_app)) {
+      if (! Z_ .size (ensemble_bingoed_positions (last_ensemble))) {
+        if (Z_ .size (ensemble_bingoed_positions (ensemble))) {
+          ;end_game () } } } }
 	return _ensemble }
 , ensemble_state ()),
 where
