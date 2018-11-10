@@ -216,8 +216,8 @@ var playing_view = _ => so ((_=_=>
                       , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
                       } </row> )) } </board>,
                   where
-                  , _crossed_positions = answered_positions (_problems) (_board) (_past)
-                  , _bingoed_positions = bingoed_positions (_problems) (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
+                  , _crossed_positions = answered_positions (_board) (_past)
+                  , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
       :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
       ? <playing-etc></playing-etc>
       : panic ('unknown lookbehind state') },

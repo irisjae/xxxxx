@@ -485,22 +485,22 @@ var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 
-var answered_positions = _problems => _board => _past => so ((_=_=>
-  T (Z .zip (_points) (_problems)
+var answered_positions = _board => _past => so ((_=_=>
+  T (_points
   ) (
-  Z .chain (under (pair_as_v
-  ) (([_point, _problem]) => so ((_=_=>
+  Z .chain (_point => so ((_=_=>
     !! (problem_choice_matches (_problem) (_choice))
     ? [ _position ]
     : [],
     where
+    , _problem = T (_point) (L .get ([ point_as_problem ]))
     , _position = T (_point) (L .get (point_as_position))
     , _choice = T (_position) (map_defined (_position =>
-        T (_board) (L .get ([ as_position (_position), cell_as_choice ]))))  )=>_)))),
+        T (_board) (L .get ([ as_position (_position), cell_as_choice ]))))  )=>_))),
   where
   , _points = T (_past) (L .get (past_as_points)) )=>_)
 
-var bingoed_positions = _problems => _board => _past => 
+var bingoed_positions = _board => _past => 
 	so ((_=_=> so ((_=_=>
 	T (bingo_patterns
   ) (
@@ -510,7 +510,7 @@ var bingoed_positions = _problems => _board => _past =>
 	, bingo_patterns = size_patterns (_size) )=>_),
   where
 	, _size = T (_board) (Z_ .size)
-	, _answered_positions = answered_positions (_problems) (_board) (_past) )=>_)
+	, _answered_positions = answered_positions (_board) (_past) )=>_)
 
 
 

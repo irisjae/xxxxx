@@ -186,11 +186,10 @@ var playing_view = _ => so ((_=_=>
           } </row> )) } </board> </div> </playing-etc>,
     where
     , _board = T (app_state ()) (L .get (app_as_board))
-    , _problems = T (app_state ()) (L .get (app_as_problems))
     , _past = T (app_state ()) (L .get (app_as_past))
     , _current_question = T (_past) ([ current_problem, L .get (problem_as_question) ])
-    , _answered_positions = answered_positions (_problems) (_board) (_past)
-    , _bingoed_positions = bingoed_positions (_problems) (_board) (_past)
+    , _answered_positions = answered_positions (_board) (_past)
+    , _bingoed_positions = bingoed_positions (_board) (_past)
     , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , game_tick = just_now (game_tick_sampler)
     , cell_feedback = cell => _dom => {;
@@ -227,14 +226,14 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, questions = T (_app) (L .collect ([ app_as_problems, L .elems, problem_as_question ]))
 	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, point_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
-	, average_time = T (_ensemble) ([
+	/*, average_time = T (_ensemble) ([
 			assemble_students (_app),
 			Z_ .map ($ ([
 				Z .snd,
 				L .collect ([ [1], L .elems, point_as_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
-			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_),
+			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) */)=>_),
   where
 	, average = by (list => $ ([
 			Z .sum,
