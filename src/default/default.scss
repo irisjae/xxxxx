@@ -134,11 +134,11 @@ teacher-app > get-ready-etc {
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      overflow: scroll;
+      overflow: auto;
       & student {
         width: 100px;
         height: 1.5em;
-        overflow: scroll;
+        /*overflow: scroll;*/
         margin: 0 0 5px;
         display: block;
         background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-item-bar.png?1541576347704);
