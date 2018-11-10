@@ -188,7 +188,8 @@ var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
-var rules = data ({ rules: (time_limit =~ number, size =~ nat, ) => rules })
+var win_rule = data ({ first_bingo: () => win_rule })
+var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
 
 
@@ -263,7 +264,7 @@ var ensemble = data ({
   ['1/7', ['2/14', '3/21']] ])
 //*/
 //var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
-var default_rules = rules .rules (10, 4)
+var default_rules = rules .rules (10, 4, win_rule .first_bingo)
 
 var default_settings = settings .settings (default_problems, default_rules)
 

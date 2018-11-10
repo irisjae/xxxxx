@@ -427,6 +427,24 @@ S (last_ensemble => {;
 					, start - now) } } } }
 	return _ensemble }
 , ensemble_state ())
+S (last_ensemble => {;
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+	if (L .isDefined (app_as_playing) (_app)) {
+		if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
+			if (L .isDefined (ensemble_as_start) (_ensemble)) {
+				var start = L .get (ensemble_as_start) (_ensemble)
+				var now = (new Date) .getTime ()
+
+				var playing_app = teacher_app_get_ready_to_playing (_app)
+				if (start > now) {
+					;app_state (playing_app) }
+				else {
+					;setTimeout (_ => {;
+						;app_state (playing_app) }
+					, start - now) } } } }
+	return _ensemble }
+, ensemble_state ())
 	 
 	 
 S (_ => {;
