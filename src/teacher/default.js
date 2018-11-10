@@ -25,7 +25,7 @@ cell_as_choice, student_name,
 pair_as_list, pair_as_first, pair_as_second,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
-teacher_app_get_ready_to_playing, 
+teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next,
 past_stepped,
 current_problem, problem_choice_matches,
@@ -433,19 +433,24 @@ so ((_=_=>
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
-	if (L .isDefined (app_as_playing) (_app) && Z_ .equals (win_rule .first_bingo) (L .get ([ app_as_settings, settings_as_win_rule ]) (_app))) {
-		if (! ensemble_bingoed_positions (last_ensemble)) {
-			if (L .isDefined (ensemble_as_start) (_ensemble)) {
-				var start = L .get (ensemble_as_start) (_ensemble)
+	if (L .isDefined (app_as_playing) (_app)
+  && T (_app) ([ L .get ([ app_as_settings, settings_as_win_rule ]), Z_ .equals (win_rule .first_bingo) ]) ) {
+		if (! Z_ .size (ensemble_bingoed_positions) (last_ensemble)) {
+			if (Z_ .size (ensemble_bingoed_positions) (ensemble)) {
 				var now = (new Date) .getTime ()
 
-				var playing_app = teacher_app_get_ready_to_playing (_app)
-				if (start > now) {
-					;app_state (playing_app) }
-				else {
-					;setTimeout (_ => {;
-						;app_state (playing_app) }
-					, start - now) } } } }
+				var game_over_app = teacher_app_playing_to_game_over (_app)
+        
+        ;go
+        .then (_ =>
+          io_state (io .messaging) && api (_room,
+            post (message_encoding (message .teacher_abort (schedule_start (_ensemble)))))
+          .then (panic_on ([
+            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+        .catch (_e => {;
+          ;console .error (_e) })
+        .then (_ => {;
+          ;io_state (io .inert) }) } } }
 	return _ensemble }
 , ensemble_state ()),
 where

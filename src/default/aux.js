@@ -424,6 +424,11 @@ var teacher_app_get_ready_to_playing = by (_app =>
   ) (({ _room, _settings, _students }) => 
     teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x) (undefined)) )))
 
+var teacher_app_playing_to_game_over =  by (_app => 
+  L .get (
+      [ data_iso (teacher_app .playing)
+      , L .inverse (data_iso (teacher_app .game_over)) ])) 
+
 var student_app_get_ready_to_playing = by (_app =>
   under (complete_ (
 		{	_room: app_as_room
@@ -625,7 +630,7 @@ window .stuff = { ...window .stuff,
   pair_as_list, pair_as_first, pair_as_second,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,
-	teacher_app_get_ready_to_playing, 
+	teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 	student_app_get_ready_to_playing, student_app_playing_to_next,
 	past_stepped,
   current_problem, problem_choice_matches,
