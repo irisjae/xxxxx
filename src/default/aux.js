@@ -221,6 +221,7 @@ var message = data ({
 	teacher_settings: ( settings =~ settings ) => message,
 	teacher_ping: ( ping =~ ping ) => message,
 	teacher_start: ( synchronization =~ timestamp ) => message,
+	teacher_step: ( synchronization =~ timestamp ) => message,
 	teacher_abort: ( synchronization =~ timestamp ) => message,
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
@@ -231,7 +232,8 @@ var ensemble = data ({
 		ping =~ ping,
 		settings =~ settings,
 		start =~ timestamp,
-		abort =~ maybe (timestamp),
+    steps =~ list (timestamp),
+		abort =~ timestamp,
 		student_pings =~ map (student) (ping),
 		student_starts =~ map (student) (timestamp),
 		student_boards =~ map (student) (board),
@@ -316,6 +318,7 @@ var io_as_heartbeat = data_iso (io .heartbeat)
 var message_as_teacher_settings = data_iso (message .teacher_settings)
 var message_as_teacher_ping = data_iso (message .teacher_ping) 
 var message_as_teacher_start = data_iso (message .teacher_start) 
+var message_as_teacher_step = data_iso (message .teacher_step) 
 var message_as_teacher_abort = data_iso (message .teacher_abort) 
 var message_as_student_ping = data_iso (message .student_ping) 
 var message_as_student_join = data_iso (message .student_join) 
@@ -330,6 +333,7 @@ var message_as_past = message_as_student_update .past
 var ensemble_as_settings = data_iso (ensemble .ensemble) .settings 
 var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
 var ensemble_as_start = data_iso (ensemble .ensemble) .start 
+var ensemble_as_steps = data_iso (ensemble .ensemble) .steps 
 var ensemble_as_abort = data_iso (ensemble .ensemble) .abort 
 var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings 
 var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
@@ -552,6 +556,8 @@ var message_encoding = by (message =>
         ) (L .getInverse (ensemble_as_ping))
       , under (message_as_teacher_start
         ) (L .getInverse (ensemble_as_start))
+      , under (message_as_teacher_step
+        ) (L .getInverse (ensemble_as_steps)) 
       , under (message_as_teacher_abort
         ) (L .getInverse (ensemble_as_abort)) 
       , under (message_as_student_ping. ping
