@@ -542,24 +542,24 @@ S (_ => {;
 		go
 		.then (_ =>
 			!! critical && S .sample (connection)
-			? io_state (io .messaging) && api (_room, 
-					post (messages_encoding (
-						so ((_=_=>
-						!! not_playing
+			? so ((_=_=>
+        io_state (io .messaging) && api (_room, 
+          post (messages_encoding (
+            !! not_playing
 						? [ message .student_ping (_student, S .sample (connection)) ]
 						: [ message .student_ping (_student, S .sample (connection))
 							, message .student_join (_student, _board)
-							, message .student_update (_student, _past) ],
-						where
-						, { _board, _past, not_playing } =
-								T (app_state ()
-                ) (
-                L .get (
-                [ complete_ (
-                  { _board: app_as_board
-                  , _past: app_as_past })
-                , L .valueOr (
-                  { not_playing: 'not playing' }) ])) )=>_) ))) 
+							, message .student_update (_student, _past) ]))),
+        where
+        , { _board, _past, not_playing } =
+            T (app_state ()
+            ) (
+            L .get (
+            [ complete_ (
+              { _board: app_as_board
+              , _past: app_as_past })
+            , L .valueOr (
+              { not_playing: 'not playing' }) ])) )=>_)
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
