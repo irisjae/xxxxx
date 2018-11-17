@@ -545,7 +545,7 @@ S (_ => {;
 			? io_state (io .messaging) && api (_room, 
 					post (messages_encoding (
 						so ((_=_=>
-						!! (not_playing)
+						!! not_playing
 						? [ message .student_ping (_student, S .sample (connection)) ]
 						: [ message .student_ping (_student, S .sample (connection))
 							, message .student_join (_student, _board)
