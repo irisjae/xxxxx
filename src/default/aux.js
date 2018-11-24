@@ -497,7 +497,15 @@ var size_patterns = memoize (size =>
 // var current_problem = by (_past =>
 //     L .get ([ past_as_points, L .last, point_as_problem ]))
 var current_problem = by (_app =>
-    L .get ([ past_as_points, L .last, point_as_problem ]))
+  so ((_=_=>
+  L .get ([ past_as_points, progress, point_as_problem ]),
+  where
+  , progress = T (_app) (L .get (app_as_progress)) )=>_))
+var current_problem_solved = _app =>
+  so ((_=_=>
+  Z .equals (Z_ .size (L .get (past_as_points))) (progress + 1),
+  where
+  , progress = T (_app) (L .get (app_as_progress)) )=>_)
 
 var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))

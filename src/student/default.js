@@ -182,9 +182,10 @@ var playing_view = _ => so ((_=_=>
           , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
           } </row> )) } </board> </div> </playing-etc>,
     where
-    , _board = T (app_state ()) (L .get (app_as_board))
-    , _past = T (app_state ()) (L .get (app_as_past))
-    , _current_question = T (_past) ([ current_problem, L .get (problem_as_question) ])
+    , _app = app_state ()
+    , _board = T (_app) (L .get (app_as_board))
+    , _past = T (_app) (L .get (app_as_past))
+    , _current_question = T (_app) ([ current_problem, L .get (problem_as_question) ])
     , _solved_positions = solved_positions (_board) (_past)
     , _bingoed_positions = bingoed_positions (_board) (_past)
     , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
@@ -332,12 +333,11 @@ var connect_room = _ => {;
 var attempt_problem = _position => {;
 	T (S .sample (app_state)) (
     under (complete_ (
-      { _problems: app_as_problems
+      { _problem: current_problem
       , _board: app_as_board
       , _past: app_as_past } )
-    ) (({ _problems, _board, _past }) => {;
+    ) (({ _problem, _board, _past }) => {;
 		//Z_ .chain (board_viewer_current_problem),
-			var _problem = current_problem (_past)
 			var _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
