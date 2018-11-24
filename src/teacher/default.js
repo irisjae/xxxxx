@@ -230,7 +230,7 @@ var playing_view = _ => so ((_=_=>
   where
   , _lookbehind = lookbehind_state () 
   , _problems = T (app_state ()) (L .get (app_as_problems))
-  , _problem = T (app_state ()) (L .get (app_as_past), current_problem)
+  , _problem = T (app_state ()) (current_problem)
   , _students = T (app_state ()) (L .get (app_as_students)) 
   , problem_number = '' // TODO: define this
   , time_left = '' // TODO: define this
