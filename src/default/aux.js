@@ -477,9 +477,9 @@ var problem_choice_matches = problem => choice =>
       str // ast
   , ast_normalize = ast =>
       !! is_normal (ast)
-      ?
+      ? ast
       : so ((_=_=>
-      
+        
         )=>_)
 )=>_)
 
