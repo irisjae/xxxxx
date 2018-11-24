@@ -472,9 +472,16 @@ var problem_choice_matches = problem => choice =>
   Z .equals (normalize (question)) (normalize (choice)),
 	where
   , question = T (problem) (L .get (problem_as_question))
-  , normalize = math =>
+  , str_normalize = $ ([ str_parse, ast_normalize ])
+  , str_parse = str =>
+      str // ast
+  , ast_normalize = ast =>
+      !! is_normal (ast)
+      ?
+      : so ((_=_=>
       
-	, correct_answers = T (problem) (L .get (problem_as_answers)) )=>_)
+        )=>_)
+)=>_)
 
 
 var size_patterns = memoize (size =>
