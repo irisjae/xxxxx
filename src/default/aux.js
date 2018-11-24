@@ -578,7 +578,8 @@ var message_encoding = by (message =>
       , under (message_as_teacher_start
         ) (L .getInverse (ensemble_as_start))
       , under (message_as_teacher_progress
-        ) (L .getInverse ([ ensemble_as_progress ])) 
+        ) (({ progress, synchronization }) =>
+        T (synchronization) (L .getInverse ([ ensemble_as_progress, progress ]))) 
       , under (message_as_teacher_end
         ) (L .getInverse (ensemble_as_end)) 
       , under (message_as_student_ping. ping
