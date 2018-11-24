@@ -179,63 +179,63 @@ var get_ready_view = _ => so ((_=_=>
           ;feedback_state (feedback .play) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
-    !! L .isDefined (lookbehind_nothing) (_lookbehind)
-    ? <playing-etc>
-        <title-etc>
-          <a-title>Bingo</a-title>
-          <problem-number>第{ problem_number }題</problem-number></title-etc>
-        <problem-etc>
-          <ticker>{ time_left }</ticker>
-          <question>{ question }</question></problem-etc>
-        <options-etc>
-          <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
-          <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button></options-etc></playing-etc>
-    :!! L .isDefined (lookbehind_view_students) (_lookbehind)
-    ? <playing-etc>
-        <problem-etc>
-          <problem-text>{ _problem }</problem-text>
-          <countdown>{ time_elapsed }</countdown> </problem-etc>
-        <students>
-          { T (_students
-            ) (
-            [ L .collect (
-              [ L .elems
-              , pair_as_second ])
-            , Z_ .map (([_board, _past]) =>
-              <student-etc>
-                { so ((_=_=>
-                <board> { T (_board) (Z_ .map (_row => 
-                  <row> { T (_row) (Z_ .map (_cell =>
-                    so ((_=_=>
-                    !! (_cell_bingo) ? <cell x-bingoed></cell>
-                    :!! (_cell_solved) ? <cell x-solved></cell>
-                    : <cell></cell>,
-                    where
-                    , _cell_position = T (_cell) (L .get (cell_as_position))
-                    , _cell_solved = Z .elem (_cell_position) (_solved_positions)
-                    , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
-                    } </row> )) } </board>,
-                where
-                , _solved_positions = solved_positions (_board) (_past)
-                , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
-    :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
-    ? <playing-etc>
-        <abort-etc>
-          <div class="box">
-            <label>結束遊戲？</label>
-            <options>
-              <button x-custom x-for="confirm" fn={ confirm_end }><img src={ confirm_img } /></button>
-              <button x-custom x-for="cancel" fn={ cancel_end }><img src={ cancel_img } /></button></options></div></abort-etc></playing-etc>
-    : panic ('unknown lookbehind state'),
+  !! L .isDefined (lookbehind_nothing) (_lookbehind)
+  ? <playing-etc>
+      <title-etc>
+        <a-title>Bingo</a-title>
+        <problem-number>第{ problem_number }題</problem-number></title-etc>
+      <problem-etc>
+        <ticker>{ time_left }</ticker>
+        <question>{ question }</question></problem-etc>
+      <options-etc>
+        <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
+        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button></options-etc></playing-etc>
+  :!! L .isDefined (lookbehind_view_students) (_lookbehind)
+  ? <playing-etc>
+      <problem-etc>
+        <problem-text>{ _problem }</problem-text>
+        <countdown>{ time_elapsed }</countdown> </problem-etc>
+      <students>
+        { T (_students
+          ) (
+          [ L .collect (
+            [ L .elems
+            , pair_as_second ])
+          , Z_ .map (([_board, _past]) =>
+            <student-etc>
+              { so ((_=_=>
+              <board> { T (_board) (Z_ .map (_row => 
+                <row> { T (_row) (Z_ .map (_cell =>
+                  so ((_=_=>
+                  !! (_cell_bingo) ? <cell x-bingoed></cell>
+                  :!! (_cell_solved) ? <cell x-solved></cell>
+                  : <cell></cell>,
+                  where
+                  , _cell_position = T (_cell) (L .get (cell_as_position))
+                  , _cell_solved = Z .elem (_cell_position) (_solved_positions)
+                  , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
+                  } </row> )) } </board>,
+              where
+              , _solved_positions = solved_positions (_board) (_past)
+              , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
+  :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
+  ? <playing-etc>
+      <abort-etc>
+        <div class="box">
+          <label>結束遊戲？</label>
+          <options>
+            <button x-custom x-for="confirm" fn={ confirm_end }><img src={ confirm_img } /></button>
+            <button x-custom x-for="cancel" fn={ cancel_end }><img src={ cancel_img } /></button></options></div></abort-etc></playing-etc>
+  : panic ('unknown lookbehind state'),
   where
   , _lookbehind = lookbehind_state () 
-  , _problems = T (app_state ()) (L .get (app_as_problems))
-  , _problem = T (app_state ()) (current_problem)
-  , _students = T (app_state ()) (L .get (app_as_students)) 
-  , problem_number = '' // TODO: define this
+  , _app = app_state ()
+  , _problem = T (_app) (current_problem)
+  , _students = T (_app) (L .get (app_as_students)) 
+  , problem_number = T (_app) (L .get (app_as_progress))
   , time_left = '' // TODO: define this
   , time_elapsed = '' // TODO: define this
-  , question = '' // TODO: define this
+  , question = T (_problem) (problem_as_question)
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
