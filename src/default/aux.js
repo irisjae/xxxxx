@@ -221,8 +221,8 @@ var message = data ({
 	teacher_settings: ( settings =~ settings ) => message,
 	teacher_ping: ( ping =~ ping ) => message,
 	teacher_start: ( synchronization =~ timestamp ) => message,
-	teacher_step: ( progress =~ nat, synchronization =~ timestamp ) => message,
-	teacher_abort: ( synchronization =~ timestamp ) => message,
+	teacher_progress: ( progress =~ nat, synchronization =~ timestamp ) => message,
+	teacher_end: ( synchronization =~ timestamp ) => message,
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
@@ -232,8 +232,8 @@ var ensemble = data ({
 		ping =~ ping,
 		settings =~ settings,
 		start =~ timestamp,
-    steps =~ list (timestamp),
-		abort =~ timestamp,
+    progress =~ list (timestamp),
+		end =~ timestamp,
 		student_pings =~ map (student) (ping),
 		student_starts =~ map (student) (timestamp),
 		student_boards =~ map (student) (board),
@@ -319,8 +319,8 @@ var io_as_heartbeat = data_iso (io .heartbeat)
 var message_as_teacher_settings = data_iso (message .teacher_settings)
 var message_as_teacher_ping = data_iso (message .teacher_ping) 
 var message_as_teacher_start = data_iso (message .teacher_start) 
-var message_as_teacher_step = data_iso (message .teacher_step) 
-var message_as_teacher_abort = data_iso (message .teacher_abort) 
+var message_as_teacher_progress = data_iso (message .teacher_progress) 
+var message_as_teacher_end = data_iso (message .teacher_end) 
 var message_as_student_ping = data_iso (message .student_ping) 
 var message_as_student_join = data_iso (message .student_join) 
 var message_as_student_start = data_iso (message .student_start) 
@@ -334,8 +334,8 @@ var message_as_past = message_as_student_update .past
 var ensemble_as_settings = data_iso (ensemble .ensemble) .settings 
 var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
 var ensemble_as_start = data_iso (ensemble .ensemble) .start 
-var ensemble_as_steps = data_iso (ensemble .ensemble) .steps 
-var ensemble_as_abort = data_iso (ensemble .ensemble) .abort 
+var ensemble_as_progress = data_iso (ensemble .ensemble) .progress 
+var ensemble_as_end = data_iso (ensemble .ensemble) .end 
 var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings 
 var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
 var ensemble_as_student_starts = data_iso (ensemble .ensemble) .student_starts 
@@ -550,7 +550,7 @@ var bingoed_positions = _board => _past =>
 
 
 
-var past_stepped = old_past => curr_past =>
+var past_progressed = old_past => curr_past =>
   so ((_=_=>
   Z_ .size (curr) > Z_ .size (old),
   where
@@ -577,10 +577,10 @@ var message_encoding = by (message =>
         ) (L .getInverse (ensemble_as_ping))
       , under (message_as_teacher_start
         ) (L .getInverse (ensemble_as_start))
-      , under (message_as_teacher_step
-        ) (L .getInverse (ensemble_as_steps)) 
-      , under (message_as_teacher_abort
-        ) (L .getInverse (ensemble_as_abort)) 
+      , under (message_as_teacher_progress
+        ) (L .getInverse ([ ensemble_as_progress ])) 
+      , under (message_as_teacher_end
+        ) (L .getInverse (ensemble_as_end)) 
       , under (message_as_student_ping. ping
         ) (L .getInverse ([ ensemble_as_student_pings, student ]))
       , under (message_as_student_join. board
@@ -647,7 +647,7 @@ window .stuff = { ...window .stuff,
 	settings_as_problems, settings_as_rules,
   settings_as_size, settings_as_time_limit, settings_as_win_rule,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
-	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_steps, ensemble_as_abort,
+	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_progress, ensemble_as_end,
 	ensemble_as_student_pings, ensemble_as_student_starts,
 	ensemble_as_student_boards, ensemble_as_student_pasts,
   attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
@@ -663,6 +663,6 @@ window .stuff = { ...window .stuff,
 	assemble_students, schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-	past_stepped,
+	past_progressed,
   current_problem, problem_choice_matches,
   attempted_positions, solved_positions, bingoed_positions }
