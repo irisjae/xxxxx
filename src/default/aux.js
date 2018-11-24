@@ -196,12 +196,12 @@ var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) 
 var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
 	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
-	playing: ( room =~ room, settings =~ settings, students =~ map (student) (board, past) ) => teacher_app,
+	playing: ( room =~ room, settings =~ settings, students =~ map (student) (board, past), progress = nat ) => teacher_app,
 	game_over: ( room =~ room, settings =~ settings, students =~ map (student) (board, past) ) => teacher_app })
 
 var student_app = data ({
 	get_ready: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
-	playing: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past ) => student_app,
+	playing: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past, progress = nat ) => student_app,
 	game_over: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past ) => student_app })
 
 /*
@@ -310,6 +310,7 @@ var app_as_room = [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
+var app_as_progress = [ 'playing', 'progress' ]
 
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
@@ -493,7 +494,9 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
-var current_problem = by (_past =>
+// var current_problem = by (_past =>
+//     L .get ([ past_as_points, L .last, point_as_problem ]))
+var current_problem = by (_app =>
     L .get ([ past_as_points, L .last, point_as_problem ]))
 
 var attempted_positions = by (_past =>
@@ -622,7 +625,7 @@ window .stuff = { ...window .stuff,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
 	as_maybe, as_defined, as_complete, complete_,
-	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over,
+	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 	settings_as_problems, settings_as_rules,
   settings_as_size, settings_as_time_limit, settings_as_win_rule,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
