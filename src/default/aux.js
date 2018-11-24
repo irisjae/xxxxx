@@ -168,6 +168,7 @@ var list = a => fiat
 var map = a => (...b) => list (v (a, ...b))
 var maybe = a => fiat
 var nat = fiat
+var integer = fiat
 var id = string
 var v = (...types) => fiat
 var piece = (...types) => fiat
@@ -466,6 +467,16 @@ var student_app_playing_to_game_over =  by (_app =>
     [ data_iso (student_app .playing)
     , L .inverse (data_iso (student_app .game_over)) ]))
 				 
+
+var normal = data ({
+  normal: (numerator =~ integer, denominator =~ integer) => normal })
+var ast = data ({
+  normal: (normal =~ normal) => ast,
+  add: (left =~ normal, right =~ normal) => ast,
+  minus: (left =~ normal, right =~ normal) => ast,
+  multiply: (left =~ normal, right =~ normal) => ast,
+  divide: (left =~ normal, right =~ normal) => ast
+})
 
 var problem_choice_matches = problem => choice =>
 	so ((_=_=>
