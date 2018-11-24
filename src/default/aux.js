@@ -221,7 +221,7 @@ var message = data ({
 	teacher_settings: ( settings =~ settings ) => message,
 	teacher_ping: ( ping =~ ping ) => message,
 	teacher_start: ( synchronization =~ timestamp ) => message,
-	teacher_step: ( synchronization =~ timestamp ) => message,
+	teacher_step: ( progress =~ nat, synchronization =~ timestamp ) => message,
 	teacher_abort: ( synchronization =~ timestamp ) => message,
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
