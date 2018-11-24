@@ -469,8 +469,11 @@ var student_app_playing_to_game_over =  by (_app =>
 
 var problem_choice_matches = problem => choice =>
 	so ((_=_=>
-	Z .elem (choice) (correct_answers),
+  Z .equals (normalize (question)) (normalize (choice)),
 	where
+  , question = T (problem) (L .get (problem_as_question))
+  , normalize = math =>
+      
 	, correct_answers = T (problem) (L .get (problem_as_answers)) )=>_)
 
 
