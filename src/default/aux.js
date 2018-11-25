@@ -483,7 +483,19 @@ var problem_choice_matches = problem => choice =>
 	where
   , question = T (problem) (L .get (problem_as_question))
   , str_normalize = $ ([ str_parse, ast_normalize ])
-  , str_parse = so ((L .cond (
+  , str_parse = so ((_=_=> so (( 
+      define
+      , order = [ '/', '*', '-', '+' ]
+      ) =>
+      apply (L .cond) (Z_ .concat (T (order) (Z_ .map (symbol => 
+        [ R .includes (symbol), str => so ((_=_=>
+            ast .divide (left, right),
+            where
+            , at = R .indexOf (symbol) (str) 
+            , left = str_parse (str .slice (0, at))                                      
+            , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ))
+        ) ([ str => ast .normal (  ) ]) )
+      L .cond (
       [ R .includes ('/'), str => so ((_=_=>
           ast .divide (left, right),
           where
