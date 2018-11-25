@@ -475,8 +475,7 @@ var ast = data ({
   add: (left =~ normal, right =~ normal) => ast,
   minus: (left =~ normal, right =~ normal) => ast,
   multiply: (left =~ normal, right =~ normal) => ast,
-  divide: (left =~ normal, right =~ normal) => ast
-})
+  divide: (left =~ normal, right =~ normal) => ast })
 
 var problem_choice_matches = problem => choice =>
 	so ((_=_=>
