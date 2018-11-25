@@ -483,10 +483,12 @@ var problem_choice_matches = problem => choice =>
 	where
   , question = T (problem) (L .get (problem_as_question))
   , str_normalize = $ ([ str_parse, ast_normalize ])
-  , str_parse = str =>
+  , str_parse = by (str =>
+      L .cond (
+        [])
       !! Z .not (Z .equals (R .indexOf ('/') (str)) (-1))
       ? 
-      str // ast
+      str )// ast
   , ast_normalize = ast =>
       !! is_normal (ast)
       ? ast
