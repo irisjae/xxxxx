@@ -483,10 +483,9 @@ var problem_choice_matches = problem => choice =>
 	where
   , question = T (problem) (L .get (problem_as_question))
   , str_normalize = $ ([ str_parse, ast_normalize ])
-  , str_parse = so ((_=_=> so (( 
+  , str_parse = so (( 
       define
-      , order = [ '/', '*', '-', '+' ]
-      ) =>
+      , order = [ '/', '*', '-', '+' ] ) =>
       apply (L .cond) (Z_ .concat (T (order) (Z_ .map (symbol => 
         [ R .includes (symbol), str => so ((_=_=>
             ast .divide (left, right),
@@ -494,39 +493,15 @@ var problem_choice_matches = problem => choice =>
             , at = R .indexOf (symbol) (str) 
             , left = str_parse (str .slice (0, at))                                      
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ))
-        ) ([ str => ast .normal (  ) ]) )
-      L .cond (
-      [ R .includes ('/'), str => so ((_=_=>
-          ast .divide (left, right),
-          where
-          , at = R .indexOf ('/') (str) 
-          , left = str_parse (str .slice (0, at))                                      
-          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ],
-      [ R .includes ('*'), str => so ((_=_=>
-          ast .multiply (left, right),
-          where
-          , at = R .indexOf ('/') (str) 
-          , left = str_parse (str .slice (0, at))                                      
-          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ],
-      [ R .includes ('*'), str => so ((_=_=>
-          ast .multiply (left, right),
-          where
-          , at = R .indexOf ('/') (str) 
-          , left = str_parse (str .slice (0, at))                                      
-          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ],
-      [ R .includes ('*'), str => so ((_=_=>
-          ast .multiply (left, right),
-          where
-          , at = R .indexOf ('/') (str) 
-          , left = str_parse (str .slice (0, at))                                      
-          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] )
-  , ast_normalize = ast =>
-      !! is_normal (ast)
-      ? ast
-      : so //((_=_=>
-        
-        //)=>_)
-)=>_)
+        ) ([ str => ast .normal ( normal .normal ( str * 1, 1 ) ) ]) ) ) //assuming str is integer
+  , ast_normalize = L .cond (
+      [ data_iso (ast .normal),  ] )
+  , gcd = a => b =>
+      !! Z .equals (b) (0)
+      ? a
+      : gcd (b) (a % b)
+      
+      )=>_)
 
 
 var size_patterns = memoize (size =>
