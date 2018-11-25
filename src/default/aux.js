@@ -495,7 +495,15 @@ var problem_choice_matches = problem => choice =>
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ))
         ) ([ str => ast .normal ( normal .normal ( str * 1, 1 ) ) ]) ) ) //assuming str is integer
   , ast_normalize = L .cond (
-      [ data_iso (ast .normal),  ] )
+      [ data_iso (ast .normal), under (data_iso (ast .normal)) (normal =>) ],
+      [ data_iso (ast .add), under (data_iso (ast .add)) (({ left, right }) => so ((
+          define
+          , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (left)
+          , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (right)
+          , n = left_numerator * right_denominaotr - right_numerator * left_denominator
+          , d = left_denominator * right_denominaotr ) =>
+          ast .normal (normal .normal (ast_normalize (left))) ],
+                                                               )
   , gcd = a => b =>
       !! Z .equals (b) (0)
       ? a
