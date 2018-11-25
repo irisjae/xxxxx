@@ -483,11 +483,31 @@ var problem_choice_matches = problem => choice =>
 	where
   , question = T (problem) (L .get (problem_as_question))
   , str_normalize = $ ([ str_parse, ast_normalize ])
-  , str_parse =  L .cond (
-      [ R .includes ('/'),   ] )
-      !! Z .not (Z .equals (R .indexOf ('/') (str)) (-1))
-      ? 
-      str // ast
+  , str_parse = so ((L .cond (
+      [ R .includes ('/'), str => so ((_=_=>
+          ast .divide (left, right),
+          where
+          , at = R .indexOf ('/') (str) 
+          , left = str_parse (str .slice (0, at))                                      
+          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ],
+      [ R .includes ('*'), str => so ((_=_=>
+          ast .multiply (left, right),
+          where
+          , at = R .indexOf ('/') (str) 
+          , left = str_parse (str .slice (0, at))                                      
+          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ],
+      [ R .includes ('*'), str => so ((_=_=>
+          ast .multiply (left, right),
+          where
+          , at = R .indexOf ('/') (str) 
+          , left = str_parse (str .slice (0, at))                                      
+          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ],
+      [ R .includes ('*'), str => so ((_=_=>
+          ast .multiply (left, right),
+          where
+          , at = R .indexOf ('/') (str) 
+          , left = str_parse (str .slice (0, at))                                      
+          , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] )
   , ast_normalize = ast =>
       !! is_normal (ast)
       ? ast
