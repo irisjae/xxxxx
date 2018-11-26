@@ -442,10 +442,10 @@ S (last_app => {;
 	return app_state () }
 , app_state ())
 S (last_app => {;
-	var last_past = T (last_app) (L .get (app_as_past))
-	var past = T (app_state ()) (L .get (app_as_past))
+	var last_progress = T (last_app) (L .get (app_as_progress))
+	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_past && past && past_progressed (last_past) (past)) {
+		if (last_progress && progress && Z .not (Z .equals (last_progress) (progress))) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -463,10 +463,10 @@ S (_ => {;
 	if (L .isDefined (app_as_get_ready) (app_state ())) {
 		;game_clock .pause () } })
 S (last_state => {;
-	var last_past = T (last_state) (L .get (app_as_past))
-	var past = T (app_state ()) (L .get (app_as_past))
+	var last_progress = T (last_state) (L .get (app_as_progress))
+	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_past && past && past_progressed (last_past) (past)) {
+		if (last_progress && progress && Z .not (Z .equals (last_progress) (progress))) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
