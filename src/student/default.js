@@ -441,7 +441,7 @@ S (last_app => {;
 	var last_progress = T (last_app) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_progress && progress && Z .not (Z .equals (last_progress) (progress))) {
+		if (last_progress !== undefined && progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -462,7 +462,7 @@ S (last_state => {;
 	var last_progress = T (last_state) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_progress && progress && Z .not (Z .equals (last_progress) (progress))) {
+		if (last_progress !== undefined && progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
