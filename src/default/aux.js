@@ -562,7 +562,7 @@ var size_patterns = memoize (size =>
 //     L .get ([ past_as_points, L .last, point_as_problem ]))
 var current_problem = by (_app =>
   so ((_=_=>
-  L .get ([ past_as_points, progress, point_as_problem ]),
+  L .get ([ app_as_problems, progress ]),
   where
   , progress = T (_app) (L .get (app_as_progress)) )=>_))
 var current_problem_solved = _app =>
