@@ -477,11 +477,11 @@ var ast = data ({
   multiply: (left =~ normal, right =~ normal) => ast,
   divide: (left =~ normal, right =~ normal) => ast })
 
-var problem_choice_matches = problem => choice =>
+var problem_choice_matches = _problem => _choice =>
 	so ((_=_=>
-  Z .equals (normalize (question)) (normalize (choice)),
+  Z .equals (normalize (_question)) (normalize (_choice)),
 	where
-  , question = T (problem) (L .get (problem_as_question))
+  , _question = T (_problem) (L .get (problem_as_question))
   , str_parse = so (( 
       define
       , order = [ '/', '*', '-', '+' ] ) =>

@@ -12,7 +12,7 @@ dependencies:
   koa-static: 4.0.3
   koa-websocket: 5.0.1
   partial.lenses: 14.17.0
-  ramda: 0.26.0
+  ramda: 0.25.0
   s-js: 0.4.9
   sanctuary: 0.15.0
   surplus: 0.5.3
@@ -486,10 +486,10 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
-  /ramda/0.26.0:
+  /ramda/0.25.0:
     dev: false
     resolution:
-      integrity: sha512-maK1XqpgsOo5DwjhROjqDvpm1vkphLQbpleVv+b3t5Y9uOQ0t8hTHT582+mDs7RLrex1kd4lWYizNXWLVjsq9w==
+      integrity: sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
   /raw-body/2.3.3:
     dependencies:
       bytes: 3.0.0
@@ -693,7 +693,7 @@ specifiers:
   koa-static: ^4.0.3
   koa-websocket: ^5.0.1
   partial.lenses: ^14.17.0
-  ramda: ^0.26.0
+  ramda: ^0.25.0
   s-js: ^0.4.9
   sanctuary: ^0.15.0
   surplus: ^0.5.3
