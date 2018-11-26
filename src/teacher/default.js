@@ -235,7 +235,7 @@ var playing_view = _ => so ((_=_=>
   , problem_number = T (_app) (L .get (app_as_progress))
   , time_left = '' // TODO: define this
   , time_elapsed = '' // TODO: define this
-  , question = T (_problem) (problem_as_question)
+  , question = T (_problem) (L .get (problem_as_question))
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
