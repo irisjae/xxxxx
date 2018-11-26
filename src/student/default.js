@@ -335,27 +335,21 @@ var attempt_problem = _position => {;
     under (complete_ (
       { _problem: current_problem
       , _board: app_as_board
-      , _past: app_as_past } )
-    ) (({ _problem, _board, _past }) => {;
+      , _point: app_as_last_point } )
+    ) (({ _problem, _board, _point }) => {;
 		//Z_ .chain (board_viewer_current_problem),
-			var _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
+      var completed = under ([ point_as_attempts, ]) || false 
+                                          
+                                       
 			if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
 				var latency = game_clock .time () //lookbehind_latency ()
-        if (problem_choice_matches (_problem) (_choice)) {
-          ;app_state (
-            T (S .sample (app_state)
-            ) (
-            [ $ (L .set
-              ) ([app_as_last_point, point_as_attempts, L .appendTo]
-              ) ([_position, latency])
-            , student_app_playing_to_next ])) }
-        else {
-          ;app_state (
-            T (S .sample (app_state)
-            ) (
-            $ (L .set
-            ) ([app_as_last_point, point_as_attempts, L .appendTo]
-            ) ([_position, latency]) ))
+        ;app_state (
+          T (S .sample (app_state)
+          ) (
+          $ (L .set
+          ) ([app_as_last_point, point_as_attempts, L .appendTo]
+          ) ([_position, latency]) ))
+        if (Z .not (problem_choice_matches (_problem) (_choice))) {
           ;lookbehind_state (lookbehind .attempting (latency, true)) } } })) }
 
 var timesup_problem = _ => {;
