@@ -428,7 +428,7 @@ var teacher_app_get_ready_to_playing = by (_app =>
     , _settings: app_as_settings
     , _students: app_as_students })
   ) (({ _room, _settings, _students }) => 
-    teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x) (undefined)) )))
+    teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x) (undefined)), 0)))
 
 var teacher_app_playing_to_game_over =  by (_app => 
   L .get (
@@ -442,7 +442,7 @@ var student_app_get_ready_to_playing = by (_app =>
 		,	_settings: app_as_settings })
   ) (({ _room, _student, _settings }) =>
 		so ((_=_=>
-		student_app .playing (_room, _settings, _student, random_board, fresh_past),
+		student_app .playing (_room, _settings, _student, random_board, fresh_past, 0),
 		where 
 		, _size = L .get (settings_as_size) (_settings)
 		, _problems = L .get (settings_as_problems) (_settings)
