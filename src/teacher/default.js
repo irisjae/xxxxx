@@ -19,7 +19,7 @@ app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progres
 settings_as_problems, settings_as_rules,
 settings_as_size, settings_as_time_limit, settings_as_win_rule,
 io_as_inert, io_as_connecting, io_as_heartbeat,
-ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_steps, ensemble_as_abort,
+ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_progress, ensemble_as_end,
 ensemble_as_student_pings, ensemble_as_student_starts,
 ensemble_as_student_boards, ensemble_as_student_pasts,
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
@@ -35,7 +35,7 @@ message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-past_stepped,
+past_progressed,
 current_problem, problem_choice_matches,
 attempted_positions, solved_positions, bingoed_positions
 } = window .stuff

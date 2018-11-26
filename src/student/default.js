@@ -19,7 +19,7 @@ app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progres
 settings_as_problems, settings_as_rules,
 settings_as_size, settings_as_time_limit, settings_as_win_rule,
 io_as_inert, io_as_connecting, io_as_heartbeat,
-ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_steps, ensemble_as_abort,
+ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_progress, ensemble_as_end,
 ensemble_as_student_pings, ensemble_as_student_starts,
 ensemble_as_student_boards, ensemble_as_student_pasts,
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
@@ -35,7 +35,7 @@ message_encoding, messages_encoding,
 assemble_students, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-past_stepped,
+past_progressed,
 current_problem, problem_choice_matches,
 attempted_positions, solved_positions, bingoed_positions
 } = window .stuff
@@ -445,7 +445,7 @@ S (last_app => {;
 	var last_past = T (last_app) (L .get (app_as_past))
 	var past = T (app_state ()) (L .get (app_as_past))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_past && past && past_stepped (last_past) (past)) {
+		if (last_past && past && past_progressed (last_past) (past)) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -466,7 +466,7 @@ S (last_state => {;
 	var last_past = T (last_state) (L .get (app_as_past))
 	var past = T (app_state ()) (L .get (app_as_past))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_past && past && past_stepped (last_past) (past)) {
+		if (last_past && past && past_progressed (last_past) (past)) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
@@ -521,8 +521,8 @@ S (last_ensemble => {;
 	, _app = S .sample (app_state)
 	, _ensemble = ensemble_state () ) => {;
 	if (L .isDefined (app_as_playing) (_app)) {
-		if (! L .isDefined (ensemble_as_abort) (last_ensemble)) {
-			if (L .isDefined (ensemble_as_abort) (_ensemble)) {
+		if (! L .isDefined (ensemble_as_end) (last_ensemble)) {
+			if (L .isDefined (ensemble_as_end) (_ensemble)) {
 				;app_state (
           T (_app) (student_app_playing_to_game_over)) } } } })
 	return ensemble_state () }
