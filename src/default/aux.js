@@ -488,14 +488,14 @@ var problem_choice_matches = _problem => _choice =>
           , '-': 'minus'
           , '*': 'multiply'
           , '/': 'divide' } ) =>
-      apply (L .cond) (Z_ .concat (T (order) (Z_ .map (symbol => 
-        [ R .includes (symbol), str => so ((_=_=>
+      L .get (apply (L .cond) (Z_ .concat (T (order) (Z_ .map (symbol => 
+        [ R .includes (symbol), [ str => so ((_=_=>
             ast [operation [symbol]] (left, right),
             where
             , at = R .indexOf (symbol) (str) 
             , left = str_parse (str .slice (0, at))                                      
-            , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ))
-        ) ([ str => ast .normal ( str * 1, 1 ) ]) ) ) //assuming str is integer
+            , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
+        ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
   , ast_normalize = L .cond (
       [ data_iso (ast .normal), Z_ .I ],
       [ data_iso (ast .add), under (data_iso (ast .add)) (({ left, right }) => so ((
@@ -513,7 +513,7 @@ var problem_choice_matches = _problem => _choice =>
           , n = left_numerator * right_denominator - right_numerator * left_denominator
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
-          ast .normal (n / factor, d / factor) )) ]
+          ast .normal (n / factor, d / factor) )) ],
       [ data_iso (ast .multiply), under (data_iso (ast .multiply)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
@@ -521,7 +521,7 @@ var problem_choice_matches = _problem => _choice =>
           , n = left_numerator * right_numerator
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
-          ast .normal (n / factor, d / factor) )) ]
+          ast .normal (n / factor, d / factor) )) ],
       [ data_iso (ast .divide), under (data_iso (ast .divide)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
