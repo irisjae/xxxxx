@@ -475,6 +475,7 @@ var ast = data ({
   multiply: (left =~ ast, right =~ ast) => ast,
   divide: (left =~ ast, right =~ ast) => ast })
 
+// TODO: simplify this
 var problem_choice_matches = _problem => _choice =>
 	so ((_=_=>
   Z .equals (normalize (_question)) (normalize (_choice)),
@@ -496,9 +497,9 @@ var problem_choice_matches = _problem => _choice =>
             , left = str_parse (str .slice (0, at))                                      
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
         ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
-  , ast_normalize = L .cond (
-      [ data_iso (ast .normal), Z_ .I ],
-      [ data_iso (ast .add), under (data_iso (ast .add)) (({ left, right }) => so ((
+  , ast_normalize = L .get (L .cond (
+      [ L .isDefined (data_iso (ast .normal)), Z_ .I ],
+      [ L .isDefined (data_iso (ast .add)), under (data_iso (ast .add)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
           , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
@@ -506,7 +507,7 @@ var problem_choice_matches = _problem => _choice =>
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
           ast .normal (n / factor, d / factor) )) ],
-      [ data_iso (ast .minus), under (data_iso (ast .minus)) (({ left, right }) => so ((
+      [ L .isDefined (data_iso (ast .minus)), under (data_iso (ast .minus)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
           , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
@@ -514,7 +515,7 @@ var problem_choice_matches = _problem => _choice =>
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
           ast .normal (n / factor, d / factor) )) ],
-      [ data_iso (ast .multiply), under (data_iso (ast .multiply)) (({ left, right }) => so ((
+      [ L .isDefined (data_iso (ast .multiply)), under (data_iso (ast .multiply)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
           , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
@@ -522,14 +523,14 @@ var problem_choice_matches = _problem => _choice =>
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
           ast .normal (n / factor, d / factor) )) ],
-      [ data_iso (ast .divide), under (data_iso (ast .divide)) (({ left, right }) => so ((
+      [ L .isDefined (data_iso (ast .divide)), under (data_iso (ast .divide)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
           , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
           , n = left_numerator * right_denominator
           , d = left_denominator * right_numerator
           , factor = gcd (n) (d) ) =>
-          ast .normal (n / factor, d / factor) )) ] ) 
+          ast .normal (n / factor, d / factor) )) ] )) 
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
       !! Z .equals (b) (0)
