@@ -583,7 +583,7 @@ var solved_positions = _board => _past => so ((_=_=>
     ? [ _position ]
     : [],
     where
-    , _problem = T (_point) (L .get ([ point_as_problem ]))
+    , _problem = T (_point) (L .get (point_as_problem))
     , _position = T (_point) (L .get (point_as_position))
     , _choice = T (_position) (map_defined (_position =>
         T (_board) (L .get ([ as_position (_position), cell_as_choice ]))))  )=>_))),
