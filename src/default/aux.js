@@ -575,17 +575,18 @@ var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 
+// make this more elegant
 var solved_positions = _board => _past => so ((_=_=>
   T (_points
   ) (
   Z .chain (_point => so ((_=_=>
-    !! (problem_choice_matches (_problem) (_choice))
+    !! (_position && problem_choice_matches (_problem) (_choice))
     ? [ _position ]
     : [],
     where
     , _problem = T (_point) (L .get (point_as_problem))
     , _position = T (_point) (L .get (point_as_position))
-    , _choice =  T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))),
+    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))),
   where
   , _points = T (_past) (L .get (past_as_points)) )=>_)
 
