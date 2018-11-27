@@ -274,7 +274,7 @@ var default_settings = settings .settings (default_problems, default_rules)
 
 
 var to_maybe = default_fn => _x => 
-	!! (Z .is (Z .MaybeType (Z$ .Any))) (_x)
+	!! (Z_ .is (Z_ .MaybeType (Z$ .Any))) (_x)
 	? _x
 	: default_fn (_x)
 
@@ -291,7 +291,7 @@ var pair_as_v = L .iso (
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
 var as_defined = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
-var as_defined_ = L .ifElse ($ (Z_ .is (Z .MaybeType (Z$ .Any)))) (as_defined) (L .identity)
+var as_defined_ = L .ifElse ($ (Z_ .is (Z_ .MaybeType (Z$ .Any)))) (as_defined) (L .identity)
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
@@ -370,7 +370,7 @@ var cell_as_choice = [ 2 ]
 var as_position = ([x, y]) => [x - 1, y - 1]
 
 var pair_as_list = L .cond (
-	[ _x => Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_x)
+	[ _x => Z_ .is (Z_ .PairType (Z$ .Any) (Z$ .Any)) (_x)
 	, [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
 		, L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] /**/, [L .zero]/**/)
 
