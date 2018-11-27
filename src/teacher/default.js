@@ -439,7 +439,7 @@ S (last_ensemble => {;
         
         var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
         game_clock .clear ()
-        var game_tick_sampler = S .data (Z time_limito
+        ;game_clock .add (timesup_problem, time_limit)
         ;T (Z .range (0) (time_limit + 1)) (R .forEach (t => {;
           ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
         
