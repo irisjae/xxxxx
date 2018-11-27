@@ -437,10 +437,11 @@ S (last_ensemble => {;
 
 				var playing_app = teacher_app_get_ready_to_playing (_app)
         
-        var game_tick_sampler = S .data (Z .Nothing)
-        ;game_clock .add (timesup_problem, 10)
-        ;T (Z .range (0) (10 + 1)) (R .forEach (t => {;
-          ;game_clock .add (_ => { ;game_tick_sampler (t) }, t) }))
+        var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+        game_clock .clear ()
+        var game_tick_sampler = S .data (Z time_limito
+        ;T (Z .range (0) (time_limit + 1)) (R .forEach (t => {;
+          ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
         
 				if (start > now) {
 					;app_state (playing_app) }
