@@ -328,9 +328,7 @@ var start_playing = _ => {;
 
 var timesup_problem = _ => {;
 	;app_state (
-    teacher_app_playing_to_next (S .sample (app_state))) 
-	//;app_state (student_app_next_playing (app_state ()))
-}
+    teacher_app_playing_to_next (S .sample (app_state))) }
 
 var end_game = _ => {;
   var now = (new Date) .getTime ()
