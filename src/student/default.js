@@ -340,7 +340,7 @@ var attempt_problem = _position => {;
       var board_choice = _board => _position =>
 			  T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
         
-      var _completed = under (point_as_position) ($ ([ board_choice (_board), problem_choice_matches (_problem) ])) || false 
+      var _completed = under (point_as_position) ($ ([ board_choice (_board), problem_choice_matches (_problem) ])) (_point) || false 
       if (Z .not (_completed)) {
         var _choice = board_choice (_board) (_position)
         if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
