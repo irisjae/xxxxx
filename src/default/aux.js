@@ -435,6 +435,19 @@ var teacher_app_playing_to_game_over =  by (_app =>
     [ data_iso (teacher_app .playing)
     , L .inverse (data_iso (teacher_app .game_over)) ])) 
 
+var teacher_app_playing_to_next = 
+	by (_app => 
+		so ((_=_=>
+		!! Z .not (game_over_ok)
+		? $ (
+      [ L .set (app_as_progress) (progress + 1)
+      , L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, [])) ] )
+		: student_app_playing_to_game_over,
+		where
+		, progress = T (_app) (L .get (app_as_progress))
+    , next_problem = T (_app) (L .get ([ app_as_problems, progress + 1 ]))
+    , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
+
 var student_app_get_ready_to_playing = by (_app =>
   under (complete_ (
 		{	_room: app_as_room

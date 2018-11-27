@@ -327,6 +327,8 @@ var start_playing = _ => {;
 			;io_state (io .inert) }) })) }
 
 var timesup_problem = _ => {;
+	;app_state (
+    teacher_app_playing_to_next (S .sample (app_state))) 
 	//;app_state (student_app_next_playing (app_state ()))
 }
 
