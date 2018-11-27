@@ -477,12 +477,13 @@ var ast = data ({
   divide: (left =~ ast, right =~ ast) => ast })
 
 // TODO: simplify this
-var problem_choice_matches = _problem => _choice =>
-	so ((_=_=>
-  Z .equals (normalize (_question)) (normalize (_choice)),
-	where
-  , _question = T (_problem) (L .get (problem_as_question))
-  , str_parse = so (( 
+var problem_choice_matches = so ((_=_=>
+  _problem => _choice => so ((_=_=>
+    Z .equals (normalize (_question)) (normalize (_choice)),
+    where
+    , _question = T (_problem) (L .get (problem_as_question)) )=>_),
+  where
+  , str_parse = so ((
       define
       , order = [ '+', '-', '*', '/' ]
       , operation = 
@@ -498,36 +499,41 @@ var problem_choice_matches = _problem => _choice =>
             , left = str_parse (str .slice (0, at))                                      
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
         ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
+  , ast_as_normal = data_iso (ast .normal)
+  , ast_as_add = data_iso (ast .add)
+  , ast_as_minus = data_iso (ast .minus)
+  , ast_as_multiply = data_iso (ast .multiply)
+  , ast_as_divide = data_iso (ast .divide)
   , ast_normalize = L .get (L .cond (
-      [ L .isDefined (data_iso (ast .normal)), [] ],
-      [ L .isDefined (data_iso (ast .add)), under (data_iso (ast .add)) (({ left, right }) => so ((
+      [ L .isDefined (ast_as_normal), [] ],
+      [ L .isDefined (ast_as_add), under (ast_as_add) (({ left, right }) => so ((
           define
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
+          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
           , n = left_numerator * right_denominator + right_numerator * left_denominator
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
           ast .normal (n / factor, d / factor) )) ],
-      [ L .isDefined (data_iso (ast .minus)), under (data_iso (ast .minus)) (({ left, right }) => so ((
+      [ L .isDefined (ast_as_minus), under (ast_as_minus) (({ left, right }) => so ((
           define
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
+          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
           , n = left_numerator * right_denominator - right_numerator * left_denominator
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
           ast .normal (n / factor, d / factor) )) ],
-      [ L .isDefined (data_iso (ast .multiply)), under (data_iso (ast .multiply)) (({ left, right }) => so ((
+      [ L .isDefined (ast_as_multiply), under (ast_as_multiply) (({ left, right }) => so ((
           define
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
+          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
           , n = left_numerator * right_numerator
           , d = left_denominator * right_denominator
           , factor = gcd (n) (d) ) =>
           ast .normal (n / factor, d / factor) )) ],
-      [ L .isDefined (data_iso (ast .divide)), under (data_iso (ast .divide)) (({ left, right }) => so ((
+      [ L .isDefined (ast_as_divide), under (ast_as_divide) (({ left, right }) => so ((
           define
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (right))
+          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
           , n = left_numerator * right_denominator
           , d = left_denominator * right_numerator
           , factor = gcd (n) (d) ) =>
