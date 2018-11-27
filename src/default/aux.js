@@ -499,7 +499,7 @@ var problem_choice_matches = _problem => _choice =>
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
         ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
   , ast_normalize = L .get (L .cond (
-      [ L .isDefined (data_iso (ast .normal)), Z_ .I ],
+      [ L .isDefined (data_iso (ast .normal)), [] ],
       [ L .isDefined (data_iso (ast .add)), under (data_iso (ast .add)) (({ left, right }) => so ((
           define
           , { numerator: left_numerator, denominator: left_denominator } = L .get (data_iso (ast .normal)) (ast_normalize (left))
