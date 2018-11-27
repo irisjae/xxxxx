@@ -531,7 +531,9 @@ var problem_choice_matches = _problem => _choice =>
           , n = left_numerator * right_denominator
           , d = left_denominator * right_numerator
           , factor = gcd (n) (d) ) =>
-          ast .normal (n / factor, d / factor) )) ] )) 
+          ast .normal (n / factor, d / factor) )) ],
+       //hack
+       [ L .zero ] )) 
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
       !! Z .equals (b) (0)
