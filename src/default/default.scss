@@ -250,24 +250,34 @@ teacher-app > game-over-etc {
   & > * {
     margin: 10px; } }
 
-student-app > setup-etc {
-  @extend %page-etc;
-  & room {
-    background-color: #D48A88;
-    padding: 2%;
-    margin: 2%;
-    display: block;
-    width: 40vw;
-    & button{
-      margin:auto; } } }
 student-app > get-ready-etc {
+  button {
+    &[x-for=join] {
+      &:focus {
+        outline: none; }
+      & img {
+        @extend %clickable; } } }
+  
   @extend %page-etc;
-  & name, & room {
-    min-width: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%); }}
+  & setup-room-etc {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center; 
+    & a-title {
+      width: 100%;
+      display: block;
+      text-align: center;
+      font-size: 100px; }
+    & sub-title {
+      width: 100%;
+      display: block;
+      text-align: center;
+      font-size: 40px; }
+    & label {
+      font-size: 20px; } } }
 
 student-app > playing-etc {
   display: flex;
