@@ -212,6 +212,24 @@ teacher-app > playing-etc {
       align-items: center;
       color: #f08751;
       font-size: 40px; } }
+  & students {
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 10%;
+    right: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: auto;
+    & student-etc {
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      & label {
+        margin: 5px;
+        position: absolute;
+        transform: translate(0,-30px);} } }
   & options {
     position: absolute;
     right: 0;

@@ -185,7 +185,7 @@ var playing_view = _ => so ((_=_=>
         <a-title>Bingo</a-title>
         <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <problem-etc>
-        <ticker>{ time_left }</ticker>
+        <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
         <question>{ question }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
@@ -200,9 +200,10 @@ var playing_view = _ => so ((_=_=>
           ) (
           [ L .collect (
             [ L .elems
-            , pair_as_second ])
-          , Z_ .map (([_board, _past]) =>
+            , pair_as_list ])
+          , Z_ .map (([ id, [_board, _past] ]) =>
             <student-etc>
+              <label>{id .name}</label>
               { so ((_=_=>
               <board> { T (_board) (Z_ .map (_row => 
                 <row> { T (_row) (Z_ .map (_cell =>
@@ -236,8 +237,8 @@ var playing_view = _ => so ((_=_=>
   , _problem = T (_app) (current_problem)
   , _students = T (_app) (L .get (app_as_students)) 
   , problem_number = T (_app) (L .get (app_as_progress)) + 1
-  , time_left = '' // TODO: define this
-  , time_elapsed = '' // TODO: define this
+  , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
+  , game_tick = just_now (game_tick_sampler)
   , question = T (_problem) (L .get (problem_as_question))
   , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
