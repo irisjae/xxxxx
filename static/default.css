@@ -1,0 +1,477 @@
+body {
+  margin: 0;
+  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541817247354);
+  background-size: cover;
+  color: white;
+}
+
+student-app > game-over-etc, student-app > get-ready-etc, teacher-app > game-over-etc, teacher-app > get-ready-etc, teacher-app > setup-etc {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+teacher-app > setup-etc button[x-for=preview]:focus, teacher-app > setup-etc button[x-for=start]:focus {
+  outline: none;
+}
+teacher-app > setup-etc .left-pane {
+  height: 100%;
+  width: 66%;
+  left: 0;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+teacher-app > setup-etc .left-pane a-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 100px;
+}
+teacher-app > setup-etc .left-pane sub-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 40px;
+}
+teacher-app > setup-etc .left-pane settings {
+  width: 100%;
+  height: 150px;
+  display: flex;
+}
+teacher-app > setup-etc .left-pane settings setting {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+teacher-app > setup-etc .left-pane settings setting label {
+  text-align: center;
+  height: 1em;
+  display: block;
+  width: 100%;
+  flex-grow: 0;
+  margin-bottom: 20px;
+}
+teacher-app > setup-etc .left-pane settings setting control {
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+  justify-content: space-evenly;
+}
+teacher-app > setup-etc .left-pane settings setting control > * {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+teacher-app > setup-etc .left-pane settings setting control > * counterteacher-app > setup-etc .left-pane settings setting control > * {
+  flex-grow: 2;
+  flex-basis: 40%;
+}
+teacher-app > setup-etc .left-pane settings setting control > * prevteacher-app > setup-etc .left-pane settings setting control > *, teacher-app > setup-etc .left-pane settings setting control > * nextteacher-app > setup-etc .left-pane settings setting control > * {
+  flex-grow: 1;
+  flex-basis: 20%;
+}
+teacher-app > setup-etc .left-pane settings setting control > * counter {
+  flex-grow: 2;
+  flex-basis: 40%;
+}
+teacher-app > setup-etc .left-pane settings setting control > * img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+teacher-app > setup-etc .right-pane {
+  height: 100%;
+  width: 33%;
+  right: 0;
+  position: absolute;
+}
+teacher-app > setup-etc .right-pane settings {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+teacher-app > setup-etc .right-pane settings setting {
+  display: block;
+}
+teacher-app > setup-etc .right-pane settings setting img {
+  max-width: 100%;
+  max-height: 33%;
+}
+
+teacher-app > get-ready-etc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > get-ready-etc button[x-for=play]:focus {
+  outline: none;
+}
+teacher-app > get-ready-etc > * {
+  margin: 10px;
+}
+teacher-app > get-ready-etc room {
+  background: #f5b54c;
+  padding: 0.5em 1.5em;
+  border-radius: 1.5em;
+}
+teacher-app > get-ready-etc students-etc {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+teacher-app > get-ready-etc students-etc label {
+  text-align: left;
+  display: block;
+}
+teacher-app > get-ready-etc students-etc students {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+teacher-app > get-ready-etc students-etc students student {
+  width: 100px;
+  height: 1.5em;
+  /*overflow: scroll;*/
+  margin: 0 0 5px;
+  display: block;
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-item-bar.png?1541576347704);
+  background-size: cover;
+  padding: 10px;
+  text-indent: 40px;
+  font-size: 0.8em;
+}
+
+teacher-app > playing-etc {
+  position: absolute;
+  display: block;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+}
+teacher-app > playing-etc button[x-for=view-students]:focus, teacher-app > playing-etc button[x-for=show-problem]:focus, teacher-app > playing-etc button[x-for=end-game]:focus, teacher-app > playing-etc button[x-for=confirm]:focus, teacher-app > playing-etc button[x-for=cancel]:focus {
+  outline: none;
+}
+teacher-app > playing-etc title-etc {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > playing-etc title-etc a-title {
+  flex-grow: 0.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-size: 40px;
+}
+teacher-app > playing-etc title-etc problem-number {
+  flex-grow: 1;
+  display: flex;
+  background: #ef8150;
+  max-height: 35px;
+  padding: 0 30px;
+  border-radius: 13px;
+  font-size: 23px;
+  justify-content: center;
+  align-items: center;
+}
+teacher-app > playing-etc problem-etc {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 25%;
+  right: 25%;
+}
+teacher-app > playing-etc problem-etc ticker {
+  background-color: #4b71d4;
+  width: 80px;
+  height: 80px;
+  font-size: 25px;
+  text-align: center;
+  line-height: 80px;
+  border-radius: 50px;
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+teacher-app > playing-etc problem-etc question {
+  background: #fae383;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  justify-content: center;
+  align-items: center;
+  color: #f08751;
+  font-size: 40px;
+}
+teacher-app > playing-etc students {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow: auto;
+}
+teacher-app > playing-etc students student-etc {
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+}
+teacher-app > playing-etc students student-etc label {
+  margin: 5px;
+  position: absolute;
+  transform: translate(0, -30px);
+}
+teacher-app > playing-etc options {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+teacher-app > playing-etc abort-etc {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ecc35f;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+teacher-app > playing-etc abort-etc .box {
+  min-width: 50%;
+  min-height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+teacher-app > playing-etc abort-etc .box label {
+  font-size: 70px;
+  font-weight: bold;
+}
+
+teacher-app > game-over-etc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > game-over-etc > * {
+  margin: 10px;
+}
+
+student-app > get-ready-etc button[x-for=join]:focus, student-app > get-ready-etc button[x-for=connect]:focus {
+  outline: none;
+}
+student-app > get-ready-etc setup-room-etc, student-app > get-ready-etc setup-student-etc {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+student-app > get-ready-etc setup-room-etc a-title, student-app > get-ready-etc setup-student-etc a-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 100px;
+}
+student-app > get-ready-etc setup-room-etc sub-title, student-app > get-ready-etc setup-student-etc sub-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 40px;
+}
+student-app > get-ready-etc setup-room-etc room label, student-app > get-ready-etc setup-room-etc name label, student-app > get-ready-etc setup-student-etc room label, student-app > get-ready-etc setup-student-etc name label {
+  font-size: 20px;
+}
+student-app > get-ready-etc setup-room-etc room input, student-app > get-ready-etc setup-room-etc name input, student-app > get-ready-etc setup-student-etc room input, student-app > get-ready-etc setup-student-etc name input {
+  border: none;
+  height: 70px;
+  width: 300px;
+  font-size: 40px;
+  border-radius: 13px;
+}
+
+student-app > playing-etc {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  height: 80%;
+  left: 10%;
+  top: 10%;
+  position: absolute;
+}
+student-app > playing-etc .left-pane {
+  height: 100%;
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+student-app > playing-etc .left-pane > * {
+  margin: 10px;
+}
+student-app > playing-etc .left-pane ticker {
+  background-color: #4b71d4;
+  width: 80px;
+  height: 80px;
+  font-size: 25px;
+  text-align: center;
+  line-height: 80px;
+  border-radius: 50px;
+  flex-grow: 0;
+}
+student-app > playing-etc .left-pane question {
+  flex-grow: 1;
+  background: #fae383;
+  border-radius: 20px;
+  text-align: center;
+  color: black;
+  font-size: 20px;
+  padding: 40px;
+  min-width: calc(100% - 100px);
+}
+student-app > playing-etc .right-pane {
+  width: 66%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+student-app > game-over-etc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+student-app > game-over-etc > * {
+  margin: 10px;
+}
+student-app > game-over-etc result-etc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+
+teacher-app > setup-etc setting[x-of=game-mode] prev, teacher-app > setup-etc setting[x-of=game-mode] next, teacher-app > setup-etc setting[x-of=time-limit] prev, teacher-app > setup-etc setting[x-of=time-limit] next, teacher-app > setup-etc setting[x-of=board-size] img, teacher-app > setup-etc button[x-for=preview] img, teacher-app > setup-etc button[x-for=start] img, teacher-app > get-ready-etc button[x-for=play] img, teacher-app > playing-etc button[x-for=view-students] img, teacher-app > playing-etc button[x-for=show-problem] img, teacher-app > playing-etc button[x-for=end-game] img, teacher-app > playing-etc button[x-for=confirm] img, teacher-app > playing-etc button[x-for=cancel] img, student-app > get-ready-etc button[x-for=join] img, student-app > get-ready-etc button[x-for=connect] img {
+  cursor: pointer;
+}
+
+board {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-direction: column;
+  border: solid white 3px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+board row {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+}
+board row cell {
+  background-color: #F3F3F39E;
+  border: 1px solid white;
+  color: #EE804F;
+  text-align: center;
+  line-height: 15vh;
+  font-size: 25px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  position: relative;
+}
+board row cell[x-solved]:after {
+  content: " ";
+  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+board row cell[x-bingoed]:after {
+  content: " ";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: peachpuff;
+}
+
+input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+button:not([x-custom]) {
+  font-size: 16px;
+  border-radius: 3px;
+  background-color: #00A746;
+  color: white;
+  border: 1px solid grey;
+  box-shadow: 2px 2px #224D34;
+  cursor: pointer;
+  min-width: 20%;
+  margin: 4px;
+}
+button:not([x-custom]):hover {
+  background-color: #26F07B;
+}
+button:not([x-custom]):active {
+  box-shadow: none;
+}
+button[x-custom] {
+  background: unset;
+  border: unset;
+  color: unset;
+  padding: unset;
+}
+
+/*# sourceMappingURL=default.css.map */
