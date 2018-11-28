@@ -259,7 +259,7 @@ student-app > get-ready-etc {
         @extend %clickable; } } }
   
   @extend %page-etc;
-  & setup-room-etc, setup-name-ettc {
+  & setup-room-etc, setup-student-etc {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -276,7 +276,7 @@ student-app > get-ready-etc {
       display: block;
       text-align: center;
       font-size: 40px; }
-    & room {
+    & room, & name {
       & label {
         font-size: 20px; }
       & input {

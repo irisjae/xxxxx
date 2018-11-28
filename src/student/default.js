@@ -121,10 +121,10 @@ var setup_student_view = _ => so ((_=_=>
   <setup-student-etc fn={ setup_student_feedback }>
     <a-title>Bingo</a-title>
     <sub-title>除法（一）</sub-title>
-    <name>
+    <name style={{ margin: '30px 0' }}>
       <label>名稱</label>
-      <input />
-      <button x-custom x-for="connect"><img src={ connect_img } /></button> </name> </setup-student-etc>,
+      <input /> </name>
+    <button x-custom x-for="connect"><img src={ connect_img } /></button> </setup-student-etc>,
   where
   , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
   , setup_student_feedback = _dom => so ((_=_=>
@@ -154,7 +154,7 @@ var get_ready_view = <get-ready-etc>
 			? setup_room_view
 			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
       ) (io_state ()))
-      ? 'Finding room...'
+      ? '正在連接遊戲室…'
       : panic ('invalid io at get ready view')
 		:!! Z .isNothing (student) ?
       !! (L .isDefined (io_as_inert
@@ -162,11 +162,11 @@ var get_ready_view = <get-ready-etc>
 			? setup_student_view
 			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
       ) (io_state ()))
-      ? 'Trying to join room...'
+      ? '正在加入遊戲室…'
       : panic ('invalid io at get ready view')
 		: so ((_=_=>
-      [ <room> {'Connected to room ' + _room } </room>
-      , 'Waiting for game to start...' ]
+      [ <room> {'已加入遊戲室' + _room} </room>
+      , '等候遊戲開始…' ]
       .map (_x => <div>{ _x }</div>),
       where
       , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_)) } </get-ready-etc>
