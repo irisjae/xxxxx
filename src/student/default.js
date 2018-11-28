@@ -90,6 +90,13 @@ var clicking = ['click']
 
 var setup_room_view = _ => so ((_=_=>
   <setup-room-etc>
+    <a-title>Bingo</a-title>
+    <sub-title>除法（一）</sub-title>
+    <room style="margin: 30px 0;">
+      <label>遊戲室編號：</label>
+      <input placeholder="Enter a room code" /></room>
+    <button x-custom="true" x-for="join"><img src={ join_img } /></button></setup-room-etc>
+  <setup-room-etc>
     <room fn={ setup_room_feedback }>
       <input placeholder="Enter a room code" />
       <button> Go </button> </room>
@@ -98,6 +105,7 @@ var setup_room_view = _ => so ((_=_=>
         : [] } </setup-room-etc>,
   where
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
+  , join_img = '"https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734"'
   , setup_room_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
