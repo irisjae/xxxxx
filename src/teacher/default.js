@@ -232,7 +232,7 @@ var playing_view = _ => so ((_=_=>
   , _app = app_state ()
   , _problem = T (_app) (current_problem)
   , _students = T (_app) (L .get (app_as_students)) 
-  , problem_number = T (_app) (L .get (app_as_progress))
+  , problem_number = T (_app) (L .get (app_as_progress)) + 1
   , time_left = '' // TODO: define this
   , time_elapsed = '' // TODO: define this
   , question = T (_problem) (L .get (problem_as_question))
