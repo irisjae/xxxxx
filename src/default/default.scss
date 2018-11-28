@@ -252,14 +252,14 @@ teacher-app > game-over-etc {
 
 student-app > get-ready-etc {
   button {
-    &[x-for=join] {
+    &[x-for=join], &[x-for=connect] {
       &:focus {
         outline: none; }
       & img {
         @extend %clickable; } } }
   
   @extend %page-etc;
-  & setup-room-etc {
+  & setup-room-etc, setup-name-ettc {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -276,8 +276,15 @@ student-app > get-ready-etc {
       display: block;
       text-align: center;
       font-size: 40px; }
-    & label {
-      font-size: 20px; } } }
+    & room {
+      & label {
+        font-size: 20px; }
+      & input {
+        border: none;
+        height: 70px;
+        width: 300px;
+        font-size: 40px;
+        border-radius: 13px; } } } }
 
 student-app > playing-etc {
   display: flex;

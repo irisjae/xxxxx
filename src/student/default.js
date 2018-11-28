@@ -97,10 +97,10 @@ var setup_room_view = _ => so ((_=_=>
       { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
         ? <message>不能連接遊戲室{ bad_room }</message>
         : [] }
-      <input placeholder="Enter a room code" /></room>
-    <button x-custom="true" x-for="join"><img src={ join_img } /></button></setup-room-etc>,
+      <input style={{ margin: { top: '10px' } }} /> </room>
+    <button x-custom x-for="join"><img src={ join_img } /></button> </setup-room-etc>,
   where
-  , join_img = '"https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734"'
+  , join_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734'
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
   , setup_room_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
@@ -118,11 +118,15 @@ var setup_room_view = _ => so ((_=_=>
           ;feedback_state (feedback .setup_room (value)) } )=>_))=>_)
 
 var setup_student_view = _ => so ((_=_=>
-  <setup-student-etc>
-    <name fn={ setup_student_feedback } >
-      <input placeholder="Enter your name" />
-      <button> Go </button> </name> </setup-student-etc>,
+  <setup-student-etc fn={ setup_student_feedback }>
+    <a-title>Bingo</a-title>
+    <sub-title>除法（一）</sub-title>
+    <name>
+      <label>名稱</label>
+      <input />
+      <button x-custom x-for="connect"><img src={ connect_img } /></button> </name> </setup-student-etc>,
   where
+  , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
   , setup_student_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
