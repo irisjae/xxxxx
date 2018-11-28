@@ -147,7 +147,7 @@ teacher-app > get-ready-etc {
         font-size: 0.8em; } } } }
 teacher-app > playing-etc {
   button {
-    &[x-for=view-students], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
+    &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
       &:focus {
         outline: none; }
       & img {

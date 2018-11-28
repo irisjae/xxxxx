@@ -33,7 +33,7 @@ cell_as_choice, student_name,
 pair_as_list, pair_as_first, pair_as_second,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
-teacher_app_get_ready_to_playing, teacher_app_playing_to_game_over,
+teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 past_progressed,
 current_problem, problem_choice_matches,
@@ -471,7 +471,7 @@ S (last_state => {;
 	var last_progress = T (last_state) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_progress !== undefined && progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
+		if (progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
