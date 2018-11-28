@@ -183,18 +183,18 @@ var playing_view = _ => so ((_=_=>
   ? <playing-etc>
       <title-etc>
         <a-title>Bingo</a-title>
-        <problem-number>第{ problem_number }題</problem-number></title-etc>
+        <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <problem-etc>
         <ticker>{ time_left }</ticker>
-        <question>{ question }</question></problem-etc>
-      <options-etc>
+        <question>{ question }</question> </problem-etc>
+      <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
-        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button></options-etc></playing-etc>
+        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
   :!! L .isDefined (lookbehind_view_students) (_lookbehind)
   ? <playing-etc>
-      <problem-etc>
-        <problem-text>{ _problem }</problem-text>
-        <countdown>{ time_elapsed }</countdown> </problem-etc>
+      <title-etc>
+        <a-title>Bingo</a-title>
+        <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <students>
         { T (_students
           ) (
@@ -217,7 +217,10 @@ var playing_view = _ => so ((_=_=>
                   } </row> )) } </board>,
               where
               , _solved_positions = solved_positions (_board) (_past)
-              , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students> </playing-etc>
+              , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students>
+      <options>
+        <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
+        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
   :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
   ? <playing-etc>
       <abort-etc>
@@ -225,7 +228,7 @@ var playing_view = _ => so ((_=_=>
           <label>結束遊戲？</label>
           <options>
             <button x-custom x-for="confirm" fn={ confirm_end }><img src={ confirm_img } /></button>
-            <button x-custom x-for="cancel" fn={ cancel_end }><img src={ cancel_img } /></button></options></div></abort-etc></playing-etc>
+            <button x-custom x-for="show-problem" fn={ show_problem }><img src={ cancel_img } /></button></options></div></abort-etc></playing-etc>
   : panic ('unknown lookbehind state'),
   where
   , _lookbehind = lookbehind_state () 
@@ -236,10 +239,15 @@ var playing_view = _ => so ((_=_=>
   , time_left = '' // TODO: define this
   , time_elapsed = '' // TODO: define this
   , question = T (_problem) (L .get (problem_as_question))
+  , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
   , cancel_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcancel.png?1541818700002'
+  , show_problem = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .nothing) })})}
   , view_students = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
@@ -251,11 +259,7 @@ var playing_view = _ => so ((_=_=>
   , confirm_end = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .end) })})}
-  , cancel_end = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .nothing) })})} )=>_)
+          ;feedback_state (feedback .end) })})} )=>_)
     
 													 
 var game_over_view = <game-over-etc> <message>Game Over!</message> </game-over-etc>
