@@ -380,10 +380,10 @@ var connection = S (_ => {;
 
 
 
-S (_ => {;
+;S (_ => {;
 	if (L .isDefined (app_as_get_ready) (app_state ())) {
 		;game_clock .pause () } })
-S (last_state => {;
+;S (last_state => {;
 	var last_progress = T (last_state) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
@@ -392,12 +392,12 @@ S (last_state => {;
 		;game_clock .play () }
 	return app_state () }
 , app_state ())
-S (_ => {;
+;S (_ => {;
 	if (L .isDefined (app_as_game_over) (app_state ())) {
 		;game_clock .pause () } })
 
 //TODO: add guard to warn against depending on datas other than feedback
-S (_ => {;
+;S (_ => {;
   ;so ((
   take
   , cases = 
@@ -437,7 +437,7 @@ S (_ => {;
 
 
 
-S (_ => {;
+;S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	
@@ -447,7 +447,7 @@ S (_ => {;
 		;app_state (
 			T (_app
 			) (L .set (app_as_students) (_ensemble_students))) } })
-S (last_ensemble => {;
+;S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	if (L .isDefined (app_as_get_ready) (_app)) {
@@ -472,7 +472,7 @@ S (last_ensemble => {;
 					, start - now) } } } }
 	return _ensemble }
 , ensemble_state ())
-S (last_progress => {;
+;S (last_progress => {;
 	var _app = app_state ()
   var _room = L .get (app_as_room) (_app)
 	if (L .isDefined (app_as_progress) (_app)) {
@@ -480,7 +480,7 @@ S (last_progress => {;
     if (! Z_ .equals (_progress) (last_progress)) {
 			go
 			.then (_ =>
-				io_state (io .messaging)&& api (_room,
+				io_state (io .messaging) && api (_room,
             post (message_encoding (message .teacher_progress (_progress, ((new Date) .getTime ()))))) )
 			.catch (_e => {;
 				;console .error (_e) })
@@ -488,7 +488,7 @@ S (last_progress => {;
 				;io_state (io .inert) }) } 
     return _progress } } )
 //TODO: tidy this up
-so ((_=_=>
+;so ((_=_=>
 S (last_ensemble => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
@@ -507,7 +507,7 @@ where
     , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past) ])
     , Z_ .join ])) )=>_)
 
-S (_ => {;
+;S (_ => {;
 	;T (app_state ()
   ) (under (app_as_room) (_room => {;
 			var phase = heartbeat ()
