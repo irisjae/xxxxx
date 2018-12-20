@@ -473,7 +473,7 @@ S (last_ensemble => {;
 	return _ensemble }
 , ensemble_state ())
 S (last_progress => {;
-	var _app = S .sample (app_state)
+	var _app = app_state ()
   var _room = L .get (app_as_room) (_app)
 	if (L .isDefined (app_as_progress) (_app)) {
     var _progress = L .get (app_as_progress) (_app)
