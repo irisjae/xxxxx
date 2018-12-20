@@ -474,27 +474,19 @@ S (last_ensemble => {;
 , ensemble_state ())
 S (last_progress => {;
 	var _app = S .sample (app_state)
+  var _room = L .get (app_as_room) (_app)
 	if (L .isDefined (app_as_progress) (_app)) {
-    var _progress = L .isDefined (app_as_progress) (_app)
-    if (Z_ .equals () ()) {
-      var start = L .get (ensemble_as_start) (_ensemble)
-      var now = (new Date) .getTime ()
-
-      var playing_app = teacher_app_get_ready_to_playing (_app)
-
-      var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-      game_clock .clear ()
-      ;game_clock .add (timesup_problem, time_limit)
-      ;T (Z .range (0) (time_limit + 1)) (R .forEach (t => {;
-        ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
-
-      if (start > now) {
-        ;app_state (playing_app) }
-      else {
-        ;setTimeout (_ => {;
-          ;app_state (playing_app) }
-        , start - now) } } 
-    return _ensemble } } )
+    var _progress = L .get (app_as_progress) (_app)
+    if (! Z_ .equals (_progress) (last_progress)) {
+			go
+			.then (_ =>
+				io_state (io .messaging)&& api (_room,
+            post (message_encoding (message .teacher_progress (_progress, ((new Date) .getTime ()))))) )
+			.catch (_e => {;
+				;console .error (_e) })
+			.then (_ => {;
+				;io_state (io .inert) }) } 
+    return _progress } } )
 //TODO: tidy this up
 so ((_=_=>
 S (last_ensemble => {;
