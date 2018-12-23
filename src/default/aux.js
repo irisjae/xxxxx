@@ -174,7 +174,6 @@ var v = (...types) => fiat
 var piece = (...types) => fiat
 
 var room = string
-var student = v (id, string)
 var choice = string
 var answer = string
 var problem = v (string, list (choice))
@@ -193,6 +192,11 @@ var win_rule = data ({ first_bingo: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
 
+var avatar = data ({ 
+  lion: avatar,
+  bunny: avatar })
+var student = data ({
+  student: (id =~ id, string =~ string, icon =~ avatar) => student })
 
 var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
