@@ -193,8 +193,8 @@ var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_r
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
 
 var avatar = data ({ 
-  lion: avatar,
-  bunny: avatar })
+  lion: () => avatar,
+  bunny: () => avatar })
 var student = data ({
   student: (id =~ id, string =~ string, icon =~ avatar) => student })
 
