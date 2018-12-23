@@ -647,7 +647,7 @@ var message_encoding = by (message =>
 	, strip ]),
 	where
 	, strip = $ ([ JSON .stringify, JSON .parse ]) 
-  , student = T (message) (L .get (message_as_student))
+  , _student = T (message) (L .get (message_as_student))
   , cases = 
       [ under (message_as_teacher_settings
         ) (L .getInverse (data_iso (ensemble .ensemble))) 
@@ -660,14 +660,14 @@ var message_encoding = by (message =>
         T (synchronization) (L .getInverse ([ ensemble_as_progress, '' + progress ]))) 
       , under (message_as_teacher_end
         ) (L .getInverse (ensemble_as_end)) 
-      , under (message_as_student_ping. ping
-        ) (L .getInverse ([ ensemble_as_student_pings, student ]))
-      , under (message_as_student_join. board
-        ) (L .getInverse ([ ensemble_as_student_boards, student ]))
+      , under (message_as_student_ping .ping
+        ) (L .getInverse ([ ensemble_as_student_pings, _student ]))
+      , under (message_as_student_join .board
+        ) (L .getInverse ([ ensemble_as_student_boards, _student ]))
       , under (message_as_student_start .synchronization
-        ) (L .getInverse ([ ensemble_as_student_starts, student ]))
+        ) (L .getInverse ([ ensemble_as_student_starts, _student ]))
       , under (message_as_student_update .past
-        ) (L .getInverse ([ ensemble_as_student_pasts, student ])) ] )=>_))
+        ) (L .getInverse ([ ensemble_as_student_pasts, _student ])) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
