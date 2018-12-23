@@ -369,6 +369,7 @@ board {
 	align-items: stretch;
 	justify-content: stretch;
 	flex-direction: column;
+  background-color: #F3F3F39E;
   border: solid white 3px;
   border-radius: 20px;
   & row {
@@ -389,7 +390,6 @@ board {
     & cell:last-child {
       border-right: none; }
     & cell {
-      background-color: #F3F3F39E;
       border: 1px solid white;
       color: #EE804F;
       text-align: center;
@@ -399,26 +399,31 @@ board {
       flex-shrink: 1;
       flex-basis: 0;
       position: relative;
-      &[x-solved] {
-        color: transparent; }
-      &[x-solved]:after {
+      &:after {
         content: ' ';
-        background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
         position: absolute;
         left: 0;
         right: 0;
         top: 0;
-        bottom: 0;
+        bottom: 0; }
+      &[x-solved] {
+        color: transparent; }
+      &[x-solved]:after {
+        @at-root {
+          @keyframes solved-cell {
+            0% {
+              transform: scale(0); }
+            90% {
+              transform: scale(1.3); }
+            100% {
+              transform: scale(1); } } }
+        animation-name: solved-cell;
+        animation-duration: 1s;
+        background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center; }
       &[x-bingoed]:after {
-        content: ' ';
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
         background: peachpuff; } } } }
 
 input {
