@@ -304,7 +304,7 @@ var setup_student = _name => {;
   ;app_state (
     T (S .sample (app_state)
     ) (
-    L .set (app_as_student) (Z_ .Just ([ uuid (), _name ])) )) } 
+    L .set (app_as_student) (Z_ .Just (student .student (uuid (), _name, avatar .lion))) )) } 
 
 var connect_room = _ => {;
 	;T (S .sample (app_state)
