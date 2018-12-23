@@ -18,6 +18,7 @@ attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, p
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_problems,
 app_as_last_point, point_as_attempts,
+student_as_id, student_as_name, student_as_icon, 
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position,

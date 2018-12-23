@@ -196,7 +196,7 @@ var avatar = data ({
   lion: () => avatar,
   bunny: () => avatar })
 var student = data ({
-  student: (id =~ id, string =~ string, icon =~ avatar) => student })
+  student: (id =~ id, name =~ string, icon =~ avatar) => student })
 
 var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
@@ -345,6 +345,10 @@ var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings
 var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
 var ensemble_as_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_as_student_pasts = data_iso (ensemble .ensemble) .student_pasts 
+
+var student_as_id = data_lens (student .student) .id
+var student_as_name = data_lens (student .student) .name
+var student_as_icon = data_lens (student .student) .icon
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
@@ -647,7 +651,7 @@ var message_encoding = by (message =>
 	, strip ]),
 	where
 	, strip = $ ([ JSON .stringify, JSON .parse ]) 
-  , _student = T (message) (L .get (message_as_student))
+  , _student_id = T (message) (L .get ([ message_as_student, student_as_id ]))
   , cases = 
       [ under (message_as_teacher_settings
         ) (L .getInverse (data_iso (ensemble .ensemble))) 
@@ -661,13 +665,13 @@ var message_encoding = by (message =>
       , under (message_as_teacher_end
         ) (L .getInverse (ensemble_as_end)) 
       , under (message_as_student_ping .ping
-        ) (L .getInverse ([ ensemble_as_student_pings, _student ]))
+        ) (L .getInverse ([ ensemble_as_student_pings, '' + _student_id ]))
       , under (message_as_student_join .board
-        ) (L .getInverse ([ ensemble_as_student_boards, _student ]))
+        ) (L .getInverse ([ ensemble_as_student_boards, '' + _student_id ]))
       , under (message_as_student_start .synchronization
-        ) (L .getInverse ([ ensemble_as_student_starts, _student ]))
+        ) (L .getInverse ([ ensemble_as_student_starts, '' + _student_id ]))
       , under (message_as_student_update .past
-        ) (L .getInverse ([ ensemble_as_student_pasts, _student ])) ] )=>_))
+        ) (L .getInverse ([ ensemble_as_student_pasts, '' + _student_id ])) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
@@ -733,6 +737,7 @@ window .stuff = { ...window .stuff,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,
   app_as_last_point, point_as_attempts,
+  student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position,
