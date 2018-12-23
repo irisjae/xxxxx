@@ -165,6 +165,7 @@ var number = fiat
 var timestamp = number
 var string = fiat
 var list = a => fiat
+//TODO: all the maps in this project are fake!
 var map = a => (...b) => list (v (a, ...b))
 var maybe = a => fiat
 var nat = fiat
@@ -365,9 +366,9 @@ var app_as_last_point = [ app_as_past, past_as_points, L .last ]
 var rules_as_size = data_lens (rules .rules) .size
 var rules_as_time_limit = data_lens (rules .rules) .time_limit
 var rules_as_win_rule = data_lens (rules .rules) .win_rule
-var settings_as_size = [settings_as_rules, rules_as_size]
-var settings_as_time_limit = [settings_as_rules, rules_as_time_limit]
-var settings_as_win_rule = [settings_as_rules, rules_as_win_rule]
+var settings_as_size = [ settings_as_rules, rules_as_size ]
+var settings_as_time_limit = [ settings_as_rules, rules_as_time_limit ]
+var settings_as_win_rule = [ settings_as_rules, rules_as_win_rule ]
 
 var problem_as_question = [ 0 ]
 var problem_as_answers = [ 1 ]
