@@ -667,7 +667,7 @@ var message_encoding = by (message =>
       , under (message_as_teacher_end
         ) (L .getInverse (ensemble_as_end)) 
       , under (message_as_student_ping .ping
-        ) (L .getInverse ([ ensemble_as_student_pings, '' + _student_id ]))
+        ) (L .getInverse ([ ensemble_as_student_pings, '' + _student_id, iso_ () () ]))
       , under (message_as_student_join .board
         ) (L .getInverse ([ ensemble_as_student_boards, '' + _student_id ]))
       , under (message_as_student_start .synchronization
