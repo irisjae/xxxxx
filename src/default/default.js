@@ -164,6 +164,10 @@ var data_iso = data =>
 var data_kind = data =>
 	R .head (Z_ .keys (data))
 
+var iso_ = lens => anchor => 
+  L .iso (L .get (lens), _x => L .set (lens) (_x) (anchor))
+
+
 var WeakMap = window .WeakMap
 var __data_length = new WeakMap
 var __data_lens = new WeakMap
