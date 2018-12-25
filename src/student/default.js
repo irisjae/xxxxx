@@ -368,7 +368,10 @@ var timesup_problem = _ => {;
 	;app_state (
     student_app_playing_to_next (S .sample (app_state))) }
 
-
+var time_travel = current => target => {;
+  var time_difference
+  
+  }
 
 
 

@@ -4,6 +4,7 @@ var {
 	tap, go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
+  iso_,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
 	as_sole, sole, every, delay	 
