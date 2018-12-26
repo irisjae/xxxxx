@@ -684,8 +684,8 @@ var assemble_students = by (_app => //and_by (_ensemble =>
         by (_ensemble =>
           $ (
           [ Z_ .flip (
-            { boards: L .collect ([ ensemble_as_student_boards, students_ensemble_as_info ])
-            , pasts: L .collect ([ ensemble_as_student_pasts, students_ensemble_as_info ]) })
+            { boards: L .collect ([ ensemble_as_student_boards, students_ensemble_as_map ])
+            , pasts: L .collect ([ ensemble_as_student_pasts, students_ensemble_as_map ]) })
           , /*under (as_complete)*/ (({ boards, pasts }) =>
             pair_zip (_a => _b => [_a, _b]) (boards) (pasts) ) ])
         //collect this instead of get!
