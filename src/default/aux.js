@@ -379,14 +379,13 @@ var cell_as_choice = [ 2 ]
 
 var as_position = ([x, y]) => [x - 1, y - 1]
 
-var pair_as_list = L .cond (
-	[ _x => Z_ .is (Z_ .PairType (Z$ .Any) (Z$ .Any)) (_x)
-	, [ L .rewrite (_x => Z_ .Pair (R .head (_x)) (R .last (_x)))
-		, L .reread (_x => [ Z_ .fst (_x), Z_ .snd (_x) ]) ] ] /**/, [L .zero]/**/)
+var pair_as_list = pair_as_v
 
 //var pair_as_first = [ L .ifElse ($ (Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)))) (L .reread (Z_ .fst)) (L .zero),  ]
 var pair_as_first = [ pair_as_list, L .first ]
 var pair_as_second = [ pair_as_list, L .last ]
+
+var list_as_pair = L .getInverse (pair_as_v)
 
 //report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
@@ -394,19 +393,9 @@ var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_as_mean = [ 1 ]
 
-var students_as_mapping = 
-	[ L .keyed
-	, L .reread (
-			Z_ .map (pair => so ((_=_=>
-				Z_ .Pair ({ id: id, name: name }) (val),
-				where
-				, id = R .head (pair)
-				, inner_pair = R .head (R .toPairs (R .last (pair)))
-				, name = R .head (inner_pair)
-				, val = R .last (inner_pair) )=>_)))
-	, L .elems ]
-var map_as_students = [ students_as_mapping, pair_as_list, L .first ]
-var mapping_as_students = [ students_as_mapping, pair_as_list, L .last ]
+var students_ensemble_as_map = [ L .values, list_as_pair ]
+var students_ensmeble_as_students = [ students_ensemble_as_map, pair_as_first ]
+var students_ensemble_as_info = [ students_ensemble_as_map, pair_as_second ]
 
 
 
@@ -688,21 +677,21 @@ var assemble_students = by (_app => //and_by (_ensemble =>
         ) (
         Z_ .K (
         by (_ensemble =>
-          L .collect ([ ensemble_as_student_pings, map_as_students ]))))
+          L .collect ([ ensemble_as_student_pings, students_ensmeble_as_students ]))))
       , under (L .choice (app_as_playing, app_as_game_over)
         ) (
         Z_ .K (
         by (_ensemble =>
           $ (
           [ Z_ .flip (
-            { boards: L .collect ([ ensemble_as_student_boards, students_as_mapping ])
-            , pasts: L .collect ([ ensemble_as_student_pasts, students_as_mapping ]) })
+            { boards: L .collect ([ ensemble_as_student_boards, students_ensemble_as_info ])
+            , pasts: L .collect ([ ensemble_as_student_pasts, students_ensemble_as_info ]) })
           , /*under (as_complete)*/ (({ boards, pasts }) =>
             pair_zip (_a => _b => [_a, _b]) (boards) (pasts) ) ])
         //collect this instead of get!
           /*under (L .pick (
-            { boards: [ ensemble_as_student_boards, students_as_mapping ]
-            , pasts: [ ensemble_as_student_pasts, students_as_mapping ] })
+            { boards: [ ensemble_as_student_boards, students_ensemble_as_map ]
+            , pasts: [ ensemble_as_student_pasts, students_ensemble_as_map ] })
           ) (({ boards, pasts }) =>
             pair_zip (_a => _b => [_a, _b]) (boards) (pasts) )*/
            ))) ] )=>_))
@@ -712,7 +701,7 @@ var schedule_start = _ensemble =>
 	(new Date) .getTime () + confidence_interval,
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_as_ping))
-	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_student_pings, mapping_as_students ]))
+	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_student_pings, students_ensemble_as_info ]))
 	, pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_as_mean)))
 	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
