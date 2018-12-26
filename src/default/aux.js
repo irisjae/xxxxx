@@ -4,7 +4,7 @@ var {
 	tap, go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
-  iso_,
+  focused_iso_,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
 	as_sole, sole, every, delay	 
@@ -668,13 +668,13 @@ var message_encoding = by (message =>
       , under (message_as_teacher_end
         ) (L .getInverse (ensemble_as_end)) 
       , under (message_as_student_ping .ping
-        ) (L .getInverse ([ ensemble_as_student_pings, '' + _student_id, iso_ ([ L .last ]) ([ student, fiat ]) ]))
+        ) (L .getInverse ([ ensemble_as_student_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ student, fiat ]) ]))
       , under (message_as_student_join .board
-        ) (L .getInverse ([ ensemble_as_student_boards, '' + _student_id, iso_ ([ L .last ]) ([ student, fiat ]) ]))
+        ) (L .getInverse ([ ensemble_as_student_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ student, fiat ]) ]))
       , under (message_as_student_start .synchronization
-        ) (L .getInverse ([ ensemble_as_student_starts, '' + _student_id, iso_ ([ L .last ]) ([ student, fiat ]) ]))
+        ) (L .getInverse ([ ensemble_as_student_starts, '' + _student_id, focused_iso_ ([ L .last ]) ([ student, fiat ]) ]))
       , under (message_as_student_update .past
-        ) (L .getInverse ([ ensemble_as_student_pasts, '' + _student_id, iso_ ([ L .last ]) ([ student, fiat ]) ])) ] )=>_))
+        ) (L .getInverse ([ ensemble_as_student_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ student, fiat ]) ])) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))

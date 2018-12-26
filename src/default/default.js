@@ -164,7 +164,7 @@ var data_iso = data =>
 var data_kind = data =>
 	R .head (Z_ .keys (data))
 
-var iso_ = lens => point => 
+var focused_iso_ = lens => point => 
   L .iso (L .get (lens), _x => L .set (lens) (_x) (point))
 
 
@@ -367,7 +367,7 @@ window .stuff = { ...window .stuff,
 	go, never, panic, panic_on,
   just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
-  iso_,
+  focused_iso_,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
 	as_sole, sole, every, delay }
