@@ -708,24 +708,31 @@ var schedule_start = _ensemble =>
 
 var persisted_ = so ((_=_=>
   _el => {;
-    var  
-    if (cache .every (cached_el => {;
+    var persisted_el 
+    if (! cache .some (cached_el => {;
       if (_el .isEqualNode (cached_el)) {
-        ;recache = recache .concat ([ _cached_el ])
-        return false }
+        ;persisted_el = cached_el
+        return true }
       else {
-        return true } })
+        return false } })
     ) {
-      ;recache = recache .concat ([ _cached_el ])
-      } },
+      ;persisted_el = _el }
+    ;recache = recache .concat ([ persisted_el ])
+    ;reset () },
   where
   , cache = []
   , recache = []
   , be_reset = false
-  , reset = S .data (fiat)
+  , reset_signal = S .data (fiat)
+  , reset = _ => {;
+      if (! be_reset) {
+        ;be_reset = true
+        ;reset_signal (fiat) } } 
   ,$= S (_=> {;
-    reset ()
-    ;be_reset = false }) )_=>) 
+    reset_signal ()
+    ;be_reset = false
+    ;cache = recache
+    ;recache = [] }) )=>_) 
 
 
 window .stuff = { ...window .stuff,
@@ -761,4 +768,5 @@ window .stuff = { ...window .stuff,
 	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 	past_progressed,
   current_problem, problem_choice_matches,
-  attempted_positions, solved_positions, bingoed_positions }
+  attempted_positions, solved_positions, bingoed_positions,
+  persisted_ }

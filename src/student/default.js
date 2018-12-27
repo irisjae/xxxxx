@@ -31,6 +31,7 @@ student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playi
 past_progressed,
 current_problem, problem_choice_matches,
 attempted_positions, solved_positions, bingoed_positions,
+persisted_,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
 so, by, and_by, under,
 go, never, panic, panic_on,
