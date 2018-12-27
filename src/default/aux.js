@@ -389,7 +389,7 @@ var list_as_pair = L .getInverse (pair_as_v)
 
 //report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
-var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
+//var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_as_mean = [ 1 ]
 
@@ -733,7 +733,7 @@ window .stuff = { ...window .stuff,
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position,
-	cell_as_choice, student_name,
+	cell_as_choice, 
   pair_as_list, pair_as_first, pair_as_second,
 	message_encoding, messages_encoding,
 	assemble_students, schedule_start,

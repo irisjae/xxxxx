@@ -22,7 +22,7 @@ student_as_id, student_as_name, student_as_icon,
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position,
-cell_as_choice, student_name,
+cell_as_choice, 
 pair_as_list, pair_as_first, pair_as_second,
 message_encoding, messages_encoding,
 assemble_students, schedule_start,
@@ -165,7 +165,7 @@ var get_ready_view = _ => so ((_=_=>
         { T (_students
           ) (
           Z_ .map ($ (
-          [ L .get (student_name)
+          [ L .get (student_as_name)
           , _x => <student>{ _x }</student> ]))) }</students> </students-etc>
     { !! Z .not (Z_ .size (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
