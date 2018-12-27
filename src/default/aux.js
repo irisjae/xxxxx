@@ -706,8 +706,12 @@ var schedule_start = _ensemble =>
 	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
 
-var persisted_ = _el => {;
-   }
+var persisted_ = so ((_=_=>
+  _el => {;
+   },
+  where
+  , cardinality = 0
+  , )_=>) 
 
 
 window .stuff = { ...window .stuff,
