@@ -708,10 +708,24 @@ var schedule_start = _ensemble =>
 
 var persisted_ = so ((_=_=>
   _el => {;
-   },
+    var  
+    if (cache .every (cached_el => {;
+      if (_el .isEqualNode (cached_el)) {
+        ;recache = recache .concat ([ _cached_el ])
+        return false }
+      else {
+        return true } })
+    ) {
+      ;recache = recache .concat ([ _cached_el ])
+      } },
   where
-  , cardinality = 0
-  , )_=>) 
+  , cache = []
+  , recache = []
+  , be_reset = false
+  , reset = S .data (fiat)
+  ,$= S (_=> {;
+    reset ()
+    ;be_reset = false }) )_=>) 
 
 
 window .stuff = { ...window .stuff,
