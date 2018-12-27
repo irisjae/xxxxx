@@ -419,6 +419,7 @@ board {
               transform: scale(1); } } }
         animation-name: solved-cell;
         animation-duration: 1s;
+        animation-fill-mode: forwards;
         background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
         background-size: contain;
         background-repeat: no-repeat;
