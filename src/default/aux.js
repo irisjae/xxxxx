@@ -709,9 +709,10 @@ var schedule_start = _ensemble =>
 var persisted_ = so ((_=_=>
   _el => {;
     var persisted_el 
-    if (! cache .some (cached_el => {;
+    if (! cache .some ((cached_el, cutoff) => {;
       if (_el .isEqualNode (cached_el)) {
         ;persisted_el = cached_el
+        ;cache = cache .slice (0, cutoff) .concat (cache .slice (cutoff + 1))
         return true }
       else {
         return false } })
