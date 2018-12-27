@@ -718,7 +718,8 @@ var persisted_ = so ((_=_=>
     ) {
       ;persisted_el = _el }
     ;recache = recache .concat ([ persisted_el ])
-    ;reset () },
+    ;reset ()
+    return persisted_el },
   where
   , cache = []
   , recache = []
