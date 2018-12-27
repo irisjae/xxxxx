@@ -173,11 +173,11 @@ var get_ready_view = <get-ready-etc>
       where
       , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_)) } </get-ready-etc>
 
-var playing_view = _ => so ((_=_=>
+var playing_view = so ((_=_=>
   <playing-etc>
     <div class="left-pane">
       <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
-      <question>{ _current_question }</question> </div>
+      <question>{ _current_question () }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
