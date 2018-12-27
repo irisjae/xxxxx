@@ -173,18 +173,20 @@ var get_ready_view = <get-ready-etc>
       where
       , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_)) } </get-ready-etc>
 
-var playing_view = so ((_=_=>
+var playing_view = _ => so ((_=_=>
   <playing-etc>
     <div class="left-pane">
-      <ticker>{ T (game_tick ()) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
-      <question>{ _current_question () }</question> </div>
+      <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
+      <question>{ _current_question }</question> </div>
     <div class="right-pane">
-      <board> { T (_board ()) (Z_ .map (_row => 
+      <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
           so ((_=_=>
+          $ (persisted_
+          ) (
           !! (_cell_bingo) ? <cell x-bingoed>{ _cell_choice }</cell>
           :!! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
-          : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
+          : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>),
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
@@ -192,14 +194,14 @@ var playing_view = so ((_=_=>
           , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions ()) )=>_)))
           } </row> )) } </board> </div> </playing-etc>,
     where
-    , _app = app_state
-    , _board = S (_=> T (_app ()) (L .get (app_as_board)))
-    , _past = S (_=> T (_app ()) (L .get (app_as_past)))
-    , _current_question = S (_=> T (_app ()) ([ current_problem, L .get (problem_as_question) ]))
-    , _solved_positions = S (_=> solved_positions (_board ()) (_past ()))
-    , _bingoed_positions = S (_=> bingoed_positions (_board ()) (_past ()))
-    , time_limit = S (_=> T (_app ()) (L .get ([ app_as_settings, settings_as_time_limit ])))
-    , game_tick = S (_=> just_now (game_tick_sampler))
+    , _app = app_state ()
+    , _board = T (_app) (L .get (app_as_board))
+    , _past = T (_app) (L .get (app_as_past))
+    , _current_question = T (_app) ([ current_problem, L .get (problem_as_question) ])
+    , _solved_positions = solved_positions (_board) (_past)
+    , _bingoed_positions = bingoed_positions (_board) (_past)
+    , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+    , game_tick = just_now (game_tick_sampler)
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
           ;_dom .addEventListener (click, _ => {;
