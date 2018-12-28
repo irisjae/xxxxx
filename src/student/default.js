@@ -55,17 +55,17 @@ var lookbehind = data ({
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind })
 
 
-var feedback_setup_room = data_iso (feedback .setup_room)
-var feedback_setup_student = data_iso (feedback .setup_student)
-var feedback_attempt_problem = data_iso (feedback .attempt_problem)
+var feedback_as_setup_room = data_iso (feedback .setup_room)
+var feedback_as_setup_student = data_iso (feedback .setup_student)
+var feedback_as_attempt_problem = data_iso (feedback .attempt_problem)
 
-var lookbehind_nothing = data_iso (lookbehind .nothing)
-var lookbehind_bad_room = data_iso (lookbehind .bad_room)
-var lookbehind_attempting = data_iso (lookbehind .attempting)
+var lookbehind_as_nothing = data_iso (lookbehind .nothing)
+var lookbehind_as_bad_room = data_iso (lookbehind .bad_room)
+var lookbehind_as_attempting = data_iso (lookbehind .attempting)
 
-var lookbehind_room = data_lens (lookbehind .bad_room) .room
-var lookbehind_since = data_lens (lookbehind .attempting) .since
-var lookbehind_blocked = data_lens (lookbehind .attempting) .blocked
+var lookbehind_as_room = data_lens (lookbehind .bad_room) .room
+var lookbehind_as_since = data_lens (lookbehind .attempting) .since
+var lookbehind_as_blocked = data_lens (lookbehind .attempting) .blocked
 
 
 
@@ -97,14 +97,14 @@ var setup_room_view = _ => so ((_=_=>
     <sub-title>除法（一）</sub-title>
     <room style={{ margin: '30px 0' }}>
       <label>遊戲室編號：</label>
-      { !! L .isDefined (lookbehind_bad_room) (lookbehind_state ())
+      { !! L .isDefined (lookbehind_as_bad_room) (lookbehind_state ())
         ? <message>不能連接遊戲室{ bad_room }</message>
         : [] }
       <input style={{ margin: { top: '10px' } }} /> </room>
     <button x-custom x-for="join"><img src={ join_img } /></button> </setup-room-etc>,
   where
   , join_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734'
-  , bad_room = T (lookbehind_state ()) (L .get (lookbehind_room))
+  , bad_room = T (lookbehind_state ()) (L .get (lookbehind_as_room))
   , setup_room_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
@@ -356,7 +356,7 @@ var attempt_problem = _position => {;
       var _completed = under (point_as_position) ($ ([ board_choice (_board), problem_choice_matches (_problem) ])) (_point) || false 
       if (Z .not (_completed)) {
         var _choice = board_choice (_board) (_position)
-        if (! L .get (lookbehind_blocked) (S .sample (lookbehind_state))) {
+        if (! L .isDefined (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
           var latency = game_clock .time () //lookbehind_latency ()
           ;app_state (
             T (S .sample (app_state)
@@ -411,15 +411,15 @@ S (_ => {;
   ;so ((
   take
   , cases = 
-      [ [ feedback_setup_room
+      [ [ feedback_as_setup_room
         , ({ room: _room }) => {;
             ;setup_room (_room) } ]
-      , [ feedback_setup_student
+      , [ feedback_as_setup_student
         , ({ name: _name }) => {;
             ;go
             .then (_ => setup_student (_name))
             .then (_ => connect_room ()) } ]
-      , [ feedback_attempt_problem
+      , [ feedback_as_attempt_problem
         , ({ position: _position }) => {;
             ;attempt_problem (_position) } ] ] )=>
   so ((_=_=>
@@ -442,7 +442,7 @@ S (_ => {;
 
 
 S (_ => {;
-	if (L .isDefined (lookbehind_bad_room) (lookbehind_state ())) {
+	if (L .isDefined (lookbehind_as_bad_room) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {;
 			;lookbehind_state (lookbehind .nothing) }
 		, 1500)
@@ -463,9 +463,9 @@ S (last_app => {;
 	return app_state () }
 , app_state ())
 S (_ => {;
-	if (L .get (lookbehind_blocked) (lookbehind_state ())) {
+	if (L .get (lookbehind_as_blocked) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {;
-			var _since = T (lookbehind_state ()) (L .get (lookbehind_since))
+			var _since = T (lookbehind_state ()) (L .get (lookbehind_as_since))
 			;lookbehind_state (lookbehind .attempting (_since, false)) }
 		, 3000)
 		;S .cleanup (_ => {;
