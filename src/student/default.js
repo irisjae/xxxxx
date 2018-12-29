@@ -354,7 +354,7 @@ var attempt_problem = _position => {;
       var _completed = under (point_as_position) ($ ([ board_choice (_board), problem_choice_matches (_problem) ])) (_point) || false 
       if (Z .not (_completed)) {
         var _choice = board_choice (_board) (_position)
-        if (! L .isDefined (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
+        if (! L .get (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
           var latency = game_clock .time () //lookbehind_latency ()
           ;app_state (
             T (S .sample (app_state)
