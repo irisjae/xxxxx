@@ -1,4 +1,5 @@
 dependencies:
+  diff-dom: 2.5.0
   fast-memoize: 2.4.0
   http-status-codes: 1.3.0
   koa: 2.5.1
@@ -11,7 +12,6 @@ dependencies:
   koa-router: 7.4.0
   koa-static: 4.0.3
   koa-websocket: 5.0.1
-  morphdom: 2.3.3
   partial.lenses: 14.17.0
   ramda: 0.26.0
   s-js: 0.4.9
@@ -132,6 +132,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
+  /diff-dom/2.5.0:
+    dev: false
+    resolution:
+      integrity: sha512-05unQ6jKUEz68908IGmT+df8e00BEqJQ3JiokvpBk/U4CNGbqa0iWG326RGyWZoC+PIiw5RO8heDa9KrExdgaQ==
   /ee-first/1.1.1:
     dev: false
     resolution:
@@ -407,10 +411,6 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha1-0B+mxlhZt2/PMbPLU6OCGjEdgFE=
-  /morphdom/2.3.3:
-    dev: false
-    resolution:
-      integrity: sha512-z+/GEulEfhrSFPOJSum8o5lZNv63cAGBPeFHO2WgpGo636Ln67ZuVydp2q0iTaZIXdf5FDNP2ZY6uhtg+LjlsA==
   /ms/2.0.0:
     dev: false
     resolution:
@@ -685,6 +685,7 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
+  diff-dom: ^2.5.0
   fast-memoize: ^2.4.0
   http-status-codes: ^1.3.0
   koa: ^2.5.1
@@ -697,7 +698,6 @@ specifiers:
   koa-router: ^7.4.0
   koa-static: ^4.0.3
   koa-websocket: ^5.0.1
-  morphdom: ^2.3.3
   partial.lenses: ^14.17.0
   ramda: ^0.26.0
   s-js: ^0.4.9

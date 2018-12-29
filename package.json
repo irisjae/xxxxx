@@ -6,6 +6,7 @@
     "start": "./scripts/bundle.sh && node server/host.js"
   },
   "dependencies": {
+    "diff-dom": "^2.5.0",
     "fast-memoize": "^2.4.0",
     "http-status-codes": "^1.3.0",
     "koa": "^2.5.1",
@@ -18,7 +19,6 @@
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.3",
     "koa-websocket": "^5.0.1",
-    "morphdom": "^2.3.3",
     "partial.lenses": "^14.17.0",
     "ramda": "^0.26.0",
     "s-js": "^0.4.9",

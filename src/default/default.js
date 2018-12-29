@@ -7,6 +7,7 @@ var Z = sanc .create ({ checkTypes: false, env: sanc .env })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
+var dd = new require ('diff-dom') 
 var TimelineMax = window .TimelineMax
 var T = _x => _fn_obj =>
 	!! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
@@ -344,11 +345,12 @@ var delay = time => {{
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;
-  var morphdom = require ('morphdom') 
   var view = document .createElement ('view') 
 	;document .body .appendChild (view)
-  ;morphdom (view, window .view), (new MutationObserver (mutations => {;
-    ;morphdom (view, window .view) }))
+  var morph = goals => {;
+    ;dd .apply (view, dd .diff (view, goals)) } 
+  ;morph (window .view), (new MutationObserver (mutations => {;
+    ;morph (window .view) }))
   .observe (window .view,
     { attributes: true
     , characterData: true
