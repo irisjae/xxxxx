@@ -22,6 +22,7 @@
     "nanomorph": "^5.1.3",
     "partial.lenses": "^14.17.0",
     "ramda": "^0.26.0",
+    "reconcile.js": "^1.3.2",
     "s-js": "^0.4.9",
     "sanctuary": "^0.15.0",
     "surplus": "^0.5.3"

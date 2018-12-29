@@ -15,6 +15,7 @@ dependencies:
   nanomorph: 5.1.3
   partial.lenses: 14.17.0
   ramda: 0.26.0
+  reconcile.js: 1.3.2
   s-js: 0.4.9
   sanctuary: 0.15.0
   surplus: 0.5.3
@@ -529,6 +530,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==
+  /reconcile.js/1.3.2:
+    dev: false
+    resolution:
+      integrity: sha1-9rZhmxfC0aNeSDhmRWCF0e6zSRc=
   /resolve-path/1.4.0:
     dependencies:
       http-errors: 1.6.3
@@ -712,6 +717,7 @@ specifiers:
   nanomorph: ^5.1.3
   partial.lenses: ^14.17.0
   ramda: ^0.26.0
+  reconcile.js: ^1.3.2
   s-js: ^0.4.9
   sanctuary: ^0.15.0
   surplus: ^0.5.3
