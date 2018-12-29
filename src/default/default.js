@@ -351,6 +351,8 @@ document .addEventListener ('DOMContentLoaded', _ => {;
         R .unfold (node => node != view && [ [... node .parentNode .children] .indexOf (node), node .parentNode ]
         , e .target))
       var target = R .reduce ((node, index) => node && node .children [index] || R .reduced (undefined), window .view, path) 
+      if (target && event === 'input') {
+        ;target .value = e .target .value }
       ;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
 
   
