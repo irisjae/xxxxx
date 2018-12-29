@@ -344,16 +344,18 @@ var delay = time => {{
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;
-	;document .body .appendChild (window .view .cloneNode (true))
-  (new MutationObserver (mutations => {;
-  })) .observe (document .documentElement,
-  { attributes: true,
-      characterData: true,
-      childList: true,
-      subtree: true,
-      attributeOldValue: true,
-      characterDataOldValue: true
-  })
+  var morphdom = require ('morphdom') 
+  var view = document .createElement ('view') 
+	;document .body .appendChild (view)
+  ;morphdom (view, window .view), (new MutationObserver (mutations => {;
+    ;morphdom (view, window .view) }))
+  .observe (window .view,
+    { attributes: true
+    , characterData: true
+    , childList: true
+    , subtree: true
+    , attributeOldValue: true
+    , characterDataOldValue: true })
 })
 
 
