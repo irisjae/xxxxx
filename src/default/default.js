@@ -350,7 +350,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
       var path = R .reverse (
         R .unfold (node => node != view && [ [... node .parentNode .children] .indexOf (node), node .parentNode ]
         , e .target))
-      var target = R .reduce ((node, index) => node ? R .reduced (undefined) : node .children [index], window .view, path) 
+      var target = R .reduce ((node, index) => node && node .children [index] || R .reduced (undefined), window .view, path) 
       ;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
 
   
