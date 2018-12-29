@@ -183,11 +183,9 @@ var playing_view = _ => so ((_=_=>
       <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
           so ((_=_=>
-          $ (persisted_
-          ) (
           !! (_cell_bingo) ? <cell x-bingoed>{ _cell_choice }</cell>
           :!! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
-          : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>),
+          : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
