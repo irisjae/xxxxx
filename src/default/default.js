@@ -344,11 +344,15 @@ var delay = time => {{
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;
-  var view = document .createElement ('view') 
-	;document .body .appendChild (window .view .cloneNode (false))
-  var dd = new (require ('diff-dom'))
+  var view = window .view .cloneNode (false)
+	;document .body .appendChild (view)
+  //var dd = new (require ('diff-dom'))
+  //var morphdom = require ('morph-dom')
+  var nanomorph = require ('nanomorph')
   var morph = goals => {;
-    ;dd .apply (view, dd .diff (view, goals)) } 
+    ;nanomorph (view, goals) }
+    //;dd .apply (view, dd .diff (view, goals)) } 
+    //;morphdom (view, goals) } 
   ;morph (window .view), (new MutationObserver (mutations => {;
     ;morph (window .view) }))
   .observe (window .view,

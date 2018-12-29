@@ -12,6 +12,7 @@ dependencies:
   koa-router: 7.4.0
   koa-static: 4.0.3
   koa-websocket: 5.0.1
+  nanomorph: 5.1.3
   partial.lenses: 14.17.0
   ramda: 0.26.0
   s-js: 0.4.9
@@ -423,6 +424,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==
+  /nanoassert/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha1-TzFS4JVA/eKMdvRLGbvNHVpCR40=
+  /nanomorph/5.1.3:
+    dependencies:
+      nanoassert: 1.1.0
+    dev: false
+    resolution:
+      integrity: sha512-VydkKjFWU/DAO0R10awFASRNXQKHrZUMdMIiNcdmWm+IhuifuPOw/dDtpiQ1cNROF8f3ATPrcKRVarEayQJOqA==
   /negotiator/0.6.1:
     dev: false
     engines:
@@ -698,6 +709,7 @@ specifiers:
   koa-router: ^7.4.0
   koa-static: ^4.0.3
   koa-websocket: ^5.0.1
+  nanomorph: ^5.1.3
   partial.lenses: ^14.17.0
   ramda: ^0.26.0
   s-js: ^0.4.9
