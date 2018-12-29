@@ -350,8 +350,8 @@ document .addEventListener ('DOMContentLoaded', _ => {;
       var path = R .reverse (
         R .unfold (node => node != view && [ [... node .parentNode .children] .indexOf (node), node .parentNode ]
         , e .target))
-      var target = R .reduce ((node, index) => node .children [index], window .view, path) 
-      ;target .dispatchEvent (e) }) })
+      var target = R .reduce ((node, index) => node ? R .reduced (undefined) : node .children [index], window .view, path) 
+      ;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
 
   
 	;document .body .appendChild (view)
