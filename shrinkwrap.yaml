@@ -11,6 +11,7 @@ dependencies:
   koa-router: 7.4.0
   koa-static: 4.0.3
   koa-websocket: 5.0.1
+  morphdom: 2.3.3
   partial.lenses: 14.17.0
   ramda: 0.26.0
   s-js: 0.4.9
@@ -406,6 +407,10 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha1-0B+mxlhZt2/PMbPLU6OCGjEdgFE=
+  /morphdom/2.3.3:
+    dev: false
+    resolution:
+      integrity: sha512-z+/GEulEfhrSFPOJSum8o5lZNv63cAGBPeFHO2WgpGo636Ln67ZuVydp2q0iTaZIXdf5FDNP2ZY6uhtg+LjlsA==
   /ms/2.0.0:
     dev: false
     resolution:
@@ -692,6 +697,7 @@ specifiers:
   koa-router: ^7.4.0
   koa-static: ^4.0.3
   koa-websocket: ^5.0.1
+  morphdom: ^2.3.3
   partial.lenses: ^14.17.0
   ramda: ^0.26.0
   s-js: ^0.4.9

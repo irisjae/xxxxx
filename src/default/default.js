@@ -344,7 +344,16 @@ var delay = time => {{
 
 
 document .addEventListener ('DOMContentLoaded', _ => {;
-	;document .body .appendChild (window .view)
+	;document .body .appendChild (window .view .cloneNode (true))
+  (new MutationObserver (mutations => {;
+  })) .observe (document .documentElement,
+  { attributes: true,
+      characterData: true,
+      childList: true,
+      subtree: true,
+      attributeOldValue: true,
+      characterDataOldValue: true
+  })
 })
 
 
