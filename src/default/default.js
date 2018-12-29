@@ -7,7 +7,7 @@ var Z = sanc .create ({ checkTypes: false, env: sanc .env })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
-var dd = new require ('diff-dom') 
+var dd = new (require ('diff-dom'))
 var TimelineMax = window .TimelineMax
 var T = _x => _fn_obj =>
 	!! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
