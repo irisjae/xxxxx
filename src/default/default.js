@@ -343,9 +343,9 @@ var delay = time => {{
 
 
 
-document .addEventListener ('DOMContentLoaded', _ => {{
+document .addEventListener ('DOMContentLoaded', _ => {;
 	;document .body .appendChild (window .view)
-}})
+})
 
 
 
