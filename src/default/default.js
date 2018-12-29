@@ -345,13 +345,13 @@ var delay = time => {{
 
 document .addEventListener ('DOMContentLoaded', _ => {;
   var view = window .view .cloneNode (false)
-  Object .keys (window) .filter (R .test (/^on/)) .forEach(key => {
-    if (/^on/.test(key)) {
-        window.addEventListener(key.slice(2), event => {
-            console.log(event);
-        });
-    }
-});
+  ;Object .keys (window) .filter (R .test (/^on/)) .map (R .slice (2, Infinity)) .forEach (event => {;
+    ;view .addEventListener (event, e => {;
+      var path = R .reverse (
+        R .unfold (node => node != view && [ [... node .parentNode .children] .indexOf (node), node .parentNode ]
+        , e .target))
+      var target = R .reduce ((node, index) => node .children [index], window .view, path) 
+      ;target .dispatchEvent (e) }) })
 
   
 	;document .body .appendChild (view)
