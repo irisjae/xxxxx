@@ -345,6 +345,15 @@ var delay = time => {{
 
 document .addEventListener ('DOMContentLoaded', _ => {;
   var view = window .view .cloneNode (false)
+  Object .keys (window) .filter (R .test (/^on/)) .forEach(key => {
+    if (/^on/.test(key)) {
+        window.addEventListener(key.slice(2), event => {
+            console.log(event);
+        });
+    }
+});
+
+  
 	;document .body .appendChild (view)
   var dd = new (require ('diff-dom'))
   //var morphdom = require ('morph-dom')
