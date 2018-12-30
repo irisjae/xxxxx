@@ -290,6 +290,8 @@ var to_maybe = default_fn => _x =>
 //--------------------LENSES--------------------
 
 
+var as_value_of = key => 
+  [ L .filter (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
 
 var pair_as_v = L .iso (
   _pair => !! Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
@@ -643,7 +645,16 @@ var position_bingoes = _board => _past =>
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
   , _local_patterns = local_patterns (size_patterns (_size))
-  , _solved_patterns = Z_ .reduce ((_pos, [ past_positions, past_patterns ])) ([ [], [] ])
+  , _solved_patterns =
+     $ (Z_ .reduce
+     ) (
+     (_pos, [ past_positions, past_patterns ]) => so ((_=_=>
+       [ positions, Z_ .append (solved_local_patterns) (past_patterns) ],
+       where
+       , positions = Z_ .append (_pos) (past_positions)
+       , solved_local_patterns = T (_local_patterns) )=>_)
+     ) (
+     [ [], [] ])
      
      )=>_)
 
