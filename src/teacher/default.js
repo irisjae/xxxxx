@@ -216,7 +216,7 @@ var playing_view = _ => so ((_=_=>
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
                   , _cell_solved = Z .elem (_cell_position) (_solved_positions)
-                  , _cell_bingo = R .any (Z .elem (_cell_position)) (_bingoed_positions) )=>_)))
+                  , _cell_bingo = Z .elem (_cell_position) (_bingoed_positions) )=>_)))
                   } </row> )) } </board>,
               where
               , _solved_positions = solved_positions (_board) (_past)
@@ -506,8 +506,7 @@ where
 , ensemble_bingoed_positions = by (_ensemble =>
     $ (
     [ assemble_students (S .sample (app_state))
-    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past) ])
-    , Z_ .join ])) )=>_)
+    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past) ]) ])) )=>_)
 
 ;S (_ => {;
 	;T (app_state ()
