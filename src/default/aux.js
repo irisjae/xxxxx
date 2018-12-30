@@ -577,6 +577,27 @@ var size_patterns = memoize (size =>
       [ T (range) (Z .map (_x => [_x, _x]))
       , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
 
+var local_patterns = memoize (patterns =>
+	so ((_=_=>
+  Z_ .reduce () (T (_positions) (_position => Z_ .Pair (_position) ([]))) ()
+	n_reducer (Z .concat) (3)
+		(vertical_patterns)
+		(horizontal_patterns)
+		(diagonal_patterns),
+	where
+	, range = Z .range (1) (size + 1)
+	, vertical_patterns =
+			T (range) (Z .map (x =>
+				T (range) (Z .map (y =>
+					[x, y] ))))
+	, horizontal_patterns =
+			T (range) (Z .map (y =>
+				T (range) (Z .map (x =>
+					[x, y] ))))
+	, diagonal_patterns =
+      [ T (range) (Z .map (_x => [_x, _x]))
+      , T (range) (Z .map (_x => [_x, (size - 1) - _x])) ] )=>_))
+
 // var current_problem = by (_past =>
 //     L .get ([ past_as_points, L .last, point_as_problem ]))
 var current_problem = by (_app =>
