@@ -706,36 +706,6 @@ var schedule_start = _ensemble =>
 	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
 
 
-var persisted_ = so ((_=_=>
-  _el => {;
-    var persisted_el 
-    if (! cache .some ((cached_el, cutoff) => {;
-      if (_el .isEqualNode (cached_el)) {
-        ;persisted_el = cached_el
-        ;cache = cache .slice (0, cutoff) .concat (cache .slice (cutoff + 1))
-        return true }
-      else {
-        return false } })
-    ) {
-      ;persisted_el = _el }
-    ;recache = recache .concat ([ persisted_el ])
-    ;reset ()
-    return persisted_el },
-  where
-  , cache = []
-  , recache = []
-  , be_reset = false
-  , reset_signal = S .data (fiat)
-  , reset = _ => {;
-      if (! be_reset) {
-        ;be_reset = true
-        ;reset_signal (fiat) } } 
-  ,$= S (_=> {;
-    reset_signal ()
-    ;be_reset = false
-    ;cache = recache
-    ;recache = [] }) )=>_) 
-
 
 window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
@@ -770,5 +740,4 @@ window .stuff = { ...window .stuff,
 	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 	past_progressed,
   current_problem, problem_choice_matches,
-  attempted_positions, solved_positions, bingoed_positions,
-  persisted_ }
+  attempted_positions, solved_positions, bingoed_positions }
