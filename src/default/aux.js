@@ -635,16 +635,12 @@ var bingoed_positions = _board => _past =>
 	, _solved_positions = solved_positions (_board) (_past) )=>_)
 
 var position_bingoes = _board => _past => 
-	so ((_=_=> so ((_=_=>
-	T (bingo_patterns
-  ) (
-  Z_ .filter (R .all (T (_solved_positions) (Z .flip (Z_ .elem))))),
-//no need to expand patterns???? 
-	where
-	, bingo_patterns = size_patterns (_size) )=>_),
-  where
-	, _size = T (_board) (Z_ .size)
-	, _solved_positions = solved_positions (_board) (_past) )=>_)
+  !! (Z_ .size (T (_past) (past_as_points)) == 0) 
+  ? T (_positions) (pair_projection (Z_ .I) (Z_ .K ([])))
+  : so ((_=_=> pair_zip (position_bingoes (_board) (incised_pastn)) () 
+    where
+    , _size = T (_board) (Z_ .size)
+    , _solved_positions = solved_positions (_board) (_past) )=>_)
 
 
 
