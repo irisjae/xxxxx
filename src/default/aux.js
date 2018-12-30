@@ -291,7 +291,7 @@ var to_maybe = default_fn => _x =>
 
 
 var as_value_of = key => 
-  [ L .filter (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
+  [ L .elems, L .when (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
 
 var pair_as_v = L .iso (
   _pair => !! Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
@@ -640,7 +640,6 @@ var position_bingoes = _board => _past =>
   so ((_=_=>
   //T (_positions) (pair_projection (Z_ .I) (Z_ .K ([])))
   pair_zip (position_bingoes (_board) (incised_past)) (),
-  
   where
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
@@ -652,11 +651,15 @@ var position_bingoes = _board => _past =>
        [ positions, Z_ .append (solved_local_patterns) (past_patterns) ],
        where
        , positions = Z_ .append (_pos) (past_positions)
-       , solved_local_patterns = T (_local_patterns) )=>_)
+       , solved_local_patterns = 
+           T (_local_patterns
+           ) (
+           [ L .get (as_value_of (_pos))
+           , Z_ .filter (R .all (positions) (Z_ .flip (Z_ .elem))) ]) )=>_)
      ) (
-     [ [], [] ])
-     
-     )=>_)
+     [ [], [] ]
+     ) (
+     T (_past) (L .collect ([ past_as_points, L .elems, point_as_position ]))) )=>_)
 
 
 
