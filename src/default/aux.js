@@ -579,11 +579,14 @@ var size_patterns = memoize (size =>
 
 var local_patterns = memoize (patterns =>
 	so ((_=_=>
-  Z_ .reduce () (T (_positions) (_position => Z_ .Pair (_position) ([]))) ()
-	n_reducer (Z .concat) (3)
-		(vertical_patterns)
-		(horizontal_patterns)
-		(diagonal_patterns),
+  T (patterns
+  ) (
+  [ Z_ .map (_pattern => T (_positions) (Z_ .map (pair_projection (Z_ .I) (_position => Z_ .elem (_position) (_pattern) ? [ _pattern ] : []))))
+  , $ (Z_ .reduce
+    ) (
+    pair_zip (Z_ .concat)
+    ) (
+    T (_positions) (Z_ .map (pair_projection (Z_ .I) (Z_ .K ([]))))) ]),
 	where
 	, range = Z .range (1) (size + 1)
 	, vertical_patterns =
