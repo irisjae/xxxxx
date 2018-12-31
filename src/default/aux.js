@@ -638,8 +638,10 @@ var bingoed_positions = _board => _past =>
 
 var position_bingoes = _board => _past => 
   so ((_=_=>
-  //T (_positions) (pair_projection (Z_ .I) (Z_ .K ([])))
-  pair_zip (position_bingoes (_board) (incised_past)) (),
+  T (_board
+  ) (
+  [ Z_ .join
+  , Z_ .map (by (_position => L .collect ([ L .elems, L .elems, L .when (Z_ .equals (_position)), L .reIx ]))) ]),
   where
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
