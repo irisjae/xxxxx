@@ -636,35 +636,27 @@ var bingoed_positions = _board => _past =>
 	, _size = T (_board) (Z_ .size)
 	, _solved_positions = solved_positions (_board) (_past) )=>_)
 
-var position_bingo_parts = _board => _past => 
+var bingoes = _board => _past => 
   so ((_=_=>
-  T (_board
-  ) (
-  L .collect ([ L .elems, L .elems, cell_as_position, pair_projection (Z_ .I
-    ) (_position =>
-      T (_solved_patterns
-      ) (
-      L .collect ([ L .elems, L .elems, L .entries, L .when (L .get ([ L .last, Z_ .equals (_position) ])), L .first, L .reread (x => +x), L .add (1) ]))) ])),
+  T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
+  , $ (Z_ .reduce
+    ) (
+    ([ past_positions, past_solved_patterns ]) => _pos => so ((_=_=>
+      [ positions, Z_ .append (solved_local_patterns) (past_solved_patterns) ],
+      where
+      , positions = Z_ .append (_pos) (past_positions)
+      , solved_local_patterns = 
+          T (_local_patterns
+          ) (
+          [ L .get (as_value_of (_pos))
+          , Z_ .filter (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) )=>_)
+    ) (
+    [ [], [] ])
+  , L .get (L .last) ]),
   where
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
-  , _local_patterns = local_patterns (size_patterns (_size))
-  , _solved_patterns =
-     T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
-     , $ (Z_ .reduce
-       ) (
-       ([ past_positions, past_solved_patterns ]) => _pos => so ((_=_=>
-         [ positions, Z_ .append (solved_local_patterns) (past_solved_patterns) ],
-         where
-         , positions = Z_ .append (_pos) (past_positions)
-         , solved_local_patterns = 
-             T (_local_patterns
-             ) (
-             [ L .get (as_value_of (_pos))
-             , Z_ .filter (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) )=>_)
-       ) (
-       [ [], [] ])
-     , L .get (L .last) ]) )=>_)
+  , _local_patterns = local_patterns (size_patterns (_size)) )=>_)
 
 
 
