@@ -636,12 +636,16 @@ var bingoed_positions = _board => _past =>
 	, _size = T (_board) (Z_ .size)
 	, _solved_positions = solved_positions (_board) (_past) )=>_)
 
-var position_bingoes = _board => _past => 
+var position_bingo_parts = _board => _past => 
   so ((_=_=>
   T (_board
   ) (
   [ Z_ .join
-  , Z_ .map (_position => T (_solved_patterns) (L .collect ([ L .elems, L .elems, L .when (Z_ .equals (_position)), L .reIx ]))) ]),
+  , Z_ .map (pair_projection (Z_ .I
+      ) (_position =>
+        T (_solved_patterns
+        ) (
+        L .collect ([ L .elems, L .entries, L .when (L .get ([ L .last, Z_ .equals (_position) ])), L .first, L .reread (x => +x), L .add (1) ])))) ]),
   where
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
