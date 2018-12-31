@@ -641,14 +641,14 @@ var bingoes = _board => _past =>
   T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
   , $ (Z_ .reduce
     ) (
-    ([ past_positions, past_solved_patterns ]) => _pos => so ((_=_=>
-      [ positions, Z_ .append (solved_local_patterns) (past_solved_patterns) ],
+    ([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
+      [ positions, Z_ .append (solved_local_patterns) (solved_patterns) ],
       where
-      , positions = Z_ .append (_pos) (past_positions)
+      , positions = Z_ .append (_position) (solved_positions)
       , solved_local_patterns = 
           T (_local_patterns
           ) (
-          [ L .get (as_value_of (_pos))
+          [ L .get (as_value_of (_position))
           , Z_ .filter (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) )=>_)
     ) (
     [ [], [] ])
