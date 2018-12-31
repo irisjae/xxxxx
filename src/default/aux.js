@@ -654,7 +654,7 @@ var position_bingo_parts = _board => _past =>
      T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
      , $ (Z_ .reduce
        ) (
-       (_pos, [ past_positions, past_solved_patterns ]) => so ((_=_=>
+       ([ past_positions, past_solved_patterns ]) => _pos => so ((_=_=>
          [ positions, Z_ .append (solved_local_patterns) (past_solved_patterns) ],
          where
          , positions = Z_ .append (_pos) (past_positions)
@@ -662,7 +662,7 @@ var position_bingo_parts = _board => _past =>
              T (_local_patterns
              ) (
              [ L .get (as_value_of (_pos))
-             , Z_ .filter (R .all (positions) (Z_ .flip (Z_ .elem))) ]) )=>_)
+             , Z_ .filter (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) )=>_)
        ) (
        [ [], [] ])
      , L .get (L .last) ]) )=>_)
