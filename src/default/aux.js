@@ -645,21 +645,23 @@ var position_bingoes = _board => _past =>
 	, _size = T (_board) (Z_ .size)
   , _local_patterns = local_patterns (size_patterns (_size))
   , _solved_patterns =
-     $ (Z_ .reduce
+     T (_past
      ) (
-     (_pos, [ past_positions, past_patterns ]) => so ((_=_=>
-       [ positions, Z_ .append (solved_local_patterns) (past_patterns) ],
-       where
-       , positions = Z_ .append (_pos) (past_positions)
-       , solved_local_patterns = 
-           T (_local_patterns
-           ) (
-           [ L .get (as_value_of (_pos))
-           , Z_ .filter (R .all (positions) (Z_ .flip (Z_ .elem))) ]) )=>_)
-     ) (
-     [ [], [] ]
-     ) (
-     T (_past) (L .collect ([ past_as_points, L .elems, point_as_position ]))) )=>_)
+     [ L .collect ([ past_as_points, L .elems, point_as_position ]))
+     , $ (Z_ .reduce
+       ) (
+       (_pos, [ past_positions, past_patterns ]) => so ((_=_=>
+         [ positions, Z_ .append (solved_local_patterns) (past_patterns) ],
+         where
+         , positions = Z_ .append (_pos) (past_positions)
+         , solved_local_patterns = 
+             T (_local_patterns
+             ) (
+             [ L .get (as_value_of (_pos))
+             , Z_ .filter (R .all (positions) (Z_ .flip (Z_ .elem))) ]) )=>_)
+       ) (
+       [ [], [] ])
+     , ]) )=>_)
 
 
 
