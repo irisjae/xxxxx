@@ -506,7 +506,7 @@ where
 , ensemble_bingoed_positions = by (_ensemble =>
     $ (
     [ assemble_students (S .sample (app_state))
-    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past) ]) ])) )=>_)
+    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past), L .elems ]) ])) )=>_)
 
 ;S (_ => {;
 	;T (app_state ()
