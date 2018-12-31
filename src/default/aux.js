@@ -641,7 +641,7 @@ var position_bingoes = _board => _past =>
   T (_board
   ) (
   [ Z_ .join
-  , Z_ .map (by (_position => L .collect ([ L .elems, L .elems, L .when (Z_ .equals (_position)), L .reIx ]))) ]),
+  , Z_ .map (_position => T (_solved_patterns) (L .collect ([ L .elems, L .elems, L .when (Z_ .equals (_position)), L .reIx ]))) ]),
   where
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
