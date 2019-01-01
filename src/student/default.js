@@ -46,6 +46,7 @@ as_sole, sole, every, delay
 
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
+  setting_up_student: (icon =~ avatar) => feedback,
   setup_student: (name =~ string) => feedback,
   attempt_problem: (position =~ position) => feedback })
 
@@ -56,8 +57,11 @@ var lookbehind = data ({
 
 
 var feedback_as_setup_room = data_iso (feedback .setup_room)
+var feedback_as_setting_up_student = data_iso (feedback .setting_up_student)
 var feedback_as_setup_student = data_iso (feedback .setup_student)
 var feedback_as_attempt_problem = data_iso (feedback .attempt_problem)
+
+var feedback_as_icon = data_iso (feedback .setting_up_student) .icon
 
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
 var lookbehind_as_bad_room = data_iso (lookbehind .bad_room)
@@ -124,14 +128,14 @@ var setup_student_view = _ => so ((_=_=>
   <setup-student-etc fn={ setup_student_feedback }>
     <a-title>Bingo</a-title>
     <sub-title>除法（一）</sub-title>
-    <name style={{ margin: '30px 0' }}>
+    <name style={{ marginTop: '30px' }}>
       <label>名稱</label>
       <input /> </name>
     <icon style={{ marginBottom: '30px' }}>
       <avatar x-selected={ T (_icon) (L .isDefined (avatar_as_lion)) }>
         <selected-input />
         <img src={ lion_avatar_img } /> </avatar>
-      <avatar>
+      <avatar x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
         <selected-input />
         <img src={ bunny_avatar_img } /> </avatar> </icon> 
     <button x-custom x-for="connect"><img src={ connect_img } /></button> </setup-student-etc>,
