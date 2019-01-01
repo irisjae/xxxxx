@@ -132,10 +132,10 @@ var setup_student_view = _ => so ((_=_=>
       <label>名稱</label>
       <input /> </name>
     <icon style={{ marginBottom: '30px' }}>
-      <avatar x-selected={ T (_icon) (L .isDefined (avatar_as_lion)) }>
+      <avatar x-for="lion" x-selected={ T (_icon) (L .isDefined (avatar_as_lion)) }>
         <selected-input />
         <img src={ lion_avatar_img } /> </avatar>
-      <avatar x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
+      <avatar x-for="bunny" x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
         <selected-input />
         <img src={ bunny_avatar_img } /> </avatar> </icon> 
     { !! L .isDefined (feedback_as_setting_up_student) (_feedback)
@@ -152,11 +152,20 @@ var setup_student_view = _ => so ((_=_=>
         if (_e .keyCode === 13) {
           ;let_name_enter () } }),
       clicking .forEach (click => {;
-        ;_button .addEventListener (click, _e => {;
-          ;let_name_enter () }) })),
+        ;_select_lion .addEventListener (click, _e => {;
+          ;let_icon (avatar .lion) })
+        ;_select_bunny .addEventListener (click, _e => {;
+          ;let_icon (avatar .bunny) })
+        if (_button) { 
+          ;_button .addEventListener (click, _e => {;
+            ;let_name_enter () }) } })),
       where
       , _input = _dom .querySelector ('input')
+      , _select_lion = _dom .querySelector ('avatar[x-for=lion] selected-input')
+      , _select_bunny = _dom .querySelector ('avatar[x-for=bunny] selected-input')
       , _button = _dom .querySelector ('button')
+      , let_icon = _avatar => {;
+          ;feedback_state (feedback .setting_up_student (_avatar)) }
       , let_name_enter = _ => {;
           if (L .isDefined (feedback_as_setting_up_student) (_feedback)) {
             var value = _input .value
