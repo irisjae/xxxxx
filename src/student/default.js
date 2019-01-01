@@ -1,13 +1,4 @@
-var { T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-so, by, and_by, under,
-go, never, panic, panic_on,
-just_now, temporal,
-fiat, data, data_lens, data_iso, data_kind,
-focused_iso_,
-n_reducer, pair_zip_n, pair_zip, pair_projection,
-map_defined_, map_defined, from_just, maybe_all,
-as_sole, sole, every, delay,
-bool, number, timestamp, string,
+var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
 avatar, student, problem, choice, answer, latency, ping, position,
@@ -27,6 +18,7 @@ attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, p
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_problems,
 app_as_last_point, point_as_attempts,
+avatar_as_lion, avatar_as_bunny, 
 student_as_id, student_as_name, student_as_icon, 
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
@@ -39,7 +31,16 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 past_progressed,
 current_problem, problem_choice_matches,
-attempted_positions, solved_positions, bingoed_positions
+attempted_positions, solved_positions, bingoed_positions,
+T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+so, by, and_by, under,
+go, never, panic, panic_on,
+just_now, temporal,
+fiat, data, data_lens, data_iso, data_kind,
+focused_iso_,
+n_reducer, pair_zip_n, pair_zip, pair_projection,
+map_defined_, map_defined, from_just, maybe_all,
+as_sole, sole, every, delay
 } = window .stuff
 
 
@@ -126,8 +127,18 @@ var setup_student_view = _ => so ((_=_=>
     <name style={{ margin: '30px 0' }}>
       <label>名稱</label>
       <input /> </name>
+    <icon style={{ marginBottom: '30px' }}>
+      <avatar x-selected={ T (_icon) (L .isDefined (avatar_as_lion)) }>
+        <selected-input />
+        <img src={ lion_avatar_img } /> </avatar>
+      <avatar>
+        <selected-input />
+        <img src={ bunny_avatar_img } /> </avatar> </icon> 
     <button x-custom x-for="connect"><img src={ connect_img } /></button> </setup-student-etc>,
   where
+  , _icon = T (app_state ()) (L .get ([ app_as_student, student_as_icon ]))
+  , lion_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
+  , bunny_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
   , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
   , setup_student_feedback = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;

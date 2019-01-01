@@ -350,6 +350,9 @@ var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards
 var ensemble_as_student_starts = data_iso (ensemble .ensemble) .student_starts 
 var ensemble_as_student_pasts = data_iso (ensemble .ensemble) .student_pasts 
 
+var avatar_as_lion = data_iso (avatar .lion)
+var avatar_as_bunny = data_iso (avatar .bunny)
+
 var student_as_id = data_lens (student .student) .id
 var student_as_name = data_lens (student .student) .name
 var student_as_icon = data_lens (student .student) .icon
@@ -765,6 +768,7 @@ window .stuff = { ...window .stuff,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,
   app_as_last_point, point_as_attempts,
+  avatar_as_lion, avatar_as_bunny, 
   student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
