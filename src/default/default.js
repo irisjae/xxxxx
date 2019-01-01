@@ -357,7 +357,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
   
 	;document .body .appendChild (view)
-  var dd = new (require ('diff-dom'))
+  var dd = new (require ('diff-dom')) ({ valueDiffing: false })
   //var morphdom = require ('morph-dom')
   //var nanomorph = require ('nanomorph')
   var morph = goals => {;
