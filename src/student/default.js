@@ -47,7 +47,7 @@ as_sole, sole, every, delay
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
   setting_up_student: (icon =~ avatar) => feedback,
-  setup_student: (name =~ string) => feedback,
+  setup_student: (icon =~ avatar, name =~ string) => feedback,
   attempt_problem: (position =~ position) => feedback })
 
 var lookbehind = data ({
@@ -142,35 +142,36 @@ var setup_student_view = _ => so ((_=_=>
       ? <button x-custom x-for="connect"><img src={ connect_img } /></button>
       : [] } </setup-student-etc>,
   where
-  , _feedback = feedback_state () 
+  , _feedback = just_now (feedback_state) 
   , _icon = T (_feedback) (L .get ([ feedback_as_icon ]))
   , lion_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
   , bunny_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
   , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
   , setup_student_feedback = _dom => so ((_=_=>
-      (_input .addEventListener ('keypress', _e => {;
+      (_name_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
           ;let_name_enter () } }),
       clicking .forEach (click => {;
-        ;_select_lion .addEventListener (click, _e => {;
+        ;_lion_option .addEventListener (click, _e => {;
           ;let_icon (avatar .lion) })
-        ;_select_bunny .addEventListener (click, _e => {;
+        ;_bunny_option .addEventListener (click, _e => {;
           ;let_icon (avatar .bunny) })
         if (_button) { 
           ;_button .addEventListener (click, _e => {;
             ;let_name_enter () }) } })),
       where
-      , _input = _dom .querySelector ('input')
-      , _select_lion = _dom .querySelector ('avatar[x-for=lion] selected-input')
-      , _select_bunny = _dom .querySelector ('avatar[x-for=bunny] selected-input')
+      , _name_input = _dom .querySelector ('input')
+      , _lion_option = _dom .querySelector ('avatar[x-for=lion]')
+      , _bunny_option = _dom .querySelector ('avatar[x-for=bunny]')
       , _button = _dom .querySelector ('button')
       , let_icon = _avatar => {;
           ;feedback_state (feedback .setting_up_student (_avatar)) }
       , let_name_enter = _ => {;
           if (L .isDefined (feedback_as_setting_up_student) (_feedback)) {
-            var value = _input .value
-            ;_input .value = ''
-            ;feedback_state (feedback .setup_student (value)) } } )=>_))=>_)
+            var _icon = T (_feedback) (L .get (feedback_as_icon))
+            var _name = _name_input .value
+            ;_name_input .value = ''
+            ;feedback_state (feedback .setup_student (_icon, _name)) } } )=>_))=>_)
 
 
 var get_ready_view = <get-ready-etc>
@@ -330,11 +331,11 @@ var setup_room = _room => {;
 		.then (_ => {;
 			;io_state (io .inert) }) }
 
-var setup_student = _name => {;
+var setup_student = _icon => _name => {;
   ;app_state (
     T (S .sample (app_state)
     ) (
-    L .set (app_as_student) (Z_ .Just (student .student (uuid (), _name, avatar .lion))) )) } 
+    L .set (app_as_student) (Z_ .Just (student .student (uuid (), _name, _icon))) )) } 
 
 var connect_room = _ => {;
 	;T (S .sample (app_state)
@@ -440,9 +441,9 @@ S (_ => {;
         , ({ room: _room }) => {;
             ;setup_room (_room) } ]
       , [ feedback_as_setup_student
-        , ({ name: _name }) => {;
+        , ({ icon: _icon, name: _name }) => {;
             ;go
-            .then (_ => setup_student (_name))
+            .then (_ => setup_student (_icon) (_name))
             .then (_ => connect_room ()) } ]
       , [ feedback_as_attempt_problem
         , ({ position: _position }) => {;
