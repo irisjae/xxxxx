@@ -138,9 +138,12 @@ var setup_student_view = _ => so ((_=_=>
       <avatar x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
         <selected-input />
         <img src={ bunny_avatar_img } /> </avatar> </icon> 
-    <button x-custom x-for="connect"><img src={ connect_img } /></button> </setup-student-etc>,
+    { !! L .isDefined (feedback_as_setting_up_student) (_feedback)
+      ? <button x-custom x-for="connect"><img src={ connect_img } /></button>
+      : [] } </setup-student-etc>,
   where
-  , _icon = T (app_state ()) (L .get ([ app_as_student, student_as_icon ]))
+  , _feedback = feedback_state () 
+  , _icon = T (_feedback) (L .get ([ feedback_as_icon ]))
   , lion_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
   , bunny_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
   , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
@@ -155,9 +158,10 @@ var setup_student_view = _ => so ((_=_=>
       , _input = _dom .querySelector ('input')
       , _button = _dom .querySelector ('button')
       , let_name_enter = _ => {;
-          var value = _input .value
-          ;_input .value = ''
-          ;feedback_state (feedback .setup_student (value)) } )=>_))=>_)
+          if (L .isDefined (feedback_as_setting_up_student) (_feedback)) {
+            var value = _input .value
+            ;_input .value = ''
+            ;feedback_state (feedback .setup_student (value)) } } )=>_))=>_)
 
 
 var get_ready_view = <get-ready-etc>
