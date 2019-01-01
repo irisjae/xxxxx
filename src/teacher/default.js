@@ -19,7 +19,7 @@ app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_problems,
 app_as_last_point, point_as_attempts,
 avatar_as_lion, avatar_as_bunny, 
-student_as_id, student_as_name, student_as_icon, 
+student_as_student, student_as_id, student_as_name, student_as_icon, 
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position,
@@ -165,9 +165,11 @@ var get_ready_view = _ => so ((_=_=>
       <students>
         { T (_students
           ) (
-          Z_ .map ($ (
-          [ L .get (student_as_name)
-          , _x => <student>{ _x }</student> ]))) }</students> </students-etc>
+          Z_ .map (under (student_as_student
+          ) (({ icon: _icon, name: _name }) => 
+            <student x-icon={
+              !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+            >{ _name }</student> ))) } </students> </students-etc>
     { !! Z .not (Z_ .size (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
 				: [] } </get-ready-etc>,

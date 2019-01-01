@@ -353,6 +353,8 @@ var ensemble_as_student_pasts = data_iso (ensemble .ensemble) .student_pasts
 var avatar_as_lion = data_iso (avatar .lion)
 var avatar_as_bunny = data_iso (avatar .bunny)
 
+var student_as_student = data_iso (student .student)
+
 var student_as_id = data_lens (student .student) .id
 var student_as_name = data_lens (student .student) .name
 var student_as_icon = data_lens (student .student) .icon
@@ -769,7 +771,7 @@ window .stuff = { ...window .stuff,
 	app_as_board, app_as_past, app_as_problems,
   app_as_last_point, point_as_attempts,
   avatar_as_lion, avatar_as_bunny, 
-  student_as_id, student_as_name, student_as_icon, 
+  student_as_student, student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position,
