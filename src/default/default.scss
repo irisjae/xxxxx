@@ -140,11 +140,14 @@ teacher-app > get-ready-etc {
         /*overflow: scroll;*/
         margin: 0 0 5px;
         display: block;
-        background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-item-bar.png?1541576347704);
         background-size: cover;
         padding: 10px;
         text-indent: 40px;
-        font-size: 0.8em; } } } }
+        font-size: 0.8em;
+        &[x-icon=lion] {
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587); }
+        &[x-icon=bunny] {
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503); } } } } }
 teacher-app > playing-etc {
   button {
     &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
