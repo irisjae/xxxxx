@@ -205,7 +205,8 @@ var get_ready_view = <get-ready-etc>
 var playing_view = _ => so ((_=_=>
   <playing-etc>
     <div class="left-pane">
-      <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
+      <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
+        <ticker><spinner/></ticker> </ticker>
       <question>{ _current_question }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 

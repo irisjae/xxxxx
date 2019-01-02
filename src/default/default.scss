@@ -194,7 +194,7 @@ teacher-app > playing-etc {
     bottom: 20%;
     left: 25%;
     right: 25%;
-    & ticker {
+    & ticker-etc {
       background-color: #4b71d4;
       width: 80px;
       height: 80px;
@@ -205,7 +205,57 @@ teacher-app > playing-etc {
       display: block;
       position: absolute;
       left: 50%;
-      transform: translateX(-50%) translateY(-50%); }
+      transform: translateX(-50%) translateY(-50%);
+      & ticker {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        &:before, & spinner, &:after {
+          top: 0;
+          position: absolute;
+          width: 50%;
+          height: 100%;
+          animation-fill-mode: forwards; }
+        
+        & spinner {
+          overflow: hidden;
+          left: 0;
+          background: #ff8330;
+          animation: tick-spin 1s linear;
+          transform-origin: center right;
+          z-index: 2;
+          border-radius: 100% 0 0 100%/ 50% 0 0 50%; }
+
+        &:before, &:after {
+          content: ' ';
+          display: block; }
+        &:before {
+          left: 0;
+          background: #4b71d4;
+          z-index: 3;
+          opacity: 1;
+          animation: tick-mask 1s steps(1, end);
+          border-radius: 100% 0 0 100%/ 50% 0 0 50%; }
+        &:after {
+          right: 0;
+          background: #4b71d4;
+          z-index: 1;
+          opacity: 0;
+          animation: tick-mask 1s steps(1, end) reverse;
+          border-radius: 0 100% 100% 0/ 0 50% 50% 0; }
+
+        @keyframes tick-spin {
+          0% {
+            transform: rotate(0deg); }
+          100% {
+            transform: rotate(360deg); } }
+        @keyframes tick-mask {
+          0% {
+            opacity: 1; }
+          50%, 100% {
+            opacity: 0; } } } }
     & question {
       background: #fae383;
       display: flex;

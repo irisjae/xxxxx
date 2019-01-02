@@ -190,7 +190,9 @@ var playing_view = _ => so ((_=_=>
         <a-title>Bingo</a-title>
         <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <problem-etc>
-        <ticker>{ T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }</ticker>
+        <ticker-etc>
+          { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
+          <ticker><spinner/></ticker> </ticker-etc>
         <question>{ question }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
