@@ -456,6 +456,7 @@ ticker-etc {
 
     &:before, & spinner, &:after {
       top: 0;
+      display: block;
       position: absolute;
       width: 50%;
       height: 100%;
@@ -463,32 +464,27 @@ ticker-etc {
       animation-fill-mode: forwards; }
 
     & spinner {
-      overflow: hidden;
       left: 0;
+      z-index: 2;
       background: #4b71d4;
       animation-name: tick-spin;
       animation-timing-function: linear;
-      transform-origin: center right;
-      z-index: 2;
-      border-radius: 100% 0 0 100%/ 50% 0 0 50%; }
+      transform-origin: center right; }
 
     &:before, &:after {
       content: ' ';
-      display: block;
       background: #a3a3a3;
       animation-name: tick-mask;
       animation-timing-function: steps(1, end); }
     &:before {
       left: 0;
       z-index: 3;
-      opacity: 1;
-      border-radius: 100% 0 0 100%/ 50% 0 0 50%; }
+      opacity: 1; }
     &:after {
       right: 0;
       z-index: 1;
       opacity: 0;
-      animation-direction: reverse;
-      border-radius: 0 100% 100% 0/ 0 50% 50% 0; }
+      animation-direction: reverse; }
 
     @keyframes tick-spin {
       0% {
