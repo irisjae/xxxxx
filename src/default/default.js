@@ -354,6 +354,11 @@ document .addEventListener ('DOMContentLoaded', _ => {;
       if (target && event === 'input') {
         ;target .value = e .target .value }
       ;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
+                                                      
+  
+  (new MutationObserver (mutations => {;
+    ;morph (window .view) }))
+  .observe (document .body, { characterData: true })                                                    
 
   
 	;document .body .appendChild (view)
