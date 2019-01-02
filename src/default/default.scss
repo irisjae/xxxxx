@@ -437,7 +437,7 @@ board {
         background-position: center; } } } }
 
 ticker-etc {
-  background-color: #4b71d4;
+  background-color: #a3a3a3;
   width: 80px;
   height: 80px;
   font-size: 25px;
@@ -445,11 +445,11 @@ ticker-etc {
   line-height: 80px;
   border-radius: 50px;
   display: block;
-  position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   & ticker {
     position: relative;
+    display: block;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -459,33 +459,35 @@ ticker-etc {
       position: absolute;
       width: 50%;
       height: 100%;
+      animation-duration: 1s;
       animation-fill-mode: forwards; }
 
     & spinner {
       overflow: hidden;
       left: 0;
-      background: #ff8330;
-      animation: tick-spin 1s linear;
+      background: #4b71d4;
+      animation-name: tick-spin;
+      animation-timing-function: linear;
       transform-origin: center right;
       z-index: 2;
       border-radius: 100% 0 0 100%/ 50% 0 0 50%; }
 
     &:before, &:after {
       content: ' ';
-      display: block; }
+      display: block;
+      background: #a3a3a3;
+      animation-name: tick-mask;
+      animation-timing-function: steps(1, end); }
     &:before {
       left: 0;
-      background: #4b71d4;
       z-index: 3;
       opacity: 1;
-      animation: tick-mask 1s steps(1, end);
       border-radius: 100% 0 0 100%/ 50% 0 0 50%; }
     &:after {
       right: 0;
-      background: #4b71d4;
       z-index: 1;
       opacity: 0;
-      animation: tick-mask 1s steps(1, end) reverse;
+      animation-direction: reverse;
       border-radius: 0 100% 100% 0/ 0 50% 50% 0; }
 
     @keyframes tick-spin {
