@@ -356,9 +356,9 @@ document .addEventListener ('DOMContentLoaded', _ => {;
       ;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
                                                       
   
-  (new MutationObserver (mutations => {;
-    ;morph (window .view) }))
-  .observe (document .body, { characterData: true })                                                    
+//  (new MutationObserver (mutations => {;
+//    ;morph (window .view) }))
+//  .observe (document .body, { characterData: true })                                                    
 
   
 	;document .body .appendChild (view)
