@@ -361,7 +361,8 @@ document .addEventListener ('DOMContentLoaded', _ => {;
   //var morphdom = require ('morph-dom')
   //var nanomorph = require ('nanomorph')
   var morph = goals => {;
-    dd .apply (view, dd .diff (view, goals)) } 
+    ;dd .apply (view, dd .diff (view, goals))
+    ;[] .forEach .call (document .querySelectorAll ('input') .dispatchEvent (new Event ('input', { bubbles: true })))  } 
     //;morphdom (view, goals) } 
     //;nanomorph (view, goals) }
   ;morph (window .view), (new MutationObserver (mutations => {;
