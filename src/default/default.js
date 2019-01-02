@@ -364,7 +364,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
     ;dd .apply (view
       , dd .diff (view, goals)
         .filter (R .complement (under ('name') (Z_ .equals ('secret')))) )
-    ;[] .forEach .call (document .querySelectorAll ('input'), _input => {;_input .dispatchEvent (new Event ('input', { bubbles: true }))})  } 
+    ;[] .forEach .call (document .querySelectorAll ('input'), _input => {;_input .dispatchEvent (new Event ('input', { bubbles: true }))}) } 
     //;morphdom (view, goals) } 
     //;nanomorph (view, goals) }
   ;morph (window .view), (new MutationObserver (mutations => {;
