@@ -361,7 +361,9 @@ document .addEventListener ('DOMContentLoaded', _ => {;
   //var morphdom = require ('morph-dom')
   //var nanomorph = require ('nanomorph')
   var morph = goals => {;
-    ;dd .apply (view, dd .diff (view, goals))
+    ;dd .apply (view
+      , dd .diff (view, goals)
+        .filter (R .complement (under ('name') (Z_ .equals ('secret')))) )
     ;[] .forEach .call (document .querySelectorAll ('input'), _input => {;_input .dispatchEvent (new Event ('input', { bubbles: true }))})  } 
     //;morphdom (view, goals) } 
     //;nanomorph (view, goals) }
