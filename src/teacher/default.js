@@ -213,13 +213,11 @@ var playing_view = _ => so ((_=_=>
               <board> { T (_board) (Z_ .map (_row => 
                 <row> { T (_row) (Z_ .map (_cell =>
                   so ((_=_=>
-                  !! (_cell_bingo) ? <cell x-bingoed></cell>
-                  :!! (_cell_solved) ? <cell x-solved></cell>
+                  !! (_cell_solved) ? <cell x-solved></cell>
                   : <cell></cell>,
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
-                  , _cell_solved = Z .elem (_cell_position) (_solved_positions)
-                  , _cell_bingo = Z .elem (_cell_position) (_bingoed_positions) )=>_)))
+                  , _cell_solved = Z .elem (_cell_position) (_solved_positions) )=>_)))
                   } </row> )) } </board>,
               where
               , _solved_positions = solved_positions (_board) (_past)
