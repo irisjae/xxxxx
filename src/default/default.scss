@@ -451,6 +451,7 @@ ticker-etc {
   text-align: center;
   line-height: 80px;
   border-radius: 50px;
+  z-index: 0;
   
   & ticker {
     position: absolute;
