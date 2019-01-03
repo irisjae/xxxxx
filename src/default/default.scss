@@ -195,7 +195,9 @@ teacher-app > playing-etc {
     left: 25%;
     right: 25%;
     & ticker-etc {
-    }
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%); }
     & question {
       background: #fae383;
       display: flex;
@@ -451,10 +453,13 @@ ticker-etc {
   border-radius: 50px;
   
   & ticker {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
+    ticker {
+    po
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     overflow: hidden;
 
     &:before, & spinner, &:after {
@@ -468,7 +473,7 @@ ticker-etc {
 
     & spinner {
       left: 0;
-      z-index: 2;
+      z-index: -2;
       background: #4b71d4;
       animation-name: tick-spin;
       animation-timing-function: linear;
@@ -481,12 +486,12 @@ ticker-etc {
     &:before {
       left: 0;
       background: #a3a3a3;
-      z-index: 3;
+      z-index: -1;
       opacity: 1; }
     &:after {
       right: 0;
       background: #4b71d4;
-      z-index: 1;
+      z-index: -3;
       opacity: 0;
       animation-direction: reverse; }
 
