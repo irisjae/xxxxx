@@ -194,6 +194,8 @@ teacher-app > playing-etc {
     bottom: 20%;
     left: 25%;
     right: 25%;
+    & ticker-etc {
+    }
     & question {
       background: #fae383;
       display: flex;
@@ -437,6 +439,9 @@ board {
         background-position: center; } } } }
 
 ticker-etc {
+  position: relative;
+  overflow: hidden;
+  display: block;
   background-color: #a3a3a3;
   width: 80px;
   height: 80px;
@@ -444,9 +449,7 @@ ticker-etc {
   text-align: center;
   line-height: 80px;
   border-radius: 50px;
-  display: block;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  
   & ticker {
     position: relative;
     display: block;
@@ -473,15 +476,16 @@ ticker-etc {
 
     &:before, &:after {
       content: ' ';
-      background: #a3a3a3;
       animation-name: tick-mask;
       animation-timing-function: steps(1, end); }
     &:before {
       left: 0;
+      background: #a3a3a3;
       z-index: 3;
       opacity: 1; }
     &:after {
       right: 0;
+      background: #4b71d4;
       z-index: 1;
       opacity: 0;
       animation-direction: reverse; }
