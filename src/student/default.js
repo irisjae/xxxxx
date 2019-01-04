@@ -207,7 +207,7 @@ var playing_view = _ => so ((_=_=>
     <div class="left-pane">
       <ticker-etc>
         { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
-        <ticker z-identity={ _progress }><spinner/></ticker> </ticker-etc>
+        <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
       <question>{ _current_question }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 
@@ -227,6 +227,7 @@ var playing_view = _ => so ((_=_=>
     , _board = T (_app) (L .get (app_as_board))
     , _past = T (_app) (L .get (app_as_past))
     , _progress = T (_app) (L .get (app_as_progress))
+    , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , _current_question = T (_app) ([ current_problem, L .get (problem_as_question) ])
     , _solved_positions = solved_positions (_board) (_past)
     , _bingoed_positions = bingoed_positions (_board) (_past)

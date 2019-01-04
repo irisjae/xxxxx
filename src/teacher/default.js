@@ -192,7 +192,7 @@ var playing_view = _ => so ((_=_=>
       <problem-etc>
         <ticker-etc>
           { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
-          <ticker z-identity={ game_tick }><spinner/></ticker> </ticker-etc>
+          <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
         <question>{ question }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
@@ -239,6 +239,8 @@ var playing_view = _ => so ((_=_=>
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
+  , _progress = T (_app) (L .get (app_as_progress))
+  , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   , _problem = T (_app) (current_problem)
   , _students = T (_app) (L .get (app_as_students)) 
   , problem_number = T (_app) (L .get (app_as_progress)) + 1
