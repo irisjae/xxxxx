@@ -148,7 +148,7 @@ teacher-app > get-ready-etc {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587); }
         &[x-icon=bunny] {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
-          padding-top: 18px; } } } } }
+          padding-top: 20px; } } } } }
 teacher-app > playing-etc {
   button {
     &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
