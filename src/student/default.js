@@ -394,8 +394,13 @@ var attempt_problem = _position => {;
             $ (L .set
             ) ([app_as_last_point, point_as_attempts, L .appendTo]
             ) ([_position, latency]) ))
-          if (Z .not (problem_choice_matches (_problem) (_choice))) {
-            ;lookbehind_state (lookbehind .attempting (latency, true)) } } } })) }
+          if (problem_choice_matches (_problem) (_choice)) {
+            var correct_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'
+            ;(new Audio (correct_audio)) .play ()
+            ;lookbehind_state (lookbehind .attempting (latency, true)) }
+          else {
+            var incorrect_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'
+            ;(new Audio (incorrect_audio)) .play () } } } })) }
 
 var timesup_problem = _ => {;
 	;app_state (
