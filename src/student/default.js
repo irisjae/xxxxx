@@ -207,7 +207,7 @@ var playing_view = _ => so ((_=_=>
     <div class="left-pane">
       <ticker-etc>
         { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
-        <ticker _-identity={ game_tick }><spinner/></ticker> </ticker-etc>
+        <ticker z-identity={ game_tick }><spinner/></ticker> </ticker-etc>
       <question>{ _current_question }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 
