@@ -381,7 +381,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
     ;mutations .forEach (mutation => {;
       if (mutation .type == 'attributes' && mutation .attributeName === 'z-identity') {;
         ;mutation .target .parentNode .insertBefore (mutation .target, mutation .target) } }) }))
-  .observe (window .view, { attributes: true, subtree: true }) })
+  .observe (view, { attributes: true, subtree: true }) })
 
 
 
