@@ -192,7 +192,7 @@ var playing_view = _ => so ((_=_=>
       <problem-etc>
         <ticker-etc>
           { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
-          <ticker><spinner/></ticker> </ticker-etc>
+          <ticker _-identity={ game_tick }><spinner/></ticker> </ticker-etc>
         <question>{ question }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>

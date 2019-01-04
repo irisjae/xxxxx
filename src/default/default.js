@@ -355,10 +355,6 @@ document .addEventListener ('DOMContentLoaded', _ => {;
         ;target .value = e .target .value }
       ;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
                                                       
-  
-//  (new MutationObserver (mutations => {;
-//    ;morph (window .view) }))
-//  .observe (document .body, { characterData: true })                                                    
 
   
 	;document .body .appendChild (view)
@@ -366,10 +362,9 @@ document .addEventListener ('DOMContentLoaded', _ => {;
   //var morphdom = require ('morph-dom')
   //var nanomorph = require ('nanomorph')
   var morph = goals => {;
-    ;dd .apply (view
-      , dd .diff (view, goals)
-        .filter (R .complement (under ('name') (Z_ .equals ('secret')))) )
+    ;dd .apply (view, dd .diff (view, goals))
     ;[] .forEach .call (document .querySelectorAll ('input'), _input => {;_input .dispatchEvent (new Event ('input', { bubbles: true }))}) } 
+  
     //;morphdom (view, goals) } 
     //;nanomorph (view, goals) }
   ;morph (window .view), (new MutationObserver (mutations => {;
@@ -381,7 +376,12 @@ document .addEventListener ('DOMContentLoaded', _ => {;
     , subtree: true
     , attributeOldValue: true
     , characterDataOldValue: true })
-})
+  
+  (new MutationObserver (mutations => {;
+    ;mutations .forEach (mutation => {;
+      if (mutation .type == 'attributes' && mutation .attributeName === '_-identity') {;
+        ;mutation .target .parentNode .insertBefore (mutation .target, mutation .target) } }) }))
+  .observe (window .view, { attributes: true }) })
 
 
 
