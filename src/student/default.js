@@ -179,7 +179,7 @@ var get_ready_view = <get-ready-etc>
 		take
 		, room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
 		, student = T (app_state ()) (L .get ([ app_as_student, as_maybe ])) ) =>
-		!! Z .isNothing (room) ?
+		!! Z_ .isNothing (room) ?
       !! (L .isDefined (io_as_inert
       ) (io_state ()))
 			? setup_room_view
@@ -187,7 +187,7 @@ var get_ready_view = <get-ready-etc>
       ) (io_state ()))
       ? '正在連接遊戲室…'
       : panic ('invalid io at get ready view')
-		:!! Z .isNothing (student) ?
+		:!! Z_ .isNothing (student) ?
       !! (L .isDefined (io_as_inert
       ) (io_state ()))
 			? setup_student_view
@@ -219,8 +219,8 @@ var playing_view = _ => so ((_=_=>
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
-          , _cell_solved = Z .elem (_cell_position) (_solved_positions)
-          , _cell_bingo = Z .elem (_cell_position) (_bingoed_positions) )=>_)))
+          , _cell_solved = Z_ .elem (_cell_position) (_solved_positions)
+          , _cell_bingo = Z_ .elem (_cell_position) (_bingoed_positions) )=>_)))
           } </row> )) } </board> </div> </playing-etc>,
     where
     , _app = app_state ()
@@ -277,8 +277,8 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) */)=>_),
   where
 	, average = by (list => $ ([
-			Z .sum,
-			Z .div (Z .size (list)) ])) )=>_)
+			Z_ .sum,
+			Z_ .div (Z_ .size (list)) ])) )=>_)
 
 
 window .view = <student-app>
@@ -353,7 +353,7 @@ var connect_room = _ => {;
 		;return go 
 		.then (_ =>
 			io_state (io .connecting) && api (_room)
-      .then (panic_on ([ [Z .equals ({}), 'empty room; expired code?'] ]))
+      .then (panic_on ([ [Z_ .equals ({}), 'empty room; expired code?'] ]))
 			.then ($ ([
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
 				 _ensemble => {;
@@ -384,7 +384,7 @@ var attempt_problem = _position => {;
 			  T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
         
       var _completed = under (point_as_position) ($ ([ board_choice (_board), problem_choice_matches (_problem) ])) (_point) || false 
-      if (Z .not (_completed)) {
+      if (Z_ .not (_completed)) {
         var _choice = board_choice (_board) (_position)
         if (! L .get (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
           var latency = game_clock .time () //lookbehind_latency ()
@@ -493,7 +493,7 @@ S (last_app => {;
 	var last_progress = T (last_app) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_progress !== undefined && progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
+		if (last_progress !== undefined && progress !== undefined && Z_ .not (Z_ .equals (last_progress) (progress))) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -514,7 +514,7 @@ S (last_state => {;
 	var last_progress = T (last_state) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
+		if (progress !== undefined && Z_ .not (Z_ .equals (last_progress) (progress))) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
@@ -540,7 +540,7 @@ S (last_ensemble => {;
         var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
         game_clock .clear ()
         ;game_clock .add (timesup_problem, time_limit)
-        ;T (Z .range (0) (time_limit + 1)) (R .forEach (t => {
+        ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {
           ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
         
 				if (start > now) {

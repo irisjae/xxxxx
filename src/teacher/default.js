@@ -111,7 +111,7 @@ var setup_view = _ => so ((_=_=>
         { T (io_state ()
           ) (
           [ L .get ([io_as_connecting, as_maybe])
-          , Z_ .maybe ([]) (Z .K (
+          , Z_ .maybe ([]) (Z_ .K (
               <div style={{ height: 0 }}>遊戲正在開始…</div>)) ]) } </button></div>
     <div class="right-pane">
       <settings x-for="board-size">
@@ -170,7 +170,7 @@ var get_ready_view = _ => so ((_=_=>
             <student x-icon={
               !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
             >{ _name }</student> ))) } </students> </students-etc>
-    { !! Z .not (Z_ .size (_students) === 0)
+    { !! Z_ .not (Z_ .size (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
 				: [] } </get-ready-etc>,
 	where
@@ -219,7 +219,7 @@ var playing_view = _ => so ((_=_=>
                   : <cell></cell>,
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
-                  , _cell_solved = Z .elem (_cell_position) (_solved_positions) )=>_)))
+                  , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_)))
                   } </row> )) } </board>,
               where
               , _solved_positions = solved_positions (_board) (_past)
@@ -301,7 +301,7 @@ var get_room = _room => {;
 	;return go
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
-		.then (panic_on ([ [_x => Z .not (Z_ .equals ({}) (_x)), _room + ' taken'] ])) )
+		.then (panic_on ([ [_x => Z_ .not (Z_ .equals ({}) (_x)), _room + ' taken'] ])) )
 	.then (_ =>
 		api (_room,
 			post (message_encoding (
@@ -394,7 +394,7 @@ var connection = S (_ => {;
 	var last_progress = T (last_state) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (progress !== undefined && Z .not (Z .equals (last_progress) (progress))) {
+		if (progress !== undefined && Z_ .not (Z_ .equals (last_progress) (progress))) {
 			;game_clock .seek (0) }
 		;game_clock .play () }
 	return app_state () }
@@ -450,7 +450,7 @@ var connection = S (_ => {;
 	
 	var _app_students = T (_app) (L .get (app_as_students))
 	var _ensemble_students = T (_ensemble) (assemble_students (_app))
-	if (_ensemble_students && Z .not (Z_ .equals (_ensemble_students) (_app_students))) {
+	if (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students))) {
 		;app_state (
 			T (_app
 			) (L .set (app_as_students) (_ensemble_students))) } })
@@ -468,7 +468,7 @@ var connection = S (_ => {;
         var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
         game_clock .clear ()
         ;game_clock .add (timesup_problem, time_limit)
-        ;T (Z .range (0) (time_limit + 1)) (R .forEach (t => {;
+        ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
           ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
         
 				if (start > now) {

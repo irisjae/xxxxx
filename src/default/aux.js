@@ -294,11 +294,11 @@ var as_value_of = key =>
   [ L .elems, L .when (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
 
 var pair_as_v = L .iso (
-  _pair => !! Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
-  _v => !! Z .and (Z_ .is (Z$ .Array (Z$ .Any)) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
+  _pair => !! Z_ .is (Z_ .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
+  _v => !! Z_ .and (Z_ .is (Z$ .Array (Z$ .Any)) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
 
-var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z .Nothing)]
-var as_defined = [L .reread (to_maybe (_ => Z .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z .Nothing)]
+var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z_ .Nothing)]
+var as_defined = [L .reread (to_maybe (_ => Z_ .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z_ .Nothing)]
 var as_defined_ = L .ifElse ($ (Z_ .is (Z_ .MaybeType (Z$ .Any)))) (as_defined) (L .identity)
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
@@ -415,8 +415,8 @@ var students_ensemble_as_info = [ students_ensemble_as_map, pair_as_second ]
 
 var generate_board = size => problems =>
 	so ((_=_=>
-	T (Z .range (1) (size + 1)) (
-		Z_ .map (row => T (Z .range (1) (size + 1)) (
+	T (Z_ .range (1) (size + 1)) (
+		Z_ .map (row => T (Z_ .range (1) (size + 1)) (
 			Z_ .map (column => [row, column, cell (row) (column)] )))),
 	where 
 	, cells = shuffle (problems .slice (0, size * size))
@@ -439,7 +439,7 @@ var teacher_app_get_ready_to_playing = by (_app =>
 var teacher_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
-		!! Z .not (game_over_ok)
+		!! Z_ .not (game_over_ok)
 		? L .set (app_as_progress) (progress + 1)
 		: teacher_app_playing_to_game_over,
 		where
@@ -470,7 +470,7 @@ var student_app_get_ready_to_playing = by (_app =>
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
-		!! Z .not (game_over_ok)
+		!! Z_ .not (game_over_ok)
 		? $ (
       [ L .set (app_as_progress) (progress + 1)
       , L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, [])) ] )
@@ -496,7 +496,7 @@ var ast = data ({
 // TODO: simplify this
 var problem_choice_matches = so ((_=_=>
   _problem => _choice => so ((_=_=>
-    Z .equals (normalize (_question)) (normalize (_choice)),
+    Z_ .equals (normalize (_question)) (normalize (_choice)),
     where
     , _question = T (_problem) (L .get (problem_as_question)) )=>_),
   where
@@ -559,30 +559,30 @@ var problem_choice_matches = so ((_=_=>
        [ L .zero ] )) 
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
-      !! Z .equals (b) (0)
+      !! Z_ .equals (b) (0)
       ? a
       : gcd (b) (a % b) )=>_)
 
 
 var size_patterns = memoize (size =>
 	so ((_=_=>
-	n_reducer (Z .concat) (3)
+	n_reducer (Z_ .concat) (3)
 		(vertical_patterns)
 		(horizontal_patterns)
 		(diagonal_patterns),
 	where
-	, range = Z .range (1) (size + 1)
+	, range = Z_ .range (1) (size + 1)
 	, vertical_patterns =
-			T (range) (Z .map (x =>
-				T (range) (Z .map (y =>
+			T (range) (Z_ .map (x =>
+				T (range) (Z_ .map (y =>
 					[x, y] ))))
 	, horizontal_patterns =
-			T (range) (Z .map (y =>
-				T (range) (Z .map (x =>
+			T (range) (Z_ .map (y =>
+				T (range) (Z_ .map (x =>
 					[x, y] ))))
 	, diagonal_patterns =
-      [ T (range) (Z .map (_x => [_x, _x]))
-      , T (range) (Z .map (_x => [_x, (size + 1) - _x])) ] )=>_))
+      [ T (range) (Z_ .map (_x => [_x, _x]))
+      , T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
 
 var local_patterns = memoize (patterns =>
 	so ((_=_=>
@@ -606,7 +606,7 @@ var current_problem = by (_app =>
   , progress = T (_app) (L .get (app_as_progress)) )=>_))
 var current_problem_solved = _app =>
   so ((_=_=>
-  Z .equals (Z_ .size (L .get (past_as_points))) (progress + 1),
+  Z_ .equals (Z_ .size (L .get (past_as_points))) (progress + 1),
   where
   , progress = T (_app) (L .get (app_as_progress)) )=>_)
 
@@ -618,7 +618,7 @@ var attempted_positions = by (_past =>
 var solved_positions = _board => _past => so ((_=_=>
   T (_points
   ) (
-  Z .chain (_point => so ((_=_=>
+  Z_ .chain (_point => so ((_=_=>
     !! (_position && problem_choice_matches (_problem) (_choice))
     ? [ _position ]
     : [],
@@ -633,7 +633,7 @@ var bingoed_positions = _board => _past =>
 	so ((_=_=> so ((_=_=>
 	T (bingo_patterns
   ) (
-  [ Z_ .filter (R .all (T (_solved_positions) (Z .flip (Z_ .elem))))
+  [ Z_ .filter (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem))))
   , Z_ .join ]),
 	where
 	, bingo_patterns = size_patterns (_size) )=>_),
@@ -677,7 +677,7 @@ var past_progressed = old_past => curr_past =>
 var message_encoding = by (message => 
 	so ((_=_=>
 	$ (
-  [ Z .flip (cases)
+  [ Z_ .flip (cases)
   , L .collect (L .elems)
   , sole
 	, L .get (data_iso (ensemble .ensemble))
@@ -712,7 +712,7 @@ var messages_encoding = list =>
 
 var assemble_students = by (_app => //and_by (_ensemble =>
   so ((_=_=>
-  $ ([ Z .flip (cases), L .collect (L .elems), L .get ([ as_sole, L .valueOr (Z_ .K (undefined)) ]) ]),
+  $ ([ Z_ .flip (cases), L .collect (L .elems), L .get ([ as_sole, L .valueOr (Z_ .K (undefined)) ]) ]),
   where
   , cases =
       [ under (app_as_get_ready
@@ -744,8 +744,8 @@ var schedule_start = _ensemble =>
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_as_ping))
 	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_student_pings, students_ensemble_as_info ]))
-	, pings = T (Z .prepend (teacher_ping) (student_pings)) (Z .map (L .get (ping_as_mean)))
-	, confidence_interval = Z .reduce (Z .max) (0) (pings) )=>_)
+	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (Z_ .map (L .get (ping_as_mean)))
+	, confidence_interval = Z_ .reduce (Z_ .max) (0) (pings) )=>_)
 
 
 
