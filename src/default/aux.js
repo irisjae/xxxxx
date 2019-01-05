@@ -279,10 +279,13 @@ var default_settings = settings .settings (default_problems, default_rules)
 
 
 
-var to_maybe = default_fn => _x => 
-	!! (Z_ .is (Z_ .MaybeType (Z$ .Any))) (_x)
-	? _x
-	: default_fn (_x)
+var to_maybe = so ((_=_=>
+  default_fn => _x => 
+    !! (Z_ .is (maybe_type_$)) (_x)
+    ? _x
+    : default_fn (_x),
+  where
+  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_) 
 
 
 
@@ -293,13 +296,20 @@ var to_maybe = default_fn => _x =>
 var as_value_of = key => 
   [ L .elems, L .when (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
 
-var pair_as_v = L .iso (
-  _pair => !! Z_ .is (Z_ .PairType (Z$ .Any) (Z$ .Any)) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
-  _v => !! Z_ .and (Z_ .is (Z$ .Array (Z$ .Any)) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined)
+var pair_as_v = so ((_=_=>
+  L .iso (
+  _pair => !! Z_ .is (pair_type_$) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
+  _v => !! Z_ .and (Z_ .is (array_type_$) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined),
+  where
+  , pair_type_$ = Z_ .PairType (Z$ .Any) (Z$ .Any)
+  , array_type_$ = Z$ .Array (Z$ .Any) )=>_)
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z_ .Nothing)]
 var as_defined = [L .reread (to_maybe (_ => Z_ .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z_ .Nothing)]
-var as_defined_ = L .ifElse ($ (Z_ .is (Z_ .MaybeType (Z$ .Any)))) (as_defined) (L .identity)
+var as_defined_ = so ((_=_=>
+  L .ifElse ($ (Z_ .is (maybe_type_$))) (as_defined) (L .identity),
+  where
+  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
