@@ -80,6 +80,9 @@ var never = new Promise (_ => {})
 
 
 
+var WeakMap = window .WeakMap
+var __data_length = new WeakMap
+var __data_lens = new WeakMap
 
 var fiat = {}
 var data = cons_definitions =>
@@ -107,9 +110,9 @@ var cons_memoize = cons =>
   memoize (cons
   , { serializer: cons => {;
         if (! cons_memoize .ids .get (cons)) {
-          var id
-          ;cons_memoize .next_id = cons ._cons_id = (cons_memoize .next_id || 0) + 1 }
-        return cons ._cons_id } })
+          ;var id = cons_memoize .next_id = (cons_memoize .next_id || 0) + 1
+          ;cons_memoize .ids .set (cons, id) }
+        return cons_memoize .ids .get (cons) } })
 ;cons_memoize .ids = new WeakMap
 
 var data_lens = cons_memoize (cons =>
@@ -176,10 +179,6 @@ var data_kind = data =>
 var focused_iso_ = lens => point => 
   L .iso (L .get (lens), _x => L .set (lens) (_x) (point))
 
-
-var WeakMap = window .WeakMap
-var __data_length = new WeakMap
-var __data_lens = new WeakMap
 
 
 
