@@ -419,7 +419,7 @@ var connection = S (_ => {;
       , [ data_iso (feedback .start)
         , _ => {;
             ;get_room (T (Math .random ()) ([
-              _x => _x * 100000000,
+              _x => _x * 10000,
               _x => Math .floor (_x) ])) .catch (_ => {}) } ]
       , [ data_iso (feedback .play)
         , _ => {;
