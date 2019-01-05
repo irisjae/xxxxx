@@ -103,7 +103,7 @@ var data = cons_definitions =>
       , $$1= __data_length .set (faux_cons, 0)
       , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_))))
 
-var data_lens = cons =>
+var data_lens = (cons =>
 	so ((_=_=>
 	faux_lens,
 	where
@@ -119,9 +119,9 @@ var data_lens = cons =>
           where
           , cons_length = __data_length .get (cons) )=>_)
       , records = T (template) ([ R .values, sole, R .keys ]) )=>
-      T (records) (R .forEach (_x => {{ ;faux_lens [_x] = [faux_lens, _x] }})) ))=>_)
+      T (records) (R .forEach (_x => {{ ;faux_lens [_x] = [faux_lens, _x] }})) ))=>_))
 
-var data_iso = cons =>
+var data_iso = (cons =>
 	so ((_=_=>
 	faux_lens,
 	where
@@ -145,7 +145,7 @@ var data_iso = cons =>
       , record_list = ordered_factors .map (_x => record [_x]) )=>_)
 	, faux_lens = L .iso (read) (write)
 	, $$X = T (ordered_factors) (R .forEach (_x => {{
-      ;faux_lens [_x] = [ faux_lens, _x ] }})) )=>_)
+      ;faux_lens [_x] = [ faux_lens, _x ] }})) )=>_))
 /*
 var data_iso = data =>
 	where ((
