@@ -103,12 +103,14 @@ var data = cons_definitions =>
       , $$1= __data_length .set (faux_cons, 0)
       , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_))))
 
-var cons_memoize = fn => 
-  memoize (fn
+var cons_memoize = cons => 
+  memoize (cons
   , { serializer: cons => {;
-        if (! cons ._cons_id) {
+        if (! cons_memoize .ids .get (cons)) {
+          var id
           ;cons_memoize .next_id = cons ._cons_id = (cons_memoize .next_id || 0) + 1 }
         return cons ._cons_id } })
+;cons_memoize .ids = new WeakMap
 
 var data_lens = cons_memoize (cons =>
 	so ((_=_=>
