@@ -103,7 +103,14 @@ var data = cons_definitions =>
       , $$1= __data_length .set (faux_cons, 0)
       , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_))))
 
-var data_lens = (cons =>
+var cons_memoize = fn => 
+  memoize (fn
+  , { serializer: cons => {;
+        if (! cons ._cons_id) {
+          ;cons_memoize .next_id = cons ._cons_id = (cons_memoize .next_id || 0) + 1 }
+        return cons ._cons_id } })
+
+var data_lens = cons_memoize (cons =>
 	so ((_=_=>
 	faux_lens,
 	where
@@ -121,7 +128,7 @@ var data_lens = (cons =>
       , records = T (template) ([ R .values, sole, R .keys ]) )=>
       T (records) (R .forEach (_x => {{ ;faux_lens [_x] = [faux_lens, _x] }})) ))=>_))
 
-var data_iso = (cons =>
+var data_iso = cons_memoize (cons =>
 	so ((_=_=>
 	faux_lens,
 	where
