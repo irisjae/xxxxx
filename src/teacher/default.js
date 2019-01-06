@@ -474,7 +474,16 @@ var timesup_problem = _ => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   if (tick_state () >= time_limit) {
-    
+    var progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+    var progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
+    var next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
+    var game_over_ok = Z_ .equals (next_problem) (undefined)  
+    if (game_over_ok) {
+      ;app_state (
+        teacher_app_playing_to_game_over (_app)) }
+    else {
+      ;app_state (
+        L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ]) (_app)) }
   } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
