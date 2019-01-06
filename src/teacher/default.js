@@ -497,21 +497,18 @@ var connection = S (_ => {;
     return _progress } } )
 //TODO: tidy this up
 ;so ((_=_=>
-S (last_ensemble => {;
+S (last_app => {;
 	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
   var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
   if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
-      if (! Z_ .size (ensemble_bingoed_positions (last_ensemble))) {
-        if (Z_ .size (ensemble_bingoed_positions (_ensemble))) {
-          ;end_game () } } } }
-	return _ensemble }
-, ensemble_state ()),
+      if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
+        ;end_game () } } }
+	return _app }),
 where
-, ensemble_bingoed_positions = by (_ensemble =>
+, app_has_bingoes_ok = by (_app =>
     $ (
-    [ assemble_students (S .sample (app_state))
+    [ //assemble_students (S .sample (app_state))
     , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past), L .elems ]) ])) )=>_)
 
 ;S (_ => {;
