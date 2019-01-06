@@ -240,8 +240,9 @@ var student = data ({
 var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
 	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
-	playing: ( room =~ room, settings =~ settings, students =~ map (student) (board, past), progress = nat ) => teacher_app,
-	game_over: ( room =~ room, settings =~ settings, students =~ map (student) (board, past) ) => teacher_app })
+	playing: ( room =~ room, settings =~ settings, students =~ list (student)
+           , student_boards =~ map (student) (board), student_pasts =~ map (student) (past), progress = nat ) => teacher_app,
+	game_over: ( room =~ room, settings =~ settings, students =~ list (student) (board, past) ) => teacher_app })
 
 var student_app = data ({
 	get_ready: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
