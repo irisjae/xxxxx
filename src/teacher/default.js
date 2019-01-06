@@ -140,10 +140,10 @@ var setup_view = _ => so ((_=_=>
       where
       , case_list_length = Z_ .size (case_v_img_list)
       , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
-      , data_img = T (case_v_img_list) (L .get ([ L .find (under (pair_as_first) (Z_ .equals (_case))), pair_as_second ]))
-      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (pair_as_first) (Z_ .equals (_case)))))
-      , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), pair_as_first ]))
-      , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), pair_as_first ]))
+      , data_img = T (case_v_img_list) (L .get ([ L .find (under (L .first) (Z_ .equals (_case))), L .last ]))
+      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (Z_ .equals (_case)))))
+      , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), L .first ]))
+      , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), L .first ]))
       , prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
       , next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
       , feedback_prev = _dom => {;
@@ -207,7 +207,7 @@ var playing_view = _ => so ((_=_=>
           ) (
           [ L .collect (
             [ L .elems
-            , pair_as_list ])
+rewrite ])
           , Z_ .map (([ id, [_board, _past] ]) =>
             <student-etc>
               <label>{id .name}</label>
