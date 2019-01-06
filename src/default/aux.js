@@ -417,6 +417,9 @@ var student_as_id = data_lens (student .student) .id
 var student_as_name = data_lens (student .student) .name
 var student_as_icon = data_lens (student .student) .icon
 
+var progress_as_step = [ 0 ]
+var progress_as_timestamp = [ 1 ]
+
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
 var point_as_problem = data_lens (point .point) .problem
@@ -770,6 +773,7 @@ window .stuff = { ...window .stuff,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
 	ensemble_as_pings, ensemble_as_progresses, ensemble_as_boards, ensemble_as_pasts,
+  progress_as_step, progress_as_timestamp, 
   attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,
