@@ -194,44 +194,20 @@ var n_reducer = binary => n =>
 	: _a => _b =>
 			n_reducer (binary) (n - 1) (binary (_a) (_b))
 
-var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
-
-// this is ugly
-var pair_zip = reducer => 
-	so ((_=_=>
-	a => b =>
-		T (Z_ .tail (a)) (Z_ .maybe ([]) (a_tail =>
-			T (pair_zip_fst_head (a) (b)) (Z_ .maybe_
-				(_ =>
-					pair_zip (reducer) (a_tail) (b))
-				(({ zip_head, snd_zipper }) =>
-					Z_ .prepend
-					 (zip_head)
-					 (pair_zip (reducer) (a_tail) (snd_zipper)))))),
-	where
-	, pair_zip_fst_head = fst => snd =>
-		T (maybe_all ({
-			fst_head: Z_ .head (fst),
-			snd_head: Z_ .head (snd),
-			snd_tail: Z_ .tail (snd) }
-		)) (Z_ .chain (({ fst_head, snd_head, snd_tail }) =>
-			so ((_=_=>
-			!! (Z_ .equals (fst_head_key) (snd_head_key))
-			? Z .Just ({
-					zip_head:
-						Z_ .Pair (fst_head_key)
-							(reducer (fst_head_value) (snd_head_value)),
-					snd_zipper: snd_tail })
-			: T (pair_zip_fst_head (fst) (snd_tail)
-				) (Z_ .map (({ zip_head, snd_zipper }) => (
-					{ zip_head: zip_head,
-						snd_zipper:
-							Z_ .prepend (snd_head) (snd_zipper) }) )),
-			where
-			, fst_head_key = Z_ .fst (fst_head)
-			, snd_head_key = Z_ .fst (snd_head)
-			, fst_head_value = Z_ .snd (fst_head)
-			, snd_head_value = Z_ .snd (snd_head) )=>_)) ) )=>_)
+// rewrite functionally?
+var projected_zip = projection => mash => a => b => {
+  var projections = new Map
+  ;T (a) (R .forEach (_x => {;
+    var _shadow = projection (_x)                         
+    ;projections .set (_shadow, _x) }))
+  
+  var _zip = []
+  ;T (b) (R .forEach (_x => {;
+    var _shadow = projection (_x)                         
+    if (projections .has (_shadow)) {
+      _zip = _zip .concat ([ mash (projections .get (_shadow)) (_x) ]) } }))
+  
+  return _zip }
 
 
 var pair_projection = key_projection => val_projection =>
