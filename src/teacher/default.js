@@ -448,30 +448,28 @@ var connection = S (_ => {;
   var _progress = L .get (app_as_progress) (_app)
   var _progress_step = L .get (progress_as_step) (_progress)
 	if (_progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
-			go
-			.then (_ =>
-				io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_progress (_progress)))) )
-			.catch (_e => {;
-				;console .error (_e) })
-			.then (_ => {;
-				;io_state (io .inert) }) } 
-    return _progress } } )
-//TODO: tidy this up
-;so ((_=_=>
-S (last_app => {;
+    go
+    .then (_ =>
+      io_state (io .messaging) && api (_room,
+          post (message_encoding (message .teacher_progress (_progress)))) )
+    .catch (_e => {;
+      ;console .error (_e) })
+    .then (_ => {;
+      ;io_state (io .inert) }) }
+  return _progress } } )
+;S (last_app => {;
+  var app_has_bingoes_ok = by (_app =>
+    $ (
+    [ //assemble_students (S .sample (app_state))
+    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past), L .elems ]) ])) )=>_)
+  
 	var _app = S .sample (app_state)
   var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
   if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
       if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
         ;end_game () } } }
-	return _app }),
-where
-, app_has_bingoes_ok = by (_app =>
-    $ (
-    [ //assemble_students (S .sample (app_state))
-    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past), L .elems ]) ])) )=>_)
+	return _app })
 
 
 ;S (_ => {;
