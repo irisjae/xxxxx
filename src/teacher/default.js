@@ -207,7 +207,7 @@ var playing_view = _ => so ((_=_=>
           ) (
           [ L .collect (
             [ L .elems
-rewrite ])
+            , rewrite ])
           , Z_ .map (([ id, [_board, _past] ]) =>
             <student-etc>
               <label>{id .name}</label>
@@ -518,11 +518,13 @@ var connection = S (_ => {;
       .then (_ => {;
         ;io_state (io .inert) }) } } })
 ;S (_ => {;
-  })
-;S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	
+	var _app_students = T (_app) (L .get (app_as_students))
+  var _app_boards = T (_app) (L .get (app_as_boards))
+  var _app_progresses = T (_app) (L .get (app_as_progresses))
+  var _app_pasts = T (_app) (L .get (app_as_pasts))
 	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
   var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
   var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
@@ -533,17 +535,15 @@ var connection = S (_ => {;
   [ !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
     ? [ L .set (app_as_students) (_ensemble_students) ] : []
   , !! (_ensemble_boards && Z_ .not (Z_ .equals (_ensemble_boards) (_app_boards)))
-    ? [ L .set (app_as_students) (_ensemble_boards) ] : []
-  , !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
-    ? [ L .set (app_as_students) (_ensemble_students) ] : []
-  , !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
-    ? [ L .set (app_as_students) (_ensemble_students) ] : []
-  ])
+    ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
+  , !! (_ensemble_progresses && Z_ .not (Z_ .equals (_ensemble_progresses) (_app_progresses)))
+    ? [ L .set (app_as_progresses) (_ensemble_progresses) ] : []
+  , !! (_ensemble_pasts && Z_ .not (Z_ .equals (_ensemble_pasts) (_app_pasts)))
+    ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
   
-	if (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students))) {
+	if (L .isDefined (L .elems) (ensemble_updates)) {
 		;app_state (
-			T (_app
-			) (L .set (app_as_students) (_ensemble_students))) } })
+			T (_app) ($ (ensemble_updates))) } })
 
 
 ;S (_ => {;
