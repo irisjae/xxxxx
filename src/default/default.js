@@ -393,11 +393,13 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 var timer = _ => {;
   var _timer = S .data ()
-  var update_timer = _ => {;
-    ;_timer (+ (new Date))
-    ;requestAnimationFrame (update_timer) }
-  ;update_timer ()
-  return _timer }
+  var _flowing = S .data (true)
+  ;S (_=> {;
+    if (_flowing ()) {
+      ;_timer (+ (new Date))
+      ;requestAnimationFrame (_ => {;
+        ;_flowing (_flowing ()) }) } })
+  return [ _timer, _flowing ] }
 
 
 
