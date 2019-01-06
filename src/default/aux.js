@@ -277,10 +277,10 @@ var ensemble = data ({
 		ping =~ ping,
 		settings =~ settings,
     progress =~ progress,
-		student_pings =~ map (student) (ping),
-		student_boards =~ map (student) (board),
-		student_progresses =~ map (student) (timestamp),
-		student_pasts =~ map (student) (past) ) => ensemble })
+		pings =~ map (student) (ping),
+		boards =~ map (student) (board),
+		progresses =~ map (student) (timestamp),
+		pasts =~ map (student) (past) ) => ensemble })
 
 
 
@@ -328,10 +328,6 @@ var to_maybe = so ((_=_=>
 
 //--------------------LENSES--------------------
 
-
-var as_value_of = key => 
-  [ L .elems, L .when (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
-
 var pair_as_v = so ((_=_=>
   L .iso (
   _pair => !! Z_ .is (pair_type_$) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
@@ -339,6 +335,18 @@ var pair_as_v = so ((_=_=>
   where
   , pair_type_$ = Z_ .PairType (Z$ .Any) (Z$ .Any)
   , array_type_$ = Z$ .Array (Z$ .Any) )=>_)
+var pair_as_list = pair_as_v
+
+//var pair_as_first = [ L .ifElse ($ (Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)))) (L .reread (Z_ .fst)) (L .zero),  ]
+var pair_as_first = [ pair_as_list, L .first ]
+var pair_as_second = [ pair_as_list, L .last ]
+
+var list_as_pair = L .getInverse (pair_as_v)
+
+var map_as_keys = [ L .elems, pair_as_first ]
+var map_as_values = [ L .elems, pair_as_second ]
+var as_value_of = key => 
+  [ L .elems, L .when (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z_ .Nothing)]
 var as_defined = [L .reread (to_maybe (_ => Z_ .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z_ .Nothing)]
@@ -390,10 +398,10 @@ var message_as_past = message_as_student_update .past
 var ensemble_as_settings = data_iso (ensemble .ensemble) .settings 
 var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
 var ensemble_as_progress = data_iso (ensemble .ensemble) .progress 
-var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings 
-var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
-var ensemble_as_student_progresses = data_iso (ensemble .ensemble) .student_progresses 
-var ensemble_as_student_pasts = data_iso (ensemble .ensemble) .student_pasts 
+var ensemble_as_pings = data_iso (ensemble .ensemble) .pings 
+var ensemble_as_boards = data_iso (ensemble .ensemble) .boards 
+var ensemble_as_progresses = data_iso (ensemble .ensemble) .progresses 
+var ensemble_as_pasts = data_iso (ensemble .ensemble) .pasts 
 
 var avatar_as_lion = data_iso (avatar .lion)
 var avatar_as_bunny = data_iso (avatar .bunny)
@@ -430,14 +438,6 @@ var cell_as_position = L .reread (_x => [ _x [0], _x [1] ])
 var cell_as_choice = [ 2 ]
 
 var as_position = ([x, y]) => [x - 1, y - 1]
-
-var pair_as_list = pair_as_v
-
-//var pair_as_first = [ L .ifElse ($ (Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)))) (L .reread (Z_ .fst)) (L .zero),  ]
-var pair_as_first = [ pair_as_list, L .first ]
-var pair_as_second = [ pair_as_list, L .last ]
-
-var list_as_pair = L .getInverse (pair_as_v)
 
 //report: var pair = L .cond ([ (_x => _x .length === 2), [] ])
 //var pair = L .cond ([ (_x => _x .length === 2), [] ], [L .zero])
@@ -734,84 +734,24 @@ var message_encoding = by (message =>
       , [ message_as_teacher_settings, map_defined (L .getInverse (data_iso (ensemble .ensemble))) ]
       , [ message_as_teacher_progress, map_defined (L .getInverse (ensemble_as_progress)) ]
       , [ message_as_student_ping .ping
-        , map_defined (L .getInverse ([ ensemble_as_student_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
+        , map_defined (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
       , [ message_as_student_join .board
-        , map_defined (L .getInverse ([ ensemble_as_student_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
+        , map_defined (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
       , [ message_as_student_progress .progress
-        , map_defined (L .getInverse ([ ensemble_as_student_progresses, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
-      , [ message_as_student_update .past, map_defined (L .getInverse ([ ensemble_as_student_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ] ] )=>_))
-/*var message_encoding = by (message => 
-	so ((_=_=>
-	$ (
-  [ Z_ .flip (cases)
-  , L .collect (L .elems)
-  , sole
-	, L .get (data_iso (ensemble .ensemble))
-	, strip ]),
-	where
-	, strip = $ ([ JSON .stringify, JSON .parse ]) 
-  , _student = T (message) (L .get (message_as_student))
-  , _student_id = T (_student) (L .get (student_as_id))
-  , cases = 
-      [ under (message_as_teacher_settings
-        ) (L .getInverse (data_iso (ensemble .ensemble))) 
-      , under (message_as_teacher_ping
-        ) (L .getInverse (ensemble_as_ping))
-      , under (message_as_teacher_start
-        ) (L .getInverse (ensemble_as_start))
-      , under (message_as_teacher_progress
-        ) (({ progress, synchronization }) =>
-        T (synchronization) (L .getInverse ([ ensemble_as_progress, '' + progress ]))) 
-      , under (message_as_teacher_end
-        ) (L .getInverse (ensemble_as_end)) 
-      , under (message_as_student_ping .ping
-        ) (L .getInverse ([ ensemble_as_student_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-      , under (message_as_student_join .board
-        ) (L .getInverse ([ ensemble_as_student_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-      , under (message_as_student_start .synchronization
-        ) (L .getInverse ([ ensemble_as_student_starts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-      , under (message_as_student_update .past
-        ) (L .getInverse ([ ensemble_as_student_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ] )=>_))*/
+        , map_defined (L .getInverse ([ ensemble_as_progresses, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
+      , [ message_as_student_update .past, map_defined (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ] ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
-
-var assemble_students = by (_app => //and_by (_ensemble =>
-  so ((_=_=>
-  $ ([ Z_ .flip (cases), L .collect (L .elems), L .get ([ as_sole, L .valueOr (Z_ .K (undefined)) ]) ]),
-  where
-  , cases =
-      [ under (app_as_get_ready
-        ) (
-        Z_ .K (
-        by (_ensemble =>
-          L .collect ([ ensemble_as_student_pings, students_ensmeble_as_students ]))))
-      , under (L .choice (app_as_playing, app_as_game_over)
-        ) (
-        Z_ .K (
-        by (_ensemble =>
-          $ (
-          [ Z_ .flip (
-            { boards: L .collect ([ ensemble_as_student_boards, students_ensemble_as_map ])
-            , pasts: L .collect ([ ensemble_as_student_pasts, students_ensemble_as_map ]) })
-          , /*under (as_complete)*/ (({ boards, pasts }) =>
-            pair_zip (_a => _b => [_a, _b]) (boards) (pasts) ) ])
-        //collect this instead of get!
-          /*under (L .pick (
-            { boards: [ ensemble_as_student_boards, students_ensemble_as_map ]
-            , pasts: [ ensemble_as_student_pasts, students_ensemble_as_map ] })
-          ) (({ boards, pasts }) =>
-            pair_zip (_a => _b => [_a, _b]) (boards) (pasts) )*/
-           ))) ] )=>_))
 
 var schedule_start = _ensemble =>
 	so ((_=_=>
 	(new Date) .getTime () + confidence_interval,
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_as_ping))
-	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_student_pings, students_ensemble_as_info ]))
-	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (Z_ .map (L .get (ping_as_mean)))
-	, confidence_interval = Z_ .reduce (Z_ .max) (0) (pings) )=>_)
+	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, map_as_values ]))
+	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
+	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
 
 
@@ -830,9 +770,8 @@ window .stuff = { ...window .stuff,
 	settings_as_problems, settings_as_rules,
   settings_as_size, settings_as_time_limit, settings_as_win_rule,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
-	ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_progress, ensemble_as_end,
-	ensemble_as_student_pings, ensemble_as_student_starts,
-	ensemble_as_student_boards, ensemble_as_student_pasts,
+	ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
+	ensemble_as_pings, ensemble_as_progresses, ensemble_as_boards, ensemble_as_pasts,
   attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room,
 	app_as_board, app_as_past, app_as_problems,
