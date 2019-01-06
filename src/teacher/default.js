@@ -92,7 +92,7 @@ var setup_view = _ => so ((_=_=>
           ) ('遊戲模式：'
           ) (_game_mode => {}
           ) (
-          [ Z_ .Pair (fiat) (play_to_win_img) ]
+          [ [ fiat, play_to_win_img ] ]
           ) (fiat) } </setting>
       <setting x-of="time-limit">
         { (counter_setting
@@ -101,9 +101,9 @@ var setup_view = _ => so ((_=_=>
               var setting_delta = T (_time_limit) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
               ;feedback_state (feedback .setup_settings (setting_delta)) }
           ) (
-          [ Z_ .Pair (10) (ten_secs_img)
-          , Z_ .Pair (20) (twenty_secs_img)
-          , Z_ .Pair (30) (thirty_secs_img) ]
+          [ [ 10, ten_secs_img ]
+          , [ 20, twenty_secs_img ]
+          , [ 30, thirty_secs_img ] ]
           ) (_time_limit) } </setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_start }>

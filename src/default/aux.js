@@ -497,23 +497,13 @@ var teacher_app_get_ready_to_playing = by (_app =>
     , _settings: app_as_settings
     , _students: app_as_students })
   ) (({ _room, _settings, _students }) => 
-    teacher_app .playing (_room, _settings, _students .map (x => Z_ .Pair (x) (undefined)), 0)))
+    teacher_app .playing (_room, _settings, _students, _progress)))
 
-var teacher_app_playing_to_next = 
-	by (_app => 
-		so ((_=_=>
-		!! Z_ .not (game_over_ok)
-		? L .set (app_as_progress) (progress + 1)
-		: teacher_app_playing_to_game_over,
-		where
-		, progress = T (_app) (L .get (app_as_progress))
-    , next_problem = T (_app) (L .get ([ app_as_problems, progress + 1 ]))
-    , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
-
-var teacher_app_playing_to_game_over =  by (_app => 
-  L .get (
-    [ data_iso (teacher_app .playing)
-    , L .inverse (data_iso (teacher_app .game_over)) ])) 
+var teacher_app_playing_to_game_over = by (_app => 
+  $ (L .get
+  ) (
+  [ data_iso (teacher_app .playing)
+  , L .inverse (data_iso (teacher_app .game_over)) ])) 
 
 var student_app_get_ready_to_playing = by (_app =>
   under (complete_ (
@@ -666,14 +656,14 @@ var local_patterns = memoize (patterns =>
 //     L .get ([ past_as_points, L .last, point_as_problem ]))
 var current_problem = by (_app =>
   so ((_=_=>
-  L .get ([ app_as_problems, progress ]),
+  L .get ([ app_as_problems, progress_step ]),
   where
-  , progress = T (_app) (L .get (app_as_progress)) )=>_))
+  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_))
 var current_problem_solved = _app =>
   so ((_=_=>
-  Z_ .equals (Z_ .size (L .get (past_as_points))) (progress + 1),
+  Z_ .equals (Z_ .size (L .get (past_as_points))) (progress_step + 1),
   where
-  , progress = T (_app) (L .get (app_as_progress)) )=>_)
+  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_)
 
 var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))
