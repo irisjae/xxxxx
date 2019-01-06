@@ -213,15 +213,16 @@ var choice = string
 var answer = string
 var problem = v (string, list (choice))
 
-var time_instant = number
-var time_interval = data ({ time_interval: (from =~ time_instant, to =~ time_instant) => time_interval })
+var time_interval = data ({ time_interval: (from =~ timestamp, to =~ timestamp) => time_interval })
 
-var time_length = number
-var latency = time_length
+var time_amount = number
+var latency = time_amount
 var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
-var attempt = v (position, time_length)
+var progress = v (nat, timestamp)
+
+var attempt = v (position, time_amount)
 var point = data ({ point: (problem =~ problem, attempts =~ list (attempt)) => point })
 var past = data ({ past: (points =~ list (point)) => past })
 
@@ -241,12 +242,13 @@ var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
 	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
 	playing: ( room =~ room, settings =~ settings, students =~ list (student)
-           , student_boards =~ map (student) (board), student_pasts =~ map (student) (past), progress = nat ) => teacher_app,
-	game_over: ( room =~ room, settings =~ settings, students =~ list (student) (board, past) ) => teacher_app })
+           , boards =~ map (student) (board), pasts =~ map (student) (past), progresses =~ map (student) (progress) ) => teacher_app,
+	game_over: ( room =~ room, settings =~ settings, students =~ list (student)
+             , boards =~ map (student) (board), pasts =~ map (student) (past) ) => teacher_app })
 
 var student_app = data ({
 	get_ready: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
-	playing: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past, progress = nat ) => student_app,
+	playing: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past, progress =~ progress ) => student_app,
 	game_over: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past ) => student_app })
 
 /*
@@ -263,14 +265,12 @@ var io = data ({
 
 
 var message = data ({
-	teacher_settings: ( settings =~ settings ) => message,
 	teacher_ping: ( ping =~ ping ) => message,
-	teacher_start: ( synchronization =~ timestamp ) => message,
-	teacher_progress: ( progress =~ nat, synchronization =~ timestamp ) => message,
-	teacher_end: ( synchronization =~ timestamp ) => message,
+	teacher_settings: ( settings =~ settings ) => message,
+	teacher_progress: ( progress =~ progress ) => message,
 	student_ping: ( student =~ student, ping =~ ping ) => message,
-	student_start: ( student =~ student, synchronization =~ timestamp ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
+	student_progress: ( student =~ student, progress =~ progress ) => message,
 	student_update: ( student =~ student, past =~ past ) => message })
 var ensemble = data ({
 	ensemble: (
@@ -365,9 +365,12 @@ var app_as_settings = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'
 var app_as_student = [ L .choices ('get_ready', 'playing', 'game_over'), 'student', as_defined_ ]
 var app_as_room = [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
+var app_as_progress = [ 'playing', 'progress' ]
+var app_as_progresses = [ 'playing', 'progresses' ]
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
-var app_as_progress = [ 'playing', 'progress' ]
+var app_as_boards = [ L .choices ('playing', 'game_over'), 'boards' ]
+var app_as_pasts = [ L .choices ('playing', 'game_over'), 'pasts' ]
 
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
