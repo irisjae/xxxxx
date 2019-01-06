@@ -1,6 +1,6 @@
 var L = require ('partial.lenses')
 var R = require ('ramda')
-var S = require ('s-js/withsubclocks')
+var S = require ('s-js/dist/withsubclocks')
 var sanc = require ('sanctuary')
 var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: false, env: sanc .env })
