@@ -448,7 +448,7 @@ var connection = S (_ => {;
   var _progress = L .get (app_as_progress) (_app)
   var _progress_step = L .get (progress_as_step) (_progress)
 	if (_progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
-    go
+    ;go
     .then (_ =>
       io_state (io .messaging) && api (_room,
           post (message_encoding (message .teacher_progress (_progress)))) )
@@ -456,12 +456,12 @@ var connection = S (_ => {;
       ;console .error (_e) })
     .then (_ => {;
       ;io_state (io .inert) }) }
-  return _progress } } )
+  return _progress } )
 ;S (last_app => {;
-  var app_has_bingoes_ok = by (_app =>
-    $ (
-    [ //assemble_students (S .sample (app_state))
-    , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past), L .elems ]) ])) )=>_)
+  var app_has_bingoes_ok = _app =>
+    T (pair_zip (Z_ .Pair) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
+    ) (
+    L .get ([ pair_as_v, ([_board, _past]) => bingoes (_board) (_past) ]) )=>_)
   
 	var _app = S .sample (app_state)
   var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
@@ -513,7 +513,7 @@ var connection = S (_ => {;
   ) (under (app_as_room) (_room => {;
 			var phase = heartbeat ()
 			var critical = phase === 1
-			go
+			;go
 			.then (_ =>
 				!! critical //&& S .sample (connection) // why need && sample
 				? io_state (io .messaging) && api (_room,
