@@ -27,8 +27,9 @@ ensemble_as_ping, ensemble_as_settings, ensemble_as_progress,
 ensemble_as_pings, ensemble_as_progresses, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
-app_as_settings, app_as_student, app_as_students, app_as_room,
-app_as_board, app_as_past, app_as_problems,
+app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
+app_as_board, app_as_past, app_as_progress,
+app_as_boards, app_as_pasts, app_as_progresses,
 app_as_last_point, point_as_attempts,
 avatar_as_lion, avatar_as_bunny, 
 student_as_student, student_as_id, student_as_name, student_as_icon, 
@@ -461,9 +462,9 @@ var connection = S (_ => {;
   var app_has_bingoes_ok = _app =>
     T (pair_zip (Z_ .Pair) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
     ) (
-    L .get ([ pair_as_v, ([_board, _past]) => bingoes (_board) (_past) ]) )=>_)
+    L .isDefined ([ L .elems, pair_as_v, ([_board, _past]) => bingoes (_board) (_past), L .first ]))
   
-	var _app = S .sample (app_state)
+	var _app = app_state ()
   var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
   if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
