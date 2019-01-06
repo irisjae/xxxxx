@@ -384,22 +384,6 @@ var connection = S (_ => {;
 
 
 
-;S (_ => {;
-	if (L .isDefined (app_as_get_ready) (app_state ())) {
-		;flowing_state (false) } })
-;S (last_state => {;
-	if (L .isDefined (app_as_playing) (app_state ())) {
-    var last_progress = T (last_state) (L .get (app_as_progress))
-    var progress = T (app_state ()) (L .get (app_as_progress))
-		if (Z_ .not (Z_ .equals (last_progress) (progress))) {
-			;game_clock .seek (0) }
-		;flowing_state (true) }
-	return app_state () }
-, app_state ())
-;S (_ => {;
-	if (L .isDefined (app_as_game_over) (app_state ())) {
-		;flowing_state (false) } })
-
 //TODO: add guard to warn against depending on datas other than feedback
 ;S (_ => {;
   ;so ((
@@ -440,41 +424,23 @@ var connection = S (_ => {;
         , action = _case [1] )=>_) ))) )=>_)) })
 
 
-
 ;S (_ => {;
-	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-	
-	var _app_students = T (_app) (L .get (app_as_students))
-	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
-	var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
-	var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
-	var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
-  ;FILL (THIS) (IN);
-	if (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students))) {
-		;app_state (
-			T (_app
-			) (L .set (app_as_students) (_ensemble_students))) } })
+	if (L .isDefined (app_as_get_ready) (app_state ())) {
+		;flowing_state (false) } })
+;S (last_state => {;
+	if (L .isDefined (app_as_playing) (app_state ())) {
+    var last_progress = T (last_state) (L .get (app_as_progress))
+    var progress = T (app_state ()) (L .get (app_as_progress))
+		if (Z_ .not (Z_ .equals (last_progress) (progress))) {
+			;game_clock .seek (0) }
+		;flowing_state (true) }
+	return app_state () }
+, app_state ())
 ;S (_ => {;
-	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _ensemble_progress = T (_ensemble) (L .get (ensemble_as_progress))
-  if (Z_ .not (Z_ .equals (_app_progress) (_ensemble_progress))) {
-    var playing_app = teacher_app_get_ready_to_playing (_app)
+	if (L .isDefined (app_as_game_over) (app_state ())) {
+		;flowing_state (false) } })
 
-    var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-    game_clock .clear ()
-    ;game_clock .add (timesup_problem, time_limit)
-    ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
-      ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
 
-    if (start > now) {
-      ;app_state (playing_app) }
-    else {
-      ;setTimeout (_ => {;
-        ;app_state (playing_app) }
-      , start - now) } } })
 ;S (last_progress => {;
 	var _app = app_state ()
   var _room = L .get (app_as_room) (_app)
@@ -505,6 +471,43 @@ where
     $ (
     [ //assemble_students (S .sample (app_state))
     , L .collect ([ L .elems, pair_as_second, ([_board, _past]) => bingoed_positions (_board) (_past), L .elems ]) ])) )=>_)
+
+
+;S (_ => {;
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+  var _app_progress = T (_app) (L .get (app_as_progress))
+  var _ensemble_progress = T (_ensemble) (L .get (ensemble_as_progress))
+  if (Z_ .not (Z_ .equals (_app_progress) (_ensemble_progress))) {
+    var playing_app = teacher_app_get_ready_to_playing (_app)
+
+    var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+    game_clock .clear ()
+    ;game_clock .add (timesup_problem, time_limit)
+    ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
+      ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
+
+    if (start > now) {
+      ;app_state (playing_app) }
+    else {
+      ;setTimeout (_ => {;
+        ;app_state (playing_app) }
+      , start - now) } } })
+;S (_ => {;
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+	
+	var _app_students = T (_app) (L .get (app_as_students))
+	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
+	var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
+	var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
+	var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
+  ;FILL (THIS) (IN);
+	if (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students))) {
+		;app_state (
+			T (_app
+			) (L .set (app_as_students) (_ensemble_students))) } })
+
 
 ;S (_ => {;
 	;T (app_state ()
