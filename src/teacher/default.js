@@ -322,21 +322,8 @@ var get_room = _room => {;
 		;io_state (io .inert) }) }
 
 var start_playing = _ => {;
-	T (
-  { _ensemble: S .sample (ensemble_state)
-  , _room: T (S .sample (app_state)) (L .get (app_as_room)) }
-  ) (
-  under (as_complete) (({ _ensemble, _room }) => {;
-		;go
-		.then (_ =>
-			io_state (io .messaging) && api (_room,
-				post (message_encoding (message .teacher_start (schedule_start (_ensemble)))))
-			.then (panic_on ([
-				[ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-		.catch (_e => {;
-			;console .error (_e) })
-		.then (_ => {;
-			;io_state (io .inert) }) })) }
+  ;app_state (
+    teacher_app_get_ready_to_playing (S .sample (app_state))) }
 
 var timesup_problem = _ => {;
 	;app_state (
