@@ -379,7 +379,7 @@ var attempt_problem = _position => {;
       if (Z_ .not (_completed)) {
         var _choice = board_choice (_board) (_position)
         if (! L .get (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
-          var latency = game_clock .time () //lookbehind_latency ()
+          var latency = S .sample (tick_state) //lookbehind_latency ()
           ;app_state (
             T (S .sample (app_state)
             ) (
@@ -398,10 +398,6 @@ var timesup_problem = _ => {;
 	;app_state (
     student_app_playing_to_next (S .sample (app_state))) }
 
-var time_travel = current => target => {;
-  var time_difference
-  
-  }
 
 
 
@@ -411,7 +407,18 @@ var time_travel = current => target => {;
 
 
 
-
+var [ time_state, flowing_state ] = timer ()
+//var time_interval = time_intervals (time_state)
+var tick_state = S .subclock (_ => {;
+  var _ticker = S .value ()
+  S (_ => {;
+    var _app = app_state ()
+    if (L .isDefined (app_as_progress) (_app)) {
+      var _progress_timestamp = T (_app) (L .isDefined ([ app_as_progress, progress_as_timestamp ]))
+      var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
+      ;_ticker (_tick) } })
+  return _ticker })
+				
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
@@ -495,21 +502,13 @@ S (_ => {;
 			;clearTimeout (forget) }) } })
 
 
-S (_ => {;
+;S (_ => {;
 	if (L .isDefined (app_as_get_ready) (app_state ())) {
-		;game_clock .pause () } })
-S (last_state => {;
-	var last_progress = T (last_state) (L .get (app_as_progress))
-	var progress = T (app_state ()) (L .get (app_as_progress))
-	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (progress !== undefined && Z_ .not (Z_ .equals (last_progress) (progress))) {
-			;game_clock .seek (0) }
-		;game_clock .play () }
-	return app_state () }
-, app_state ())
-S (_ => {;
-	if (L .isDefined (app_as_game_over) (app_state ())) {
-		;game_clock .pause () } })
+		;flowing_state (false) }
+	else if (L .isDefined (app_as_playing) (app_state ())) {
+		;flowing_state (true) }
+	else if (L .isDefined (app_as_game_over) (app_state ())) {
+		;flowing_state (false) } })
 
 
 S (last_ensemble => {;
@@ -542,7 +541,7 @@ S (last_ensemble => {;
 				var _student = T (_app) (L .get (app_as_student))
 				;io_state (io .messaging) && api (_room, post (
 					message_encoding (
-						message .student_start (_student, start))))
+						message .student_progress (_student, start))))
 				.catch (_e => {;
 					;console .error (_e) })
 				.then (_ => {;
