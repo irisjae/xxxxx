@@ -357,7 +357,7 @@ var end_game = _ => {;
 				
 
 var [ time_state, flowing_state ] = timer ()
-var time_interval = time_intervals (time_state)
+//var time_interval = time_intervals (time_state)
 var tick_state = S .subclock (_ => {;
   var _ticker = S .value ()
   S (_ => {;
@@ -471,10 +471,11 @@ var timesup_problem = _ => {;
     teacher_app_playing_to_next (S .sample (app_state))) }
 
 ;S (last_tick => {;
-  var _time_interval = time_interval ()
-  
-  
-  })
+  var _app = app_state () 
+  var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+  if (tick_state () >= time_limit) {
+    
+  } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
@@ -491,7 +492,6 @@ var timesup_problem = _ => {;
 
 
     
-/*
 ;S (last_app => {;
   var _app = app_state () 
   var _room = T (_app) (L .get (app_as_room))
@@ -525,7 +525,7 @@ var timesup_problem = _ => {;
       .then (_ => {;
         ;io_state (io .inert) }) } }
   return _app })
-  */
+  
 
 
 ;S (_ => {;
@@ -567,19 +567,25 @@ var timesup_problem = _ => {;
   var _app_progress = T (_app) (L .get (app_as_progress))
   var _progress = T (_ensemble) (L .get (ensemble_as_progress))
   if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
-    ;app_state (
-      T (_app
-      ) (
-      [ teacher_app_get_ready_to_playing
-      , L .set (app_as_progress) (_progress) ])
-
-         
-         
-  var _progress_step = L .get (progress_as_step) (_progress)
-  // is there a more elegant way? this is not markovian 
-  if (L .isDefined (app_as_get_ready) (_app) && ) {}
-  else if (L .isDefined (app_as_playing) (_app)) {
-    } })
+    // is there a more elegant way? this is not markovian 
+    
+    var _progress_step = L .get (progress_as_step) (_progress)
+    if (L .isDefined (app_as_get_ready) (_app)) {
+      ;app_state (
+        T (_app
+        ) (
+        [ teacher_app_get_ready_to_playing
+        , L .set (app_as_progress) (_progress) ])) }
+    /*else if (L .isDefined (app_as_playing) (_app) && _progress_step != -1) {
+      ;app_state (
+        T (_app
+        ) (
+        L .set (app_as_progress) (_progress))) }
+    else if (L .isDefined (app_as_playing) (_app) && _progress_step == -1) {
+      ;app_state (
+        T (_app
+        ) (
+        teacher_app_playing_to_game_over)) }*/  } })
 //  ;app_state (
 //    teacher_app_get_ready_to_playing (schedule_start (S .sample (ensemble_state))) (S .sample (app_state)))
 //  ;app_state (
