@@ -443,6 +443,8 @@ var connection = S (_ => {;
 		;flowing_state (false) } })
 
 
+// This is wrong, signal should be sent by timer; the sent message in the ensemble is the casual cause which triggers app progress
+/*
 ;S (last_progress => {;
 	var _app = app_state ()
   var _room = L .get (app_as_room) (_app)
@@ -458,6 +460,22 @@ var connection = S (_ => {;
       .then (_ => {;
         ;io_state (io .inert) }) } }
   return _progress } )
+*/
+// This should trigger everything
+/*
+    var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+    game_clock .clear ()
+    ;game_clock .add (timesup_problem, time_limit)
+    ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
+      ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
+
+    if (start > now) {
+      ;app_state (playing_app) }
+    else {
+      ;setTimeout (_ => {;
+        ;app_state (playing_app) }
+      , start - now) } 
+*/
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
@@ -473,20 +491,6 @@ var connection = S (_ => {;
 	return _app })
 
 
-/*
-    var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-    game_clock .clear ()
-    ;game_clock .add (timesup_problem, time_limit)
-    ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
-      ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
-
-    if (start > now) {
-      ;app_state (playing_app) }
-    else {
-      ;setTimeout (_ => {;
-        ;app_state (playing_app) }
-      , start - now) } 
-*/
 ;S (_ => {;
 	var _app = app_state ()
   
