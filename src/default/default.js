@@ -193,26 +193,6 @@ var n_reducer = binary => n =>
 	? _x => _x
 	: _a => _b =>
 			n_reducer (binary) (n - 1) (binary (_a) (_b))
-
-// rewrite functionally?
-var projected_zip = projection => mash => a => b => {
-  var projections = new Map
-  ;T (a) (R .forEach (_x => {;
-    var _shadow = projection (_x)                         
-    ;projections .set (_shadow, _x) }))
-  
-  var _zip = []
-  ;T (b) (R .forEach (_x => {;
-    var _shadow = projection (_x)                         
-    if (projections .has (_shadow)) {
-      _zip = _zip .concat ([ mash (projections .get (_shadow)) (_x) ]) } }))
-  
-  return _zip }
-
-
-var pair_projection = key_projection => val_projection =>
-	_x => Z_ .Pair (L .get (key_projection) (_x)) (L .get (val_projection) (_x))
-
 	
 	
 	
@@ -380,6 +360,6 @@ window .stuff = { ...window .stuff,
   just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
-	n_reducer, pair_zip_n, pair_zip, pair_projection,
+	n_reducer, 
 	map_defined_, map_defined, from_just, maybe_all,
 	as_sole, sole, every, delay }

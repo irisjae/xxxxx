@@ -5,7 +5,7 @@ var {
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
-	n_reducer, pair_zip_n, pair_zip, pair_projection,
+	n_reducer, 
 	map_defined_, map_defined, from_just, maybe_all,
 	as_sole, sole, every, delay	 
 } = window .stuff
@@ -38,6 +38,20 @@ var uuid = _ =>
 
 
 
+
+
+// rewrite functionally?
+var map_zip = mash => a => b => {
+  var projections = new Map
+  ;T (a) (R .forEach (([ _key, _val ]) => {;
+    ;projections .set (_key, _val) }))
+  
+  var _zip = []
+  ;T (b) (R .forEach (([ _key, _val ]) => {;
+    if (projections .has (_key)) {
+      _zip = _zip .concat ([ [ _key, mash (projections .get (_key)) (_val) ] ]) } }))
+  
+  return _zip }
 
 
 
@@ -641,7 +655,10 @@ var local_patterns = memoize (patterns =>
 	so ((_=_=>
   T (patterns
   ) (
-  [ Z_ .map (_pattern => T (_positions) (Z_ .map (pair_projection (Z_ .I) (_position => Z_ .elem (_position) (_pattern) ? [ _pattern ] : []))))
+  [ $ (L .collect
+    ) (
+    [ L .elems
+    , _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_position) (_pattern) ? [ _pattern ] : [] ] ))) ])
   , $ (Z_ .reduce
     ) (
     pair_zip (Z_ .concat)
