@@ -341,6 +341,18 @@ var end_game = _ => {;
 
 var [ time_state, flowing_state ] = timer ()
 var time_interval = time_intervals (time_state)
+var tick_state = S .subclock (_ => {;
+  var _ticker = S .value ()
+  S (_ => {;
+    var _app = app_state ()
+    if (L .isDefined (app_as_progress) (_app)) {
+      var _progress_timestamp = 
+      var _tick = time_state () - 
+      ;_ticker ()
+    }
+  })
+  return _ticker
+})
 				
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
@@ -440,7 +452,11 @@ var connection = S (_ => {;
         ;app_state (playing_app) }
       , start - now) } 
 */
-;S ()
+;S (last_tick => {;
+  var _time_interval = time_interval ()
+  
+  
+  })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))

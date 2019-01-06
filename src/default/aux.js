@@ -754,7 +754,7 @@ var schedule_start = _ensemble =>
 	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, map_as_values ]))
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
-
+var schedule_tick = 
 
 
 window .stuff = { ...window .stuff,
