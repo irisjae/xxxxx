@@ -1,5 +1,5 @@
 var {
-	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
 	so, by, and_by, under,
 	tap, go, never, panic, panic_on,
   just_now, temporary,

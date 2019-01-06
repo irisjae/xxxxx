@@ -1,4 +1,14 @@
-var { bool, number, timestamp, string,
+var { T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
+so, by, and_by, under,
+go, never, panic, panic_on,
+just_now, temporal,
+fiat, data, data_lens, data_iso, data_kind,
+focused_iso_,
+n_reducer, pair_zip_n, pair_zip, pair_projection,
+map_defined_, map_defined, from_just, maybe_all,
+as_sole, sole, every, delay,
+timer,
+bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
 avatar, student, problem, choice, answer, latency, ping, position,
@@ -31,16 +41,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 past_progressed,
 current_problem, problem_choice_matches,
-attempted_positions, solved_positions, bingoed_positions,
-T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
-so, by, and_by, under,
-go, never, panic, panic_on,
-just_now, temporal,
-fiat, data, data_lens, data_iso, data_kind,
-focused_iso_,
-n_reducer, pair_zip_n, pair_zip, pair_projection,
-map_defined_, map_defined, from_just, maybe_all,
-as_sole, sole, every, delay
+attempted_positions, solved_positions, bingoed_positions
 } = window .stuff
 
 

@@ -1,6 +1,6 @@
 var L = require ('partial.lenses')
 var R = require ('ramda')
-var S = require ('s-js')
+var S = require ('s-js/withsubclocks')
 var sanc = require ('sanctuary')
 var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: false, env: sanc .env })
@@ -420,4 +420,5 @@ window .stuff = { ...window .stuff,
   focused_iso_,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
-	as_sole, sole, every, delay }
+	as_sole, sole, every, delay,
+  timer }
