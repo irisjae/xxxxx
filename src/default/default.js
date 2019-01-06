@@ -391,9 +391,13 @@ document .addEventListener ('DOMContentLoaded', _ => {;
   .observe (view, { attributes: true, subtree: true }) })
 
 
-var timing = _ => {;
-  var last_time 
-}
+var timer = _ => {;
+  var _timer = S .data ()
+  var update_timer = _ => {;
+    ;_timer (+ (new Date))
+    ;requestAnimationFrame (update_timer) }
+  ;update_timer ()
+  return _timer }
 
 
 
