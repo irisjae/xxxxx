@@ -323,7 +323,7 @@ var get_room = _room => {;
 
 var start_playing = _ => {;
   ;app_state (
-    teacher_app_get_ready_to_playing (S .sample (app_state))) }
+    teacher_app_get_ready_to_playing (schedule_start (S .sample (ensemble_state))) (S .sample (app_state))) }
 
 var timesup_problem = _ => {;
 	;app_state (

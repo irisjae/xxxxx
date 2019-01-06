@@ -491,7 +491,7 @@ var generate_board = size => problems =>
 				L .first ])) )=>_)
 
 
-var teacher_app_get_ready_to_playing = by (_app =>
+var teacher_app_get_ready_to_playing = _schedule => by (_app =>
   under (complete_ (
     { _room: app_as_room
     , _settings: app_as_settings
