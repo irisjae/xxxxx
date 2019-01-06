@@ -23,7 +23,7 @@ var apply = fn => arg_list =>
 
 
 
-var as_sole = [ L .reread (list => !! (list .length === 1) ? list [0] : undefined) ]
+var as_sole = L .singleton
 var sole = list =>
   !! (list .length === 1) ? list [0]
   : panic (list + ' is not sole')
