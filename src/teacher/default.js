@@ -346,13 +346,10 @@ var tick_state = S .subclock (_ => {;
   S (_ => {;
     var _app = app_state ()
     if (L .isDefined (app_as_progress) (_app)) {
-      var _progress_timestamp = 
-      var _tick = time_state () - 
-      ;_ticker ()
-    }
-  })
-  return _ticker
-})
+      var _progress_timestamp = T (_app) (L .isDefined ([ app_as_progress, progress_as_timestamp ]))
+      var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
+      ;_ticker (_tick) } })
+  return _ticker })
 				
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
