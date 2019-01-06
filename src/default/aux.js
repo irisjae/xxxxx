@@ -491,13 +491,17 @@ var generate_board = size => problems =>
 				L .first ])) )=>_)
 
 
-var teacher_app_get_ready_to_playing = _schedule => by (_app =>
-  under (complete_ (
-    { _room: app_as_room
-    , _settings: app_as_settings
-    , _students: app_as_students })
-  ) (({ _room, _settings, _students }) => 
-    teacher_app .playing (_room, _settings, _students, [ 0, _schedule ])))
+var teacher_app_get_ready_to_playing = /*_schedule => */by (_app =>
+  $ (L .get
+  ) (
+  [ data_iso (teacher_app .get_ready)
+  , L .inverse (data_iso (teacher_app .playing)) ])) 
+//  under (complete_ (
+//    { _room: app_as_room
+//    , _settings: app_as_settings
+//    , _students: app_as_students })
+//  ) (({ _room, _settings, _students }) => 
+//    teacher_app .playing (_room, _settings, _students, [ 0, _schedule ])))
 
 var teacher_app_playing_to_game_over = by (_app => 
   $ (L .get
@@ -754,7 +758,7 @@ var schedule_start = _ensemble =>
 	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, map_as_values ]))
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
-var schedule_tick = 
+//var schedule_tick = 
 
 
 window .stuff = { ...window .stuff,
