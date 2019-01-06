@@ -362,10 +362,10 @@ var pair_as_second = [ pair_as_list, L .last ]
 
 var list_as_pair = L .getInverse (pair_as_v)
 
-var map_as_keys = [ L .elems, pair_as_first ]
-var map_as_values = [ L .elems, pair_as_second ]
+var map_as_keys = [ L .elems, L .first ]
+var map_as_values = [ L .elems, L .last ]
 var as_value_of = key => 
-  [ L .elems, L .when (pair => Z_ .equals (key) (Z_ .fst (pair))), pair_as_v, L .valueOr ([ key, undefined ]), L .last ]
+  [ L .elems, L .when (([ _key, _val ]) => Z_ .equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
 
 var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z_ .Nothing)]
 var as_defined = [L .reread (to_maybe (_ => Z_ .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z_ .Nothing)]
@@ -466,10 +466,6 @@ var as_position = ([x, y]) => [x - 1, y - 1]
 //var student_name = L .choices ( [ pair_as_list, L .first, 'name' ], 'name' )
 
 var ping_as_mean = [ 1 ]
-
-var students_ensemble_as_map = [ L .values, list_as_pair ]
-var students_ensmeble_as_students = [ students_ensemble_as_map, pair_as_first ]
-var students_ensemble_as_info = [ students_ensemble_as_map, pair_as_second ]
 
 
 
@@ -655,15 +651,14 @@ var local_patterns = memoize (patterns =>
 	so ((_=_=>
   T (patterns
   ) (
-  [ $ (L .collect
-    ) (
-    [ L .elems
-    , _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_position) (_pattern) ? [ _pattern ] : [] ] ))) ])
-  , $ (Z_ .reduce
-    ) (
-    pair_zip (Z_ .concat)
-    ) (
-    T (_positions) (Z_ .map (pair_projection (Z_ .I) (Z_ .K ([]))))) ]),
+  $ (L .foldl
+  ) (
+  map_zip (Z_ .concat)
+  ) (
+  T (_positions) (Z_ .map (_pos => [ _pos, [] ]))
+  ) (
+  [ L .elems
+  , _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_pos) (_pattern) ? [ _pattern ] : [] ] )) ])),
 	where
 	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
 
@@ -774,7 +769,7 @@ var schedule_start = _ensemble =>
 window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
 	list, map, maybe, nat, id, v, piece,
-	shuffle, uuid, api, post,
+	shuffle, uuid, map_zip, api, post,
   timer, timer_since, time_intervals, 
 	avatar, student, problem, choice, answer, latency, ping, position,
 	attempt, point, past, board, win_rule, rules, settings,

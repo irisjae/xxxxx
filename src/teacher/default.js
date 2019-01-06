@@ -4,12 +4,12 @@ go, never, panic, panic_on,
 just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
-n_reducer, projected_zip,
+n_reducer, 
 map_defined_, map_defined, from_just, maybe_all,
 as_sole, sole, every, delay,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
-shuffle, uuid, api, post,
+shuffle, uuid, map_zip, api, post,
 timer, timer_since, time_intervals, 
 avatar, student, problem, choice, answer, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
@@ -460,9 +460,9 @@ var connection = S (_ => {;
   return _progress } )
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
-    T (pair_zip (Z_ .Pair) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
+    T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
     ) (
-    L .isDefined ([ L .elems, pair_as_v, ([_board, _past]) => bingoes (_board) (_past), L .first ]))
+    L .isDefined ([ L .elems, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
   
 	var _app = app_state ()
   var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
