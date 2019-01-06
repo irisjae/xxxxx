@@ -343,22 +343,8 @@ var timesup_problem = _ => {;
     teacher_app_playing_to_next (S .sample (app_state))) }
 
 var end_game = _ => {;
-  var now = (new Date) .getTime ()
-  
-  var _app = S .sample (app_state) 
-  var _room = T (_app) (L .get (app_as_room))
-
-  ;go
-  .then (_ =>
-    io_state (io .messaging) && api (_room,
-      post (message_encoding (message .teacher_end (now))))
-    .then (panic_on ([
-      [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-  .then (_ => {;app_state (teacher_app_playing_to_game_over (_app))})
-  .catch (_e => {;
-    ;console .error (_e) })
-  .then (_ => {;
-    ;io_state (io .inert) }) } 
+  ;app_state (
+    teacher_app_playing_to_game_over (S .sample (app_state))) } 
 				
 				
 				
@@ -491,6 +477,8 @@ var connection = S (_ => {;
 	return _app })
 
 
+// no need, app state sends signals to ensemble
+/*
 ;S (_ => {;
 	var _app = app_state ()
   
@@ -505,33 +493,29 @@ var connection = S (_ => {;
   if (L .isDefined (app_as_get_ready) (_app) && ) {}
   else if (L .isDefined (app_as_playing) (_app)) {
     } })
-;S (_ => {;
-	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-	
-	var _app_students = T (_app) (L .get (app_as_students))
-  var _app_boards = T (_app) (L .get (app_as_boards))
-  var _app_progresses = T (_app) (L .get (app_as_progresses))
-  var _app_pasts = T (_app) (L .get (app_as_pasts))
-	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
-  var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
-  var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
-  var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
-  
-  var ensemble_updates = $ (Z_ .join
-  ) ( 
-  [ !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
-    ? [ L .set (app_as_students) (_ensemble_students) ] : []
-  , !! (_ensemble_boards && Z_ .not (Z_ .equals (_ensemble_boards) (_app_boards)))
-    ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
-  , !! (_ensemble_progresses && Z_ .not (Z_ .equals (_ensemble_progresses) (_app_progresses)))
-    ? [ L .set (app_as_progresses) (_ensemble_progresses) ] : []
-  , !! (_ensemble_pasts && Z_ .not (Z_ .equals (_ensemble_pasts) (_app_pasts)))
-    ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
-  
-	if (L .isDefined (L .elems) (ensemble_updates)) {
-		;app_state (
-			T (_app) ($ (ensemble_updates))) } })
+  */
+    
+;S (last_app => {;
+  var _app = app_state () 
+  if (! L .isDefined (app_as_game_over) (last_app)) {
+    if (L .isDefined (app_as_game_over) (_app)) {
+      var now = (new Date) .getTime ()
+
+      var _app = S .sample (app_state) 
+      var _room = T (_app) (L .get (app_as_room))
+
+      ;go
+      .then (_ =>
+        io_state (io .messaging) && api (_room,
+          post (message_encoding (message .teacher_progress ())))
+        .then (panic_on ([
+          [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+      .then (_ => {;app_state (teacher_app_playing_to_game_over (_app))})
+      .catch (_e => {;
+        ;console .error (_e) })
+      .then (_ => {;
+        ;io_state (io .inert) }) } }
+  return _app })
 
 
 ;S (_ => {;
@@ -565,3 +549,30 @@ var connection = S (_ => {;
 				, 300) })
 			.then (_ => {;
 				;io_state (io .inert) }) })) })
+;S (_ => {;
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+	
+	var _app_students = T (_app) (L .get (app_as_students))
+  var _app_boards = T (_app) (L .get (app_as_boards))
+  var _app_progresses = T (_app) (L .get (app_as_progresses))
+  var _app_pasts = T (_app) (L .get (app_as_pasts))
+	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
+  var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
+  var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
+  var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
+  
+  var ensemble_updates = $ (Z_ .join
+  ) ( 
+  [ !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
+    ? [ L .set (app_as_students) (_ensemble_students) ] : []
+  , !! (_ensemble_boards && Z_ .not (Z_ .equals (_ensemble_boards) (_app_boards)))
+    ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
+  , !! (_ensemble_progresses && Z_ .not (Z_ .equals (_ensemble_progresses) (_app_progresses)))
+    ? [ L .set (app_as_progresses) (_ensemble_progresses) ] : []
+  , !! (_ensemble_pasts && Z_ .not (Z_ .equals (_ensemble_pasts) (_app_pasts)))
+    ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
+  
+	if (L .isDefined (L .elems) (ensemble_updates)) {
+		;app_state (
+			T (_app) ($ (ensemble_updates))) } })
