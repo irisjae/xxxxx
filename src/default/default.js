@@ -391,23 +391,6 @@ document .addEventListener ('DOMContentLoaded', _ => {;
   .observe (view, { attributes: true, subtree: true }) })
 
 
-var timer = _ => {;
-  var _timer = S .data ()
-  var _flowing = S .data (true)
-  ;S (_=> {;
-    if (_flowing ()) {
-      ;_timer (+ (new Date))
-      ;requestAnimationFrame (_ => {;
-        ;_flowing (_flowing ()) }) } })
-  return [ _timer, _flowing ] }
-
-
-
-
-
-
-
-
 
 
 
@@ -422,5 +405,4 @@ window .stuff = { ...window .stuff,
   focused_iso_,
 	n_reducer, pair_zip_n, pair_zip, pair_projection,
 	map_defined_, map_defined, from_just, maybe_all,
-	as_sole, sole, every, delay,
-  timer }
+	as_sole, sole, every, delay }

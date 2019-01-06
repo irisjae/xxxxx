@@ -38,6 +38,39 @@ var uuid = _ =>
 
 
 
+
+
+
+
+
+
+var timer = _ => {;
+  var _timer = S .data ()
+  var _flowing = S .data (true)
+  ;S (_=> {;
+    if (_flowing ()) {
+      ;_timer (+ (new Date))
+      ;requestAnimationFrame (_ => {;
+        ;_flowing (_flowing ()) }) } })
+  return [ _timer, _flowing ] }
+var timer_since = _timer => S .subclock (_=> {;
+  var _since = S .data ()
+	;S (_=> {;
+    ;_since (_since .next || - Infinity)
+    ;_since .next = _timer () })
+  return _since })
+var time_intervals = _timer => so ((_=_=>
+  S (_ => time_interval .time_interval (_timer_since (), _timer ())),
+  where
+  , _timer_since = timer_since (_timer) )=>_)
+
+
+
+
+
+
+
+
 var _ping_cache = {}
 var _ping_listeners = {}
 
@@ -179,12 +212,16 @@ var room = string
 var choice = string
 var answer = string
 var problem = v (string, list (choice))
-var timeinterval = number
-var latency = timeinterval
+
+var time_instant = number
+var time_interval = data ({ time_interval: (from =~ time_instant, to =~ time_instant) => time_interval })
+
+var time_length = number
+var latency = time_length
 var position = v (nat, nat)
 var ping = v (timestamp, latency, latency)
 
-var attempt = v (position, timeinterval)
+var attempt = v (position, time_length)
 var point = data ({ point: (problem =~ problem, attempts =~ list (attempt)) => point })
 var past = data ({ past: (points =~ list (point)) => past })
 
@@ -787,6 +824,7 @@ window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
 	list, map, maybe, nat, id, v, piece,
 	shuffle, uuid, api, post,
+  timer, timer_since, time_intervals, 
 	avatar, student, problem, choice, answer, latency, ping, position,
 	attempt, point, past, board, win_rule, rules, settings,
 	teacher_app, student_app,
