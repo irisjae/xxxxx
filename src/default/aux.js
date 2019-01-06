@@ -241,7 +241,7 @@ var student = data ({
 var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
 	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
-	playing: ( room =~ room, settings =~ settings, students =~ list (student)
+	playing: ( room =~ room, settings =~ settings, students =~ list (student), progress =~ progress
            , boards =~ map (student) (board), pasts =~ map (student) (past), progresses =~ map (student) (progress) ) => teacher_app,
 	game_over: ( room =~ room, settings =~ settings, students =~ list (student)
              , boards =~ map (student) (board), pasts =~ map (student) (past) ) => teacher_app })
@@ -710,15 +710,6 @@ var bingoes = _board => _past =>
 
 
 
-var past_progressed = old_past => curr_past =>
-  so ((_=_=>
-  Z_ .size (curr) > Z_ .size (old),
-  where
-  , old = T (old_past) (L .get (past_as_points))
-  , curr = T (curr_past) (L .get (past_as_points)) )=>_)
-    
-
-
 //optimizing this
 var message_encoding = by (message => 
 	so ((_=_=>
@@ -765,6 +756,8 @@ window .stuff = { ...window .stuff,
 	teacher_app, student_app,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
+  pair_as_v, pair_as_list, pair_as_first, pair_as_second,
+  list_as_pair, map_as_keys, map_as_values, as_value_of,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 	settings_as_problems, settings_as_rules,
@@ -780,13 +773,9 @@ window .stuff = { ...window .stuff,
   student_as_student, student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
-	cell_as_position, as_position,
-	cell_as_choice, 
-  pair_as_list, pair_as_first, pair_as_second,
-	message_encoding, messages_encoding,
-	assemble_students, schedule_start,
+	cell_as_position, as_position, cell_as_choice, 
+	message_encoding, messages_encoding, schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-	past_progressed,
   current_problem, problem_choice_matches,
-  attempted_positions, solved_positions, bingoed_positions }
+  attempted_positions, solved_positions, bingoed_positions, bingoes }

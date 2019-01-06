@@ -16,14 +16,15 @@ attempt, point, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
+pair_as_v, pair_as_list, pair_as_first, pair_as_second,
+list_as_pair, map_as_keys, map_as_values, as_value_of,
 as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 settings_as_problems, settings_as_rules,
 settings_as_size, settings_as_time_limit, settings_as_win_rule,
 io_as_inert, io_as_connecting, io_as_heartbeat,
-ensemble_as_ping, ensemble_as_settings, ensemble_as_start, ensemble_as_progress, ensemble_as_end,
-ensemble_as_student_pings, ensemble_as_student_starts,
-ensemble_as_student_boards, ensemble_as_student_pasts,
+ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
+ensemble_as_pings, ensemble_as_progresses, ensemble_as_boards, ensemble_as_pasts,
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 app_as_settings, app_as_student, app_as_students, app_as_room,
 app_as_board, app_as_past, app_as_problems,
@@ -32,16 +33,12 @@ avatar_as_lion, avatar_as_bunny,
 student_as_student, student_as_id, student_as_name, student_as_icon, 
 rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
-cell_as_position, as_position,
-cell_as_choice, 
-pair_as_list, pair_as_first, pair_as_second,
-message_encoding, messages_encoding,
-assemble_students, schedule_start,
+cell_as_position, as_position, cell_as_choice, 
+message_encoding, messages_encoding, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-past_progressed,
 current_problem, problem_choice_matches,
-attempted_positions, solved_positions, bingoed_positions
+attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
 
 
@@ -450,36 +447,38 @@ var connection = S (_ => {;
 	var _ensemble = ensemble_state ()
 	
 	var _app_students = T (_app) (L .get (app_as_students))
-	var _ensemble_students = T (_ensemble) (assemble_students (_app))
+	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
+	var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
+	var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
+	var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
+  ;FILL (THIS) (IN);
 	if (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students))) {
 		;app_state (
 			T (_app
 			) (L .set (app_as_students) (_ensemble_students))) } })
-;S (last_ensemble => {;
+;S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
-	if (L .isDefined (app_as_get_ready) (_app)) {
-		if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
-			if (L .isDefined (ensemble_as_start) (_ensemble)) {
-				var start = L .get (ensemble_as_start) (_ensemble)
-				var now = (new Date) .getTime ()
+  var _ensemble_progress = T (_ensemble) (
+  if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
+    if (L .isDefined (ensemble_as_start) (_ensemble)) {
+      var start = L .get (ensemble_as_start) (_ensemble)
+      var now = (new Date) .getTime ()
 
-				var playing_app = teacher_app_get_ready_to_playing (_app)
-        
-        var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-        game_clock .clear ()
-        ;game_clock .add (timesup_problem, time_limit)
-        ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
-          ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
-        
-				if (start > now) {
-					;app_state (playing_app) }
-				else {
-					;setTimeout (_ => {;
-						;app_state (playing_app) }
-					, start - now) } } } }
-	return _ensemble }
-, ensemble_state ())
+      var playing_app = teacher_app_get_ready_to_playing (_app)
+
+      var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+      game_clock .clear ()
+      ;game_clock .add (timesup_problem, time_limit)
+      ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
+        ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
+
+      if (start > now) {
+        ;app_state (playing_app) }
+      else {
+        ;setTimeout (_ => {;
+          ;app_state (playing_app) }
+        , start - now) } } } })
 ;S (last_progress => {;
 	var _app = app_state ()
   var _room = L .get (app_as_room) (_app)
