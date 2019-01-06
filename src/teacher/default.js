@@ -443,20 +443,20 @@ var connection = S (_ => {;
 		;flowing_state (false) } })
 
 
-;S (last_progress_step => {;
+;S (last_progress => {;
 	var _app = app_state ()
   var _room = L .get (app_as_room) (_app)
   var _progress = L .get (app_as_progress) (_app)
-  var _progress_step = L .get (progress_as_step) (_progress)
-	if (_progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
-    ;go
-    .then (_ =>
-      io_state (io .messaging) && api (_room,
-          post (message_encoding (message .teacher_progress (_progress)))) )
-    .catch (_e => {;
-      ;console .error (_e) })
-    .then (_ => {;
-      ;io_state (io .inert) }) }
+	if (L .isDefined (app_as_playing) (_app)) {
+    if (Z_ .not (Z_ .equals (_progress) (last_progress))) {
+      ;go
+      .then (_ =>
+        io_state (io .messaging) && api (_room,
+            post (message_encoding (message .teacher_progress (_progress)))) )
+      .catch (_e => {;
+        ;console .error (_e) })
+      .then (_ => {;
+        ;io_state (io .inert) }) } }
   return _progress } )
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
@@ -492,7 +492,31 @@ var connection = S (_ => {;
     else {
       ;setTimeout (_ => {;
         ;app_state (playing_app) }
-      , start - now) } } })
+      , start - now) } }
+         
+         
+  var _progress_step = L .get (progress_as_step) (_progress)
+  // is there a more elegant way? this is not markovian 
+  if (L .isDefined (app_as_get_ready) (_app)) {
+    if (_progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
+      ;go
+      .then (_ =>
+        io_state (io .messaging) && api (_room,
+            post (message_encoding (message .teacher_progress (_progress)))) )
+      .catch (_e => {;
+        ;console .error (_e) })
+      .then (_ => {;
+        ;io_state (io .inert) }) } }
+  else if (L .isDefined (app_as_playing) (_app)) {
+    if (! _progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
+      ;go
+      .then (_ =>
+        io_state (io .messaging) && api (_room,
+            post (message_encoding (message .teacher_progress (_progress)))) )
+      .catch (_e => {;
+        ;console .error (_e) })
+      .then (_ => {;
+        ;io_state (io .inert) }) } } })
 ;S (_ => {;
   })
 ;S (_ => {;

@@ -196,6 +196,7 @@ var n_reducer = binary => n =>
 
 var pair_zip_n = reducer => n_reducer (pair_zip (reducer))
 
+// this is ugly
 var pair_zip = reducer => 
 	so ((_=_=>
 	a => b =>
