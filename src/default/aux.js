@@ -740,7 +740,8 @@ var message_encoding = by (message =>
         , map_defined (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
       , [ message_as_student_progress .progress
         , map_defined (L .getInverse ([ ensemble_as_progresses, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
-      , [ message_as_student_update .past, map_defined (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ] ] )=>_))
+      , [ message_as_student_update .past
+        , map_defined (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ] ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))

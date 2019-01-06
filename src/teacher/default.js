@@ -523,12 +523,23 @@ var connection = S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	
-	var _app_students = T (_app) (L .get (app_as_students))
 	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
-	var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
-	var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
-	var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
-  ;FILL (THIS) (IN);
+  var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
+  var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
+  var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
+  
+  var ensemble_updates = $ (Z_ .join
+  ) ( 
+  [ !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
+    ? [ L .set (app_as_students) (_ensemble_students) ] : []
+  , !! (_ensemble_boards && Z_ .not (Z_ .equals (_ensemble_boards) (_app_boards)))
+    ? [ L .set (app_as_students) (_ensemble_boards) ] : []
+  , !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
+    ? [ L .set (app_as_students) (_ensemble_students) ] : []
+  , !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
+    ? [ L .set (app_as_students) (_ensemble_students) ] : []
+  ])
+  
 	if (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students))) {
 		;app_state (
 			T (_app
