@@ -497,7 +497,7 @@ var teacher_app_get_ready_to_playing = _schedule => by (_app =>
     , _settings: app_as_settings
     , _students: app_as_students })
   ) (({ _room, _settings, _students }) => 
-    teacher_app .playing (_room, _settings, _students, _progress)))
+    teacher_app .playing (_room, _settings, _students, [ 0, _schedule ])))
 
 var teacher_app_playing_to_game_over = by (_app => 
   $ (L .get
@@ -525,12 +525,12 @@ var student_app_playing_to_next =
 		so ((_=_=>
 		!! Z_ .not (game_over_ok)
 		? $ (
-      [ L .set (app_as_progress) (progress + 1)
+      [ L .set ([ app_as_progress, progress_as_step ]) (progress_step + 1)
       , L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, [])) ] )
 		: student_app_playing_to_game_over,
 		where
-		, progress = T (_app) (L .get (app_as_progress))
-    , next_problem = T (_app) (L .get ([ app_as_problems, progress + 1 ]))
+		, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+    , next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
     , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
 				 
 var student_app_playing_to_game_over =  by (_app => 
