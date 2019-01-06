@@ -47,17 +47,17 @@ var uuid = _ =>
 var timer = _ => {;
   var _timer = S .data ()
   var _flowing = S .data (true)
-  var _flowing_ok = S .subclock (_=> {
-    var val = S .value (_flowing ())
-    ;S (_=> {;val (_flowing ())})
-    return val })
-  var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
+  //var _flowing_ok = S .subclock (_=> {
+  //  var val = S .value (_flowing ())
+  //  ;S (_=> {;val (_flowing ())})
+  //  return val })
+  //var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
   var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
   ;tick_S (_=> {;
     ;_timer (+ (new Date))
     ;requestAnimationFrame (_ => {;
       ;_flowing (_flowing ()) }) })
-  return [ _timer, _flowing, _S, tick_S ] }
+  return [ _timer, _flowing, ] } //_S, tick_S ] }
 var timer_since = _timer => S .subclock (_=> {;
   var _since = S .data ()
 	;S (_=> {;

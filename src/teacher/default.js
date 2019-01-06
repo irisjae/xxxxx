@@ -363,6 +363,9 @@ var end_game = _ => {;
 				
 				
 				
+
+var [ time_state, flowing_state ] = timer ()
+var time_interval = time_intervals (time_state)
 				
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
@@ -383,19 +386,19 @@ var connection = S (_ => {;
 
 ;S (_ => {;
 	if (L .isDefined (app_as_get_ready) (app_state ())) {
-		;game_clock .pause () } })
+		;flowing_state (false) } })
 ;S (last_state => {;
-	var last_progress = T (last_state) (L .get (app_as_progress))
-	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (progress !== undefined && Z_ .not (Z_ .equals (last_progress) (progress))) {
+    var last_progress = T (last_state) (L .get (app_as_progress))
+    var progress = T (app_state ()) (L .get (app_as_progress))
+		if (Z_ .not (Z_ .equals (last_progress) (progress))) {
 			;game_clock .seek (0) }
-		;game_clock .play () }
+		;flowing_state (true) }
 	return app_state () }
 , app_state ())
 ;S (_ => {;
 	if (L .isDefined (app_as_game_over) (app_state ())) {
-		;game_clock .pause () } })
+		;flowing_state (false) } })
 
 //TODO: add guard to warn against depending on datas other than feedback
 ;S (_ => {;
