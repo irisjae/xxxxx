@@ -494,6 +494,8 @@ var connection = S (_ => {;
         ;app_state (playing_app) }
       , start - now) } } })
 ;S (_ => {;
+  })
+;S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
 	
