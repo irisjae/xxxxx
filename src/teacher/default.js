@@ -473,14 +473,7 @@ var connection = S (_ => {;
 	return _app })
 
 
-;S (_ => {;
-	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _ensemble_progress = T (_ensemble) (L .get (ensemble_as_progress))
-  if (Z_ .not (Z_ .equals (_app_progress) (_ensemble_progress))) {
-    var playing_app = teacher_app_get_ready_to_playing (_app)
-
+/*
     var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
     game_clock .clear ()
     ;game_clock .add (timesup_problem, time_limit)
@@ -492,31 +485,22 @@ var connection = S (_ => {;
     else {
       ;setTimeout (_ => {;
         ;app_state (playing_app) }
-      , start - now) } }
+      , start - now) } 
+*/
+;S (_ => {;
+	var _app = app_state ()
+  
+  var _app_progress = T (_app) (L .get (app_as_progress))
+  if (Z_ .not (Z_ .equals (_app_progress) (_ensemble_progress))) {
+    var playing_app = teacher_app_get_ready_to_playing (_app)
+
          
          
   var _progress_step = L .get (progress_as_step) (_progress)
   // is there a more elegant way? this is not markovian 
-  if (L .isDefined (app_as_get_ready) (_app)) {
-    if (_progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
-      ;go
-      .then (_ =>
-        io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_progress (_progress)))) )
-      .catch (_e => {;
-        ;console .error (_e) })
-      .then (_ => {;
-        ;io_state (io .inert) }) } }
+  if (L .isDefined (app_as_get_ready) (_app) && ) {}
   else if (L .isDefined (app_as_playing) (_app)) {
-    if (! _progress && Z_ .not (Z_ .equals (_progress_step) (last_progress_step))) {
-      ;go
-      .then (_ =>
-        io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_progress (_progress)))) )
-      .catch (_e => {;
-        ;console .error (_e) })
-      .then (_ => {;
-        ;io_state (io .inert) }) } } })
+    } })
 ;S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
