@@ -373,6 +373,7 @@ var connection = S (_ => {;
 
 
 //TODO: add guard to warn against depending on datas other than feedback
+// replace with lens control structure
 ;S (_ => {;
   ;so ((
   take
@@ -414,21 +415,11 @@ var connection = S (_ => {;
 
 ;S (_ => {;
 	if (L .isDefined (app_as_get_ready) (app_state ())) {
-		;flowing_state (false) } })
-;S (last_state => {;
-	if (L .isDefined (app_as_playing) (app_state ())) {
-    var last_progress = T (last_state) (L .get (app_as_progress))
-    var progress = T (app_state ()) (L .get (app_as_progress))
-		if (Z_ .not (Z_ .equals (last_progress) (progress))) {
-			;game_clock .seek (0) }
+		;flowing_state (false) }
+	else if (L .isDefined (app_as_playing) (app_state ())) {
 		;flowing_state (true) }
-	return app_state () }
-, app_state ())
-;S (_ => {;
-	if (L .isDefined (app_as_game_over) (app_state ())) {
+	else if (L .isDefined (app_as_game_over) (app_state ())) {
 		;flowing_state (false) } })
-
-
 // This is wrong, signal should be sent by timer; the sent message in the ensemble is the casual cause which triggers app progress
 /*
 ;S (last_progress => {;
@@ -462,6 +453,7 @@ var connection = S (_ => {;
         ;app_state (playing_app) }
       , start - now) } 
 */
+;S ()
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
@@ -497,20 +489,32 @@ var connection = S (_ => {;
     
 ;S (last_app => {;
   var _app = app_state () 
-  if (! L .isDefined (app_as_game_over) (last_app)) {
-    if (L .isDefined (app_as_game_over) (_app)) {
-      var now = (new Date) .getTime ()
+  var _room = T (_app) (L .get (app_as_room))
 
-      var _app = S .sample (app_state) 
-      var _room = T (_app) (L .get (app_as_room))
+  if (L .isDefined (app_as_playing) (_app)) {
+    var _progress = T (_app) (L .get (app_as_progress))
+    var last_progress = T (last_app) (L .get (app_as_progress))
+    if (! Z_ .equals (_app) (last_app)) {
+      ;go
+      .then (_ =>
+        io_state (io .messaging) && api (_room,
+          post (message_encoding (message .teacher_progress (_progress))))
+        .then (panic_on ([
+          [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+      .catch (_e => {;
+        ;console .error (_e) })
+      .then (_ => {;
+        ;io_state (io .inert) }) } }
+  else if (L .isDefined (app_as_game_over) (_app)) {
+    if (! L .isDefined (app_as_game_over) (last_app)) {
+      var now = (new Date) .getTime ()
 
       ;go
       .then (_ =>
         io_state (io .messaging) && api (_room,
-          post (message_encoding (message .teacher_progress ())))
+          post (message_encoding (message .teacher_progress ([ -1, now ]))))
         .then (panic_on ([
           [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-      .then (_ => {;app_state (teacher_app_playing_to_game_over (_app))})
       .catch (_e => {;
         ;console .error (_e) })
       .then (_ => {;
