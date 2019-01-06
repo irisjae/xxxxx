@@ -276,12 +276,10 @@ var ensemble = data ({
 	ensemble: (
 		ping =~ ping,
 		settings =~ settings,
-		start =~ timestamp,
-    progress =~ list (timestamp),
-		end =~ timestamp,
+    progress =~ progress,
 		student_pings =~ map (student) (ping),
-		student_starts =~ map (student) (timestamp),
 		student_boards =~ map (student) (board),
+		student_progresses =~ map (student) (timestamp),
 		student_pasts =~ map (student) (past) ) => ensemble })
 
 
@@ -378,27 +376,23 @@ var io_as_heartbeat = data_iso (io .heartbeat)
 
 var message_as_teacher_settings = data_iso (message .teacher_settings)
 var message_as_teacher_ping = data_iso (message .teacher_ping) 
-var message_as_teacher_start = data_iso (message .teacher_start) 
 var message_as_teacher_progress = data_iso (message .teacher_progress) 
-var message_as_teacher_end = data_iso (message .teacher_end) 
 var message_as_student_ping = data_iso (message .student_ping) 
 var message_as_student_join = data_iso (message .student_join) 
-var message_as_student_start = data_iso (message .student_start) 
+var message_as_student_progress = data_iso (message .student_progress) 
 var message_as_student_update = data_iso (message .student_update) 
 
-var message_as_student = [L .choices (message_as_student_ping, message_as_student_join, message_as_student_start, message_as_student_update), 'student']
-var message_as_ping = [L .choices (message_as_teacher_ping, message_as_student_ping), 'ping']
+var message_as_student = [ L .choices (message_as_student_ping, message_as_student_join, message_as_student_progress, message_as_student_update), 'student' ]
+var message_as_ping = [ L .choices (message_as_teacher_ping, message_as_student_ping), 'ping' ]
 var message_as_board = message_as_student_join .board
 var message_as_past = message_as_student_update .past
 	
 var ensemble_as_settings = data_iso (ensemble .ensemble) .settings 
 var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
-var ensemble_as_start = data_iso (ensemble .ensemble) .start 
 var ensemble_as_progress = data_iso (ensemble .ensemble) .progress 
-var ensemble_as_end = data_iso (ensemble .ensemble) .end 
 var ensemble_as_student_pings = data_iso (ensemble .ensemble) .student_pings 
 var ensemble_as_student_boards = data_iso (ensemble .ensemble) .student_boards 
-var ensemble_as_student_starts = data_iso (ensemble .ensemble) .student_starts 
+var ensemble_as_student_progresses = data_iso (ensemble .ensemble) .student_progresses 
 var ensemble_as_student_pasts = data_iso (ensemble .ensemble) .student_pasts 
 
 var avatar_as_lion = data_iso (avatar .lion)
