@@ -7,10 +7,10 @@ focused_iso_,
 n_reducer, pair_zip_n, pair_zip, pair_projection,
 map_defined_, map_defined, from_just, maybe_all,
 as_sole, sole, every, delay,
-timer,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, api, post,
+timer, timer_since, time_intervals, 
 avatar, student, problem, choice, answer, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
 teacher_app, student_app,
@@ -303,14 +303,6 @@ window .view = <student-app>
 
 
 
-
-/*
-var lookbehind_latency = _ => {
-		var now = game_clock .time ()
-		var start = T (game_clock .getLabelTime ('next'))
-			(_x => !! (_x === -1) ? 0 : _x)
-		return now - start }
-*/
 			 
 			 
 			 
@@ -419,10 +411,6 @@ var time_travel = current => target => {;
 
 
 
-
-
-var game_clock = new TimelineMax
-var game_tick_sampler = temporal ()
 
 
 var reping_period = 3
