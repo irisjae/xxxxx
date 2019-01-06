@@ -7,7 +7,6 @@ var Z = sanc .create ({ checkTypes: false, env: sanc .env })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
-var TimelineMax = window .TimelineMax
 var T = _x => _fn_obj =>
 	!! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
 	? !! (Z_ .equals ([]) (_fn_obj))
@@ -406,7 +405,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
-	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, TimelineMax,
+	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
 	so, by, and_by, under,
 	go, never, panic, panic_on,
   just_now, temporal,
