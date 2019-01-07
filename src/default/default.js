@@ -6,6 +6,9 @@ var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: false, env: sanc .env })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
+//report to adam haile
+;Surplus .S = S
+;Surplus .S .effect = S
 var memoize = require ('fast-memoize')
 var T = _x => _fn_obj =>
 	!! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)

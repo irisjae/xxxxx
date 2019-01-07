@@ -44,6 +44,9 @@ attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
 
 
+
+
+
 var feedback = data ({
   start: () => feedback,
   setup_settings: ( settings_piece =~ piece (settings) ) => feedback,
@@ -62,6 +65,11 @@ var feedback_play = data_iso (feedback .play)
 var lookbehind_nothing = data_iso (lookbehind .nothing)
 var lookbehind_view_students = data_iso (lookbehind .view_students)
 var lookbehind_consider_end = data_iso (lookbehind .consider_end)
+
+
+
+
+
 
 
 var app_state = S .data (teacher_app .setup (default_settings))
