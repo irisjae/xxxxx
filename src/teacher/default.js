@@ -356,6 +356,7 @@ var end_game = _ => {;
 
 var [ time_state, flowing_state ] = timer ()
 //var time_interval = time_intervals (time_state)
+var tick_fn = _ => Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_as_progress, progress_as_timestamp ]))) / 1000)
 var tick_state = S .value ()
 ;S (_ => {;
   var _app = app_state ()
@@ -477,12 +478,9 @@ var connection = S (_ => {;
 ;S (last_tick => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  if (L .isDefined (app_as_playing) (_app) && tick_state () >= time_limit) {
-    //HACK
-    S .freeze (_ => {;
-      ;app_state (
-        teacher_app_playing_to_next (S .sample (app_state)))
-      ;tick_state (0) }) } })
+  if (L .isDefined (app_as_playing) (_app) && tick_state (), tick_fn () >= time_limit) {
+    ;app_state (
+      teacher_app_playing_to_next (S .sample (app_state))) } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
@@ -610,8 +608,7 @@ var connection = S (_ => {;
 				: io_state (io .heartbeat) && api (_room)
 					.then ($ ([
 						L .get (L .inverse (data_iso (ensemble .ensemble))),
-						_x => {;
-							;ensemble_state (_x) } ])) )
+						_x => {;ensemble_state (_x)} ])) )
       .catch (_x => {;
         if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
           ;console .warn ('Room timed out') }
