@@ -534,23 +534,12 @@ S (last_ensemble => {;
           T (_app
           ) (
           L .set (app_as_progress) (_ensemble_progress))) }
-    else {}
-  } 
+    else {
+      ;app_state (
+        T (_app
+        ) (
+        student_app_playing_to_game_over)) } } }
 	return _ensemble })
-
-//TODO make implementation more sophisticated
-S (last_ensemble => {;
-	;so ((
-	take
-	, _app = S .sample (app_state)
-	, _ensemble = ensemble_state () ) => {;
-	if (L .isDefined (app_as_playing) (_app)) {
-		if (! L .isDefined (ensemble_as_end) (last_ensemble)) {
-			if (L .isDefined (ensemble_as_end) (_ensemble)) {
-				;app_state (
-          T (_app) (student_app_playing_to_game_over)) } } } })
-	return ensemble_state () }
-, ensemble_state ())
 
 
 S (_ => {;
