@@ -1,7 +1,7 @@
 var {
 	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
 	so, by, and_by, under,
-	tap, go, never, panic, panic_on,
+	go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
@@ -10,7 +10,7 @@ var {
 	as_sole, sole, every, delay	 
 } = window .stuff
 
-var tap = _fn => x => (_fn (x), x)
+
 
 var shuffle = list => {
 	var array = []
@@ -24,191 +24,6 @@ var shuffle = list => {
 		;array [j] = arr_i }
 	
 	return array }
-
-
-
-
-var uuid = _ =>
-	'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
-		so ((
-		take
-		, r = Math .random () * 16 | 0
-		, v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
-		v .toString (16) ))
-
-
-
-
-
-// rewrite functionally?
-var map_zip = mash => a => b => {
-  var projections = new Map
-  ;T (a) (R .forEach (([ _key, _val ]) => {;
-    ;projections .set (_key, _val) }))
-  
-  var _zip = []
-  ;T (b) (R .forEach (([ _key, _val ]) => {;
-    if (projections .has (_key)) {
-      _zip = _zip .concat ([ [ _key, mash (projections .get (_key)) (_val) ] ]) } }))
-  
-  return _zip }
-
-
-
-
-
-
-var timer = _ => {;
-  var _timer = S .data ()
-  var _flowing = S .data (true)
-  //var _flowing_ok = S .subclock (_=> {
-  //  var val = S .value (_flowing ())
-  //  ;S (_=> {;val (_flowing ())})
-  //  return val })
-  //var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
-  var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
-  ;tick_S (_=> {;
-    ;_timer (+ (new Date))
-    ;requestAnimationFrame (_ => {;
-      ;_flowing (_flowing ()) }) })
-  return [ _timer, _flowing, ] } //_S, tick_S ] }
-var timer_since = _timer => S .subclock (_=> {;
-  var _since = S .data ()
-	;S (_=> {;
-    ;_since (_since .next || - Infinity)
-    ;_since .next = _timer () })
-  return _since })
-var time_intervals = _timer => so ((_=_=>
-  S (_ => time_interval .time_interval (_timer_since (), _timer ())),
-  where
-  , _timer_since = timer_since (_timer) )=>_)
-
-
-
-
-
-
-
-
-var _ping_cache = {}
-var _ping_listeners = {}
-
-/*var api = (room, _x) => {;
-	var begin = performance .now ()
-	return fetch ('/room/' + room, _x) .then (_x => {;{
-		var end = performance .now ()
-		var sample = end - begin
-		;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-		;(_ping_listeners [room] || []) .forEach (fn => {{;fn (_ping_cache [room])}})
-		return _x .json () }}) }*/
-//add retire code for sockets?
-var api = so ((_=_=>
-  (room, _x) => {;
-    ;_x = _x || { method: 'GET' }
-    if (_x .body) {
-      ;_x .body = JSON .parse (_x .body) }
-
-    var [ continuation, signal ] = api .new_continuation ()
-    var id = new_id ()
-
-    ;api .continuations [id] = signal
-    ;continuation .catch (Z_ .I) .then (_=> {;delete api .continuations [id]})
-
-    if (! api .sockets [room]) {
-      ;api .sockets [room] = new_socket (room) }
-    ;api .sockets [room] .refresh ()
-
-    var begin, end
-    ;go
-    .then (Z_ .K (api .sockets [room] .ready))
-    .then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
-    .then (_=> {;begin = performance .now ()})
-    .then (Z_ .K (continuation))
-    .then (_=> {;end = performance .now ()})
-    .then (_=> {;
-      var sample = end - begin
-      ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-      ;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
-    .catch (_ => {})
-    
-    return continuation },
-where
-, new_id = _ => {
-    var id = '' + Math .floor (1000000 * Math .random ())
-    return !! Z_ .not (api .continuations [id])
-    ? id
-    : new_id () }
-//TODO: make this more elegant
-, new_socket = room => so ((_=_=>(
-    rec =
-    { _socket: _
-    , ready: _
-    , refresh: refresh
-    , send: _x => _socket .send (_x) } , refresh (), rec),
-    where
-    , rec = _
-    , _socket = _
-    , refresh = _ => {;
-        if (! (_socket instanceof WebSocket)
-        || _socket .readyState === WebSocket .CLOSED
-        || _socket .readyState === WebSocket .CLOSING) {
-          ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
-          rec ._socket = _socket
-          rec .ready = new Promise ((resolve, reject) => {;
-            _socket .onopen = _ => {;resolve ()} })
-          _socket .onmessage = _event => {;
-            var _packet = JSON .parse (_event .data)
-            var id = _packet .id
-            var data = _packet .body
-            if (api .continuations [id]) {;
-               ;api .continuations [id] (data) } } } } )=>_)
-      
-, update_pings = sample =>
-  $ (
-  [ L .get (L .valueOr ([0, 0, 0, 0]))
-  , ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
-    [ mean * carry + sample / (n + 1)
-    , sqr_mean * carry + (sample * sample) / (n + 1)
-    , n + 1
-    , (new Date) .getTime () ],
-    where 
-    , carry = n / (n + 1) )=>_) ]))=>_) 
-;api .listen_ping = room => fn => {{ 
-	if (! _ping_listeners [room]) {
-		;_ping_listeners [room] = [] }
-	;_ping_listeners [room] .push (fn)
-	if (_ping_cache [room]) {
-		;fn (_ping_cache [room]) } }}
-;api .sockets = []
-;api .continuations = {}
-;api .new_continuation = timeout => {;
-  ;timeout = timeout || 5000
-                                     
-  var resolve, reject
-  var done = false
-  var faux_resolve = _x => {
-    if (! done) {
-      ;resolve (_x) } }
-  
-  var continuation = (new Promise ((_resolve, _reject) => {;
-    ;resolve = _resolve
-    ;reject = _reject }))
-  ;continuation .catch (Z_ .I) .then (_ => {;done = true})
-  
-  ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
-  
-  return [ continuation, faux_resolve ] }
-
-
-
-var post = x => ({
-	method: 'POST',
-	headers: {
-		'Accept': 'application/json',
-		'Content-Type': 'application/json' },
-	body: JSON .stringify (x) })
-
-
 
 
 //--------------------TYPES--------------------
@@ -388,7 +203,7 @@ var app_as_settings = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'
 var app_as_student = [ L .choices ('get_ready', 'playing', 'game_over'), 'student', as_defined_ ]
 var app_as_room = [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
-var app_as_progress = [ 'playing', 'progress' ]
+var app_as_progress = L .choose (_app => L .is[ 'playing', 'progress' ])
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
 var app_as_boards = [ L .choices ('playing', 'game_over'), 'boards' ]
@@ -471,21 +286,6 @@ var ping_as_mean = [ 1 ]
 
 
 
-var generate_board = size => problems =>
-	so ((_=_=>
-	T (Z_ .range (1) (size + 1)) (
-		Z_ .map (row => T (Z_ .range (1) (size + 1)) (
-			Z_ .map (column => [row, column, cell (row) (column)] )))),
-	where 
-	, cells = shuffle (problems .slice (0, size * size))
-	, cell = y => x =>
-			T (cells) (L .get ([
-				(x - 1) * size + (y - 1),
-				problem_as_answers,
-				L .reread (shuffle),
-				L .first ])) )=>_)
-
-
 var teacher_app_get_ready_to_playing = by (_app =>
   $ (
   [ $ (L .get
@@ -543,12 +343,134 @@ var student_app_playing_to_game_over =  by (_app =>
   , L .inverse (data_iso (student_app .game_over)) ]))
 
 
-var ast = data ({
-  normal: (numerator =~ integer, denominator =~ integer) => ast,
-  add: (left =~ ast, right =~ ast) => ast,
-  minus: (left =~ ast, right =~ ast) => ast,
-  multiply: (left =~ ast, right =~ ast) => ast,
-  divide: (left =~ ast, right =~ ast) => ast })
+
+
+
+
+
+
+
+
+
+var generate_board = size => problems =>
+	so ((_=_=>
+	T (Z_ .range (1) (size + 1)) (
+		Z_ .map (row => T (Z_ .range (1) (size + 1)) (
+			Z_ .map (column => [row, column, cell (row) (column)] )))),
+	where 
+	, cells = shuffle (problems .slice (0, size * size))
+	, cell = y => x =>
+			T (cells) (L .get ([
+				(x - 1) * size + (y - 1),
+				problem_as_answers,
+				L .reread (shuffle),
+				L .first ])) )=>_)
+
+var size_patterns = memoize (size =>
+	so ((_=_=>
+	n_reducer (Z_ .concat) (3)
+		(vertical_patterns)
+		(horizontal_patterns)
+		(diagonal_patterns),
+	where
+	, range = Z_ .range (1) (size + 1)
+	, vertical_patterns =
+			T (range) (Z_ .map (x =>
+				T (range) (Z_ .map (y =>
+					[x, y] ))))
+	, horizontal_patterns =
+			T (range) (Z_ .map (y =>
+				T (range) (Z_ .map (x =>
+					[x, y] ))))
+	, diagonal_patterns =
+      [ T (range) (Z_ .map (_x => [_x, _x]))
+      , T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
+
+var local_patterns = memoize (patterns =>
+	so ((_=_=>
+  T (patterns
+  ) (
+  $ (L .foldl
+  ) (
+  map_zip (Z_ .concat)
+  ) (
+  T (_positions) (Z_ .map (_pos => [ _pos, [] ]))
+  ) (
+  [ L .elems
+  , _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_pos) (_pattern) ? [ _pattern ] : [] ] )) ])),
+	where
+	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
+
+// var current_problem = by (_past =>
+//     L .get ([ past_as_points, L .last, point_as_problem ]))
+var current_problem = by (_app =>
+  so ((_=_=>
+  L .get ([ app_as_problems, progress_step ]),
+  where
+  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_))
+
+/*var current_problem_solved_ok = _app =>
+  so ((_=_=>
+  Z_ .equals (Z_ .size (L .get (past_as_points))) (progress_step + 1),
+  where
+  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_)*/
+
+var attempted_positions = by (_past =>
+  L .collect ([ past_as_points, L .elems, point_as_position ]))
+
+// make this more elegant
+var solved_positions = _board => _past => so ((_=_=>
+  T (_points
+  ) (
+  Z_ .chain (_point => so ((_=_=>
+    !! (_position && problem_choice_matches (_problem) (_choice))
+    ? [ _position ]
+    : [],
+    where
+    , _problem = T (_point) (L .get (point_as_problem))
+    , _position = T (_point) (L .get (point_as_position))
+    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))),
+  where
+  , _points = T (_past) (L .get (past_as_points)) )=>_)
+
+var bingoed_positions = _board => _past => 
+	so ((_=_=> so ((_=_=>
+	T (bingo_patterns
+  ) (
+  [ Z_ .filter (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem))))
+  , Z_ .join ]),
+	where
+	, bingo_patterns = size_patterns (_size) )=>_),
+  where
+	, _size = T (_board) (Z_ .size)
+	, _solved_positions = solved_positions (_board) (_past) )=>_)
+
+var bingoes = _board => _past => 
+  so ((_=_=>
+  T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
+  , $ (Z_ .reduce
+    ) (
+    ([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
+      [ positions, Z_ .append (solved_local_patterns) (solved_patterns) ],
+      where
+      , positions = Z_ .append (_position) (solved_positions)
+      , solved_local_patterns = 
+          T (_local_patterns
+          ) (
+          [ L .get (as_value_of (_position))
+          , Z_ .filter (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) )=>_)
+    ) (
+    [ [], [] ])
+  , L .get (L .last) ]),
+  where
+  , _solved_positions = solved_positions (_board) (_past)
+	, _size = T (_board) (Z_ .size)
+  , _local_patterns = local_patterns (size_patterns (_size)) )=>_)
+
+
+
+
+
 
 // TODO: simplify this
 var problem_choice_matches = so ((_=_=>
@@ -557,6 +479,12 @@ var problem_choice_matches = so ((_=_=>
     where
     , _question = T (_problem) (L .get (problem_as_question)) )=>_),
   where
+  , ast = data ({
+      normal: (numerator =~ integer, denominator =~ integer) => ast,
+      add: (left =~ ast, right =~ ast) => ast,
+      minus: (left =~ ast, right =~ ast) => ast,
+      multiply: (left =~ ast, right =~ ast) => ast,
+      divide: (left =~ ast, right =~ ast) => ast })
   , str_parse = so ((
       define
       , order = [ '+', '-', '*', '/' ]
@@ -621,106 +549,8 @@ var problem_choice_matches = so ((_=_=>
       : gcd (b) (a % b) )=>_)
 
 
-var size_patterns = memoize (size =>
-	so ((_=_=>
-	n_reducer (Z_ .concat) (3)
-		(vertical_patterns)
-		(horizontal_patterns)
-		(diagonal_patterns),
-	where
-	, range = Z_ .range (1) (size + 1)
-	, vertical_patterns =
-			T (range) (Z_ .map (x =>
-				T (range) (Z_ .map (y =>
-					[x, y] ))))
-	, horizontal_patterns =
-			T (range) (Z_ .map (y =>
-				T (range) (Z_ .map (x =>
-					[x, y] ))))
-	, diagonal_patterns =
-      [ T (range) (Z_ .map (_x => [_x, _x]))
-      , T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
-
-var local_patterns = memoize (patterns =>
-	so ((_=_=>
-  T (patterns
-  ) (
-  $ (L .foldl
-  ) (
-  map_zip (Z_ .concat)
-  ) (
-  T (_positions) (Z_ .map (_pos => [ _pos, [] ]))
-  ) (
-  [ L .elems
-  , _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_pos) (_pattern) ? [ _pattern ] : [] ] )) ])),
-	where
-	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
-
-// var current_problem = by (_past =>
-//     L .get ([ past_as_points, L .last, point_as_problem ]))
-var current_problem = by (_app =>
-  so ((_=_=>
-  L .get ([ app_as_problems, progress_step ]),
-  where
-  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_))
-var current_problem_solved = _app =>
-  so ((_=_=>
-  Z_ .equals (Z_ .size (L .get (past_as_points))) (progress_step + 1),
-  where
-  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_)
-
-var attempted_positions = by (_past =>
-  L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 
-// make this more elegant
-var solved_positions = _board => _past => so ((_=_=>
-  T (_points
-  ) (
-  Z_ .chain (_point => so ((_=_=>
-    !! (_position && problem_choice_matches (_problem) (_choice))
-    ? [ _position ]
-    : [],
-    where
-    , _problem = T (_point) (L .get (point_as_problem))
-    , _position = T (_point) (L .get (point_as_position))
-    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))),
-  where
-  , _points = T (_past) (L .get (past_as_points)) )=>_)
-
-var bingoed_positions = _board => _past => 
-	so ((_=_=> so ((_=_=>
-	T (bingo_patterns
-  ) (
-  [ Z_ .filter (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem))))
-  , Z_ .join ]),
-	where
-	, bingo_patterns = size_patterns (_size) )=>_),
-  where
-	, _size = T (_board) (Z_ .size)
-	, _solved_positions = solved_positions (_board) (_past) )=>_)
-
-var bingoes = _board => _past => 
-  so ((_=_=>
-  T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
-  , $ (Z_ .reduce
-    ) (
-    ([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
-      [ positions, Z_ .append (solved_local_patterns) (solved_patterns) ],
-      where
-      , positions = Z_ .append (_position) (solved_positions)
-      , solved_local_patterns = 
-          T (_local_patterns
-          ) (
-          [ L .get (as_value_of (_position))
-          , Z_ .filter (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) )=>_)
-    ) (
-    [ [], [] ])
-  , L .get (L .last) ]),
-  where
-  , _solved_positions = solved_positions (_board) (_past)
-	, _size = T (_board) (Z_ .size)
-  , _local_patterns = local_patterns (size_patterns (_size)) )=>_)
 
 
 
@@ -747,6 +577,11 @@ var message_encoding = by (message =>
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
+
+
+
+
+
 
 var schedule_start = _ensemble =>
 	so ((_=_=>
