@@ -203,16 +203,15 @@ var playing_view = _ => so ((_=_=>
         <a-title>Bingo</a-title>
         <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <students>
-        { T (_students
+        { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
           ) (
-          [ L .collect (
-            [ L .elems
-            , rewrite ])
-          , Z_ .map (([ id, [_board, _past] ]) =>
+          L .collect (
+          [ L .elems
+          , ([ _student, [_board, _past] ]) =>
             <student-etc>
-              <label>{id .name}</label>
-              { so ((_=_=>
+              <label>{ T (_student) (L .get (student_as_name)) }</label>
               <board> { T (_board) (Z_ .map (_row => 
+              { 
                 <row> { T (_row) (Z_ .map (_cell =>
                   so ((_=_=>
                   !! (_cell_solved) ? <cell x-solved></cell>
@@ -221,9 +220,9 @@ var playing_view = _ => so ((_=_=>
                   , _cell_position = T (_cell) (L .get (cell_as_position))
                   , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_)))
                   } </row> )) } </board>,
-              where
-              , _solved_positions = solved_positions (_board) (_past)
-              , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc>) ]) } </students>
+                where
+                , _solved_positions = solved_positions (_board) (_past)
+                , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc> ])) } </students>
       <options>
         <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
@@ -242,10 +241,11 @@ var playing_view = _ => so ((_=_=>
   , _progress = T (_app) (L .get (app_as_progress))
   , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   , _problem = T (_app) (current_problem)
-  , _students = T (_app) (L .get (app_as_students)) 
+  , _boards = T (_app) (L .get (app_as_boards)) 
+  , _pasts = T (_app) (L .get (app_as_pasts)) 
   , problem_number = T (_app) (L .get (app_as_progress)) + 1
   , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  , game_tick = just_now (game_tick_sampler)
+  , game_tick = tick_state ()
   , question = T (_problem) (L .get (problem_as_question))
   , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
@@ -336,18 +336,10 @@ var start_playing = _ => {;
     ;io_state (io .inert) }) }
 
 var end_game = _ => {;
-  var _room = T (S .sample (app_state)) (L .get (app_as_room))
-  
-  ;go
-  .then (_ =>
-    io_state (io .messaging) && api (_room,
-      post (message_encoding (message .teacher_progress ([ -1, + (new Date) ]))))
-    .then (panic_on ([
-      [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-  .catch (_e => {;
-    ;console .error (_e) })
-  .then (_ => {;
-    ;io_state (io .inert) }) }
+  ;app_state (
+    T (S .sample (app_state)
+    ) (
+    teacher_app_playing_to_game_over)) }
 
 				
 				
