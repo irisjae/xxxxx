@@ -539,15 +539,15 @@ var message_encoding = by (message =>
   , _student = T (message) (L .get (message_as_student))
   , _student_id = T (_student) (L .get (student_as_id))
   , cases = 
-      [ [ message_as_teacher_ping .ping, L .getInverse (ensemble_as_ping) ]
-      , [ message_as_teacher_settings .settings, L .getInverse (ensemble_as_settings) ]
-      , [ message_as_teacher_progress .progress, L .getInverse (ensemble_as_progress) ]
-      , [ message_as_student_ping .ping
-        , L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]) ]
-      , [ message_as_student_join .board
-        , L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]) ]
-      , [ message_as_student_update .past
-        , L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]) ] ] )=>_))
+      [ L .chain (Z_ .K (L .getInverse (ensemble_as_ping)), message_as_teacher_ping .ping )
+      , L .chain (Z_ .K (L .getInverse (ensemble_as_settings)), message_as_teacher_settings .settings )
+      , L .chain (Z_ .K (L .getInverse (ensemble_as_progress)), message_as_teacher_progress .progress )
+      , L .chain (Z_ .K (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+        , message_as_student_ping .ping )
+      , L .chain (Z_ .K (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+        , message_as_student_join .board )
+      , L .chain (Z_ .K (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+        , message_as_student_update .past ) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
