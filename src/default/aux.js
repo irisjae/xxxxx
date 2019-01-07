@@ -754,11 +754,32 @@ var schedule_start = _ensemble =>
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
-var morph_past = _app =>
+var morph_past = by (_app =>
   so ((_=_=>
-  
-  )=>_)
+  $ (L .modify
+  ) (
+  [ app_as_past, past_as_points, L .slice (Z_ .size (_past), _progress_step + 1) ]
+  ) (
+  (_, i) => point .point (L .get (i) (_problems), [])),
+  where
+  , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+  , _problems = T (_app) (L .get (app_as_problems))
+  , _past = T (_app) (L .get (app_as_past)) )=>_))
 //var schedule_tick = 
+/*
+var student_app_playing_to_next = 
+	by (_app => 
+		so ((_=_=>
+		!! Z_ .not (game_over_ok)
+		? $ (
+      [ L .set ([ app_as_progress, progress_as_step ]) (progress_step + 1)
+      , L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, [])) ] )
+		: student_app_playing_to_game_over,
+		where
+		, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+    , next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
+    , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
+*/
 
 
 window .stuff = { ...window .stuff,
