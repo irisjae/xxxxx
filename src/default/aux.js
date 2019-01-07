@@ -507,27 +507,30 @@ var teacher_app_playing_to_game_over = by (_app =>
   , L .inverse (data_iso (teacher_app .game_over)) ])) 
 
 var student_app_get_ready_to_playing = by (_app =>
-  under (complete_ (
-		{	_room: app_as_room
-    , _student: app_as_student
-		,	_settings: app_as_settings })
-  ) (({ _room, _student, _settings }) =>
-		so ((_=_=>
-		student_app .playing (_room, _settings, _student, random_board, fresh_past, [ 0, fiat ]),
-		where 
-		, _size = L .get (settings_as_size) (_settings)
-		, _problems = L .get (settings_as_problems) (_settings)
-    , random_board = generate_board (_size) (_problems)
-    , first_problem = L .get (L .first) (_problems)
-		, fresh_past = past .past ([point .point (first_problem, [])]) )=>_)))
+  so ((_=_=>
+  $ (
+  [ $ (L .get
+    ) (
+    [ data_iso (student_app .get_ready)
+    , L .inverse (data_iso (student_app .playing)) ])) 
+  , L .set (app_as_board) (random_board)
+  , L .set (app_as_past) (fresh_past)
+  , L .set () () ]
+
+  student_app .playing (_room, _settings, _student, , , [ 0, fiat ]),
+  where 
+  , _settings = L .get (app_as_setting) (_app)
+  , _size = L .get (settings_as_size) (_settings)
+  , _problems = L .get (settings_as_problems) (_settings)
+  , random_board = generate_board (_size) (_problems)
+  , first_problem = L .get (L .first) (_problems)
+  , fresh_past = past .past ([point .point (first_problem, [])]) )=>_))
 
 var student_app_playing_to_next = 
 	by (_app => 
 		so ((_=_=>
 		!! Z_ .not (game_over_ok)
-		? $ (
-      [ L .set ([ app_as_progress, progress_as_step ]) (progress_step + 1)
-      , L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, [])) ] )
+		? L .set ([ L .rewrite (progress_past), app_as_progress, progress_as_step ]) (progress_step + 1)
 		: student_app_playing_to_game_over,
 		where
 		, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
@@ -754,13 +757,13 @@ var schedule_start = _ensemble =>
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
-var morph_past = by (_app =>
+var progress_past = by (_app =>
   so ((_=_=>
   $ (L .set
   ) (
   [ app_as_past, past_as_points, L .slice (Z_ .size (_past), _progress_step + 1) ]
   ) (
-  Z_ .range () () (_, i) => point .point (L .get (i) (_problems), [])),
+  T (Z_ .range (Z_ .size (_past)) (_progress_step + 1)) (L .collect ([ L .elems, i => point .point (L .get (i) (_problems), []) ]))),
   where
   , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
   , _problems = T (_app) (L .get (app_as_problems))
