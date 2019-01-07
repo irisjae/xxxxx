@@ -416,6 +416,10 @@ tick_state .update = _ => {;
     var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
     var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
     if (_tick >= 0) {
+      if (! _ && tick_state .stored !== undefined) {
+        ;tick_state .stored = undefined
+        return }
+      if (_) {;tick_state .stored = _tick}
       ;tick_state (_tick) } } }
 ;S (tick_state .update)
 /*var tick_state = S .subclock (_ => {;
