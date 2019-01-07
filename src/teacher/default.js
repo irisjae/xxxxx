@@ -466,24 +466,13 @@ var connection = S (_ => {;
         ;app_state (playing_app) }
       , start - now) } 
 */
-var timesup_problem = _ => {;
-	;app_state (
-    teacher_app_playing_to_next (S .sample (app_state))) }
 
 ;S (last_tick => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   if (tick_state () >= time_limit) {
-    var progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-    var progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
-    var next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
-    var game_over_ok = Z_ .equals (next_problem) (undefined)  
-    if (game_over_ok) {
-      ;app_state (
-        teacher_app_playing_to_game_over (_app)) }
-    else {
-      ;app_state (
-        L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ]) (_app)) } } })
+	;app_state (
+    teacher_app_playing_to_next (S .sample (app_state))) } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
@@ -521,10 +510,11 @@ var timesup_problem = _ => {;
   var _app = app_state () 
   var _room = T (_app) (L .get (app_as_room))
 
+  var _progress = T (_app) (L .get (app_as_progress))
+  var last_progress = T (last_app) (L .get (app_as_progress))
+  
   if (L .isDefined (app_as_playing) (_app)) {
-    var _progress = T (_app) (L .get (app_as_progress))
-    var last_progress = T (last_app) (L .get (app_as_progress))
-    if (! Z_ .equals (_app) (last_app)) {
+    if (! Z_ .equals (_progress) (last_progress)) {
       ;go
       .then (_ =>
         io_state (io .messaging) && api (_room,
@@ -537,12 +527,10 @@ var timesup_problem = _ => {;
         ;io_state (io .inert) }) } }
   else if (L .isDefined (app_as_game_over) (_app)) {
     if (! L .isDefined (app_as_game_over) (last_app)) {
-      var now = (new Date) .getTime ()
-
       ;go
       .then (_ =>
         io_state (io .messaging) && api (_room,
-          post (message_encoding (message .teacher_progress ([ -1, now ]))))
+          post (message_encoding (message .teacher_progress ([ -1, + (new Date) ]))))
         .then (panic_on ([
           [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
       .catch (_e => {;

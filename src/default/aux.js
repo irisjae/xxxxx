@@ -488,17 +488,22 @@ var generate_board = size => problems =>
 				L .first ])) )=>_)
 
 
-var teacher_app_get_ready_to_playing = /*_schedule => */by (_app =>
-  $ (L .get
-  ) (
-  [ data_iso (teacher_app .get_ready)
-  , L .inverse (data_iso (teacher_app .playing)) ])) 
-//  under (complete_ (
-//    { _room: app_as_room
-//    , _settings: app_as_settings
-//    , _students: app_as_students })
-//  ) (({ _room, _settings, _students }) => 
-//    teacher_app .playing (_room, _settings, _students, [ 0, _schedule ])))
+var teacher_app_get_ready_to_playing = by (_app =>
+  $ (
+  [ $ (L .get
+    ) (
+    [ data_iso (teacher_app .get_ready)
+    , L .inverse (data_iso (teacher_app .playing)) ])
+  , L .set (app_as_progress) ([ 0, fiat ]) ]))
+
+var teacher_app_playing_to_next = by (_app =>
+  so ((_=_=>
+  !! Z_ .not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
+  : teacher_app_playing_to_game_over,
+  where
+  , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+  , [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
+  , game_over_ok = Z_ .not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_))
 
 var teacher_app_playing_to_game_over = by (_app => 
   $ (L .get
@@ -526,8 +531,7 @@ var student_app_get_ready_to_playing = by (_app =>
 
 var student_app_playing_to_next = by (_app => 
   so ((_=_=>
-  !! Z_ .not (game_over_ok)
-  ? L .set ([ L .rewrite (progress_past), app_as_progress, progress_as_step ]) (progress_step + 1)
+  !! Z_ .not (game_over_ok) ? L .set ([ L .rewrite (progress_past), app_as_progress, progress_as_step ]) (progress_step + 1)
   : student_app_playing_to_game_over,
   where
   , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
