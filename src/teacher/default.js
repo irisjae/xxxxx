@@ -361,7 +361,7 @@ var tick_state = S .subclock (_ => {;
   S (_ => {;
     var _app = app_state ()
     if (L .isDefined (app_as_progress) (_app)) {
-      var _progress_timestamp = T (_app) (L .isDefined ([ app_as_progress, progress_as_timestamp ]))
+      var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
       var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
       ;_ticker (_tick) } })
   return _ticker })
@@ -473,6 +473,7 @@ var connection = S (_ => {;
       teacher_app_playing_to_next (S .sample (app_state))) } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
+    L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
     ) (
     L .isDefined ([ L .elems, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
