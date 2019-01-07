@@ -559,12 +559,12 @@ var messages_encoding = list =>
 
 var schedule_start = _ensemble =>
 	so ((_=_=>
-	(new Date) .getTime () + confidence_interval,
+	(+ (new Date)) + confidence_interval,
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_as_ping))
 	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_value ]))
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
-	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
+	, confidence_interval = Z_ .min (1000) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
 var progress_past = so ((_=_=>
   by (_app =>

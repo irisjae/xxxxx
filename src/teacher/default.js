@@ -360,10 +360,11 @@ var tick_state = S .subclock (_ => {;
   var _ticker = S .value ()
   S (_ => {;
     var _app = app_state ()
-    if (L .isDefined (app_as_progress) (_app)) {
+    if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
       var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
       var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
-      ;_ticker (_tick) } })
+      if (_tick >= 0) {
+        ;_ticker (_tick) } } })
   return _ticker })
 				
 var reping_period = 3
