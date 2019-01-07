@@ -469,7 +469,7 @@ var connection = S (_ => {;
 ;S (last_tick => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  if (tick_state () >= time_limit) {
+  if (L .isDefined (app_as_playing) (_app) && tick_state () >= time_limit) {
     ;app_state (
       teacher_app_playing_to_next (S .sample (app_state))) } })
 ;S (last_app => {;
