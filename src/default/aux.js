@@ -289,16 +289,14 @@ var message = data ({
 	teacher_progress: ( progress =~ progress ) => message,
 	student_ping: ( student =~ student, ping =~ ping ) => message,
 	student_join: ( student =~ student, board =~ board ) => message,
-	student_progress: ( student =~ student, progress =~ progress ) => message,
 	student_update: ( student =~ student, past =~ past ) => message })
 var ensemble = data ({
 	ensemble: (
 		ping =~ ping,
+		pings =~ map (student) (ping),
 		settings =~ settings,
     progress =~ progress,
-		pings =~ map (student) (ping),
 		boards =~ map (student) (board),
-		progresses =~ map (student) (timestamp),
 		pasts =~ map (student) (past) ) => ensemble })
 
 
@@ -406,10 +404,9 @@ var message_as_teacher_ping = data_iso (message .teacher_ping)
 var message_as_teacher_progress = data_iso (message .teacher_progress) 
 var message_as_student_ping = data_iso (message .student_ping) 
 var message_as_student_join = data_iso (message .student_join) 
-var message_as_student_progress = data_iso (message .student_progress) 
 var message_as_student_update = data_iso (message .student_update) 
 
-var message_as_student = [ L .choices (message_as_student_ping, message_as_student_join, message_as_student_progress, message_as_student_update), 'student' ]
+var message_as_student = [ L .choices (message_as_student_ping, message_as_student_join, message_as_student_update), 'student' ]
 var message_as_ping = [ L .choices (message_as_teacher_ping, message_as_student_ping), 'ping' ]
 var message_as_board = message_as_student_join .board
 var message_as_past = message_as_student_update .past
@@ -742,8 +739,6 @@ var message_encoding = by (message =>
         , map_defined (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
       , [ message_as_student_join .board
         , map_defined (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
-      , [ message_as_student_progress .progress
-        , map_defined (L .getInverse ([ ensemble_as_progresses, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ]
       , [ message_as_student_update .past
         , map_defined (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ])) ] ] )=>_))
 
@@ -759,7 +754,7 @@ var schedule_start = _ensemble =>
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
-var morphh_past = _app =>
+var morph_past = _app =>
   so ((_=_=>
   
   )=>_)

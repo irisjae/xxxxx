@@ -621,14 +621,3 @@ S (_ => {;
           T (_app
           ) (
           student_app_playing_to_game_over)) } } } })
-
-
-				var _room = T (_app) (L .get (app_as_room))
-				var _student = T (_app) (L .get (app_as_student))
-				;io_state (io .messaging) && api (_room, post (
-					message_encoding (
-						message .student_progress (_student, start))))
-				.catch (_e => {;
-					;console .error (_e) })
-				.then (_ => {;
-					;io_state (io .inert) }) 
