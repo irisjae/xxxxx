@@ -356,13 +356,24 @@ var end_game = _ => {;
 
 var [ time_state, flowing_state ] = timer ()
 //var time_interval = time_intervals (time_state)
-var tick_state = S (_ => {;
+var tick_state = S .value ()
+;S (_ => {;
   var _app = app_state ()
   if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
     var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
     var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
     if (_tick >= 0) {
-      return _tick } } })
+      ;tick_state (_tick) } } })
+/*var tick_state = S .subclock (_ => {;
+  var _ticker = S .value ()
+  S (_ => {;
+    var _app = app_state ()
+    if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
+      var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
+      var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
+      if (_tick >= 0) {
+        ;_ticker (_tick) } } })
+  return _ticker })*/
 				
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
