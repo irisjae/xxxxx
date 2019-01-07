@@ -500,6 +500,23 @@ var timesup_problem = _ => {;
 
 
     
+;S (_ => {;
+  var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+  
+  var _app_progress = T (_app) (L .get (app_as_progress))
+  var _progress = T (_ensemble) (L .get (ensemble_as_progress))
+  // is there a more elegant way? this is not markovian 
+  if (L .isDefined (app_as_get_ready) (_app)) {
+    if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
+
+      var _progress_step = L .get (progress_as_step) (_progress)
+      ;app_state (
+        T (_app
+        ) (
+        [ teacher_app_get_ready_to_playing
+        , L .set (app_as_progress) (_progress) ])) } } })
+
 ;S (last_app => {;
   var _app = app_state () 
   var _room = T (_app) (L .get (app_as_room))
@@ -536,54 +553,6 @@ var timesup_problem = _ => {;
   
 
 
-;S (_ => {;
-	;T (app_state ()
-  ) (under (app_as_room) (_room => {;
-			var phase = heartbeat ()
-			var critical = phase === 1
-			;go
-			.then (_ =>
-				!! critical //&& S .sample (connection) // why need && sample
-				? io_state (io .messaging) && api (_room,
-						post (message_encoding (message .teacher_ping (S .sample (connection)))))
-				: io_state (io .heartbeat) && api (_room)
-					.then ($ ([
-						L .get (L .inverse (data_iso (ensemble .ensemble))),
-						_x => {;
-							;ensemble_state (_x) } ])) )
-      .catch (_x => {;
-        if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
-          ;console .warn ('Room timed out') }
-        else {;
-          ;throw _x }})
-			.then (_ => {;
-				;setTimeout (_ => {;
-					;heartbeat (!! critical ? reping_period : phase - 1) }
-				, 300) })
-			.catch (_e => {;
-				;console .error (_e)
-				;setTimeout (_ => {;
-					;heartbeat (phase) }
-				, 300) })
-			.then (_ => {;
-				;io_state (io .inert) }) })) })
-
-;S (_ => {;
-  var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _progress = T (_ensemble) (L .get (ensemble_as_progress))
-  // is there a more elegant way? this is not markovian 
-  if (L .isDefined (app_as_get_ready) (_app)) {
-    if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
-
-      var _progress_step = L .get (progress_as_step) (_progress)
-      ;app_state (
-        T (_app
-        ) (
-        [ teacher_app_get_ready_to_playing
-        , L .set (app_as_progress) (_progress) ])) }
     /*else if (L .isDefined (app_as_playing) (_app) && _progress_step != -1) {
       ;app_state (
         T (_app
@@ -593,7 +562,7 @@ var timesup_problem = _ => {;
       ;app_state (
         T (_app
         ) (
-        teacher_app_playing_to_game_over)) }*/  } })
+        teacher_app_playing_to_game_over)) }*/ 
 //  ;app_state (
 //    teacher_app_get_ready_to_playing (schedule_start (S .sample (ensemble_state))) (S .sample (app_state)))
 //  ;app_state (
@@ -626,3 +595,35 @@ var timesup_problem = _ => {;
 	if (L .isDefined (L .elems) (ensemble_updates)) {
 		;app_state (
 			T (_app) ($ (ensemble_updates))) } })
+
+;S (_ => {;
+	;T (app_state ()
+  ) (under (app_as_room) (_room => {;
+			var phase = heartbeat ()
+			var critical = phase === 1
+			;go
+			.then (_ =>
+				!! critical //&& S .sample (connection) // why need && sample
+				? io_state (io .messaging) && api (_room,
+						post (message_encoding (message .teacher_ping (S .sample (connection)))))
+				: io_state (io .heartbeat) && api (_room)
+					.then ($ ([
+						L .get (L .inverse (data_iso (ensemble .ensemble))),
+						_x => {;
+							;ensemble_state (_x) } ])) )
+      .catch (_x => {;
+        if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
+          ;console .warn ('Room timed out') }
+        else {;
+          ;throw _x }})
+			.then (_ => {;
+				;setTimeout (_ => {;
+					;heartbeat (!! critical ? reping_period : phase - 1) }
+				, 300) })
+			.catch (_e => {;
+				;console .error (_e)
+				;setTimeout (_ => {;
+					;heartbeat (phase) }
+				, 300) })
+			.then (_ => {;
+				;io_state (io .inert) }) })) })
