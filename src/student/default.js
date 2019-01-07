@@ -410,18 +410,13 @@ var timesup_problem = _ => {;
 var [ time_state, flowing_state ] = timer ()
 //var time_interval = time_intervals (time_state)
 var tick_state = S .value ()
-tick_state .update = _ => {;
-  var _app = _ || app_state ()
+;S (_ => {;
+  var _app = app_state ()
   if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
     var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
     var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
     if (_tick >= 0) {
-      if (! _ && tick_state .stored !== undefined) {
-        ;tick_state .stored = undefined
-        return }
-      if (_) {;tick_state .stored = _tick}
-      ;tick_state (_tick) } } }
-;S (tick_state .update)
+      ;tick_state (_tick) } } })
 /*var tick_state = S .subclock (_ => {;
   var _ticker = S .value ()
   S (_ => {;
@@ -536,9 +531,9 @@ S (_ => {;
   if (L .isDefined (app_as_playing) (_app) && tick_state () >= time_limit) {
     //HACK
     S .freeze (_ => {;
-      var _app = student_app_playing_to_next (S .sample (app_state))               
-      ;app_state (_app)
-      ;tick_state .update (_app) }) } })
+      ;app_state (
+        student_app_playing_to_next (S .sample (app_state)))
+      ;tick_state (0) }) } })
 
 
 
