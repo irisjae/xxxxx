@@ -512,42 +512,31 @@ S (_ => {;
 
 
 S (last_ensemble => {;
-	;so ((
-	take
-	, _app = S .sample (app_state)
-	, _ensemble = ensemble_state () ) => {;
+	var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+  
+  var _app_progress = T (_app) (L .get (app_as_progress))
+  var _ensemble_progress = T (_ensemble) (L .get (ensemble_as_progress))
+  
 	if (L .isDefined (app_as_get_ready) (_app)) { //c change unready get readies to setup state?
-		if (! L .isDefined (ensemble_as_start) (last_ensemble)) {
-			if (L .isDefined (ensemble_as_start) (_ensemble)) {
-				var start = T (_ensemble) (L .get (ensemble_as_start))
-				var now = (new Date) .getTime ()
-
-				var playing_app = student_app_get_ready_to_playing (_app)
-        
-        var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-        game_clock .clear ()
-        ;game_clock .add (timesup_problem, time_limit)
-        ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {
-          ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
-        
-				if (start > now) {
-					;app_state (playing_app) }
-				else {
-					;setTimeout (_ => {;
-						;app_state (playing_app) }
-					, start - now) }
-
-				var _room = T (_app) (L .get (app_as_room))
-				var _student = T (_app) (L .get (app_as_student))
-				;io_state (io .messaging) && api (_room, post (
-					message_encoding (
-						message .student_progress (_student, start))))
-				.catch (_e => {;
-					;console .error (_e) })
-				.then (_ => {;
-					;io_state (io .inert) }) } } } })
-	return ensemble_state () }
-, ensemble_state ())
+		if (! L .isDefined (ensemble_as_progress) (last_ensemble)) {
+			if (L .isDefined (ensemble_as_progress) (_ensemble)) {
+				;app_state (
+          T (_app
+          ) (
+          [ student_app_get_ready_to_playing
+          , L .set (app_as_progress) (_ensemble_progress) ])) } } } 
+  else if (L .isDefined (app_as_playing) (_app)) {
+    var _ensemble_progress_step = T (_ensemble_progress) (L .get (progress_as_step))
+    if (_ensemble_progress_step !== -1) {
+      if (Z_ .not (Z_ .equals (_app_progress) (_ensemble_progress))) {
+        ;app_state (
+          T (_app
+          ) (
+          L .set (app_as_progress) (_ensemble_progress))) }
+    else {}
+  } 
+	return _ensemble })
 
 //TODO make implementation more sophisticated
 S (last_ensemble => {;
@@ -615,3 +604,14 @@ S (_ => {;
 			, 300) })
 		.then (_ => {;
 			;io_state (io .inert) }) })) })
+
+
+				var _room = T (_app) (L .get (app_as_room))
+				var _student = T (_app) (L .get (app_as_student))
+				;io_state (io .messaging) && api (_room, post (
+					message_encoding (
+						message .student_progress (_student, start))))
+				.catch (_e => {;
+					;console .error (_e) })
+				.then (_ => {;
+					;io_state (io .inert) }) 
