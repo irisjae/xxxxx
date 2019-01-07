@@ -17,7 +17,7 @@ teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
 pair_as_v, pair_as_list, pair_as_first, pair_as_second,
-list_as_pair, map_as_keys, map_as_values, as_value_of,
+list_as_pair, map_v_as_key, map_v_as_value, as_value_of,
 as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 settings_as_problems, settings_as_rules,
@@ -563,7 +563,7 @@ var connection = S (_ => {;
   var _app_pasts = T (_app) (L .get (app_as_pasts))
 	var _ensemble_students =
     L .get (L .choice (app_as_get_ready, app_as_playing, app_as_game_over)) (_app)
-    && T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_as_keys ]))
+    && T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_key ]))
   var _ensemble_boards =
     L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
     && T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))

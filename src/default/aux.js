@@ -146,8 +146,8 @@ var pair_as_second = [ pair_as_list, L .last ]
 
 var list_as_pair = L .getInverse (pair_as_v)
 
-var map_as_keys = [ L .elems, L .first ]
-var map_as_values = [ L .elems, L .last ]
+var map_v_as_key = L .first
+var map_v_as_value = L .last
 var as_value_of = key => 
   [ L .elems, L .when (([ _key, _val ]) => Z_ .equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
 
@@ -562,7 +562,7 @@ var schedule_start = _ensemble =>
 	(new Date) .getTime () + confidence_interval,
 	where
 	, teacher_ping = T (_ensemble) (L .get (ensemble_as_ping))
-	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, map_as_values ]))
+	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_value ]))
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
@@ -785,7 +785,7 @@ window .stuff = { ...window .stuff,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
   pair_as_v, pair_as_list, pair_as_first, pair_as_second,
-  list_as_pair, map_as_keys, map_as_values, as_value_of,
+  list_as_pair, map_v_as_key, map_v_as_value, as_value_of,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 	settings_as_problems, settings_as_rules,
