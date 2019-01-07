@@ -357,13 +357,14 @@ var end_game = _ => {;
 var [ time_state, flowing_state ] = timer ()
 //var time_interval = time_intervals (time_state)
 var tick_state = S .value ()
-;S (_ => {;
-  var _app = app_state ()
+tick_state .update = _ => {;
+  var _app = _ || app_state ()
   if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
     var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
     var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
     if (_tick >= 0) {
-      ;tick_state (_tick) } } })
+      ;tick_state (_tick) } } }
+;S (tick_state .update)
 /*var tick_state = S .subclock (_ => {;
   var _ticker = S .value ()
   S (_ => {;
@@ -478,8 +479,11 @@ var connection = S (_ => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   if (L .isDefined (app_as_playing) (_app) && tick_state () >= time_limit) {
-    ;app_state (
-      teacher_app_playing_to_next (S .sample (app_state))) } })
+    //HACK
+    S .freeze (_ => {;
+      var _app = teacher_app_playing_to_next (S .sample (app_state))               
+      ;app_state (_app)
+      ;tick_state .update (_app) }) } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
