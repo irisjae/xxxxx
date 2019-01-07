@@ -6,24 +6,10 @@ var {
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
 	n_reducer, 
-	map_defined_, map_defined, from_just, maybe_all,
-	as_sole, sole, every, delay	 
+	map_defined_, map_defined, from_just, maybe_all, to_maybe,
+	as_sole, sole, shuffle
 } = window .stuff
 
-
-
-var shuffle = list => {
-	var array = []
-	for (var i in list) {
-		;array .push (list [i])}
-	for (var i = array. length - 1; i > 0; i --) {
-		var j = Math .floor (Math .random () * (i + 1))
-		var arr_i = array [i]
-		var arr_j = array [j]
-		;array [i] = arr_j
-		;array [j] = arr_i }
-	
-	return array }
 
 
 //--------------------TYPES--------------------
@@ -33,7 +19,6 @@ var number = fiat
 var timestamp = number
 var string = fiat
 var list = a => fiat
-//TODO: all the maps in this project are fake!
 var map = a => (...b) => list (v (a, ...b))
 var maybe = a => fiat
 var nat = fiat
@@ -121,8 +106,7 @@ var ensemble = data ({
 
 
 
-/*/var default_problems = shuffle ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-/*/ var default_problems = shuffle ([
+var default_problems = shuffle ([
 	['1/2', ['2/4', '3/6']],
 	['1/3', ['2/6', '3/9']],
 	['2/3', ['4/6', '6/9']],
@@ -139,22 +123,9 @@ var ensemble = data ({
 	['4/6', ['2/3', '6/9']],
 	['5/6', ['10/12', '15/18']],
   ['1/7', ['2/14', '3/21']] ])
-//*/
-//var default_filler = shuffle ('1234567890!@#$%^&*()+=_-|\~`<,>.?/{[}]')
 var default_rules = rules .rules (10, 4, win_rule .first_bingo)
 
 var default_settings = settings .settings (default_problems, default_rules)
-
-
-
-var to_maybe = so ((_=_=>
-  default_fn => _x => 
-    !! (Z_ .is (maybe_type_$)) (_x)
-    ? _x
-    : default_fn (_x),
-  where
-  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_) 
-
 
 
 
@@ -203,7 +174,10 @@ var app_as_settings = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'
 var app_as_student = [ L .choices ('get_ready', 'playing', 'game_over'), 'student', as_defined_ ]
 var app_as_room = [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
-var app_as_progress = L .choose (_app => L .is[ 'playing', 'progress' ])
+var app_as_progress = L .choose (_app =>
+  !! L .isDefined (app_as_board) (_app) // check is student_app, TODO: create Z_ .is () for data ()
+  ? [ L .rewrite (progress_past), data_lens (student_app .playing) .progress ]
+  : data_lens (teacher_app .playing) .progress)
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
 var app_as_boards = [ L .choices ('playing', 'game_over'), 'boards' ]
@@ -329,7 +303,7 @@ var student_app_get_ready_to_playing = by (_app =>
 
 var student_app_playing_to_next = by (_app => 
   so ((_=_=>
-  !! Z_ .not (game_over_ok) ? L .set ([ L .rewrite (progress_past), app_as_progress, progress_as_step ]) (progress_step + 1)
+  !! Z_ .not (game_over_ok) ? L .set ([ app_as_progress, progress_as_step ]) (progress_step + 1)
   : student_app_playing_to_game_over,
   where
   , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
@@ -603,21 +577,198 @@ var progress_past = by (_app =>
   , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
   , _problems = T (_app) (L .get (app_as_problems))
   , _past = T (_app) (L .get (app_as_past)) )=>_))
+
 //var schedule_tick = 
-/*
-var student_app_playing_to_next = 
-	by (_app => 
-		so ((_=_=>
-		!! Z_ .not (game_over_ok)
-		? $ (
-      [ L .set ([ app_as_progress, progress_as_step ]) (progress_step + 1)
-      , L .set ([ app_as_past, past_as_points, L .appendTo ]) (point .point (next_problem, [])) ] )
-		: student_app_playing_to_game_over,
-		where
-		, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-    , next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
-    , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
-*/
+
+
+
+
+var timer = _ => {;
+  var _timer = S .data ()
+  var _flowing = S .data (true)
+  //var _flowing_ok = S .subclock (_=> {
+  //  var val = S .value (_flowing ())
+  //  ;S (_=> {;val (_flowing ())})
+  //  return val })
+  //var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
+  var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
+  ;tick_S (_=> {;
+    ;_timer (+ (new Date))
+    ;requestAnimationFrame (_ => {;
+      ;_flowing (_flowing ()) }) })
+  return [ _timer, _flowing, ] } //_S, tick_S ] }
+var timer_since = _timer => S .subclock (_=> {;
+  var _since = S .data ()
+	;S (_=> {;
+    ;_since (_since .next || - Infinity)
+    ;_since .next = _timer () })
+  return _since })
+var time_intervals = _timer => so ((_=_=>
+  S (_ => time_interval .time_interval (_timer_since (), _timer ())),
+  where
+  , _timer_since = timer_since (_timer) )=>_)
+
+
+
+
+
+
+
+
+var _ping_cache = {}
+var _ping_listeners = {}
+
+/*var api = (room, _x) => {;
+	var begin = performance .now ()
+	return fetch ('/room/' + room, _x) .then (_x => {;{
+		var end = performance .now ()
+		var sample = end - begin
+		;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
+		;(_ping_listeners [room] || []) .forEach (fn => {{;fn (_ping_cache [room])}})
+		return _x .json () }}) }*/
+//add retire code for sockets?
+var api = so ((_=_=>
+  (room, _x) => {;
+    ;_x = _x || { method: 'GET' }
+    if (_x .body) {
+      ;_x .body = JSON .parse (_x .body) }
+
+    var [ continuation, signal ] = api .new_continuation ()
+    var id = new_id ()
+
+    ;api .continuations [id] = signal
+    ;continuation .catch (Z_ .I) .then (_=> {;delete api .continuations [id]})
+
+    if (! api .sockets [room]) {
+      ;api .sockets [room] = new_socket (room) }
+    ;api .sockets [room] .refresh ()
+
+    var begin, end
+    ;go
+    .then (Z_ .K (api .sockets [room] .ready))
+    .then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
+    .then (_=> {;begin = performance .now ()})
+    .then (Z_ .K (continuation))
+    .then (_=> {;end = performance .now ()})
+    .then (_=> {;
+      var sample = end - begin
+      ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
+      ;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
+    .catch (_ => {})
+    
+    return continuation },
+where
+, new_id = _ => {
+    var id = '' + Math .floor (1000000 * Math .random ())
+    return !! Z_ .not (api .continuations [id])
+    ? id
+    : new_id () }
+//TODO: make this more elegant
+, new_socket = room => so ((_=_=>(
+    rec =
+    { _socket: _
+    , ready: _
+    , refresh: refresh
+    , send: _x => _socket .send (_x) } , refresh (), rec),
+    where
+    , rec = _
+    , _socket = _
+    , refresh = _ => {;
+        if (! (_socket instanceof WebSocket)
+        || _socket .readyState === WebSocket .CLOSED
+        || _socket .readyState === WebSocket .CLOSING) {
+          ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+          rec ._socket = _socket
+          rec .ready = new Promise ((resolve, reject) => {;
+            _socket .onopen = _ => {;resolve ()} })
+          _socket .onmessage = _event => {;
+            var _packet = JSON .parse (_event .data)
+            var id = _packet .id
+            var data = _packet .body
+            if (api .continuations [id]) {;
+               ;api .continuations [id] (data) } } } } )=>_)
+      
+, update_pings = sample =>
+  $ (
+  [ L .get (L .valueOr ([0, 0, 0, 0]))
+  , ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
+    [ mean * carry + sample / (n + 1)
+    , sqr_mean * carry + (sample * sample) / (n + 1)
+    , n + 1
+    , (new Date) .getTime () ],
+    where 
+    , carry = n / (n + 1) )=>_) ]))=>_) 
+;api .listen_ping = room => fn => {{ 
+	if (! _ping_listeners [room]) {
+		;_ping_listeners [room] = [] }
+	;_ping_listeners [room] .push (fn)
+	if (_ping_cache [room]) {
+		;fn (_ping_cache [room]) } }}
+;api .sockets = []
+;api .continuations = {}
+;api .new_continuation = timeout => {;
+  ;timeout = timeout || 5000
+                                     
+  var resolve, reject
+  var done = false
+  var faux_resolve = _x => {
+    if (! done) {
+      ;resolve (_x) } }
+  
+  var continuation = (new Promise ((_resolve, _reject) => {;
+    ;resolve = _resolve
+    ;reject = _reject }))
+  ;continuation .catch (Z_ .I) .then (_ => {;done = true})
+  
+  ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
+  
+  return [ continuation, faux_resolve ] }
+
+
+
+var post = x => ({
+	method: 'POST',
+	headers: {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json' },
+	body: JSON .stringify (x) })
+
+
+
+
+
+
+
+
+// rewrite functionally?
+var map_zip = mash => a => b => {
+  var projections = new Map
+  ;T (a) (R .forEach (([ _key, _val ]) => {;
+    ;projections .set (_key, _val) }))
+  
+  var _zip = []
+  ;T (b) (R .forEach (([ _key, _val ]) => {;
+    if (projections .has (_key)) {
+      _zip = _zip .concat ([ [ _key, mash (projections .get (_key)) (_val) ] ]) } }))
+  
+  return _zip }
+
+
+
+var uuid = _ =>
+	'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
+		so ((
+		take
+		, r = Math .random () * 16 | 0
+		, v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
+		v .toString (16) ))
+
+
+
+
+
+
+
 
 
 window .stuff = { ...window .stuff,

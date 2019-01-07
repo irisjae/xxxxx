@@ -234,6 +234,17 @@ var maybe_all = _x =>
 	: undefined
 */
 var maybe_all = Z_ .sequence (Z .Maybe)
+var to_maybe = so ((_=_=>
+  default_fn => _x => 
+    !! (Z_ .is (maybe_type_$)) (_x)
+    ? _x
+    : default_fn (_x),
+  where
+  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_) 
+
+
+
+
 
 
 /*
@@ -281,7 +292,7 @@ var temporal = _init_val => so ((_=_=>
 
 
 
-var every = _x =>
+/*var every = _x =>
 	so ((
 	take
 	, every = S .data (false)
@@ -295,7 +306,21 @@ var delay = time => {{
 	;setTimeout (_ => {{
 		;done (true) }}
 	, time)
-	return done }}
+	return done }}*/
+var shuffle = list => {
+	var array = []
+	for (var i in list) {
+		;array .push (list [i])}
+	for (var i = array .length - 1; i > 0; i --) {
+		var j = Math .floor (Math .random () * (i + 1))
+		var arr_i = array [i]
+		var arr_j = array [j]
+		;array [i] = arr_j
+		;array [j] = arr_i }
+	
+	return array }
+
+
 
 
 
@@ -361,5 +386,5 @@ window .stuff = { ...window .stuff,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
 	n_reducer, 
-	map_defined_, map_defined, from_just, maybe_all,
-	as_sole, sole, every, delay }
+	map_defined_, map_defined, from_just, maybe_all, to_maybe,
+	as_sole, sole, shuffle }

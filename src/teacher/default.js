@@ -5,8 +5,8 @@ just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
 n_reducer, 
-map_defined_, map_defined, from_just, maybe_all,
-as_sole, sole, every, delay,
+map_defined_, map_defined, from_just, maybe_all, to_maybe,
+as_sole, sole, shuffle,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, map_zip, api, post,
@@ -552,11 +552,9 @@ var connection = S (_ => {;
 	
 	var _app_students = T (_app) (L .get (app_as_students))
   var _app_boards = T (_app) (L .get (app_as_boards))
-  var _app_progresses = T (_app) (L .get (app_as_progresses))
   var _app_pasts = T (_app) (L .get (app_as_pasts))
 	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
   var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
-  var _ensemble_progresses = T (_ensemble) (L .get (ensemble_as_progresses))
   var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
   
   var ensemble_updates = $ (Z_ .join
@@ -565,8 +563,6 @@ var connection = S (_ => {;
     ? [ L .set (app_as_students) (_ensemble_students) ] : []
   , !! (_ensemble_boards && Z_ .not (Z_ .equals (_ensemble_boards) (_app_boards)))
     ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
-  , !! (_ensemble_progresses && Z_ .not (Z_ .equals (_ensemble_progresses) (_app_progresses)))
-    ? [ L .set (app_as_progresses) (_ensemble_progresses) ] : []
   , !! (_ensemble_pasts && Z_ .not (Z_ .equals (_ensemble_pasts) (_app_pasts)))
     ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
   
