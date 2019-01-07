@@ -469,8 +469,8 @@ var connection = S (_ => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   if (tick_state () >= time_limit) {
-	;app_state (
-    teacher_app_playing_to_next (S .sample (app_state))) } })
+    ;app_state (
+      teacher_app_playing_to_next (S .sample (app_state))) } })
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
@@ -561,9 +561,9 @@ var connection = S (_ => {;
 	var _app_students = T (_app) (L .get (app_as_students))
   var _app_boards = T (_app) (L .get (app_as_boards))
   var _app_pasts = T (_app) (L .get (app_as_pasts))
-	var _ensemble_students = T (_ensemble) (L .get ([ ensemble_as_pings, map_as_keys ]))
-  var _ensemble_boards = T (_ensemble) (L .get (ensemble_as_boards))
-  var _ensemble_pasts = T (_ensemble) (L .get (ensemble_as_pasts))
+	var _ensemble_students = T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_as_keys ]))
+  var _ensemble_boards = T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))
+  var _ensemble_pasts = T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
   
   var ensemble_updates = $ (Z_ .join
   ) ( 
