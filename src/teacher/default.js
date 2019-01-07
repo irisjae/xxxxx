@@ -88,14 +88,14 @@ var setup_view = _ => so ((_=_=>
       <sub-title>除法（一）</sub-title>
       <settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
       <setting x-of="game-mode">
-        { (counter_setting
+        { $ (counter_setting
           ) ('遊戲模式：'
           ) (_game_mode => {}
           ) (
           [ [ fiat, play_to_win_img ] ]
           ) (fiat) } </setting>
       <setting x-of="time-limit">
-        { (counter_setting
+        { $ (counter_setting
           ) ('各題作答時限：'
           ) (_time_limit => {;
               var setting_delta = T (_time_limit) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
