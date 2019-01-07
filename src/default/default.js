@@ -1,14 +1,15 @@
 var L = require ('partial.lenses')
 var R = require ('ramda')
-var S = require ('s-js/dist/withsubclocks')
+var S = require ('s-js')
 var sanc = require ('sanctuary')
 var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: false, env: sanc .env })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 //report to adam haile
-;Surplus .S = S
-;Surplus .S .effect = S
+//var S = require ('s-js/dist/withsubclocks')
+//;Surplus .S = S
+//;Surplus .S .effect = S
 var memoize = require ('fast-memoize')
 var T = _x => _fn_obj =>
 	!! Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
