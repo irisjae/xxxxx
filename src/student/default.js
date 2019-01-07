@@ -232,7 +232,7 @@ var playing_view = _ => so ((_=_=>
     , _solved_positions = solved_positions (_board) (_past)
     , _bingoed_positions = bingoed_positions (_board) (_past)
     , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-    , game_tick = just_now (game_tick_sampler)
+    , game_tick = tick_state ()
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
           ;_dom .addEventListener (click, _ => {;
@@ -263,7 +263,7 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	where							
 	, _app = app_state ()
 	, _ensemble = ensemble_state ()
-	, all_students = T (_ensemble) (assemble_students (_app))
+	//, all_students = T (_ensemble) (assemble_students (_app))
 	, questions = T (_app) (L .collect ([ app_as_problems, L .elems, problem_as_question ]))
 	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, point_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
@@ -607,15 +607,20 @@ S (_ => {;
       ;app_state (
         T (_app
         ) (
-        [ teacher_app_get_ready_to_playing
+        [ student_app_get_ready_to_playing
         , L .set (app_as_progress) (_progress) ])) }
     else if (L .isDefined (app_as_playing) (_app)) {
       var _progress_step = L .get (progress_as_step) (_progress)
-      ;app_state (
-        T (_app
-        ) (
-        [ teacher_app_get_ready_to_playing
-        , L .set (app_as_progress) (_progress) ])) } } })
+      if (_progress_step !== -1) {
+        ;app_state (
+          T (_app
+          ) (
+          L .set (app_as_progress) (_progress) )) }
+      else {
+        ;app_state (
+          T (_app
+          ) (
+          student_app_playing_to_game_over)) } } } })
 
 
 				var _room = T (_app) (L .get (app_as_room))
