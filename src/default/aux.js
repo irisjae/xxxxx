@@ -307,8 +307,7 @@ var student_app_playing_to_next = by (_app =>
   : student_app_playing_to_game_over,
   where
   , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-  , next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
-  , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
+  , game_over_ok = Z_ .not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
 
 var student_app_playing_to_game_over =  by (_app => 
   $ (L .get

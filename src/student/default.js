@@ -479,12 +479,14 @@ S (_ => {;
 		, 1500)
 		;S .cleanup (_ => {;
 			;clearTimeout (forget) }) } })
+
 S (last_app => {;
 	if (! L .isDefined (app_as_room) (last_app)) {
 		if (L .isDefined (app_as_room) (app_state ())) {
 			;lookbehind_state (lookbehind .nothing) } }
 	return app_state () }
 , app_state ())
+
 S (last_app => {;
 	var last_progress = T (last_app) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
@@ -493,6 +495,7 @@ S (last_app => {;
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
+
 S (_ => {;
 	if (L .get (lookbehind_as_blocked) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {;
@@ -510,6 +513,15 @@ S (_ => {;
 		;flowing_state (true) }
 	else if (L .isDefined (app_as_game_over) (app_state ())) {
 		;flowing_state (false) } })
+
+
+
+;S (last_tick => {;
+  var _app = app_state () 
+  var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+  if (tick_state () >= time_limit) {
+    ;app_state (
+      student_app_playing_to_next (S .sample (app_state))) } })
 
 
 
@@ -539,6 +551,9 @@ S (_ => {;
           T (_app
           ) (
           student_app_playing_to_game_over)) } } } })
+
+
+
 
 S (_ => {;
 	;T (app_state ()
