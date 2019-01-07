@@ -569,17 +569,17 @@ var schedule_start = _ensemble =>
 var progress_past = so ((_=_=>
   by (_app =>
     so ((_=_=>
-    $ (L .set
+    $ (L .modify
     ) (
-    [ app_as_past, past_as_points, L .slice (Z_ .size (_past), _progress_step + 1) ]
+    [ app_as_past, past_as_points, natural_slice (Z_ .size (_past)) (_progress_step + 1), L .elems ]
     ) (
-    T (Z_ .range (Z_ .size (_past)) (_progress_step + 1)) (L .collect ([ L .elems, i => point .point (L .get (i) (_problems), []) ]))),
+    (_, i) => point .point (L .get (i) (_problems), []) ),
     where
     , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
     , _problems = T (_app) (L .get (app_as_problems))
     , _past = T (_app) (L .get (app_as_past)) )=>_)),
   where
-  ,  )
+  , natural_slice = a => b => [ L .slice (a, b), L .reread (xs => b < a ? xs : xs .concat (Array (b - a - xs .length))) ] )=>_)
 
 //var schedule_tick = 
 
