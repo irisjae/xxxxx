@@ -512,36 +512,34 @@ var student_app_get_ready_to_playing = by (_app =>
   [ $ (L .get
     ) (
     [ data_iso (student_app .get_ready)
-    , L .inverse (data_iso (student_app .playing)) ])) 
+    , L .inverse (data_iso (student_app .playing)) ])
   , L .set (app_as_board) (random_board)
   , L .set (app_as_past) (fresh_past)
-  , L .set () () ]
-
-  student_app .playing (_room, _settings, _student, , , [ 0, fiat ]),
+  , L .set (app_as_progress) ([ 0, fiat ]) ]),
   where 
-  , _settings = L .get (app_as_setting) (_app)
+  , _settings = L .get (app_as_settings) (_app)
   , _size = L .get (settings_as_size) (_settings)
   , _problems = L .get (settings_as_problems) (_settings)
   , random_board = generate_board (_size) (_problems)
   , first_problem = L .get (L .first) (_problems)
   , fresh_past = past .past ([point .point (first_problem, [])]) )=>_))
 
-var student_app_playing_to_next = 
-	by (_app => 
-		so ((_=_=>
-		!! Z_ .not (game_over_ok)
-		? L .set ([ L .rewrite (progress_past), app_as_progress, progress_as_step ]) (progress_step + 1)
-		: student_app_playing_to_game_over,
-		where
-		, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-    , next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
-    , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
-				 
+var student_app_playing_to_next = by (_app => 
+  so ((_=_=>
+  !! Z_ .not (game_over_ok)
+  ? L .set ([ L .rewrite (progress_past), app_as_progress, progress_as_step ]) (progress_step + 1)
+  : student_app_playing_to_game_over,
+  where
+  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+  , next_problem = T (_app) (L .get ([ app_as_problems, progress_step + 1 ]))
+  , game_over_ok = Z_ .equals (next_problem) (undefined) )=>_)) 
+
 var student_app_playing_to_game_over =  by (_app => 
-  L .get (
-    [ data_iso (student_app .playing)
-    , L .inverse (data_iso (student_app .game_over)) ]))
-				 
+  $ (L .get
+  ) (
+  [ data_iso (student_app .playing)
+  , L .inverse (data_iso (student_app .game_over)) ]))
+
 
 var ast = data ({
   normal: (numerator =~ integer, denominator =~ integer) => ast,
