@@ -561,9 +561,15 @@ var connection = S (_ => {;
 	var _app_students = T (_app) (L .get (app_as_students))
   var _app_boards = T (_app) (L .get (app_as_boards))
   var _app_pasts = T (_app) (L .get (app_as_pasts))
-	var _ensemble_students = T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_as_keys ]))
-  var _ensemble_boards = T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))
-  var _ensemble_pasts = T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
+	var _ensemble_students =
+    L .get (L .choice (app_as_get_ready, app_as_playing, app_as_game_over)) (_app)
+    && T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_as_keys ]))
+  var _ensemble_boards =
+    L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
+    && T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))
+  var _ensemble_pasts =
+    L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
+    && T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
   
   var ensemble_updates = $ (Z_ .join
   ) ( 
