@@ -566,17 +566,20 @@ var schedule_start = _ensemble =>
 	, pings = T (Z_ .prepend (teacher_ping) (student_pings)) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = Z_ .min (3) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
-var progress_past = by (_app =>
-  so ((_=_=>
-  $ (L .set
-  ) (
-  [ app_as_past, past_as_points, L .slice (Z_ .size (_past), _progress_step + 1) ]
-  ) (
-  T (Z_ .range (Z_ .size (_past)) (_progress_step + 1)) (L .collect ([ L .elems, i => point .point (L .get (i) (_problems), []) ]))),
+var progress_past = so ((_=_=>
+  by (_app =>
+    so ((_=_=>
+    $ (L .set
+    ) (
+    [ app_as_past, past_as_points, L .slice (Z_ .size (_past), _progress_step + 1) ]
+    ) (
+    T (Z_ .range (Z_ .size (_past)) (_progress_step + 1)) (L .collect ([ L .elems, i => point .point (L .get (i) (_problems), []) ]))),
+    where
+    , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+    , _problems = T (_app) (L .get (app_as_problems))
+    , _past = T (_app) (L .get (app_as_past)) )=>_)),
   where
-  , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-  , _problems = T (_app) (L .get (app_as_problems))
-  , _past = T (_app) (L .get (app_as_past)) )=>_))
+  ,  )
 
 //var schedule_tick = 
 
