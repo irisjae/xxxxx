@@ -260,8 +260,8 @@ var student = data ({
 var teacher_app = data ({
   setup: ( settings =~ settings ) => teacher_app,
 	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
-	playing: ( room =~ room, settings =~ settings, students =~ list (student), progress =~ progress
-           , boards =~ map (student) (board), pasts =~ map (student) (past), progresses =~ map (student) (progress) ) => teacher_app,
+	playing: ( room =~ room, settings =~ settings, students =~ list (student)
+           , boards =~ map (student) (board), pasts =~ map (student) (past), progress =~ progress ) => teacher_app,
 	game_over: ( room =~ room, settings =~ settings, students =~ list (student)
              , boards =~ map (student) (board), pasts =~ map (student) (past) ) => teacher_app })
 
@@ -389,7 +389,6 @@ var app_as_student = [ L .choices ('get_ready', 'playing', 'game_over'), 'studen
 var app_as_room = [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_progress = [ 'playing', 'progress' ]
-var app_as_progresses = [ 'playing', 'progresses' ]
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
 var app_as_boards = [ L .choices ('playing', 'game_over'), 'boards' ]
@@ -416,7 +415,6 @@ var ensemble_as_ping = data_iso (ensemble .ensemble) .ping
 var ensemble_as_progress = data_iso (ensemble .ensemble) .progress 
 var ensemble_as_pings = data_iso (ensemble .ensemble) .pings 
 var ensemble_as_boards = data_iso (ensemble .ensemble) .boards 
-var ensemble_as_progresses = data_iso (ensemble .ensemble) .progresses 
 var ensemble_as_pasts = data_iso (ensemble .ensemble) .pasts 
 
 var avatar_as_lion = data_iso (avatar .lion)
@@ -805,12 +803,12 @@ window .stuff = { ...window .stuff,
   settings_as_size, settings_as_time_limit, settings_as_win_rule,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
-	ensemble_as_pings, ensemble_as_progresses, ensemble_as_boards, ensemble_as_pasts,
+	ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
   progress_as_step, progress_as_timestamp, 
   attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 	app_as_board, app_as_past, app_as_progress,
-	app_as_boards, app_as_pasts, app_as_progresses,
+	app_as_boards, app_as_pasts, 
   app_as_last_point, point_as_attempts,
   avatar_as_lion, avatar_as_bunny, 
   student_as_student, student_as_id, student_as_name, student_as_icon, 

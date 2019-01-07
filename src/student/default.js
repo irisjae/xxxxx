@@ -542,6 +542,34 @@ S (last_ensemble => {;
 	return _ensemble })
 
 
+
+;S (_ => {;
+  var _app = S .sample (app_state)
+	var _ensemble = ensemble_state ()
+  
+  var _app_progress = T (_app) (L .get (app_as_progress))
+  var _progress = T (_ensemble) (L .get (ensemble_as_progress))
+  
+  if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
+    if (L .isDefined (app_as_get_ready) (_app)) {
+      ;app_state (
+        T (_app
+        ) (
+        [ student_app_get_ready_to_playing
+        , L .set (app_as_progress) (_progress) ])) }
+    else if (L .isDefined (app_as_playing) (_app)) {
+      var _progress_step = L .get (progress_as_step) (_progress)
+      if (_progress_step !== -1) {
+        ;app_state (
+          T (_app
+          ) (
+          L .set (app_as_progress) (_progress) )) }
+      else {
+        ;app_state (
+          T (_app
+          ) (
+          student_app_playing_to_game_over)) } } } })
+
 S (_ => {;
 	;T (app_state ()
   ) (
@@ -593,31 +621,3 @@ S (_ => {;
 			, 300) })
 		.then (_ => {;
 			;io_state (io .inert) }) })) })
-
-
-;S (_ => {;
-  var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _progress = T (_ensemble) (L .get (ensemble_as_progress))
-  
-  if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
-    if (L .isDefined (app_as_get_ready) (_app)) {
-      ;app_state (
-        T (_app
-        ) (
-        [ student_app_get_ready_to_playing
-        , L .set (app_as_progress) (_progress) ])) }
-    else if (L .isDefined (app_as_playing) (_app)) {
-      var _progress_step = L .get (progress_as_step) (_progress)
-      if (_progress_step !== -1) {
-        ;app_state (
-          T (_app
-          ) (
-          L .set (app_as_progress) (_progress) )) }
-      else {
-        ;app_state (
-          T (_app
-          ) (
-          student_app_playing_to_game_over)) } } } })

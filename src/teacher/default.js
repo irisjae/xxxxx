@@ -207,22 +207,20 @@ var playing_view = _ => so ((_=_=>
           ) (
           L .collect (
           [ L .elems
-          , ([ _student, [_board, _past] ]) =>
+          , ([ _student, [_board, _past] ]) => so ((_=_=>
             <student-etc>
-              <label>{ T (_student) (L .get (student_as_name)) }</label>
+              <label>{ _name }</label>
               <board> { T (_board) (Z_ .map (_row => 
-              { 
-                <row> { T (_row) (Z_ .map (_cell =>
-                  so ((_=_=>
-                  !! (_cell_solved) ? <cell x-solved></cell>
-                  : <cell></cell>,
+                <row> { T (_row) (Z_ .map (_cell => so ((_=_=>
+                  !! _cell_solved ? <cell x-solved />
+                  : <cell />,
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
-                  , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_)))
-                  } </row> )) } </board>,
-                where
-                , _solved_positions = solved_positions (_board) (_past)
-                , _bingoed_positions = bingoed_positions (_board) (_past) )=>_) } </student-etc> ])) } </students>
+                  , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) } </board> </student-etc>,
+            where
+            , _name = T (_student) (L .get (student_as_name))
+            , _solved_positions = solved_positions (_board) (_past)
+            , _bingoed_positions = bingoed_positions (_board) (_past) )=>_)])) } </students>
       <options>
         <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
