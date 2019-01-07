@@ -756,11 +756,11 @@ var schedule_start = _ensemble =>
 
 var morph_past = by (_app =>
   so ((_=_=>
-  $ (L .modify
+  $ (L .set
   ) (
   [ app_as_past, past_as_points, L .slice (Z_ .size (_past), _progress_step + 1) ]
   ) (
-  (_, i) => point .point (L .get (i) (_problems), [])),
+  Z_ .range () () (_, i) => point .point (L .get (i) (_problems), [])),
   where
   , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
   , _problems = T (_app) (L .get (app_as_problems))
