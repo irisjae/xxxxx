@@ -413,10 +413,11 @@ var tick_state = S .subclock (_ => {;
   var _ticker = S .value ()
   S (_ => {;
     var _app = app_state ()
-    if (L .isDefined (app_as_progress) (_app)) {
-      var _progress_timestamp = T (_app) (L .isDefined ([ app_as_progress, progress_as_timestamp ]))
+    if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
+      var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
       var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
-      ;_ticker (_tick) } })
+      if (_tick >= 0) {
+        ;_ticker (_tick) } } })
   return _ticker })
 				
 var reping_period = 3
@@ -509,37 +510,6 @@ S (_ => {;
 		;flowing_state (true) }
 	else if (L .isDefined (app_as_game_over) (app_state ())) {
 		;flowing_state (false) } })
-
-
-S (last_ensemble => {;
-	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _ensemble_progress = T (_ensemble) (L .get (ensemble_as_progress))
-  
-	if (L .isDefined (app_as_get_ready) (_app)) { //c change unready get readies to setup state?
-		if (! L .isDefined (ensemble_as_progress) (last_ensemble)) {
-			if (L .isDefined (ensemble_as_progress) (_ensemble)) {
-				;app_state (
-          T (_app
-          ) (
-          [ student_app_get_ready_to_playing
-          , L .set (app_as_progress) (_ensemble_progress) ])) } } } 
-  else if (L .isDefined (app_as_playing) (_app)) {
-    var _ensemble_progress_step = T (_ensemble_progress) (L .get (progress_as_step))
-    if (_ensemble_progress_step !== -1) {
-      if (Z_ .not (Z_ .equals (_app_progress) (_ensemble_progress))) {
-        ;app_state (
-          T (_app
-          ) (
-          L .set (app_as_progress) (_ensemble_progress))) }
-    else {
-      ;app_state (
-        T (_app
-        ) (
-        student_app_playing_to_game_over)) } } }
-	return _ensemble })
 
 
 
