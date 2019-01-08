@@ -553,10 +553,11 @@ S (_ => {;
     else if (L .isDefined (app_as_playing) (_app)) {
       var _progress_step = L .get (progress_as_step) (_progress)
       if (_progress_step !== -1) {
-        ;app_state (
-          T (_app
-          ) (
-          L .set (app_as_progress) (_progress) )) }
+        if (_progress_step > L .get (progress_as_step) (_app_progress)) {
+          ;app_state (
+            T (_app
+            ) (
+            L .set (app_as_progress) (_progress) )) } }
       else {
         ;app_state (
           T (_app
