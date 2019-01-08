@@ -745,13 +745,11 @@ var post = x => ({
 
 // rewrite functionally?
 var map_zip = mash => a => b => {
-  var projections = new Map
-  ;T (a) (R .forEach (([ _key, _val ]) => {;
-    ;projections .set (_key, _val) }))
-  
   var _zip = []
   ;T (b) (R .forEach (([ _key, _val ]) => {;
-    if (projections .has (_key)) {
+    for (var i = 0; i < a .length; i ++) {
+      [ k, v ]
+      if (
       _zip = _zip .concat ([ [ _key, mash (projections .get (_key)) (_val) ] ]) } }))
   
   return _zip }

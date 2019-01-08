@@ -249,7 +249,7 @@ var playing_view = _ => so ((_=_=>
   , _problem = T (_app) (current_problem)
   , _boards = T (_app) (L .get (app_as_boards)) 
   , _pasts = T (_app) (L .get (app_as_pasts)) 
-  , problem_number = T (_app) (L .get (app_as_progress)) + 1
+  , problem_number = T (_app) (L .get ([ app_as_progress, progress_as_step ])) + 1
   , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
   , game_tick = tick_state ()
   , question = T (_problem) (L .get (problem_as_question))
