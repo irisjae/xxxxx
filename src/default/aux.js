@@ -425,7 +425,7 @@ var bingoes = _board => _past =>
   , $ (Z_ .reduce
     ) (
     ([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
-      [ positions, Z_ .append (solved_local_patterns) (solved_patterns) ],
+      [ positions, Z_ .concat (solved_local_patterns) (solved_patterns) ],
       where
       , positions = Z_ .append (_position) (solved_positions)
       , solved_local_patterns = 
