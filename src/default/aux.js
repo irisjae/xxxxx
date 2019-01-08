@@ -366,7 +366,7 @@ var local_patterns = memoize (patterns =>
   ) (
   $ (L .foldl
   ) (
-  map_zip (Z_ .concat)
+  (a, b) => map_zip (Z_ .concat) (a) (b)
   ) (
   T (_positions) (Z_ .map (_pos => [ _pos, [] ]))
   ) (
