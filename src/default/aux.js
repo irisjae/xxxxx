@@ -419,7 +419,7 @@ var bingoed_positions = _board => _past =>
 	, _size = T (_board) (Z_ .size)
 	, _solved_positions = solved_positions (_board) (_past) )=>_)
 
-var bingoes = _board => _past => 
+var bingoes = _board => _pasappendt => 
   so ((_=_=>
   T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
   , $ (Z_ .reduce
