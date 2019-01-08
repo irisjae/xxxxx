@@ -748,9 +748,9 @@ var map_zip = mash => a => b => {
   var _zip = []
   ;T (b) (R .forEach (([ _key, _val ]) => {;
     for (var i = 0; i < a .length; i ++) {
-      [ k, v ]
-      if (
-      _zip = _zip .concat ([ [ _key, mash (projections .get (_key)) (_val) ] ]) } }))
+      var [ k, v ] = a [i]
+      if (Z_ .equals (k) (_key)) {
+        ;_zip = _zip .concat ([ [ _key, mash (v) (_val) ] ]) } } }))
   
   return _zip }
 
