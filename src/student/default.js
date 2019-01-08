@@ -394,10 +394,6 @@ var attempt_problem = _position => {;
             ;(new Audio (incorrect_audio)) .play ()
             ;lookbehind_state (lookbehind .attempting (latency, true)) } } } })) }
 
-var timesup_problem = _ => {;
-	;app_state (
-    student_app_playing_to_next (S .sample (app_state))) }
-
 
 
 
