@@ -238,8 +238,9 @@ teacher-app > playing-etc {
           background-repeat: no-repeat;
           background-position: bottom; }
         &[x-icon=bunny]:before {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623);
-        } } } }
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
+        &[x-icon=lion]:before {
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } } } }
   & options {
     position: absolute;
     right: 0;

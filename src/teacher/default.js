@@ -217,7 +217,9 @@ var playing_view = _ => so ((_=_=>
           [ L .elems
           , ([ _student, [_board, _past] ]) => so ((_=_=>
             <student-etc>
-              <label>{ _name }</label>
+              <label x-icon={
+                !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+              >{ _name }</label>
               <board> { T (_board) (Z_ .map (_row => 
                 <row> { T (_row) (Z_ .map (_cell => so ((_=_=>
                   !! _cell_solved ? <cell x-solved />
@@ -227,6 +229,7 @@ var playing_view = _ => so ((_=_=>
                   , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) } </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
+            , _icon = T (_student) (L .get (student_as_icon))
             , _solved_positions = solved_positions (_board) (_past)
             , _bingoed_positions = bingoed_positions (_board) (_past) )=>_)])) } </students>
       <options>
