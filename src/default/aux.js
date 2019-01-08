@@ -571,13 +571,13 @@ var progress_past = so ((_=_=>
     so ((_=_=>
     $ (L .modify
     ) (
-    [ app_as_past, past_as_points, natural_slice (Z_ .size (_past)) (_progress_step + 1), L .elems ]
+    [ app_as_past, past_as_points, natural_slice (Z_ .size (_points)) (_progress_step + 1), L .elems ]
     ) (
     (_, i) => point .point (L .get (i) (_problems), []) ),
     where
     , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
     , _problems = T (_app) (L .get (app_as_problems))
-    , _past = T (_app) (L .get (app_as_past)) )=>_)),
+    , _points = T (_app) (L .get ([ app_as_past, past_as_points ])) )=>_)),
   where
   , natural_slice = a => b => [ L .slice (a, b), L .reread (xs => b < a ? xs : xs .concat (Array (b - a - xs .length))) ] )=>_)
 
