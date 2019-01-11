@@ -213,15 +213,13 @@ var playing_view = _ => so ((_=_=>
       <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
           so ((_=_=>
-          !! (_cell_bingo) ? <cell x-bingoed>{ _cell_choice }</cell>
-          :!! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
+          !! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
           : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
-          , _cell_solved = Z_ .elem (_cell_position) (_solved_positions)
-          , _cell_bingo = Z_ .elem (_cell_position) (_bingoed_positions) )=>_)))
-          } </row> )) } </board> </div> </playing-etc>,
+          , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+        <bingo> </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))

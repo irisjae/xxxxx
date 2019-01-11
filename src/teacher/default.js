@@ -226,12 +226,13 @@ var playing_view = _ => so ((_=_=>
                   : <cell />,
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
-                  , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) } </board> </student-etc>,
+                  , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+                <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> )=>_))) } </bingo> </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
             , _icon = T (_student) (L .get (student_as_icon))
             , _solved_positions = solved_positions (_board) (_past)
-            , _bingoed_positions = bingoed_positions (_board) (_past) )=>_)])) } </students>
+            , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
       <options>
         <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
