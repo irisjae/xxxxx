@@ -298,7 +298,7 @@ var playing_view = _ => so ((_=_=>
           ;feedback_state (feedback .end) })})} )=>_)
     
 													 
-var game_over_view = so ((_=_=>
+var game_over_view = _ => so ((_=_=>
   <game-over-etc>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
