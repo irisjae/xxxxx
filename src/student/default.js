@@ -417,10 +417,9 @@ var attempt_problem = _position => {;
             var _local_patterns = T (local_patterns (size_patterns (_size))
               ) (
               L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem)))) ]))
+            ;(new Audio (correct_audio)) .play ()
             if (L .isDefined (L .elems) (_local_patterns)) {
-              ;(new Audio (bingo_audio)) .play () }
-            else {
-              ;(new Audio (correct_audio)) .play () } }
+              ;(new Audio (bingo_audio)) .play () } }
           else {
             var incorrect_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'
             ;(new Audio (incorrect_audio)) .play ()
