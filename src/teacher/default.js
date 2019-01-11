@@ -297,11 +297,10 @@ var playing_view = _ => so ((_=_=>
           ;feedback_state (feedback .end) })})} )=>_)
     
 													 
-var game_over_view = 
+var game_over_view = so ((_=_=>
   <game-over-etc>
     <title-etc>
-      <a-title>Bingo</a-title>
-      <problem-number>第{ problem_number }題</problem-number> </title-etc>
+      <a-title>Bingo</a-title> </title-etc>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
@@ -340,10 +339,12 @@ var game_over_view =
           , _name = T (_student) (L .get (student_as_name))
           , _icon = T (_student) (L .get (student_as_icon))
           , _solved_positions = solved_positions (_board) (_past)
-          , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
-    <options>
-      <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
-      <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </game-over-etc>
+          , _bingoes = bingoes (_board) (_past) )=>_)])) } </students> </game-over-etc>,
+  where
+  , _app = app_state ()
+  , _boards = T (_app) (L .get (app_as_boards)) 
+  , _pasts = T (_app) (L .get (app_as_pasts)) 
+  , size = T (_app) (L .get ([ app_as_settings, settings_as_size ])) )=>_) 
 
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))
