@@ -557,10 +557,16 @@ S (_ => {;
 ;S (last_tick => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  //HACK
-  if (L .isDefined (app_as_playing) (_app) && tick_state (), tick_fn () >= time_limit) {
-    ;app_state (
-      student_app_playing_to_next (S .sample (app_state))) } })
+  
+  if (L .isDefined (app_as_playing) (_app)) {
+    //HACK
+    var tick = (tick_state (), tick_fn ())
+    if (tick == time_limit - 3) {
+      var 
+      ;(new Audio (bingo_audio)) .play () }
+    if (tick >= time_limit) {
+      ;app_state (
+        student_app_playing_to_next (S .sample (app_state))) } } })
 
 
 
