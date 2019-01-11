@@ -413,7 +413,19 @@ student-app > playing-etc {
          &[x-as=g] {
            background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-g.png?1547109352295); }
          &[x-as=o] {
-           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-o.png?1547109352202); } } } } } }
+           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-o.png?1547109352202); }
+       
+         @at-root {
+           @keyframes bingo-letter {
+             0% {
+               transform: scale(0); }
+             90% {
+               transform: scale(3); }
+             100% {
+               transform: scale(2); } } }
+          animation-name: bingo-letter;
+          animation-duration: 0.5s;
+          animation-timing-function: ease-in;} } } } }
 
 student-app > game-over-etc {
   @extend %page-etc;

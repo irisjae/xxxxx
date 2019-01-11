@@ -219,7 +219,7 @@ var playing_view = _ => so ((_=_=>
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
           , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-        <bingo> { T (_bingoes) (Z_ .chain (_pattern => so ((
+        <bingo> { T (Z_ .reverse (_bingoes)) (Z_ .chain (_pattern => so ((
            define
            , [ first_y, first_x ] = L .get (L .first) (_pattern)
            , [ last_y, last_x ] = L .get (L .last) (_pattern)
