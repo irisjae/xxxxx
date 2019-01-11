@@ -236,13 +236,13 @@ var playing_view = _ => so ((_=_=>
                       :!! ((_i - 1) * 1 / 5) * 100 + '%'
              , top = !! Z_ .equals (shape) ('horizontal') ? ((_i - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                       :!! ((_i - 1) * 1 / 5) * 100 + '%'
-             , letter = !! Z_ .equals (_i) (0) ? 'b'
-                        :!! Z_ .equals (_i) (1) ? 'i'
-                        :!! Z_ .equals (_i) (2) ? 'n'
-                        :!! Z_ .equals (_i) (3) ? 'g'
-                        :!! Z_ .equals (_i) (4) ? 'o'
+             , letter = !! Z_ .equals (_i) (1) ? 'b'
+                        :!! Z_ .equals (_i) (2) ? 'i'
+                        :!! Z_ .equals (_i) (3) ? 'n'
+                        :!! Z_ .equals (_i) (4) ? 'g'
+                        :!! Z_ .equals (_i) (5) ? 'o'
                         : panic ('bad letter') )=>_)
-           ) (L .elems)) ))) } </bingo> </board> </div> </playing-etc>,
+           )) ))) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))
