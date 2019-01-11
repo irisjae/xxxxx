@@ -393,19 +393,15 @@ var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 // make this more elegant
-var solved_positions = _board => _past => 
-  T (_past
-  ) (
+var solved_positions = _board => by (_past => 
   $ (L .collect
   ) (
-  [ past_as_points, L .elems, L .reread (_point => so ((_=_=>
-    !! (_position && problem_choice_matches (_problem) (_choice))
-    ? _position
-    : undefined,
+  [ past_as_points, L .elems, L .choose (_point => so ((_=_=>
+    [ point_as_position, L .when (_ => problem_choice_matches (_problem) (_choice)) ],
     where
     , _problem = T (_point) (L .get (point_as_problem))
     , _position = T (_point) (L .get (point_as_position))
-    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_) ) ])),
+    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_)) ]))
 
 var bingoed_positions = _board => _past => 
 	so ((_=_=> so ((_=_=>
