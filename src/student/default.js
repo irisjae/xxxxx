@@ -230,10 +230,19 @@ var playing_view = _ => so ((_=_=>
                :!! Z_ .lt (first_y) (last_y) ? 'diagonal-up'
                : panic ('bad pattern') )=>
            T (_pattern) (L .collectAs ((_pos, _i) => so ((_=_=>
-             <letter x-as={ fiat } style={{ left: left, top: top }} />,
+             <letter x-as={ letter } style={{ left: left, top: top }} />,
              where
              , [ x, y ] = _pos
-             , left = !! Z_ .equals (shape) ('vertical') )=>_)
+             , left = !! Z_ .equals (shape) ('vertical') ? ((x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                      :!! ((x - 1) * 1 / 5) * 100 + '%'
+             , top = !! Z_ .equals (shape) ('horizontal') ? ((y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                      :!! ((y - 1) * 1 / 5) * 100 + '%'
+             , letter = !! Z_ .equals (0) ? 'b'
+                        :!! Z_ .equals (1) ? 'i'
+                        :!! Z_ .equals (2) ? 'n'
+                        :!! Z_ .equals (3) ? 'g'
+                        :!! Z_ .equals (4) ? 'o'
+                        : panic ('bad letter') )=>_)
            ) (L .elems)) ))) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
