@@ -297,8 +297,54 @@ var playing_view = _ => so ((_=_=>
           ;feedback_state (feedback .end) })})} )=>_)
     
 													 
-var game_over_view = <game-over-etc> <message>Game Over!</message> </game-over-etc>
-  
+var game_over_view = 
+  <game-over-etc>
+    <title-etc>
+      <a-title>Bingo</a-title>
+      <problem-number>第{ problem_number }題</problem-number> </title-etc>
+    <students>
+      { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
+        ) (
+        L .collect (
+        [ L .elems
+        , ([ _student, [_board, _past] ]) => so ((_=_=>
+          <student-etc>
+            <label x-icon={
+              !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+            >{ _name }</label>
+            <board> { T (_board) (Z_ .map (_row => 
+              <row> { T (_row) (Z_ .map (_cell => so ((_=_=>
+                !! _cell_solved ? <cell x-solved />
+                : <cell />,
+                where
+                , _cell_position = T (_cell) (L .get (cell_as_position))
+                , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+              <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> 
+                <line x-shape={ shape } style={{ top: top, left: left }} />,
+                where
+                , [ first_y, first_x ] = L .get (L .first) (_pattern)
+                , [ last_y, last_x ] = L .get (L .last) (_pattern)
+                , shape =
+                    !! Z_ .equals (first_x) (last_x) ? 'vertical'
+                    :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
+                    :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
+                    :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
+                    : panic ('bad pattern')
+                , top = !! Z_ .equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
+                        :!! Z_ .equals (shape) ('vertical') ? '5%'
+                        : ''
+                , left = !! Z_ .equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
+                        :!! Z_ .equals (shape) ('horizontal') ? '5%'
+                        : '' )=>_))) } </bingo> </board> </student-etc>,
+          where
+          , _name = T (_student) (L .get (student_as_name))
+          , _icon = T (_student) (L .get (student_as_icon))
+          , _solved_positions = solved_positions (_board) (_past)
+          , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
+    <options>
+      <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
+      <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </game-over-etc>
+
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))
     ? setup_view
