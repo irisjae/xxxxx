@@ -221,8 +221,8 @@ var playing_view = _ => so ((_=_=>
           , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
         <bingo> { T (_bingoes) (Z_ .chain (_pattern => so ((
            define
-           , [ first_x, first_y ] = L .get (L .first) (_pattern)
-           , [ last_x, last_y ] = L .get (L .last) (_pattern)
+           , [ first_y, first_x ] = L .get (L .first) (_pattern)
+           , [ last_y, last_x ] = L .get (L .last) (_pattern)
            , shape =
                !! Z_ .equals (first_x) (last_x) ? 'vertical'
                :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
@@ -232,16 +232,16 @@ var playing_view = _ => so ((_=_=>
            T (_pattern) (L .collectAs ((_pos, _i) => so ((_=_=>
              <letter x-as={ letter } style={{ left: left, top: top }} />,
              where
-             , [ x, y ] = _pos
+             , [ y, x ] = _pos
              , left = !! Z_ .equals (shape) ('vertical') ? ((x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                       :!! ((x - 1) * 1 / 5) * 100 + '%'
              , top = !! Z_ .equals (shape) ('horizontal') ? ((y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                       :!! ((y - 1) * 1 / 5) * 100 + '%'
-             , letter = !! Z_ .equals (0) ? 'b'
-                        :!! Z_ .equals (1) ? 'i'
-                        :!! Z_ .equals (2) ? 'n'
-                        :!! Z_ .equals (3) ? 'g'
-                        :!! Z_ .equals (4) ? 'o'
+             , letter = !! Z_ .equals (_i) (0) ? 'b'
+                        :!! Z_ .equals (_i) (1) ? 'i'
+                        :!! Z_ .equals (_i) (2) ? 'n'
+                        :!! Z_ .equals (_i) (3) ? 'g'
+                        :!! Z_ .equals (_i) (4) ? 'o'
                         : panic ('bad letter') )=>_)
            ) (L .elems)) ))) } </bingo> </board> </div> </playing-etc>,
     where

@@ -421,7 +421,7 @@ var bingoed_positions = _board => _past =>
 
 var bingoes = _board => _past => 
   so ((_=_=>
-  T (_past) ([ L .collect ([ past_as_points, L .elems, point_as_position ])
+  T (_solved_positions) ([ 
   , $ (Z_ .reduce
     ) (
     ([ solved_positions, solved_patterns ]) => _position => so ((_=_=>

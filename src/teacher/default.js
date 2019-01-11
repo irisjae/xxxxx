@@ -230,8 +230,8 @@ var playing_view = _ => so ((_=_=>
                 <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> 
                   <line x-shape={ shape } style={{ top: top, left: left }} />,
                   where
-                  , [ first_x, first_y ] = L .get (L .first) (_pattern)
-                  , [ last_x, last_y ] = L .get (L .last) (_pattern)
+                  , [ first_y, first_x ] = L .get (L .first) (_pattern)
+                  , [ last_y, last_x ] = L .get (L .last) (_pattern)
                   , shape =
                       !! Z_ .equals (first_x) (last_x) ? 'vertical'
                       :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
