@@ -250,13 +250,17 @@ teacher-app > playing-etc {
             border-radius: 3px;
             position: absolute;
             transform-origin: left;
-            &[horizontal] {}
-            &[vertical] {
+            &[x-shape=horizontal] {}
+            &[x-shape=vertical] {
               transform: rotate(90deg); }
-            &[diagonal-down] {
-              transform: rotate(45deg) scale(1.3); }
-            &[diagonal-up] {
-              transform: rotate(-45deg) scale(1.3); } } } } } }
+            &[x-shape=diagonal-down] {
+              transform: rotate(45deg) scale(1.3);
+              top: calc(5% + 3px); 
+              left: calc(5% + 3px); }
+            &[x-shape=diagonal-up] {
+              transform: rotate(-45deg) scale(1.3);
+              bottom: calc(5% + 3px); 
+              left: calc(5% + 3px); } } } } } }
   & options {
     position: absolute;
     right: 0;

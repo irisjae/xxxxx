@@ -228,8 +228,21 @@ var playing_view = _ => so ((_=_=>
                   , _cell_position = T (_cell) (L .get (cell_as_position))
                   , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
                 <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> 
-                  <line style={{ top: 0, left: 0 }} />,
-                  where )=>_))) } </bingo> </board> </student-etc>,
+                  <line x-shape={ shape } style={{ top: top, left: left }} />,
+                  where
+                  , [ first_x, first_y ] = L .get (L .first) (_pattern)
+                  , [ last_x, last_y ] = L .get (L .last) (_pattern)
+                  , shape =
+                      !! Z_ .equals (first_x) (last_x) ? 'vertical'
+                      :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
+                      :!! Z_ .gt (first_y) (last_y) ? 'diagonal-down'
+                      :!! Z_ .lt (first_y) (last_y) ? 'diagonal-up'
+                      : panic ('bad pattern')
+                  , top = !! Z_ .equals (shape) ('horizontal') ? '5%'
+                          :!! Z_ .equals (shape) ('vertical') ? (1 / (size * 2)) * 100 + '5'
+                          : ''
+                                                                 
+                                                                )=>_))) } </bingo> </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
             , _icon = T (_student) (L .get (student_as_icon))
@@ -257,6 +270,7 @@ var playing_view = _ => so ((_=_=>
   , _pasts = T (_app) (L .get (app_as_pasts)) 
   , problem_number = T (_app) (L .get ([ app_as_progress, progress_as_step ])) + 1
   , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
+  , size = T (app_state ()) (L .get ([ app_as_settings, settings_as_size ]))
   , game_tick = tick_state ()
   , question = T (_problem) (L .get (problem_as_question))
   , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
