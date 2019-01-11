@@ -227,7 +227,9 @@ var playing_view = _ => so ((_=_=>
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
                   , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-                <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> )=>_))) } </bingo> </board> </student-etc>,
+                <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> 
+                  <line style={{ top: 0, left: 0 }} />,
+                  where )=>_))) } </bingo> </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
             , _icon = T (_student) (L .get (student_as_icon))

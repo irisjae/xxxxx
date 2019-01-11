@@ -219,7 +219,15 @@ var playing_view = _ => so ((_=_=>
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
           , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-        <bingo> </bingo> </board> </div> </playing-etc>,
+        <bingo> { T (_bingoes) (Z_ .chain (_pattern => so ((
+           define
+           , diagonal )=>
+           T (_pattern) (L .collect ((_pos, _i) => so ((_=_=>
+           <letter x-as={ fiat } style={{ left: left, top: top }} />,
+           where
+           ,  )=>_)
+           ) (L .elems)) ))
+            } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))
@@ -228,7 +236,7 @@ var playing_view = _ => so ((_=_=>
     , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , _current_question = T (_app) ([ current_problem, L .get (problem_as_question) ])
     , _solved_positions = solved_positions (_board) (_past)
-    , _bingoed_positions = bingoed_positions (_board) (_past)
+    , _bingoes = bingoes (_board) (_past)
     , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , game_tick = tick_state ()
     , cell_feedback = cell => _dom => {;
