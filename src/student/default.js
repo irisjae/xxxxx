@@ -410,6 +410,7 @@ var attempt_problem = _position => {;
             ) ([_position, latency]) ))
           if (problem_choice_matches (_problem) (_choice)) {
             var correct_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'
+            var _local_patterns = 
             ;(new Audio (correct_audio)) .play () }
           else {
             var incorrect_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'
