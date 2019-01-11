@@ -425,15 +425,15 @@ board {
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 0;
-    &:first-child {
+    &:first-of-type {
       & cell {
         border-top: none; } }
-    &:last-child {
+    &:last-of-type {
       & cell {
         border-bottom: none; } }
-    & cell:first-child {
+    & cell:first-of-type {
       border-left: none; }
-    & cell:last-child {
+    & cell:last-of-type {
       border-right: none; }
     & cell {
       border: 1px solid white;
