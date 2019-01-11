@@ -396,11 +396,11 @@ var solved_positions = _board => by (_past =>
   $ (L .collect
   ) (
   [ past_as_points, L .elems, L .choose (_point => 
-    L .chain (L .when (_position => so ((_=_=>
+    L .chain (Z_ .K (L .when (_position => so ((_=_=>
       problem_choice_matches (_problem) (_choice),
       where
       , _problem = T (_point) (L .get (point_as_problem))
-      , _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))
+      , _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_)))
     ) (
     point_as_position)) ]))
 

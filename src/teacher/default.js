@@ -514,7 +514,8 @@ var connection = S (_ => {;
   if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
       if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-        ;end_game () } } }
+        //;end_game ()
+      } } }
 	return _app })
 
 
