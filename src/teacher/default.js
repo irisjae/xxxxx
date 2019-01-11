@@ -239,10 +239,11 @@ var playing_view = _ => so ((_=_=>
                       :!! Z_ .lt (first_y) (last_y) ? 'diagonal-up'
                       : panic ('bad pattern')
                   , top = !! Z_ .equals (shape) ('horizontal') ? '5%'
-                          :!! Z_ .equals (shape) ('vertical') ? (1 / (size * 2)) * 100 + '5'
+                          :!! Z_ .equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '5'
                           : ''
-                                                                 
-                                                                )=>_))) } </bingo> </board> </student-etc>,
+                  , left = !! Z_ .equals (shape) ('vertical') ? '5%'
+                          :!! Z_ .equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '5'
+                          : '' )=>_))) } </bingo> </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
             , _icon = T (_student) (L .get (student_as_icon))
