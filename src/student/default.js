@@ -233,10 +233,10 @@ var playing_view = _ => so ((_=_=>
              <letter x-as={ letter } style={{ left: left, top: top }} />,
              where
              , left = !! Z_ .equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                      :!! ((_i - 1) * 1 / 5) * 100 + '%'
+                      : ((_i - 1) * 1 / 5) * 100 + '%'
              , top = !! Z_ .equals (shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                      :!! Z_ .equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
-                     :!! ((_i - 1) * 1 / 5) * 100 + '%'
+                     : ((_i - 1) * 1 / 5) * 100 + '%'
              , letter = !! Z_ .equals (_i) (1) ? 'b'
                         :!! Z_ .equals (_i) (2) ? 'i'
                         :!! Z_ .equals (_i) (3) ? 'n'
