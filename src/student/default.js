@@ -410,10 +410,17 @@ var attempt_problem = _position => {;
             ) ([app_as_last_point, point_as_attempts, L .appendTo]
             ) ([_position, latency]) ))
           if (problem_choice_matches (_problem) (_choice)) {
+            var bingo_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'
             var correct_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'
+            var _solved_positions = Z_ .append (_position) (solved_positions (_board) (L .get (app_as_past) (S .sample (app_state))))
             var _size = T (S .sample (app_state)) ([ app_as_settings, settings_as_size ])
-            var _local_patterns = T (local_patterns (size_patterns (_size))) (L .get ([ as_value_of (_position) ]))
-            ;(new Audio (correct_audio)) .play () }
+            var _local_patterns = T (local_patterns (size_patterns (_size))
+              ) (
+              L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions)) (Z_ .flip (Z_ .elem))) ]))
+            if (L .isDefined (L .elems) (_local_patterns)) {
+              ;(new Audio (bingo_audio)) .play () }
+            else {
+              ;(new Audio (correct_audio)) .play () } }
           else {
             var incorrect_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'
             ;(new Audio (incorrect_audio)) .play ()

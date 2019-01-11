@@ -408,7 +408,7 @@ var bingoed_positions = _board => _past =>
 	so ((_=_=> 
 	T (bingo_patterns
   ) (
-  L .collect ([ L .elems, L .when (L .all (T (_solved_positions) (Z_ .flip (Z_ .elem))) (L .elems)), L .elems ])),
+  L .collect ([ L .elems, L .when (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem)))), L .elems ])),
   where
 	, _size = T (_board) (Z_ .size)
   , bingo_patterns = size_patterns (_size)    
