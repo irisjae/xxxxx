@@ -235,8 +235,8 @@ var playing_view = _ => so ((_=_=>
                   , shape =
                       !! Z_ .equals (first_x) (last_x) ? 'vertical'
                       :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
-                      :!! Z_ .gt (first_y) (last_y) ? 'diagonal-down'
-                      :!! Z_ .lt (first_y) (last_y) ? 'diagonal-up'
+                      :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
+                      :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
                       : panic ('bad pattern')
                   , top = !! Z_ .equals (shape) ('horizontal') ? '5%'
                           :!! Z_ .equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '5'
