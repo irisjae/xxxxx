@@ -221,19 +221,27 @@ var playing_view = _ => so ((_=_=>
           , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
         <bingo> { T (_bingoes) (Z_ .chain (_pattern => so ((
            define
-           , diagonal )=>
-           T (_pattern) (L .collect ((_pos, _i) => so ((_=_=>
-           <letter x-as={ fiat } style={{ left: left, top: top }} />,
-           where
-           ,  )=>_)
-           ) (L .elems)) ))
-            } </bingo> </board> </div> </playing-etc>,
+           , [ first_x, first_y ] = L .get (L .first) (_pattern)
+           , [ last_x, last_y ] = L .get (L .last) (_pattern)
+           , shape =
+               !! Z_ .equals (first_x) (last_x) ? 'vertical'
+               :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
+               :!! Z_ .gt (first_y) (last_y) ? 'diagonal-down'
+               :!! Z_ .lt (first_y) (last_y) ? 'diagonal-up'
+               : panic ('bad pattern') )=>
+           T (_pattern) (L .collectAs ((_pos, _i) => so ((_=_=>
+             <letter x-as={ fiat } style={{ left: left, top: top }} />,
+             where
+             , [ x, y ] = _pos
+             , left = !! Z_ .equals (shape) ('vertical') )=>_)
+           ) (L .elems)) ))) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))
     , _past = T (_app) (L .get (app_as_past))
     , _progress = T (_app) (L .get (app_as_progress))
     , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+    , _size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
     , _current_question = T (_app) ([ current_problem, L .get (problem_as_question) ])
     , _solved_positions = solved_positions (_board) (_past)
     , _bingoes = bingoes (_board) (_past)
