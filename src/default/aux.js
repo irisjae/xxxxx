@@ -396,10 +396,10 @@ var attempted_positions = by (_past =>
 var solved_positions = _board => _past => so ((_=_=>
   T (_points
   ) (
-  Z_ .chain (_point => so ((_=_=>
-    !! (_position && problem_choice_matches (_problem) (_choice))
-    ? [ _position ]
-    : [],
+  L .collectAs (_point => so ((_=_=>
+    L .chain () (point_as_position) !! (_position && problem_choice_matches (_problem) (_choice))
+    ? _position
+    : Z_ .Nothing,
     where
     , _problem = T (_point) (L .get (point_as_problem))
     , _position = T (_point) (L .get (point_as_position))
