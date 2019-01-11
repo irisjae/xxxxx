@@ -229,14 +229,13 @@ var playing_view = _ => so ((_=_=>
                :!! Z_ .gt (first_y) (last_y) ? 'diagonal-down'
                :!! Z_ .lt (first_y) (last_y) ? 'diagonal-up'
                : panic ('bad pattern') )=>
-           T (_pattern) (L .collectAs ((_pos, _i) => so ((_=_=>
+           T (Z_ .range (1) (5 + 1)) (Z_ .map (_i => so ((_=_=>
              <letter x-as={ letter } style={{ left: left, top: top }} />,
              where
-             , [ y, x ] = _pos
-             , left = !! Z_ .equals (shape) ('vertical') ? ((x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                      :!! ((x - 1) * 1 / 5) * 100 + '%'
-             , top = !! Z_ .equals (shape) ('horizontal') ? ((y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                      :!! ((y - 1) * 1 / 5) * 100 + '%'
+             , left = !! Z_ .equals (shape) ('vertical') ? ((_i - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                      :!! ((_i - 1) * 1 / 5) * 100 + '%'
+             , top = !! Z_ .equals (shape) ('horizontal') ? ((_i - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                      :!! ((_i - 1) * 1 / 5) * 100 + '%'
              , letter = !! Z_ .equals (_i) (0) ? 'b'
                         :!! Z_ .equals (_i) (1) ? 'i'
                         :!! Z_ .equals (_i) (2) ? 'n'
