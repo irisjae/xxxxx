@@ -414,6 +414,7 @@ var bingoed_positions = _board => _past =>
   , bingo_patterns = size_patterns (_size)    
 	, _solved_positions = solved_positions (_board) (_past) )=>_)
 
+// make more elegant
 var bingoes = _board => _past => 
   so ((_=_=>
   T (_solved_positions
@@ -801,4 +802,5 @@ window .stuff = { ...window .stuff,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
   current_problem, problem_choice_matches,
+  local_patterns, size_patterns,
   attempted_positions, solved_positions, bingoed_positions, bingoes }

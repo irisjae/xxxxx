@@ -40,6 +40,7 @@ message_encoding, messages_encoding, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 current_problem, problem_choice_matches,
+local_patterns, size_patterns,
 attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
 
@@ -410,7 +411,8 @@ var attempt_problem = _position => {;
             ) ([_position, latency]) ))
           if (problem_choice_matches (_problem) (_choice)) {
             var correct_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'
-            var _local_patterns = 
+            var _size = T (S .sample (app_state)) ([ app_as_settings, settings_as_size ])
+            var _local_patterns = T (local_patterns (size_patterns (_size))) (L .get ([ as_value_of (_position) ]))
             ;(new Audio (correct_audio)) .play () }
           else {
             var incorrect_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'
