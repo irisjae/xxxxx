@@ -183,28 +183,7 @@ teacher-app > playing-etc {
       display: flex;
       background: #ef8150;
       max-height: 35px;
-      padding: 0 30px;
-      border-radius: 13px;
-      font-size: 23px;
-      justify-content: center;
-      align-items: center;} }
-  & problem-etc {
-    position: absolute;
-    top: 20%;
-    bottom: 20%;
-    left: 25%;
-    right: 25%;
-    & ticker-etc {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%); }
-    & question {
-      background: #fae383;
-      display: flex;
-      width: 100%;
-      height: 100%;
-      border-radius: 30px;
-      justify-content: center;
+
       align-items: center;
       color: #f08751;
       font-size: 40px; } }
@@ -292,12 +271,105 @@ teacher-app > playing-etc {
         font-size: 70px;
         font-weight: bold; } } } }
 teacher-app > game-over-etc {
-  @extend %page-etc;
-	display: flex;
-  flex-direction: column;
-  align-items: center;
-  & > * {
-    margin: 10px; } }
+  /* button {
+    &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
+      &:focus {
+        outline: none; }
+      & img {
+        @extend %clickable; } } } */
+  position: absolute;
+  display: block;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  /* & title-etc {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 25%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & a-title {
+      flex-grow: 0.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      font-size: 40px; }
+    & problem-number {
+      flex-grow: 1;
+      display: flex;
+      background: #ef8150;
+      max-height: 35px;
+      padding: 0 30px;
+      border-radius: 13px;
+      font-size: 23px;
+      justify-content: center;
+      align-items: center;} } */
+  & students {
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 10%;
+    right: 10%;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: auto;
+    & student-etc {
+      width: 100px;
+      height: 100px;
+      margin: 30px;
+      & label {
+        margin: 5px;
+        position: absolute;
+        transform: translate(25px,-27px);
+        &:before {
+          content: ' ';
+          position: absolute;
+          padding: 12px;
+          padding-top: 30px;
+          bottom: 0;
+          left: -30px;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: bottom; }
+        &[x-icon=bunny]:before {
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
+        &[x-icon=lion]:before {
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
+      & board {
+        & bingo {
+          & line {
+            width: 90%;
+            height: 3px;
+            background: #f99f73;
+            border-radius: 3px;
+            position: absolute;
+            transform-origin: left;
+            &[x-shape=horizontal] {}
+            &[x-shape=vertical] {
+              transform: rotate(90deg); }
+            &[x-shape=diagonal-down] {
+              transform: rotate(45deg) scale(1.3);
+              top: calc(5% + 3px); 
+              left: calc(5% + 3px); }
+            &[x-shape=diagonal-up] {
+              transform: rotate(-45deg) scale(1.3);
+              bottom: calc(5% + 3px); 
+              left: calc(5% + 3px); } } } } } }
+  /*& options {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    align-items: center; }*/ }
 
 student-app > get-ready-etc {
   button {
