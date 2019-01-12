@@ -519,6 +519,7 @@ student-app > playing-etc {
          background-position: center;
          background-repeat: no-repeat;
          transform: scale(2);
+         pointer-events: none;
          &[x-as=b] {
            background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-b.png?1547109352146); }
          &[x-as=i] {
