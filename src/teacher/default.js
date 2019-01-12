@@ -302,6 +302,10 @@ var game_over_view = _ => so ((_=_=>
   <game-over-etc>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
+    <options x-for="tabs">
+      <button x-custom x-for="show-results"><img src={ show_results_img } /></button>
+      <button x-custom x-for="students-analysis"><img src={ students_analysis_img } /></button>
+      <button x-custom x-for="problems-analysis"><img src={ problems_analysis_img } /></button> </options>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
@@ -340,12 +344,19 @@ var game_over_view = _ => so ((_=_=>
           , _name = T (_student) (L .get (student_as_name))
           , _icon = T (_student) (L .get (student_as_icon))
           , _solved_positions = solved_positions (_board) (_past)
-          , _bingoes = bingoes (_board) (_past) )=>_)])) } </students> </game-over-etc>,
+          , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
+    <options x-for="options">
+      <button x-custom x-for="view-students"><img src={ view_students_img } /></button> </options> </game-over-etc>,
   where
   , _app = app_state ()
   , _boards = T (_app) (L .get (app_as_boards)) 
   , _pasts = T (_app) (L .get (app_as_pasts)) 
-  , size = T (_app) (L .get ([ app_as_settings, settings_as_size ])) )=>_) 
+  , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
+  , show_results_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
+  , students_analysis_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-off.png?1546759645007'                             
+  , problems_analysis_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
+  , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
+                             )=>_) 
 
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))
@@ -562,8 +573,15 @@ var connection = S (_ => {;
   if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
       if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-        //;end_game ()
-      } } }
+        ;end_game () } } }
+	return _app })
+
+
+;S (last_app => {;
+	var _app = app_state ()
+  if (! L .isDefined (app_as_game_over) (last_app)) {
+    if (L .isDefined (app_as_game_over) (_app)) {
+      ;lookbehind_state (lookbehind .nothing) } }
 	return _app })
 
 
