@@ -227,7 +227,7 @@ var playing_view = _ => so ((_=_=>
            , shape =
                !! Z_ .equals (first_x) (last_x) ? 'vertical'
                :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
-               :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
+               :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'te
                :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
                : panic ('bad pattern') )=>
            T (Z_ .range (1) (5 + 1)) (Z_ .map (_i => so ((_=_=>
