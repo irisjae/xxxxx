@@ -220,7 +220,7 @@ var playing_view = _ => so ((_=_=>
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
           , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-        <bingo> { T (_bingoes) (L .collect (L .chain (Z_ .K ([ L .reverse, L .elems, L .elems ])) ([ (_pattern, nth) => so ((
+        <bingo> { T (_bingoes) ([ L .collect (L .chain (Z_ .K (L .elems)) ([ L .elems, (_pattern, nth) => so ((
            define
            , [ first_y, first_x ] = L .get (L .first) (_pattern)
            , [ last_y, last_x ] = L .get (L .last) (_pattern)
@@ -231,7 +231,7 @@ var playing_view = _ => so ((_=_=>
                :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
                : panic ('bad pattern') )=>
            T (Z_ .range (1) (5 + 1)) (Z_ .map (_i => so ((_=_=>
-             <letter x-as={ letter } style={{ left: left, top: top }} />,
+             <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,
              where
              , left = !! Z_ .equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                       : ((_i - 1) * 1 / 5) * 100 + '%'
@@ -243,7 +243,7 @@ var playing_view = _ => so ((_=_=>
                         :!! Z_ .equals (_i) (3) ? 'n'
                         :!! Z_ .equals (_i) (4) ? 'g'
                         :!! Z_ .equals (_i) (5) ? 'o'
-                        : panic ('bad letter') )=>_) )) ) ]))) } </bingo> </board> </div> </playing-etc>,
+                        : panic ('bad letter') )=>_) )) ) ])), Z_ .reverse ]) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))
