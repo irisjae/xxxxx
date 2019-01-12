@@ -183,7 +183,28 @@ teacher-app > playing-etc {
       display: flex;
       background: #ef8150;
       max-height: 35px;
-
+      padding: 0 30px;
+      border-radius: 13px;
+      font-size: 23px;
+      justify-content: center;
+      align-items: center;} }
+  & problem-etc {
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 25%;
+    right: 25%;
+    & ticker-etc {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%); }
+    & question {
+      background: #fae383;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      justify-content: center;
       align-items: center;
       color: #f08751;
       font-size: 40px; } }
@@ -271,19 +292,20 @@ teacher-app > playing-etc {
         font-size: 70px;
         font-weight: bold; } } } }
 teacher-app > game-over-etc {
-  /* button {
+  /*button {
     &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
       &:focus {
         outline: none; }
       & img {
-        @extend %clickable; } } } */
+        @extend %clickable; } } }*/
+  
   position: absolute;
   display: block;
   top: 10px;
   bottom: 10px;
   left: 10px;
   right: 10px;
-  /* & title-etc {
+  /*& title-etc {
     position: absolute;
     left: 0;
     top: 0;
@@ -307,7 +329,27 @@ teacher-app > game-over-etc {
       border-radius: 13px;
       font-size: 23px;
       justify-content: center;
-      align-items: center;} } */
+      align-items: center;} }
+  & problem-etc {
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 25%;
+    right: 25%;
+    & ticker-etc {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%); }
+    & question {
+      background: #fae383;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      justify-content: center;
+      align-items: center;
+      color: #f08751;
+      font-size: 40px; } }*/
   & students {
     position: absolute;
     top: 20%;
@@ -370,6 +412,7 @@ teacher-app > game-over-etc {
     display: flex;
     flex-direction: row;
     align-items: center; }*/ }
+
 
 student-app > get-ready-etc {
   button {
