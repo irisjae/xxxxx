@@ -57,7 +57,10 @@ var feedback = data ({
 var lookbehind = data ({
 	nothing: () => lookbehind,
 	view_students: () => lookbehind,
-	consider_end: () => lookbehind })
+	consider_end: () => lookbehind,
+	show_results: () => lookbehind,
+	students_analysis: () => lookbehind,
+	problems_analysis: () => lookbehind })
 
 var feedback_start = data_iso (feedback .start)
 var feedback_setup_settings = data_iso (feedback .setup_settings)
@@ -66,6 +69,9 @@ var feedback_play = data_iso (feedback .play)
 var lookbehind_nothing = data_iso (lookbehind .nothing)
 var lookbehind_view_students = data_iso (lookbehind .view_students)
 var lookbehind_consider_end = data_iso (lookbehind .consider_end)
+var lookbehind_show_results = data_iso (lookbehind .show_results)
+var lookbehind_student_analysis = data_iso (lookbehind .student_analysis)
+var lookbehind_problems_analysis = data_iso (lookbehind .problems_analysis)
 
 
 
@@ -303,9 +309,9 @@ var game_over_view = _ => so ((_=_=>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
     <options x-for="tabs">
-      <button x-custom x-for="show-results"><img src={ show_results_img } /></button>
-      <button x-custom x-for="students-analysis"><img src={ students_analysis_img } /></button>
-      <button x-custom x-for="problems-analysis"><img src={ problems_analysis_img } /></button> </options>
+      <button x-custom x-for="show-results" fn={  } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
+      <button x-custom x-for="students-analysis"><img src={ !! (L .isDefined (lookbehind .students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis"><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
@@ -348,13 +354,17 @@ var game_over_view = _ => so ((_=_=>
     <options x-for="options">
       <button x-custom x-for="view-students"><img src={ view_students_img } /></button> </options> </game-over-etc>,
   where
+  , _lookbehind = lookbehind_state () 
   , _app = app_state ()
   , _boards = T (_app) (L .get (app_as_boards)) 
   , _pasts = T (_app) (L .get (app_as_pasts)) 
   , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
-  , show_results_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
-  , students_analysis_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-off.png?1546759645007'                             
-  , problems_analysis_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
+  , show_results_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
+  , show_results_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'                              
+  , students_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-on.png?1546759645196'                             
+  , students_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-off.png?1546759645007'                             
+  , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
+  , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
                              )=>_) 
 
@@ -581,7 +591,7 @@ var connection = S (_ => {;
 	var _app = app_state ()
   if (! L .isDefined (app_as_game_over) (last_app)) {
     if (L .isDefined (app_as_game_over) (_app)) {
-      ;lookbehind_state (lookbehind .nothing) } }
+      ;lookbehind_state (lookbehind .show_results) } }
 	return _app })
 
 
