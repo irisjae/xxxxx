@@ -62,16 +62,16 @@ var lookbehind = data ({
 	students_analysis: () => lookbehind,
 	problems_analysis: () => lookbehind })
 
-var feedback_start = data_iso (feedback .start)
-var feedback_setup_settings = data_iso (feedback .setup_settings)
-var feedback_play = data_iso (feedback .play)
+var feedback_as_start = data_iso (feedback .start)
+var feedback_as_setup_settings = data_iso (feedback .setup_settings)
+var feedback_as_play = data_iso (feedback .play)
 
-var lookbehind_nothing = data_iso (lookbehind .nothing)
-var lookbehind_view_students = data_iso (lookbehind .view_students)
-var lookbehind_consider_end = data_iso (lookbehind .consider_end)
-var lookbehind_show_results = data_iso (lookbehind .show_results)
-var lookbehind_student_analysis = data_iso (lookbehind .students_analysis)
-var lookbehind_problems_analysis = data_iso (lookbehind .problems_analysis)
+var lookbehind_as_nothing = data_iso (lookbehind .nothing)
+var lookbehind_as_view_students = data_iso (lookbehind .view_students)
+var lookbehind_as_consider_end = data_iso (lookbehind .consider_end)
+var lookbehind_as_show_results = data_iso (lookbehind .show_results)
+var lookbehind_as_students_analysis = data_iso (lookbehind .students_analysis)
+var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
 
 
 
@@ -309,9 +309,9 @@ var game_over_view = _ => so ((_=_=>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
     <options x-for="tabs">
-      <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
-      <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind .students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind .problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+      <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind_as_show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
+      <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind_as_students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind_as_problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
