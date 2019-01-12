@@ -352,7 +352,7 @@ var game_over_view = _ => so ((_=_=>
           , _solved_positions = solved_positions (_board) (_past)
           , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
     <options x-for="options">
-      <button x-custom x-for="view-students"><img src={ view_students_img } /></button> </options> </game-over-etc>,
+      <button x-custom x-for="play-again"><img src={ play_again_img } /></button> </options> </game-over-etc>,
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
@@ -365,7 +365,7 @@ var game_over_view = _ => so ((_=_=>
   , students_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-off.png?1546759645007'                             
   , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
   , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
-  , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
+  , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
   , show_results = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
@@ -378,6 +378,10 @@ var game_over_view = _ => so ((_=_=>
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;lookbehind_state (lookbehind .students_analysis) })})}                              
+  , play_again = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;app_state (teacher_app .setup (default_settings)) })})}                              
                              )=>_) 
 
 window .view = <teacher-app>
