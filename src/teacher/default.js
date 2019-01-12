@@ -70,7 +70,7 @@ var lookbehind_nothing = data_iso (lookbehind .nothing)
 var lookbehind_view_students = data_iso (lookbehind .view_students)
 var lookbehind_consider_end = data_iso (lookbehind .consider_end)
 var lookbehind_show_results = data_iso (lookbehind .show_results)
-var lookbehind_student_analysis = data_iso (lookbehind .student_analysis)
+var lookbehind_student_analysis = data_iso (lookbehind .students_analysis)
 var lookbehind_problems_analysis = data_iso (lookbehind .problems_analysis)
 
 
@@ -311,7 +311,7 @@ var game_over_view = _ => so ((_=_=>
     <options x-for="tabs">
       <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
       <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind .students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind .problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
@@ -381,8 +381,7 @@ var game_over_view = _ => so ((_=_=>
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;app_state (teacher_app .setup (default_settings)) })})}                              
-                             )=>_) 
+          ;app_state (teacher_app .setup (default_settings)) })})} )=>_) 
 
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))

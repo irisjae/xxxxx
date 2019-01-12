@@ -54,7 +54,9 @@ var feedback = data ({
 var lookbehind = data ({
 	nothing: () => lookbehind,
 	bad_room: (room =~ room) => lookbehind,
-	attempting: (since =~ latency, blocked =~ bool) => lookbehind })
+	attempting: (since =~ latency, blocked =~ bool) => lookbehind,
+	overall_analysis: () => lookbehind,
+	problems_analysis: () => lookbehind   })
 
 
 var feedback_as_setup_room = data_iso (feedback .setup_room)
@@ -67,6 +69,8 @@ var feedback_as_icon = data_iso (feedback .setting_up_student) .icon
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
 var lookbehind_as_bad_room = data_iso (lookbehind .bad_room)
 var lookbehind_as_attempting = data_iso (lookbehind .attempting)
+var lookbehind_as_overall_analysis = data_iso (lookbehind .overall_analysis)
+var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
 
 var lookbehind_as_room = data_lens (lookbehind .bad_room) .room
 var lookbehind_as_since = data_lens (lookbehind .attempting) .since
@@ -261,7 +265,7 @@ var playing_view = _ => so ((_=_=>
           ;_dom .addEventListener (click, _ => {;
             ;feedback_state (feedback .attempt_problem (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) 
 
-var game_over_view = _ => so ((_=_=> so ((_=_=>
+/*var game_over_view = _ => so ((_=_=> 
 	<game-over-etc>
     <message>Game Over!</message>
 		<result-etc>
@@ -290,18 +294,47 @@ var game_over_view = _ => so ((_=_=> so ((_=_=>
 	, questions = T (_app) (L .collect ([ app_as_problems, L .elems, problem_as_question ]))
 	, attempts = T (_app) ([ L .collect ([ app_as_past, L .elems, point_as_attempts ]), Z_ .map (Z_ .size) ])
 	//TODO: make readable
-	/*, average_time = T (_ensemble) ([
+	, average_time = T (_ensemble) ([
 			assemble_students (_app),
 			Z_ .map ($ ([
 				Z .snd,
 				L .collect ([ [1], L .elems, point_as_attempts, L .last, [1], as_maybe ]),
 				Z .map (Z .of (Array)) ])),
 			_x => Z .reduce (Z .zipWith (Z .concat)) (R .head (_x)) (R .tail (_x)),
-			Z .map ($ ([ Z .justs, average, Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) */)=>_),
+			Z .map ($ ([ Z .justs, L .mean (L .elems), Z_ .fromMaybe (_ => panic ('average time fail!')) ])) ]) )=>_)*/
+
+var game_over_view = _ => so ((_=_=>
+  <game-over-etc>
+    <title-etc>
+      <a-title>Bingo</a-title> </title-etc>
+    <options x-for="tabs">
+      <button x-custom x-for="overall-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind .overall_analysis)) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind .problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+    <options x-for="options">
+      <button x-custom x-for="play-again"><img src={ play_again_img } /></button> </options> </game-over-etc>,
   where
-	, average = by (list => $ ([
-			Z_ .sum,
-			Z_ .div (Z_ .size (list)) ])) )=>_)
+  , _lookbehind = lookbehind_state () 
+  , _app = app_state ()
+  , _boards = T (_app) (L .get (app_as_boards)) 
+  , _pasts = T (_app) (L .get (app_as_pasts)) 
+  , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
+  , overall_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-analysis-on.png?1547306859997'                             
+  , overall_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-anlysis-off.png?1547306860589'                             
+  , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
+  , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
+  , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
+  , overall_analysis = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .overall_analysis) })})}                              
+  , problems_analysis = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .problems_analysis) })})}                              
+  , play_again = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;app_state (student_app .get_ready (Z .Nothing, Z .Nothing, Z .Nothing)) })})} )=>_) 
 
 
 window .view = <student-app>
