@@ -309,9 +309,9 @@ var game_over_view = _ => so ((_=_=>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
     <options x-for="tabs">
-      <button x-custom x-for="show-results" fn={  } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
-      <button x-custom x-for="students-analysis"><img src={ !! (L .isDefined (lookbehind .students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis"><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+      <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
+      <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind .students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind .show_results)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
@@ -366,6 +366,18 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
   , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
+  , show_results = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .show_results) })})}                              
+  , problems_analysis = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .problems_analysis) })})}                              
+  , students_analysis = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .students_analysis) })})}                              
                              )=>_) 
 
 window .view = <teacher-app>
