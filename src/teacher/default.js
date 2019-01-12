@@ -199,7 +199,7 @@ var get_ready_view = _ => so ((_=_=>
           ;feedback_state (feedback .play) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
-  !! L .isDefined (lookbehind_nothing) (_lookbehind)
+  !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
   ? <playing-etc>
       <title-etc>
         <a-title>Bingo</a-title>
@@ -212,7 +212,7 @@ var playing_view = _ => so ((_=_=>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
-  :!! L .isDefined (lookbehind_view_students) (_lookbehind)
+  :!! L .isDefined (lookbehind_as_view_students) (_lookbehind)
   ? <playing-etc>
       <title-etc>
         <a-title>Bingo</a-title>
@@ -259,7 +259,7 @@ var playing_view = _ => so ((_=_=>
       <options>
         <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
-  :!! L .isDefined (lookbehind_consider_end) (_lookbehind)
+  :!! L .isDefined (lookbehind_as_consider_end) (_lookbehind)
   ? <playing-etc>
       <abort-etc>
         <div class="box">
