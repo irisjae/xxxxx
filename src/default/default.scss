@@ -394,7 +394,7 @@ teacher-app > game-over-etc {
     align-items: center; } }
 
 
-student-app > get-ready-etc {
+student-app > setup-etc {
   button {
     &[x-for=join], &[x-for=connect] {
       &:focus {
@@ -454,6 +454,8 @@ student-app > get-ready-etc {
           right: 3px;
           border-radius: 20px;
           background: #222; } } } } }
+
+  @extend %page-etc;
 
 
 student-app > playing-etc {

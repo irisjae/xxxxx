@@ -99,7 +99,7 @@ var data = cons_definitions =>
       where
       , faux_cons = (...vals) => (
           { [cons_label]: R .fromPairs (R .zip (arg_labels, vals)) } )
-			, arg_labels = args_match .split (/\(.*,.*\)/g) .join ('') .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
+			, arg_labels = args_match .split (/\(.+?\)/g) .join ('') .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
       , $$1= __data_length .set (faux_cons, arg_labels .length)
       , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_)  
 		: so ((_=_=> 
