@@ -510,10 +510,8 @@ var connection = S (_ => {;
 //TODO: add guard to warn against depending on datas other than feedback
 // replace with lens control structure
 ;S (_ => {;
-  ;so ((
-  take
-  , cases = 
-      [ [ feedback_as_setup_settings
+  T (just_now (feedback_state)
+  ) (L .forEach ([ [ feedback_as_setup_settings
         , _ => {;
             var _piece = T (S .sample (feedback_state)) (L .get (feedback_as_settings_piece)) //TODO: tidy this up
             var cleansed_piece = JSON .parse (JSON .stringify (_piece))
@@ -534,21 +532,8 @@ var connection = S (_ => {;
             ;end_game () } ]
       , [ feedback_as_reset
         , _ => {;
-            ;reset_game () } ] ] )=>
-  so ((_=_=>
-  T (just_now (feedback_state)
-  ) (
-  action),
-  where
-  , action = 
-      Z_ .flip (T (cases) (Z_ .map (_case => so ((_=_=>
-        _feedback => {;
-          var result = L .get (predicate) (_feedback)
-          if (result) {
-            ;action (result) } },
-        where
-        , predicate = _case [0]
-        , action = _case [1] )=>_) ))) )=>_)) })
+            ;reset_game () } ] ]))
+})
 
 
 ;S (_ => {;
