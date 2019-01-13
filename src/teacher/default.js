@@ -105,7 +105,7 @@ var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window)
 var setup_view = _ => so ((_=_=>
   <setup-etc>
     <div class="left-pane">
-      <a-title>Bingo</a-title>
+      <a-title><img src={ logo_img }/></a-title>
       <sub-title>除法（一）</sub-title>
       <settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
       <setting x-of="game-mode">
@@ -142,6 +142,7 @@ var setup_view = _ => so ((_=_=>
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
+  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
   , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
   , twenty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F20-secs.png?1541563332669'
@@ -208,7 +209,7 @@ var playing_view = _ => so ((_=_=>
   !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
   ? <playing-etc>
       <title-etc>
-        <a-title>Bingo</a-title>
+        <a-title><img src={ logo_img }/></a-title>
         <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <problem-etc>
         <ticker-etc>
@@ -224,7 +225,7 @@ var playing_view = _ => so ((_=_=>
   :!! L .isDefined (lookbehind_as_view_students) (_lookbehind)
   ? <playing-etc>
       <title-etc>
-        <a-title>Bingo</a-title>
+        <a-title><img src={ logo_img }/></a-title>
         <problem-number>第{ problem_number }題</problem-number> </title-etc>
       <students>
         { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
@@ -292,6 +293,7 @@ var playing_view = _ => so ((_=_=>
   , question = T (_problem) (L .get (problem_as_question))
   , question_text = T (question) (L .get (question_as_text))
   , question_image = T (question) (L .get (question_as_image))
+  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
@@ -318,7 +320,7 @@ var playing_view = _ => so ((_=_=>
 var game_over_view = _ => so ((_=_=>
   <game-over-etc>
     <title-etc>
-      <a-title>Bingo</a-title> </title-etc>
+      <a-title><img src={ logo_img }/></a-title> </title-etc>
     <student><label>{ _name }</label></student>                                 
     <options x-for="tabs">
       <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind_as_show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
@@ -373,6 +375,7 @@ var game_over_view = _ => so ((_=_=>
   , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
   , _student = T (_app) (L .get (app_as_student))
   , _name = T (_student) (L .get (student_as_name))
+  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , show_results_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
   , show_results_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'                              
   , students_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-on.png?1546759645196'                             

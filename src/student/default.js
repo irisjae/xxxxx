@@ -105,7 +105,7 @@ var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window)
 
 var setup_room_view = _ => so ((_=_=>
   <setup-room-etc fn={ setup_room_feedback }>
-    <a-title>Bingo</a-title>
+    <a-title><img src={ logo_img }/></a-title>
     <sub-title>除法（一）</sub-title>
     <room style={{ margin: '30px 0' }}>
       <label>遊戲室編號：</label>
@@ -115,6 +115,7 @@ var setup_room_view = _ => so ((_=_=>
       <input style={{ margin: { top: '10px' } }} /> </room>
     <button x-custom x-for="join"><img src={ join_img } /></button> </setup-room-etc>,
   where
+  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , join_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734'
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_as_room))
   , setup_room_feedback = _dom => so ((_=_=>
@@ -134,7 +135,7 @@ var setup_room_view = _ => so ((_=_=>
 
 var setup_student_view = _ => so ((_=_=>
   <setup-student-etc fn={ setup_student_feedback }>
-    <a-title>Bingo</a-title>
+    <a-title><img src={ logo_img }/></a-title>
     <sub-title>除法（一）</sub-title>
     <name style={{ marginTop: '30px' }}>
       <label>名稱</label>
@@ -152,6 +153,7 @@ var setup_student_view = _ => so ((_=_=>
   where
   , _feedback = just_now (feedback_state) 
   , _icon = T (_feedback) (L .get ([ feedback_as_icon ]))
+  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , lion_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
   , bunny_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
   , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
@@ -315,8 +317,7 @@ var playing_view = _ => so ((_=_=>
 
 var game_over_view = _ => so ((_=_=>
   <game-over-etc>
-    <title-etc>
-      <a-title>Bingo</a-title> </title-etc>
+    <a-title><img src={ logo_img }/></a-title>
     <student><label>{ _name }</label></student> 
     <options x-for="tabs">
       <button x-custom x-for="overall-analysis" fn={ overall_analysis } ><img src={ !! (L .isDefined (lookbehind_as_overall_analysis)) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
@@ -339,6 +340,7 @@ var game_over_view = _ => so ((_=_=>
   , attempted_points_amount = T (_app) (L .count ([ app_as_past, past_as_points, L .elems, point_as_attempts, L .last ]))
   , solved_points_amount = T (_app) (L .count ([ app_as_past, past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
   , mean_solved_point_latency = T (_app) (L .mean ([ app_as_past, past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) .toFixed (2) * 1 || '0'
+  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , overall_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-analysis-on.png?1547306859997'                             
   , overall_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-anlysis-off.png?1547306860589'                             
   , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
