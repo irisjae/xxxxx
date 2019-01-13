@@ -544,7 +544,7 @@ student-app > game-over-etc {
     left: 0;
     top: 0;
     width: 25%;
-    height: 20%;
+    height: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -554,6 +554,27 @@ student-app > game-over-etc {
       flex-direction: column;
       justify-content: flex-end;
       font-size: 40px; } }
+  & student {
+    position: absolute;
+    left: 5%;
+    top: 10%;
+    width: 250px;
+    height: 100px;
+    & label {
+      font-size: 2em;
+      transform: translate(100px, 20px);
+      display: flex; }
+    &:after {
+      content: ' ';
+      background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-title-bar.png?1547404084265);
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      z-index: -1; } }
   & options[x-for=tabs] {
     position: absolute;
     left: 50%;
@@ -566,10 +587,12 @@ student-app > game-over-etc {
     align-items: center; }
   & analysis {
     position: absolute;
-    width: 60%;
-    height: 40%;
     top: 30%;
-    left: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 500px;
+    height: 40%;
     background: #FFF;
     color: #ff7b44;
     border-radius: 80px;

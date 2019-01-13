@@ -313,6 +313,7 @@ var game_over_view = _ => so ((_=_=>
   <game-over-etc>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
+    <student><label>{ _name }</label></student>                                 
     <options x-for="tabs">
       <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind_as_show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
       <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind_as_students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
@@ -364,6 +365,8 @@ var game_over_view = _ => so ((_=_=>
   , _boards = T (_app) (L .get (app_as_boards)) 
   , _pasts = T (_app) (L .get (app_as_pasts)) 
   , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
+  , _student = T (_app) (L .get (app_as_student))
+  , _name = T (_student) (L .get (student_as_name))
   , show_results_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
   , show_results_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'                              
   , students_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-on.png?1546759645196'                             
