@@ -90,7 +90,7 @@ var __data_lens = new WeakMap
 var fiat = {}
 var data = cons_definitions =>
 	T (cons_definitions
-	) (R .mapObjIndexed ((def_fn, cons_label) => 
+	) (L .modify (L .values) ((def_fn, cons_label) => 
 		so ((
 		take
 		, args_match = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
@@ -101,7 +101,7 @@ var data = cons_definitions =>
           { [cons_label]: R .fromPairs (R .zip (arg_labels, vals)) } )
 			, arg_labels = args_match .split (/\(.+?\)/g) .join ('') .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
       , $$1= __data_length .set (faux_cons, arg_labels .length)
-      , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_)  
+      , $$2= __data_lens .set (faux_cons, [cons_label]) )=>_)
 		: so ((_=_=> 
       faux_cons,
       where
@@ -238,13 +238,13 @@ var maybe_all = _x =>
 	: undefined
 */
 var maybe_all = Z_ .sequence (Z .Maybe)
-var to_maybe = so ((_=_=>
+/* var to_maybe = so ((_=_=>
   default_fn => _x => 
     !! (Z_ .is (maybe_type_$)) (_x)
     ? _x
     : default_fn (_x),
   where
-  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_) 
+  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_) */
 
 
 
@@ -390,5 +390,5 @@ window .stuff = { ...window .stuff,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
 	n_reducer, 
-	map_defined_, map_defined, from_just, maybe_all, to_maybe,
+	map_defined_, map_defined, from_just, maybe_all, 
 	as_sole, sole, shuffle }
