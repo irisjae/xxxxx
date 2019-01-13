@@ -152,7 +152,7 @@ var map_v_as_value = L .last
 var as_value_of = key => 
   [ L .elems, L .when (([ _key, _val ]) => Z_ .equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
 
-var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .defaults (Z_ .Nothing)]
+var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .valueOr (Z_ .Nothing)]
 var as_defined = [L .reread (to_maybe (_ => Z_ .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z_ .Nothing)]
 var as_defined_ = so ((_=_=>
   L .ifElse ($ (Z_ .is (maybe_type_$))) (as_defined) (L .identity),
