@@ -399,7 +399,17 @@ var current_problem = by (_app =>
 var attempted_positions = by (_past =>
   L .collect ([ past_as_points, L .elems, point_as_position ]))
 
+var as_solved_on = _board =>
+  L .when (_point => so ((_=_=>
+    problem_choice_matches (_problem) (_choice),
+    where
+    , _problem = T (_point) (L .get (point_as_problem))
+    , _position = T (_point) (L .get (point_as_position))
+    , _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))
+
 var solved_positions = _board => by (_past => 
+  L .collect ([ past_as_points, L .elems, as_solved_on (_board), point_as_position ]))
+/*by (_past => 
   $ (L .collect
   ) (
   [ past_as_points, L .elems, L .choose (_point => 
@@ -409,7 +419,7 @@ var solved_positions = _board => by (_past =>
       , _problem = T (_point) (L .get (point_as_problem))
       , _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_)))
     ) (
-    point_as_position)) ]))
+    point_as_position)) ]))*/
 
 var bingoed_positions = _board => _past => 
 	so ((_=_=> 
@@ -810,4 +820,4 @@ window .stuff = { ...window .stuff,
 	student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
   current_problem, problem_choice_matches,
   local_patterns, size_patterns,
-  attempted_positions, solved_positions, bingoed_positions, bingoes }
+  as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes }

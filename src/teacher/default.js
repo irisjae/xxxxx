@@ -32,7 +32,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 current_problem, problem_choice_matches,
 local_patterns, size_patterns,
-attempted_positions, solved_positions, bingoed_positions, bingoes,
+as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
 so, by, and_by, under,
 go, never, panic, panic_on,

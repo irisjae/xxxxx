@@ -32,7 +32,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 current_problem, problem_choice_matches,
 local_patterns, size_patterns,
-attempted_positions, solved_positions, bingoed_positions, bingoes,
+as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
 so, by, and_by, under,
 go, never, panic, panic_on,
@@ -57,7 +57,7 @@ var lookbehind = data ({
 	bad_room: (room =~ room) => lookbehind,
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind,
 	overall_analysis: () => lookbehind,
-	problems_analysis: () => lookbehind   })
+	problems_analysis: () => lookbehind })
 
 
 var feedback_as_setup_room = data_iso (feedback .setup_room)
@@ -586,6 +586,15 @@ S (_ => {;
 		, 3000)
 		;S .cleanup (_ => {;
 			;clearTimeout (forget) }) } })
+
+
+;S (last_app => {;
+	var _app = app_state ()
+  if (! L .isDefined (app_as_game_over) (last_app)) {
+    if (L .isDefined (app_as_game_over) (_app)) {
+      ;lookbehind_state (lookbehind .overall_analysis) } }
+	return _app })
+
 
 
 ;S (_ => {;
