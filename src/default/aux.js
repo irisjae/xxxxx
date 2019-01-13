@@ -154,6 +154,10 @@ var as_value_of = key =>
 
 var as_maybe = [ L .rewrite (Z_ .maybe (undefined) (Z_ .I)), L .reread (by (Z_ .K (Z_ .Just))), L .valueOr (Z_ .Nothing) ]
 var as_defined = [ L .required (Z_ .Nothing), L .rewrite (by (Z_ .K (Z_ .Just))), L .reread (Z_ .maybe (undefined) (Z_ .I)) ]    
+var as_defined_ = so ((_=_=>
+  L .ifElse (by (Z_ .K (Z_ .is (maybe_type_$)))) (as_defined) (L .identity),
+  where
+  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
@@ -167,9 +171,9 @@ var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_as_settings = L .choices ([ L .choices ('get_ready', 'playing', 'game_over'), 'settings' ], [ data_lens (student_app .setup) .settings, as_defined ])
-var app_as_student = L .choices ([ L .choices ('get_ready', 'playing', 'game_over'), 'student' ], [ data_lens (student_app .setup) .student, as_defined ])
-var app_as_room = L .choices ([ L .choices ('get_ready', 'playing', 'game_over'), 'room' ], [ data_lens (student_app .setup) .room, as_defined ])
+var app_as_settings = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'settings', as_defined_ ]
+var app_as_student = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'student', as_defined_ ]
+var app_as_room = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_progress = L .choose (_app =>
   !! L .isDefined (app_as_board) (_app) // check is student_app, TODO: create Z_ .is () for data ()
