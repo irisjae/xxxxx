@@ -683,6 +683,7 @@ S (_ => {;
 
 ;S (_ => {;
   if (L .isDefined (app_as_setup) (app_state ())) {
+    ;lookbehind_state (lookbehind .nothing)
     ;ensemble_state (undefined) } })
 
 ;S (_ => {;
