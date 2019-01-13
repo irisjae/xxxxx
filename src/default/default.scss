@@ -150,7 +150,7 @@ teacher-app > get-ready-etc {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587); }
         &[x-icon=bunny] {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
-          padding-top: 20px; } } } } }
+          padding-top: 21px; } } } } }
 teacher-app > playing-etc {
   button {
     &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
@@ -489,11 +489,13 @@ student-app > playing-etc {
       background: #fae383;
       border-radius: 20px;
       text-align: center;
+      color: #EE804F;
+      font-weight: bold;
+      font-size: 2em;
       color: black;
-      font-size: 20px;
-      min-height: 40%;
+  
       max-height: 76%;
-      line-height: 100px;
+      line-height: 200px;
       min-width: 60%;
       box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
       & img {
@@ -676,6 +678,9 @@ board {
       flex-shrink: 1;
       flex-basis: 0;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       &:after {
         content: ' ';
         position: absolute;

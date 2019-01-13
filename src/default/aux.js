@@ -126,7 +126,7 @@ var default_problems = shuffle ([/**/
 	[question .text ('3/6'), ['1/2', '2/4']],
 	[question .text ('4/6'), ['2/3', '6/9']],
 	[question .text ('5/6'), ['10/12', '15/18']],
-  [question .text ('1/7'), ['2/14', '3/21']]/**/
+  [question .text ('1/7'), ['2/14', '3/21']],/**/
   [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1547414777420', '11'), ['11']],
   [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1547414777721', '4'), ['4']],
   [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1547414778338', '5'), ['5']],
