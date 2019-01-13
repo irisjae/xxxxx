@@ -223,7 +223,8 @@ var progress_as_step = [ 0 ]
 var progress_as_timestamp = [ 1 ]
 
 var question_as_text = data_lens (question .text) .text
-var question_as_image = data_lens (question .image)
+var question_as_image = data_lens (question .image) .image
+var question_as_solution = data_lens (question .image) .solution
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
@@ -469,9 +470,14 @@ var bingoes = _board => _past =>
 // TODO: simplify this
 var problem_choice_matches = so ((_=_=>
   _problem => _choice => so ((_=_=>
-    Z_ .equals (normalize (_question)) (normalize (_choice)),
+    !! L .isDefined (question_as_text) (_question) 
+    ? Z_ .equals (normalize (_question)) (normalize (_choice))
+    :!! L .isDefined (question_as_image) (_question) 
+    ? Z_ .equals (_solution) (_choice)
+    : panic ('bad question'),
     where
-    , _question = T (_problem) (L .get (problem_as_question)) )=>_),
+    , _question = T (_problem) (L .get (problem_as_question))
+    , _solution = T (_question) (L .get (question_as_solution)) )=>_),
   where
   , ast = data ({
       normal: (numerator =~ integer, denominator =~ integer) => ast,
