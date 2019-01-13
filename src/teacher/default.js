@@ -290,8 +290,8 @@ var playing_view = _ => so ((_=_=>
   , size = T (app_state ()) (L .get ([ app_as_settings, settings_as_size ]))
   , game_tick = tick_state ()
   , question = T (_problem) (L .get (problem_as_question))
-  , _question_text = T (_current_question) (L .get (question_as_text))
-  , _question_image = T (_current_question) (L .get (question_as_image)) 
+  , question_text = T (question) (L .get (question_as_text))
+  , question_image = T (question) (L .get (question_as_image)) 
                              
   , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fs
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
