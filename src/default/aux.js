@@ -28,9 +28,12 @@ var v = (...types) => fiat
 var piece = (...types) => fiat
 
 var room = string
+var url = string
 var choice = string
-var answer = string
-var problem = v (string, list (choice))
+var question = data ({
+  text: (text =~ string) => question,
+  image: (image =~ url, solution =~ choice) => question })
+var problem = v (question, list (choice))
 
 var time_interval = data ({ time_interval: (from =~ timestamp, to =~ timestamp) => time_interval })
 
@@ -108,22 +111,22 @@ var ensemble = data ({
 
 
 var default_problems = shuffle ([
-	['1/2', ['2/4', '3/6']],
-	['1/3', ['2/6', '3/9']],
-	['2/3', ['4/6', '6/9']],
-	['1/4', ['2/8', '3/12']],
-	['2/4', ['1/2', '3/6']],
-	['3/4', ['6/8', '9/12']],
-	['1/5', ['2/10', '3/15']],
-	['2/5', ['4/10', '6/15']],
-	['3/5', ['6/10', '9/15']],
-	['4/5', ['8/10', '12/15']],
-	['1/6', ['2/12', '3/18']],
-	['2/6', ['1/3', '3/9']],
-	['3/6', ['1/2', '2/4']],
-	['4/6', ['2/3', '6/9']],
-	['5/6', ['10/12', '15/18']],
-  ['1/7', ['2/14', '3/21']] ])
+	[question .text ('1/2'), ['2/4', '3/6']],
+	[question .text ('1/3'), ['2/6', '3/9']],
+	[question .text ('2/3'), ['4/6', '6/9']],
+	[question .text ('1/4'), ['2/8', '3/12']],
+	[question .text ('2/4'), ['1/2', '3/6']],
+	[question .text ('3/4'), ['6/8', '9/12']],
+	[question .text ('1/5'), ['2/10', '3/15']],
+	[question .text ('2/5'), ['4/10', '6/15']],
+	[question .text ('3/5'), ['6/10', '9/15']],
+	[question .text ('4/5'), ['8/10', '12/15']],
+	[question .text ('1/6'), ['2/12', '3/18']],
+	[question .text ('2/6'), ['1/3', '3/9']],
+	[question .text ('3/6'), ['1/2', '2/4']],
+	[question .text ('4/6'), ['2/3', '6/9']],
+	[question .text ('5/6'), ['10/12', '15/18']],
+  [question .text ('1/7'), ['2/14', '3/21']] ])
 var default_rules = rules .rules (10, 4, win_rule .first_bingo)
 
 var default_settings = settings .settings (default_problems, default_rules)
@@ -218,6 +221,9 @@ var student_as_icon = data_lens (student .student) .icon
 
 var progress_as_step = [ 0 ]
 var progress_as_timestamp = [ 1 ]
+
+var question_as_text = data_lens (question .text) .text
+var question_as_image = data_lens (question .image)
 
 var attempt_as_position = [ 0 ]
 var attempt_as_latency = [ 1 ]
@@ -791,7 +797,7 @@ window .stuff = { ...window .stuff,
 	list, map, maybe, nat, id, v, piece,
 	shuffle, uuid, map_zip, api, post,
   timer, timer_since, time_intervals, 
-	avatar, student, problem, choice, answer, latency, ping, position,
+	avatar, student, problem, choice, latency, ping, position,
 	attempt, point, past, board, win_rule, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
