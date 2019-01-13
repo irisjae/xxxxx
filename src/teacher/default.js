@@ -52,7 +52,8 @@ var feedback = data ({
   start: () => feedback,
   setup_settings: ( settings_piece =~ piece (settings) ) => feedback,
   play: () => feedback,
-  end: () => feedback })
+  end: () => feedback,
+  reset: () => feedback })
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
@@ -65,6 +66,10 @@ var lookbehind = data ({
 var feedback_as_start = data_iso (feedback .start)
 var feedback_as_setup_settings = data_iso (feedback .setup_settings)
 var feedback_as_play = data_iso (feedback .play)
+var feedback_as_end = data_iso (feedback .end)
+var feedback_as_reset = data_iso (feedback .reset)
+
+var feedback_as_settings_piece = data_lens (feedback .setup_settings) .settings_piece
 
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
 var lookbehind_as_view_students = data_iso (lookbehind .view_students)
@@ -381,7 +386,7 @@ var game_over_view = _ => so ((_=_=>
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .play_again) })})} )=>_) 
+          ;feedback_state (feedback .reset) })})} )=>_) 
 
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))
@@ -452,6 +457,10 @@ var end_game = _ => {;
     ) (
     teacher_app_playing_to_game_over)) }
 
+var reset_game = _ => {;
+  ;app_state (
+    teacher_app .setup (default_settings)) }
+
 				
 				
 				
@@ -504,25 +513,28 @@ var connection = S (_ => {;
   ;so ((
   take
   , cases = 
-      [ [ data_lens (feedback .setup_settings) .settings_piece
-        , _piece => {;
-            //TODO: tidy this up
+      [ [ feedback_as_setup_settings
+        , _ => {;
+            var _piece = T (S .sample (feedback_state)) (L .get (feedback_as_settings_piece)) //TODO: tidy this up
             var cleansed_piece = JSON .parse (JSON .stringify (_piece))
             ;app_state (
               T (S .sample (app_state)
               ) (
               L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ]
-      , [ data_iso (feedback .start)
+      , [ feedback_as_start
         , _ => {;
             ;get_room (T (Math .random ()) ([
               _x => _x * 10000,
               _x => Math .floor (_x) ])) .catch (_ => {}) } ]
-      , [ data_iso (feedback .play)
+      , [ feedback_as_play
         , _ => {;
             ;start_playing () } ]
-      , [ data_iso (feedback .end)
+      , [ feedback_as_end
         , _ => {;
-            ;end_game () } ] ] )=>
+            ;end_game () } ]
+      , [ feedback_as_reset
+        , _ => {;
+            ;reset_game () } ] ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (
