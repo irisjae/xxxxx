@@ -167,9 +167,9 @@ var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_as_settings = L .choices ([ data_lens (student_app .setup) .settings, as_defined ], [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'settings' ])
-var app_as_student = L .choices ([ data_lens (student_app .setup) .student, as_defined ], [ L .choices ('get_ready', 'playing', 'game_over'), 'student' ])
-var app_as_room = L .choices ([ data_lens (student_app .setup) .room, as_defined ], [ L .choices ('get_ready', 'playing', 'game_over'), 'room' ])
+var app_as_settings = L .choices ([ L .choices ('get_ready', 'playing', 'game_over'), 'settings' ], [ data_lens (student_app .setup) .settings, as_defined ])
+var app_as_student = L .choices ([ L .choices ('get_ready', 'playing', 'game_over'), 'student' ], [ data_lens (student_app .setup) .student, as_defined ])
+var app_as_room = L .choices ([ L .choices ('get_ready', 'playing', 'game_over'), 'room' ], [ data_lens (student_app .setup) .room, as_defined ])
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_progress = L .choose (_app =>
   !! L .isDefined (app_as_board) (_app) // check is student_app, TODO: create Z_ .is () for data ()

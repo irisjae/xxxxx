@@ -40,7 +40,7 @@ just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
 n_reducer, 
-map_defined_, map_defined, from_just, maybe_all, to_maybe,
+map_defined_, map_defined, from_just, maybe_all, 
 as_sole, sole, shuffle
 } = window .stuff
 
