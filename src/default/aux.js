@@ -171,7 +171,7 @@ var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (
 var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
 var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_as_settings = L .choiices ([ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'settings', as_defined_ ]
+var app_as_settings = L .choiices ([ data_lens (student_app .setup) .settings, as_maybe ], [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'settings', as_defined_ ])
 var app_as_student = L .choices ([ data_lens (student_app .setup) .student, as_maybe ], [ L .choices ('get_ready', 'playing', 'game_over'), 'student', as_defined_ ])
 var app_as_room = L .choices ([ data_lens (student_app .setup) .room, as_maybe ], [ L .choices ('get_ready', 'playing', 'game_over'), 'room', as_defined_ ])
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
@@ -283,6 +283,12 @@ var teacher_app_playing_to_game_over = by (_app =>
   ) (
   [ data_iso (teacher_app .playing)
   , L .inverse (data_iso (teacher_app .game_over)) ])) 
+
+var student_app_setup_to_get_ready = by (_app => 
+  $ (L .get
+  ) (
+  [ data_iso (student_app .setup)
+  , L .inverse (data_iso (student_app .get_ready)) ])) 
 
 var student_app_get_ready_to_playing = by (_app =>
   so ((_=_=>
@@ -801,7 +807,7 @@ window .stuff = { ...window .stuff,
 	cell_as_position, as_position, cell_as_choice, 
 	message_encoding, messages_encoding, schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
-	student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
+	student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
   current_problem, problem_choice_matches,
   local_patterns, size_patterns,
   attempted_positions, solved_positions, bingoed_positions, bingoes }

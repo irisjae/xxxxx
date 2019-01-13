@@ -1,13 +1,4 @@
-var { T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-so, by, and_by, under,
-go, never, panic, panic_on,
-just_now, temporal,
-fiat, data, data_lens, data_iso, data_kind,
-focused_iso_,
-n_reducer, 
-map_defined_, map_defined, from_just, maybe_all, to_maybe,
-as_sole, sole, shuffle,
-bool, number, timestamp, string,
+var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, map_zip, api, post,
 timer, timer_since, time_intervals, 
@@ -38,10 +29,19 @@ problem_as_question, problem_as_answers,
 cell_as_position, as_position, cell_as_choice, 
 message_encoding, messages_encoding, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
-student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
+student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 current_problem, problem_choice_matches,
 local_patterns, size_patterns,
-attempted_positions, solved_positions, bingoed_positions, bingoes
+attempted_positions, solved_positions, bingoed_positions, bingoes,
+T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
+so, by, and_by, under,
+go, never, panic, panic_on,
+just_now, temporal,
+fiat, data, data_lens, data_iso, data_kind,
+focused_iso_,
+n_reducer, 
+map_defined_, map_defined, from_just, maybe_all, to_maybe,
+as_sole, sole, shuffle
 } = window .stuff
 
 
@@ -381,8 +381,8 @@ var setup_room = _room => {;
 				;app_state (
 					T (S .sample (app_state)
           ) (
-          [ L .set (app_as_room) (Z_ .Just (_room))
-          , L .set (app_as_settings) (Z_ .Just (_settings)) ])) } ])) )
+          [ L .set (app_as_room) (_room)
+          , L .set (app_as_settings) (_settings) ])) } ])) )
 		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
@@ -393,7 +393,7 @@ var setup_student = _icon => _name => {;
   ;app_state (
     T (S .sample (app_state)
     ) (
-    L .set (app_as_student) (Z_ .Just (student .student (uuid (), _name, _icon))) )) } 
+    L .set (app_as_student) (student .student (uuid (), _name, _icon)) )) } 
 
 var connect_room = _ => {;
 	;T (S .sample (app_state)
@@ -420,7 +420,7 @@ var connect_room = _ => {;
       ;app_state (
         T (S .sample (app_state)
         ) (
-        L .set (app_as_settings) (Z_ .Just (latest_settings)) ))  })
+        L .set (app_as_settings) (latest_settings) ))  })
 		.catch (_e => {;
 			;lookbehind_state (lookbehind .bad_room (_room))
 			;console .error (_e) })
@@ -597,6 +597,13 @@ S (_ => {;
 		;flowing_state (false) } })
 
 
+;S (_ => {
+  var _app = app_state ()
+  if (L .isDefined (app_as_setup) (_app)) {
+    under (complete_ ({ app_as_student, app_as_room, app_as_settings })) (_ => {;
+      ;app_state () })
+  }
+})
 
 ;S (last_tick => {;
   var _app = app_state () 
