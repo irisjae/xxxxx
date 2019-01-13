@@ -49,7 +49,8 @@ var feedback = data ({
   setup_room: (room =~ room) => feedback,
   setting_up_student: (icon =~ avatar) => feedback,
   setup_student: (icon =~ avatar, name =~ string) => feedback,
-  attempt_problem: (position =~ position) => feedback })
+  attempt_problem: (position =~ position) => feedback,
+  reset_game: () => feedback })
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
@@ -63,6 +64,7 @@ var feedback_as_setup_room = data_iso (feedback .setup_room)
 var feedback_as_setting_up_student = data_iso (feedback .setting_up_student)
 var feedback_as_setup_student = data_iso (feedback .setup_student)
 var feedback_as_attempt_problem = data_iso (feedback .attempt_problem)
+var feedback_as_reset_game = data_iso (feedback .reset_game)
 
 var feedback_as_icon = data_iso (feedback .setting_up_student) .icon
 
@@ -81,7 +83,7 @@ var lookbehind_as_blocked = data_lens (lookbehind .attempting) .blocked
 
 
 
-var app_state = S .data (student_app .get_ready (Z .Nothing, Z .Nothing, Z .Nothing))
+var app_state = S .data (student_app .setup (Z_ .Nothing, Z_ .Nothing, Z_ .Nothing))
  
 var io_state = S .data (io .inert)
 var ensemble_state = S .data (undefined)
@@ -336,7 +338,7 @@ var game_over_view = _ => so ((_=_=>
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;app_state (student_app .get_ready (Z .Nothing, Z .Nothing, Z .Nothing)) })})} )=>_) 
+          ;feedback_state (feedback .reset_game) })})} )=>_) 
 
 
 window .view = <student-app>
@@ -460,6 +462,9 @@ var attempt_problem = _position => {;
             ;(new Audio (incorrect_audio)) .play ()
             ;lookbehind_state (lookbehind .attempting (latency, true)) } } } })) }
 
+var reset_game = _ => {
+  ;app_state (
+    student_app .setup (Z .Nothing, Z .Nothing, Z .Nothing)) }
 
 
 
@@ -524,7 +529,10 @@ S (_ => {;
             .then (_ => connect_room ()) } ]
       , [ feedback_as_attempt_problem
         , ({ position: _position }) => {;
-            ;attempt_problem (_position) } ] ] )=>
+            ;attempt_problem (_position) } ]
+      , [ feedback_as_reset_game
+        , _ => {
+            ;reset_game () } ] ] )=>
   so ((_=_=>
   T (just_now (feedback_state)
   ) (
