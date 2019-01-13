@@ -715,7 +715,7 @@ var connection = S (_ => {;
 			var critical = phase === 1
 			;go
 			.then (_ =>
-				!! critical //&& S .sample (connection) // why need && sample
+				!! critical
 				? io_state (io .messaging) && api (_room,
 						post (message_encoding (message .teacher_ping (S .sample (connection)))))
 				: io_state (io .heartbeat) && api (_room)
