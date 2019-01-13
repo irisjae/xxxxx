@@ -721,6 +721,10 @@ var connection = S (_ => {;
 			T (_app) ($ (ensemble_updates))) } })
 
 ;S (_ => {;
+  if (L .isDefined (app_as_setup) (app_state ())) {
+    ;ensemble_state (undefined) } })
+
+;S (_ => {;
 	;T (app_state ()
   ) (under (app_as_room) (_room => {;
 			var phase = heartbeat ()

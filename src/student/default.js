@@ -206,7 +206,7 @@ var setup_view = <setup-etc>
 
 var get_ready_view = _ => so ((_=_=>
   <get-ready-etc>
-    <div><room>已加入遊戲室{ room }</room></div>
+    <div><room>已加入遊戲室{room}</room></div>
     <div>等候遊戲開始…</div> </get-ready-etc>,
   where
   , room = T (app_state ()) (L .get (app_as_room)) )=>_)
@@ -342,11 +342,13 @@ var game_over_view = _ => so ((_=_=>
 
 
 window .view = <student-app>
-	{ !! (L .isDefined (app_as_get_ready) (app_state ()))
-		? get_ready_view
-		: !! (L .isDefined (app_as_playing) (app_state ()))
+	{ !! (L .isDefined (app_as_setup) (app_state ()))
+		? setup_view
+    :!! (L .isDefined (app_as_get_ready) (app_state ()))
+		? get_ready_view   
+		:!! (L .isDefined (app_as_playing) (app_state ()))
 		? playing_view
-		: !! (L .isDefined (app_as_game_over) (app_state ()))
+		:!! (L .isDefined (app_as_game_over) (app_state ()))
 		? game_over_view
 		: panic ('undefined app state in view') } </student-app>
 
@@ -643,7 +645,11 @@ S (_ => {;
 
 
 
-S (_ => {;
+;S (_ => {;
+  if (L .isDefined (app_as_setup) (app_state ())) {
+    ;ensemble_state (undefined) } })
+
+;S (_ => {;
 	;T (app_state ()
   ) (
   under (
