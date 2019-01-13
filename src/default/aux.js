@@ -152,12 +152,8 @@ var map_v_as_value = L .last
 var as_value_of = key => 
   [ L .elems, L .when (([ _key, _val ]) => Z_ .equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
 
-var as_maybe = [L .reread (to_maybe (_x => Z_ .Just (_x))), L .valueOr (Z_ .Nothing)]
-var as_defined = [L .reread (to_maybe (_ => Z_ .Nothing)), L .reread (Z_ .maybe (undefined) (_x => _x)), L .required (Z_ .Nothing)]
-var as_defined_ = so ((_=_=>
-  L .ifElse ($ (Z_ .is (maybe_type_$))) (as_defined) (L .identity),
-  where
-  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
+var as_maybe = [ L .rewrite (Z_ .maybe (undefined) (Z_ .I)), L .reread (to_maybe (_x => Z_ .Just (_x))), L .valueOr (Z_ .Nothing) ]
+var as_defined = [ L .required (Z_ .Nothing), L .rewrite (by (Z_ .K (Z_ .Just))), L .reread (Z_ .maybe (undefined) (Z_ .I)) ]    
 
 var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
 var complete_ = lens_shape =>
