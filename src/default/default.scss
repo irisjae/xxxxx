@@ -209,6 +209,7 @@ teacher-app > playing-etc {
       align-items: center;
       color: #f08751;
       font-size: 40px;
+      box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
       & img {
         max-width: 100%;
         max-height: 100%; } } }
@@ -490,6 +491,7 @@ student-app > playing-etc {
       font-size: 20px;
       padding: 40px 0;
       min-width: 60%;
+      box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
       & img {
         max-width: 100%; 
         max-height: 100%; } } }
