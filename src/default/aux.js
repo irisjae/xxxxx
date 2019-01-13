@@ -127,36 +127,36 @@ var default_problems = shuffle ([/*
 	[question .text ('4/6'), ['2/3', '6/9']],
 	[question .text ('5/6'), ['10/12', '15/18']],
   [question .text ('1/7'), ['2/14', '3/21']]*/
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1547414777420', '11'), ['11']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1547414777721', '4'), ['4']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1547414778338', '5'), ['5']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-04.png?1547414777938', '41'), ['41']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-05.png?1547414778416', '1'), ['1']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-06.png?1547414778705', '0'), ['0']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-07.png?1547414778841', '25'), ['25']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-08.png?1547414780092', '23'), ['23']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-09.png?1547414780000', '10'), ['10']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-10.png?1547414780190', '80'), ['80']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-11.png?1547414780644', '1'), ['1']]
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-12.png?1547414780868', '31'), ['31']]
-  [question .image ('', '20'), ['20']]
-  [question .image ('', '33'), ['33']]
-  [question .image ('', '4'), ['4']]
-  [question .image ('', '3'), ['3']]
-  [question .image ('', '300'), ['300']]
-  [question .image ('', '100'), ['100']]
-  [question .image ('', '714'), ['714']]
-  [question .image ('', '2'), ['2']]
-  [question .image ('', '456'), ['456']]
-  [question .image ('', '30'), ['30']]
-  [question .image ('', '5'), ['5']]
-  [question .image ('', '2'), ['2']]
-  [question .image ('', '51'), ['51']]
-  [question .image ('', '40'), ['40']]
-  [question .image ('', '6'), ['6']]
-  [question .image ('', '70'), ['70']]
-  [question .image ('', '21'), ['21']]
-  [question .image ('', '50'), ['50']] ])
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1547414777420', '11'), ['11']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1547414777721', '4'), ['4']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1547414778338', '5'), ['5']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-04.png?1547414777938', '41'), ['41']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-05.png?1547414778416', '1'), ['1']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-06.png?1547414778705', '0'), ['0']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-07.png?1547414778841', '25'), ['25']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-08.png?1547414780092', '23'), ['23']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-09.png?1547414780000', '10'), ['10']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-10.png?1547414780190', '80'), ['80']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-11.png?1547414780644', '1'), ['1']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-12.png?1547414780868', '31'), ['31']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-13.png?1547414781314', '20'), ['20']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-14.png?1547414781982', '33'), ['33']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-15.png?1547414782734', '4'), ['4']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-16.png?1547414782800', '3'), ['3']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-17.png?1547414783783', '300'), ['300']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-18.png?1547414783930', '100'), ['100']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-19.png?1547414784740', '714'), ['714']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-20.png?1547414784784', '2'), ['2']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-21.png?1547414785801', '456'), ['456']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-22.png?1547414785741', '30'), ['30']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-23.png?1547415673036', '5'), ['5']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-24.png?1547415672789', '2'), ['2']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-25.png?1547415672911', '51'), ['51']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-26.png?1547414787009', '40'), ['40']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-27.png?1547414787144', '6'), ['6']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-28.png?1547414786816', '70'), ['70']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-29.png?1547414787077', '21'), ['21']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-30.png?1547414787199', '50'), ['50']] ])
 var default_rules = rules .rules (10, 4, win_rule .first_bingo)
 
 var default_settings = settings .settings (default_problems, default_rules)
