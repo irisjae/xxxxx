@@ -669,7 +669,10 @@ S (_ => {;
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
-					_x => {;ensemble_state (_x)} ])) )
+					_x => {
+            var current_room = T (S .sample (app_state)) (L .get (app_as_room))
+            if (Z_ .equals (_room) (current_room)) {
+              ;ensemble_state (_x)} } ])) )
     .catch (_x => {;
       if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
         ;console .warn ('Room timed out') }

@@ -381,7 +381,7 @@ var game_over_view = _ => so ((_=_=>
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;app_state (teacher_app .setup (default_settings)) })})} )=>_) 
+          ;feedback_state (feedback .play_again) })})} )=>_) 
 
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))
@@ -721,7 +721,10 @@ var connection = S (_ => {;
 				: io_state (io .heartbeat) && api (_room)
 					.then ($ ([
 						L .get (L .inverse (data_iso (ensemble .ensemble))),
-						_x => {;ensemble_state (_x)} ])) )
+						_x => {
+              var current_room = T (S .sample (app_state)) (L .get (app_as_room))
+              if (Z_ .equals (_room) (current_room)) {              
+                ;ensemble_state (_x) } } ])) )
       .catch (_x => {;
         if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
           ;console .warn ('Room timed out') }
