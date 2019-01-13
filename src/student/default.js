@@ -315,7 +315,7 @@ var game_over_view = _ => so ((_=_=>
       <button x-custom x-for="overall-analysis" fn={ overall_analysis } ><img src={ !! (L .isDefined (lookbehind_as_overall_analysis)) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
       <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind_as_problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     <options x-for="options">
-      <button x-custom x-for="play-again"><img src={ play_again_img } /></button> </options> </game-over-etc>,
+      <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()

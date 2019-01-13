@@ -357,7 +357,7 @@ var game_over_view = _ => so ((_=_=>
           , _solved_positions = solved_positions (_board) (_past)
           , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
     <options x-for="options">
-      <button x-custom x-for="play-again"><img src={ play_again_img } /></button> </options> </game-over-etc>,
+      <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
