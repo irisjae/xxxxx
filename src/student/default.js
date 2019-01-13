@@ -2,7 +2,7 @@ var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, map_zip, api, post,
 timer, timer_since, time_intervals, 
-avatar, student, problem, choice, answer, latency, ping, position,
+avatar, student, problem, choice, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
@@ -17,6 +17,7 @@ io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
 ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
+question_as_text, question_as_image, question_as_solution, 
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 app_as_board, app_as_past, app_as_progress,
@@ -99,7 +100,7 @@ var lookbehind_state = S .data (lookbehind .nothing)
 
 
  
-var clicking = ['click']
+var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window)
 
 
 var setup_room_view = _ => so ((_=_=>
@@ -217,7 +218,10 @@ var playing_view = _ => so ((_=_=>
       <ticker-etc>
         { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
         <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
-      <question>{ _current_question }</question> </div>
+      <question>
+        { !! L .isDefined (question_as_text) (_current_question) ? _question_text
+          :!! L .isDefined (question_as_image) (_current_question) ? _question_image
+          : panic ('bad question') }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 
         <row> { T (_row) (Z_ .map (_cell =>
@@ -260,6 +264,8 @@ var playing_view = _ => so ((_=_=>
     , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , _size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
     , _current_question = T (_app) ([ current_problem, L .get (problem_as_question) ])
+    , _question_text = T (_current_question) (L .get (question_as_text))
+    , _question_image = T (_current_question) (L .get (question_as_image))
     , _solved_positions = solved_positions (_board) (_past)
     , _bingoes = bingoes (_board) (_past)
     , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))

@@ -2,7 +2,7 @@ var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
 shuffle, uuid, map_zip, api, post,
 timer, timer_since, time_intervals, 
-avatar, student, problem, choice, answer, latency, ping, position,
+avatar, student, problem, choice, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
@@ -17,6 +17,7 @@ io_as_inert, io_as_connecting, io_as_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
 ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
+question_as_text, question_as_image, question_as_solution, 
 attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
 app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 app_as_board, app_as_past, app_as_progress,
@@ -99,7 +100,7 @@ var lookbehind_state = S .data (lookbehind .nothing)
 
 
 
-var clicking = ['click']
+var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window)
 
 var setup_view = _ => so ((_=_=>
   <setup-etc>
@@ -213,7 +214,10 @@ var playing_view = _ => so ((_=_=>
         <ticker-etc>
           { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
           <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
-        <question>{ question }</question> </problem-etc>
+        <question>
+          { !! L .isDefined (question_as_text) (question) ? question_text
+            :!! L .isDefined (question_as_image) (question) ? question_image
+            : panic ('bad question') }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
@@ -286,7 +290,10 @@ var playing_view = _ => so ((_=_=>
   , size = T (app_state ()) (L .get ([ app_as_settings, settings_as_size ]))
   , game_tick = tick_state ()
   , question = T (_problem) (L .get (problem_as_question))
-  , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
+  , _question_text = T (_current_question) (L .get (question_as_text))
+  , _question_image = T (_current_question) (L .get (question_as_image)) 
+                             
+  , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fs
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
