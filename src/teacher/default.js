@@ -291,9 +291,8 @@ var playing_view = _ => so ((_=_=>
   , game_tick = tick_state ()
   , question = T (_problem) (L .get (problem_as_question))
   , question_text = T (question) (L .get (question_as_text))
-  , question_image = T (question) (L .get (question_as_image)) 
-                             
-  , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fs
+  , question_image = T (question) (L .get (question_as_image))
+  , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'

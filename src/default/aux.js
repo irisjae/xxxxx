@@ -471,12 +471,13 @@ var bingoes = _board => _past =>
 var problem_choice_matches = so ((_=_=>
   _problem => _choice => so ((_=_=>
     !! L .isDefined (question_as_text) (_question) 
-    ? Z_ .equals (normalize (_question)) (normalize (_choice))
+    ? Z_ .equals (normalize (_text)) (normalize (_choice))
     :!! L .isDefined (question_as_image) (_question) 
     ? Z_ .equals (_solution) (_choice)
     : panic ('bad question'),
     where
     , _question = T (_problem) (L .get (problem_as_question))
+    , _text = T (_question) (L .get (question_as_text))
     , _solution = T (_question) (L .get (question_as_solution)) )=>_),
   where
   , ast = data ({
