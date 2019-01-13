@@ -66,7 +66,8 @@ var teacher_app = data ({
              , boards =~ map (student) (board), pasts =~ map (student) (past) ) => teacher_app })
 
 var student_app = data ({
-	get_ready: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
+	setup: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
+	get_ready: ( room =~ room, settings =~ settings, student =~ student ) => student_app,
 	playing: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past, progress =~ progress ) => student_app,
 	game_over: ( room =~ room, settings =~ settings, student =~ student, board =~ board, past =~ past ) => student_app })
 

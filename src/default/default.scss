@@ -455,8 +455,8 @@ student-app > setup-etc {
           border-radius: 20px;
           background: #222; } } } } }
 
-  @extend %page-etc;
-
+student-app > get-ready-etc {
+  @extend %page-etc; }
 
 student-app > playing-etc {
   display: flex;

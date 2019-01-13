@@ -178,34 +178,36 @@ var setup_student_view = _ => so ((_=_=>
             ;_name_input .value = ''
             ;feedback_state (feedback .setup_student (_icon, _name)) } } )=>_))=>_)
 
+var setup_view = <setup-etc>
+  { so ((
+    define
+    , room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
+    , student = T (app_state ()) (L .get ([ app_as_student, as_maybe ])) ) =>
+    !! Z_ .isNothing (room) ?
+       !! (L .isDefined (io_as_inert
+       ) (io_state ()))
+      ? setup_room_view
+      : !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
+       ) (io_state ()))
+       ? '正在連接遊戲室…'
+       : panic ('invalid io at get ready view')
+    :!! Z_ .isNothing (student) ?
+       !! (L .isDefined (io_as_inert
+       ) (io_state ()))
+      ? setup_student_view
+      : !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
+       ) (io_state ()))
+       ? '正在加入遊戲室…'
+       : panic ('invalid io at get ready view')
+    // blank for now    
+    : [] ) } </setup-etc>
 
-var get_ready_view = <get-ready-etc>
-	{ so ((
-		take
-		, room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
-		, student = T (app_state ()) (L .get ([ app_as_student, as_maybe ])) ) =>
-		!! Z_ .isNothing (room) ?
-      !! (L .isDefined (io_as_inert
-      ) (io_state ()))
-			? setup_room_view
-			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
-      ) (io_state ()))
-      ? '正在連接遊戲室…'
-      : panic ('invalid io at get ready view')
-		:!! Z_ .isNothing (student) ?
-      !! (L .isDefined (io_as_inert
-      ) (io_state ()))
-			? setup_student_view
-			: !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
-      ) (io_state ()))
-      ? '正在加入遊戲室…'
-      : panic ('invalid io at get ready view')
-		: so ((_=_=>
-      [ <room> {'已加入遊戲室' + _room} </room>
-      , '等候遊戲開始…' ]
-      .map (_x => <div>{ _x }</div>),
-      where
-      , { _room, _student } = { _room: from_just (room), _student: from_just (student) } )=>_)) } </get-ready-etc>
+var get_ready_view = _ => so ((_=_=>
+  <get-ready-etc>
+    <div><room>已加入遊戲室{ room }</room></div>
+    <div>等候遊戲開始…</div> </get-ready-etc>,
+  where
+  , room = T (app_state ()) (L .get (app_as_room)) )=>_)
 
 var playing_view = _ => so ((_=_=>
   <playing-etc>
