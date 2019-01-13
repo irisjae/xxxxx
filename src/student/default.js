@@ -317,6 +317,7 @@ var game_over_view = _ => so ((_=_=>
   <game-over-etc>
     <title-etc>
       <a-title>Bingo</a-title> </title-etc>
+    <student><label>{ _name }</label></student> 
     <options x-for="tabs">
       <button x-custom x-for="overall-analysis" fn={ overall_analysis } ><img src={ !! (L .isDefined (lookbehind_as_overall_analysis)) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
       <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind_as_problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
@@ -332,6 +333,8 @@ var game_over_view = _ => so ((_=_=>
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
+  , _student = T (_app) (L .get (app_as_student))
+  , _name = T (_student) (L .get (student_as_name))
   , _board = T (_app) (L .get (app_as_board)) 
   , attempted_points_amount = T (_app) (L .count ([ app_as_past, past_as_points, L .elems, point_as_attempts, L .last ]))
   , solved_points_amount = T (_app) (L .count ([ app_as_past, past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
