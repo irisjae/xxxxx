@@ -601,9 +601,10 @@ S (_ => {;
   var _app = app_state ()
   if (L .isDefined (app_as_setup) (_app)) {
     under (complete_ ({ app_as_student, app_as_room, app_as_settings })) (_ => {;
-      ;app_state () })
-  }
-})
+      ;app_state (
+        T (S .sample (app_state)
+        ) (
+        student_app_setup_to_get_ready) ) }) } })
 
 ;S (last_tick => {;
   var _app = app_state () 

@@ -513,9 +513,8 @@ var connection = S (_ => {;
   ;so ((
   take
   , cases = 
-      [ [ feedback_as_setup_settings
-        , _ => {;
-            var _piece = T (S .sample (feedback_state)) (L .get (feedback_as_settings_piece)) //TODO: tidy this up
+      [ [ feedback_as_settings_piece
+        , _piece => {;
             var cleansed_piece = JSON .parse (JSON .stringify (_piece))
             ;app_state (
               T (S .sample (app_state)
