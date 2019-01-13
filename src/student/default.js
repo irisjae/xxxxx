@@ -220,7 +220,7 @@ var playing_view = _ => so ((_=_=>
         <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
       <question>
         { !! L .isDefined (question_as_text) (_current_question) ? _question_text
-          :!! L .isDefined (question_as_image) (_current_question) ? _question_image
+          :!! L .isDefined (question_as_image) (_current_question) ? <img src={ _question_image } />
           : panic ('bad question') }</question> </div>
     <div class="right-pane">
       <board> { T (_board) (Z_ .map (_row => 

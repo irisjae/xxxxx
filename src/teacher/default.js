@@ -216,7 +216,7 @@ var playing_view = _ => so ((_=_=>
           <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
         <question>
           { !! L .isDefined (question_as_text) (question) ? question_text
-            :!! L .isDefined (question_as_image) (question) ? question_image
+            :!! L .isDefined (question_as_image) (question) ? <img src={ question_image } />
             : panic ('bad question') }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>

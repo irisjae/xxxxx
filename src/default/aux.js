@@ -110,7 +110,7 @@ var ensemble = data ({
 
 
 
-var default_problems = shuffle ([
+var default_problems = shuffle ([/*
 	[question .text ('1/2'), ['2/4', '3/6']],
 	[question .text ('1/3'), ['2/6', '3/9']],
 	[question .text ('2/3'), ['4/6', '6/9']],
@@ -126,7 +126,37 @@ var default_problems = shuffle ([
 	[question .text ('3/6'), ['1/2', '2/4']],
 	[question .text ('4/6'), ['2/3', '6/9']],
 	[question .text ('5/6'), ['10/12', '15/18']],
-  [question .text ('1/7'), ['2/14', '3/21']] ])
+  [question .text ('1/7'), ['2/14', '3/21']]*/
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1547414777420', '11'), ['11']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1547414777721', '4'), ['4']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1547414778338', '5'), ['5']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-04.png?1547414777938', '41'), ['41']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-05.png?1547414778416', '1'), ['1']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-06.png?1547414778705', '0'), ['0']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-07.png?1547414778841', '25'), ['25']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-08.png?1547414780092', '23'), ['23']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-09.png?1547414780000', '10'), ['10']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-10.png?1547414780190', '80'), ['80']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-11.png?1547414780644', '1'), ['1']]
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-12.png?1547414780868', '31'), ['31']]
+  [question .image ('', '20'), ['20']]
+  [question .image ('', '33'), ['33']]
+  [question .image ('', '4'), ['4']]
+  [question .image ('', '3'), ['3']]
+  [question .image ('', '300'), ['300']]
+  [question .image ('', '100'), ['100']]
+  [question .image ('', '714'), ['714']]
+  [question .image ('', '2'), ['2']]
+  [question .image ('', '456'), ['456']]
+  [question .image ('', '30'), ['30']]
+  [question .image ('', '5'), ['5']]
+  [question .image ('', '2'), ['2']]
+  [question .image ('', '51'), ['51']]
+  [question .image ('', '40'), ['40']]
+  [question .image ('', '6'), ['6']]
+  [question .image ('', '70'), ['70']]
+  [question .image ('', '21'), ['21']]
+  [question .image ('', '50'), ['50']] ])
 var default_rules = rules .rules (10, 4, win_rule .first_bingo)
 
 var default_settings = settings .settings (default_problems, default_rules)
