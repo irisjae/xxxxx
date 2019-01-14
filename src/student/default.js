@@ -100,7 +100,7 @@ var lookbehind_state = S .data (lookbehind .nothing)
 
 
  
-var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window)
+var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
 
 
 var setup_room_view = _ => so ((_=_=>
