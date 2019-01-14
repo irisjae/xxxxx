@@ -364,13 +364,13 @@ teacher-app > game-over-etc {
       & label {
         margin: 5px;
         position: absolute;
-        transform: translate(25px,-27px);
+        transform: translate(25px,-30px);
         &:before {
           content: ' ';
           position: absolute;
           padding: 12px;
           padding-top: 30px;
-          bottom: 0;
+          bottom: -1px;
           left: -30px;
           background-size: contain;
           background-repeat: no-repeat;
@@ -585,7 +585,7 @@ student-app > game-over-etc {
     height: 100px;
     & label {
       font-size: 2em;
-      transform: translate(100px, 20px);
+      transform: translate(100px, 22px);
       display: flex; }
     &:after {
       content: ' ';
