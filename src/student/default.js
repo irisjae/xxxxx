@@ -60,6 +60,10 @@ var lookbehind = data ({
 	overall_analysis: () => lookbehind,
 	problems_analysis: () => lookbehind })
 
+var ambient = data ({
+  no_background_music: () => ambient,
+  background_music: () => ambient })
+
 
 var feedback_as_setup_room = data_iso (feedback .setup_room)
 var feedback_as_setting_up_student = data_iso (feedback .setting_up_student)
@@ -79,6 +83,9 @@ var lookbehind_as_room = data_lens (lookbehind .bad_room) .room
 var lookbehind_as_since = data_lens (lookbehind .attempting) .since
 var lookbehind_as_blocked = data_lens (lookbehind .attempting) .blocked
 
+var ambient_as_no_background_music = data_iso (ambient .no_background_music)
+var ambient_as_background_music = data_iso (ambient .background_music)
+
 
 
 
@@ -91,6 +98,7 @@ var ensemble_state = S .data (undefined)
 
 var feedback_state = temporal ()
 var lookbehind_state = S .data (lookbehind .nothing)
+var ambient_state = S .data (ambient .no_background_music)
 
 
 

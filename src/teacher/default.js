@@ -64,6 +64,10 @@ var lookbehind = data ({
 	students_analysis: () => lookbehind,
 	problems_analysis: () => lookbehind })
 
+var ambient = data ({
+  no_background_music: () => ambient,
+  background_music: () => ambient })
+
 var feedback_as_start = data_iso (feedback .start)
 var feedback_as_setup_settings = data_iso (feedback .setup_settings)
 var feedback_as_play = data_iso (feedback .play)
@@ -79,6 +83,9 @@ var lookbehind_as_show_results = data_iso (lookbehind .show_results)
 var lookbehind_as_students_analysis = data_iso (lookbehind .students_analysis)
 var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
 
+var ambient_as_no_background_music = data_iso (ambient .no_background_music)
+var ambient_as_background_music = data_iso (ambient .background_music)
+
 
 
 
@@ -93,6 +100,7 @@ var ensemble_state = S .data (ensemble .nothing)
 //var feedback_state = S .data (temporal ())
 var feedback_state = temporal ()
 var lookbehind_state = S .data (lookbehind .nothing)
+var ambient_state = S .data (ambient .no_background_music)
 
 
 
