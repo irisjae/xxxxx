@@ -110,7 +110,7 @@ var ensemble = data ({
 
 
 
-var default_problems = shuffle ([/**/
+var default_problems = shuffle ([/*
 	[question .text ('1/2'), ['2/4', '3/6']],
 	[question .text ('1/3'), ['2/6', '3/9']],
 	[question .text ('2/3'), ['4/6', '6/9']],
