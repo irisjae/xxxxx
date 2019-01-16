@@ -3,7 +3,7 @@ var R = require ('ramda')
 var S = require ('s-js')
 var sanc = require ('sanctuary')
 var Z$ = require ('sanctuary-def')
-var Z = sanc .create ({ checkTypes: false, env: sanc .env })
+var Z = sanc .create ({ checkTypes: false, env: [] })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 //report to adam haile
