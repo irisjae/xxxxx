@@ -178,9 +178,8 @@ var as_defined_ = so ((_=_=>
 
 var as_complete = L .when (L .none (Z_ .equals (undefined)) (L .values))
 var complete_ = lens_shape =>
-  [ L .reread ($ ([Z_ .flip (T (lens_shape) (Z_ .map (L .get))), L .get (as_complete)]))
-  , L .identity // implement rewrite
-  ]
+  [ L .pick (lens_shape)
+  , L .when(L .none (Z_ .equals (undefined)) (L .props (L .get (L .keys) (lens_shape)))) ]
 
 
 var app_as_setup = data_iso (teacher_app .setup)

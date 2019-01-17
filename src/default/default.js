@@ -201,6 +201,8 @@ var n_reducer = binary => n =>
 	: _a => _b =>
 			n_reducer (binary) (n - 1) (binary (_a) (_b))
 	
+var l_sum = traversals =>
+  [ L .pick (L .get ([ L .indexed,  ]) (traversals)), L .values ]
 	
 	
 	
