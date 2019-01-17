@@ -16,7 +16,7 @@ var T = _x => _fn_obj =>
 	? !! (Z_ .equals ([]) (_fn_obj))
 		? _x
 		: T (T (_x) (R .head (_fn_obj))) (R .tail (_fn_obj))
-	: !! //Z_ .is (Z$ .AnyFunction) (_fn_obj)
+	: !! _x .constructor === Function //Z_ .is (Z$ .AnyFunction) (_fn_obj)
 		? _fn_obj (_x)
 		: panic ('T requires a function as its input')
 var $ = form =>
@@ -24,6 +24,9 @@ var $ = form =>
     T (x) (form)
 var apply = fn => arg_list =>
   fn .apply (null, arg_list)
+
+var I = _x => _x // = L .get ([]) = Z_ .I
+var K = _x => _ => _x // = L .set ([]) = Z_ .K
 
 
 
@@ -63,7 +66,7 @@ var so = fn_form =>
 	? fn_form () ()
 	: fn_form ()
 var by = _meta_fn => x => T (x) (_meta_fn (x))
-var and_by = $ ([ by, Z .flip ])
+//var and_by = $ ([ by, Z .flip ])
 var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
 var go = Promise .resolve ()
 var never = new Promise (_ => {})
@@ -176,8 +179,8 @@ var data_iso = data =>
 			data .apply (null, list) ) =>
 		L .iso (read) (write))
 */
-var data_kind = data =>
-	R .head (Z_ .keys (data))
+var data_kind = by (data =>
+	L .get ([ L .keys, L .first ]))
 
 var focused_iso_ = lens => point => 
   L .iso (L .get (lens), _x => L .set (lens) (_x) (point))
@@ -237,7 +240,7 @@ var maybe_all = _x =>
 			Z_ .map (R .fromPairs) ])
 	: undefined
 */
-var maybe_all = Z_ .sequence (Z .Maybe)
+//var maybe_all = Z_ .sequence (Z .Maybe)
 /* var to_maybe = so ((_=_=>
   default_fn => _x => 
     !! (Z_ .is (maybe_type_$)) (_x)
@@ -384,11 +387,11 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
 	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-	so, by, and_by, under,
+	so, by, under,
 	go, never, panic, panic_on,
   just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
 	n_reducer, 
-	map_defined_, map_defined, from_just, maybe_all, 
+	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle }

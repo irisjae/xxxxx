@@ -1,12 +1,12 @@
 var {
 	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-	so, by, and_by, under,
+	so, by, under,
 	go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
 	n_reducer, 
-	map_defined_, map_defined, from_just, maybe_all, 
+	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle
 } = window .stuff
 
@@ -176,7 +176,7 @@ var as_defined_ = so ((_=_=>
   where
   , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
 
-var as_complete = L .reread (_x => !! R .all (_x => _x !== undefined) (Z_ .values (_x)) ? _x : undefined)
+var as_complete = L .reread (L .get (_x => !! L .none (Z_ .equals (undefined)) (L .values) (_x) ? _x : undefined)
 var complete_ = lens_shape =>
   [ L .reread ($ ([Z_ .flip (T (lens_shape) (Z_ .map (L .get))), L .get (as_complete)]))
   , L .identity // implement rewrite
