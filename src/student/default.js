@@ -549,18 +549,18 @@ S (_ => {;
   ) (
   L .transform (
     l_sum (
-      [ L .chain (({ room: _room }) => {;
-          ;setup_room (_room) }
+      [ L .chain (K (({ room: _room }) => {;
+          ;setup_room (_room) })
         ) (feedback_as_setup_room)
-      , L .chain (({ icon: _icon, name: _name }) => {;
+      , L .chain (K (({ icon: _icon, name: _name }) => {;
           ;go
           .then (_ => setup_student (_icon) (_name))
-          .then (_ => connect_room ()) }
+          .then (_ => connect_room ()) })
         ) (feedback_as_setup_student)
-      , L .chain (({ position: _position }) => {;
-          ;attempt_problem (_position) }
+      , L .chain (K (({ position: _position }) => {;
+          ;attempt_problem (_position) })
         ) (feedback_as_attempt_problem)
-      , L .chain (reset_game
+      , L .chain (K (reset_game)
         ) (feedback_as_reset_game) ] ))) })
 
 

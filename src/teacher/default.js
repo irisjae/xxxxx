@@ -534,23 +534,22 @@ S (_ => {;
   ) (
   L .transform (
     l_sum (
-      [ L .chain (_piece => {;
+      [ L .chain (K (_piece => {;
           var cleansed_piece = JSON .parse (JSON .stringify (_piece))
           ;app_state (
             T (S .sample (app_state)
             ) (
-            L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) }
+            L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) })
         ) (feedback_as_settings_piece)
-      , L .chain (_ => {;
-          ;get_room (T (Math .random ()) ([
-            _x => _x * 10000,
-            _x => Math .floor (_x) ])) .catch (_ => {}) }
+      , L .chain (K (_ => {;
+          var _room = Math .floor (10000 * Math .random ())
+          ;get_room (_room) })
         ) (feedback_as_start)
-      , L .chain (start_playing
+      , L .chain (K (start_playing)
         ) (feedback_as_play)
-      , L .chain (end_game
+      , L .chain (K (end_game)
         ) (feedback_as_end)
-      , L .chain (reset_game
+      , L .chain (K (reset_game)
         ) (feedback_as_reset) ] ))) })
 
 
@@ -561,39 +560,6 @@ S (_ => {;
 		;flowing_state (true) }
 	else if (L .isDefined (app_as_game_over) (app_state ())) {
 		;flowing_state (false) } })
-// This is wrong, signal should be sent by timer; the sent message in the ensemble is the casual cause which triggers app progress
-/*
-;S (last_progress => {;
-	var _app = app_state ()
-  var _room = L .get (app_as_room) (_app)
-  var _progress = L .get (app_as_progress) (_app)
-	if (L .isDefined (app_as_playing) (_app)) {
-    if (not (equals (_progress) (last_progress))) {
-      ;go
-      .then (_ =>
-        io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_progress (_progress)))) )
-      .catch (_e => {;
-        ;console .error (_e) })
-      .then (_ => {;
-        ;io_state (io .inert) }) } }
-  return _progress } )
-*/
-// This should trigger everything
-/*
-    var time_limit = T (playing_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-    game_clock .clear ()
-    ;game_clock .add (timesup_problem, time_limit)
-    ;T (Z_ .range (0) (time_limit + 1)) (R .forEach (t => {;
-      ;game_clock .add (_ => {;game_tick_sampler (t)}, t) }))
-
-    if (start > now) {
-      ;app_state (playing_app) }
-    else {
-      ;setTimeout (_ => {;
-        ;app_state (playing_app) }
-      , start - now) } 
-*/
 
 ;S (last_tick => {;
   var _app = app_state () 
@@ -678,21 +644,6 @@ S (_ => {;
   
 
 
-    /*else if (L .isDefined (app_as_playing) (_app) && _progress_step != -1) {
-      ;app_state (
-        T (_app
-        ) (
-        L .set (app_as_progress) (_progress))) }
-    else if (L .isDefined (app_as_playing) (_app) && _progress_step == -1) {
-      ;app_state (
-        T (_app
-        ) (
-        teacher_app_playing_to_game_over)) }*/ 
-//  ;app_state (
-//    teacher_app_get_ready_to_playing (schedule_start (S .sample (ensemble_state))) (S .sample (app_state)))
-//  ;app_state (
-//    teacher_app_playing_to_game_over (S .sample (app_state))) } 
-    
 ;S (_ => {;
 	var _app = S .sample (app_state)
 	var _ensemble = ensemble_state ()
