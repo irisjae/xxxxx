@@ -708,11 +708,11 @@ S (_ => {;
             T (app_state ()
             ) (
             L .get (
-            [ complete_ (
-              { _board: app_as_board
-              , _past: app_as_past })
-            , L .valueOr (
-              { not_playing: 'not playing' }) ])) )=>_)
+              L .choice (
+                complete_ (
+                  { _board: app_as_board
+                  , _past: app_as_past }),
+                K ({ not_playing: 'not playing' }) ))) )=>_)
 			: io_state (io .heartbeat) && api (_room)
 				.then ($ ([
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
