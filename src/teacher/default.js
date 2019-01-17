@@ -528,45 +528,29 @@ var connection = S (_ => {;
 
 //TODO: add guard to warn against depending on datas other than feedback
 // replace with lens control structure
-;S (_ => {;
-  ;so ((
-  take
-  , cases = 
-      [ [ feedback_as_settings_piece
-        , _piece => {;
-            var cleansed_piece = JSON .parse (JSON .stringify (_piece))
-            ;app_state (
-              T (S .sample (app_state)
-              ) (
-              L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) } ]
-      , [ feedback_as_start
-        , _ => {;
-            ;get_room (T (Math .random ()) ([
-              _x => _x * 10000,
-              _x => Math .floor (_x) ])) .catch (_ => {}) } ]
-      , [ feedback_as_play
-        , _ => {;
-            ;start_playing () } ]
-      , [ feedback_as_end
-        , _ => {;
-            ;end_game () } ]
-      , [ feedback_as_reset
-        , _ => {;
-            ;reset_game () } ] ] )=>
-  so ((_=_=>
+S (_ => {;
   T (just_now (feedback_state)
   ) (
-  action),
-  where
-  , action = 
-      Z_ .flip (T (cases) (Z_ .map (_case => so ((_=_=>
-        _feedback => {;
-          var result = L .get (predicate) (_feedback)
-          if (result) {
-            ;action (result) } },
-        where
-        , predicate = _case [0]
-        , action = _case [1] )=>_) ))) )=>_)) })
+  L .transform (
+    l_sum (
+      [ L .chain (_piece => {;
+          var cleansed_piece = JSON .parse (JSON .stringify (_piece))
+          ;app_state (
+            T (S .sample (app_state)
+            ) (
+            L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) }
+        ) (feedback_as_settings_piece)
+      , L .chain (_ => {;
+          ;get_room (T (Math .random ()) ([
+            _x => _x * 10000,
+            _x => Math .floor (_x) ])) .catch (_ => {}) }
+        ) (feedback_as_start)
+      , L .chain (start_playing
+        ) (feedback_as_play)
+      , L .chain (end_game
+        ) (feedback_as_end)
+      , L .chain (reset_game
+        ) (feedback_as_reset) ] ))) })
 
 
 ;S (_ => {;

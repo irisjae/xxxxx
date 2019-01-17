@@ -544,36 +544,24 @@ var connection = S (_ => {;
 
 
 S (_ => {;
-  L .forEach (
-    l_sum (
-      [ [ L .when (feedback_as_setup_room)
-        , ({ room: _room }) => {;
-            ;setup_room (_room) } ]
-      , [ feedback_as_setup_student
-        , ({ icon: _icon, name: _name }) => {;
-            ;go
-            .then (_ => setup_student (_icon) (_name))
-            .then (_ => connect_room ()) } ]
-      , [ feedback_as_attempt_problem
-        , ({ position: _position }) => {;
-            ;attempt_problem (_position) } ]
-      , [ feedback_as_reset_game
-        , _ => {
-            ;reset_game () } ] ] )=>
-  so ((_=_=>
   T (just_now (feedback_state)
   ) (
-  action),
-  where
-  , action = 
-      Z_ .flip (T (cases) (Z_ .map (_case => so ((_=_=>
-        _feedback => {;
-          var result = L .get (predicate) (_feedback)
-          if (result) {
-            ;action (result) } },
-        where
-        , predicate = _case [0]
-        , action = _case [1] )=>_) ))) )=>_)) })
+  L .transform (
+    l_sum (
+      [ L .chain (({ room: _room }) => {;
+          ;setup_room (_room) }
+        ) (feedback_as_setup_room)
+      , L .chain (({ icon: _icon, name: _name }) => {;
+          ;go
+          .then (_ => setup_student (_icon) (_name))
+          .then (_ => connect_room ()) }
+        ) (feedback_as_setup_student)
+      , L .chain (({ position: _position }) => {;
+          ;attempt_problem (_position) }
+        ) (feedback_as_attempt_problem)
+      , L .chain (
+          ;reset_game () }
+        ) (feedback_as_reset_game) ] ))) })
 
 
 
