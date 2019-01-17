@@ -129,7 +129,7 @@ var data_lens = cons_memoize (cons =>
 	where
 	, faux_lens = __data_lens .get (cons)
 	, $$X=
-    !! not ((Z .is (Z$ .AnyFunction) (cons))) ? 'nothing'
+    !! not (Z .is (Z$ .AnyFunction) (cons)) ? 'nothing'
     : so ((
       define
       , marked_template = so ((_=_=> 
@@ -153,11 +153,11 @@ var data_iso = cons_memoize (cons =>
       where
       , cons_length = __data_length .get (cons)
       , markers = Z_ .range (1) (cons_length + 1) )=>_)
-	, marked_factors = T (marked_template) ([ L .get ([ L .values, as_sole ]), R .invert ])
+	, marked_factors = T (marked_template) ([ R .values, sole, R .invert ])
 	, ordered_factors = T (marked_factors) (L .collect ([ L .keyed, R .sortBy (L .get (L .first)), L .elems, L .last ]))
-  , order_record = record => T (ordered_factors) (L .modify (L .elems) (_factor => record [_factor]))
+  , record_to_factors = record => T (ordered_factors) (L .modify (L .elems) (_factor => record [_factor]))
 	, cons_label = sole (R .keys (marked_template))
-	, faux_lens = L .iso (L .get (cons_label)) ($ ([ order_record, cons_fn ]))
+	, faux_lens = L .iso (L .get (cons_label)) ($ ([ record_to_factors, cons_fn ]))
 	, $$X=
     T (ordered_factors) (R .forEach (_x => {;
       ;faux_lens [_x] = [ faux_lens, _x ] })) )=>_))
