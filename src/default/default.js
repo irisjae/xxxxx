@@ -155,7 +155,7 @@ var data_iso = cons_memoize (cons =>
       , markers = Z_ .range (1) (cons_length + 1) )=>_)
 	, marked_factors = T (marked_template) ([ R .values, sole, R .invert ])
 	, ordered_factors = T (marked_factors) (L .collect ([ L .keyed, R .sortBy (L .get (L .first)), L .elems, L .last ]))
-  , record_to_factors = record => T (ordered_factors) (L .modify (L .elems) (_factor => record [_factor]))
+  , record_to_factors = record => T (ordered_factors) (L .modify (L .elemsTotal) (_factor => record [_factor]))
 	, cons_label = sole (R .keys (marked_template))
 	, faux_lens = L .iso (L .get (cons_label)) ($ ([ record_to_factors, cons_fn ]))
 	, $$X=
