@@ -132,14 +132,15 @@ var data_lens = cons_memoize (cons =>
     !! not ((Z .is (Z$ .AnyFunction) (cons))) ? 'nothing'
     : so ((
       define
-      , template = so ((_=_=> so ((_=_=>
+      , template = so ((_=_=> 
           T (cons) ([ apply, T (factors) ]),
           where
-          , factors = R .range (1, cons_length + 1) )=>_),
-          where
-          , cons_length = __data_length .get (cons) )=>_)
+          , cons_length = __data_length .get (cons)
+          , factors = Z_ .range (1) (cons_length + 1) )=>_)
       , records = T (template) ([ R .values, sole, R .keys ]) )=>
-      T (records) (R .forEach (_x => {{ ;faux_lens [_x] = [faux_lens, _x] }})) ))=>_))
+      T (records
+      ) (
+      R .forEach (_x => {;faux_lens [_x] = [faux_lens, _x]})) ))=>_))
 
 var data_iso = cons_memoize (cons =>
 	so ((_=_=>
@@ -147,14 +148,13 @@ var data_iso = cons_memoize (cons =>
 	where
 	, template =
       !! not (Z .is (Z$ .AnyFunction) (cons)) ? cons
-      : so ((_=_=> so ((_=_=>
+      : so ((_=_=> 
         T (cons) ([ apply, T (factors) ]),
         where
-        , factors = R .range (1, cons_length + 1) )=>_),
-        where
-        , cons_length = __data_length .get (cons) )=>_)
+        , cons_length = __data_length .get (cons)
+        , factors = Z_ .range (1) (cons_length + 1) )=>_)
 	, inverted_template = T (template) ([ R .values, sole, R .invert ])
-	, ordered_factors = T (inverted_template) ([ R .toPairs, R .sortBy (R .head), R .map (R .last) ])
+	, ordered_factors = T (inverted_template) (L .collect ([ L .keyed, R .sortBy (L .get (L .first)), L .elems, L .last ]))
 	, cons_label = sole (R .keys (template))
 	, read = _x =>
       L .get (cons_label) (_x)
