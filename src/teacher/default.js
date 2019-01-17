@@ -191,16 +191,16 @@ var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
 		<room>遊戲室編號：{ _room }</room>
     <students-etc>
-      <label>人數：{ Z_ .size (_students) }</label>
+      <label>人數：{ R .length (_students) }</label>
       <students>
         { T (_students
           ) (
-          Z_ .map (under (student_as_student
+          R .map (under (student_as_student
           ) (({ icon: _icon, name: _name }) => 
             <student x-icon={
               !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
             >{ _name }</student> ))) } </students> </students-etc>
-    { !! not (Z_ .size (_students) === 0)
+    { !! not (R .length (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
 				: [] } </get-ready-etc>,
 	where
@@ -245,14 +245,14 @@ var playing_view = _ => so ((_=_=>
               <label x-icon={
                 !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
               >{ _name }</label>
-              <board> { T (_board) (Z_ .map (_row => 
-                <row> { T (_row) (Z_ .map (_cell => so ((_=_=>
+              <board> { T (_board) (R .map (_row => 
+                <row> { T (_row) (R .map (_cell => so ((_=_=>
                   !! _cell_solved ? <cell x-solved />
                   : <cell />,
                   where
                   , _cell_position = T (_cell) (L .get (cell_as_position))
-                  , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-                <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> 
+                  , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+                <bingo> { T (_bingoes) (R .map (_pattern => so ((_=_=> 
                   <line x-shape={ shape } style={{ top: top, left: left }} />,
                   where
                   , [ first_y, first_x ] = L .get (L .first) (_pattern)
@@ -260,8 +260,8 @@ var playing_view = _ => so ((_=_=>
                   , shape =
                       !! equals (first_x) (last_x) ? 'vertical'
                       :!! equals (first_y) (last_y) ? 'horizontal'
-                      :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
-                      :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
+                      :!! first_x < last_x ? 'diagonal-down'
+                      :!! first_x > last_x ? 'diagonal-up'
                       : panic ('bad pattern')
                   , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
                           :!! equals (shape) ('vertical') ? '5%'
@@ -344,14 +344,14 @@ var game_over_view = _ => so ((_=_=>
             <label x-icon={
               !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
             >{ _name }</label>
-            <board> { T (_board) (Z_ .map (_row => 
-              <row> { T (_row) (Z_ .map (_cell => so ((_=_=>
+            <board> { T (_board) (R .map (_row => 
+              <row> { T (_row) (R .map (_cell => so ((_=_=>
                 !! _cell_solved ? <cell x-solved />
                 : <cell />,
                 where
                 , _cell_position = T (_cell) (L .get (cell_as_position))
-                , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-              <bingo> { T (_bingoes) (Z_ .map (_pattern => so ((_=_=> 
+                , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+              <bingo> { T (_bingoes) (R .map (_pattern => so ((_=_=> 
                 <line x-shape={ shape } style={{ top: top, left: left }} />,
                 where
                 , [ first_y, first_x ] = L .get (L .first) (_pattern)
@@ -359,8 +359,8 @@ var game_over_view = _ => so ((_=_=>
                 , shape =
                     !! equals (first_x) (last_x) ? 'vertical'
                     :!! equals (first_y) (last_y) ? 'horizontal'
-                    :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
-                    :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
+                    :!! first_x < last_x ? 'diagonal-down'
+                    :!! first_x > last_x ? 'diagonal-up'
                     : panic ('bad pattern')
                 , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
                         :!! equals (shape) ('vertical') ? '5%'
@@ -579,7 +579,7 @@ var connection = S (_ => {;
   if (equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
       if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-        ;end_game () } } }
+        ;setTimeout (_=>{;end_game ()}, 8000) } } }
 	return _app })
 
 
@@ -661,7 +661,7 @@ var connection = S (_ => {;
     L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
     && T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
   
-  var ensemble_updates = $ (Z_ .join
+  var ensemble_updates = $ (R .flatten
   ) ( 
   [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
     ? [ L .set (app_as_students) (_ensemble_students) ] : []
