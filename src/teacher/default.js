@@ -168,7 +168,7 @@ var setup_view = _ => so ((_=_=>
           <counter><img src={ data_img } /></counter>
           <next fn={ feedback_next }><img src={ next_img } /></next></control> ],
       where
-      , case_list_length = Z_ .size (case_v_img_list)
+      , case_list_length = R .length (case_v_img_list)
       , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
       , data_img = T (case_v_img_list) (L .get ([ L .find (under (L .first) (equals (_case))), L .last ]))
       , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (equals (_case)))))

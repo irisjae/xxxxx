@@ -196,7 +196,7 @@ var setup_view = <setup-etc>
     define
     , room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
     , student = T (app_state ()) (L .get ([ app_as_student, as_maybe ])) ) =>
-    !! Z_ .isNothing (room) ?
+    !! equals (Z_ .Nothing) (room) ?
        !! (L .isDefined (io_as_inert
        ) (io_state ()))
       ? setup_room_view
@@ -204,7 +204,7 @@ var setup_view = <setup-etc>
        ) (io_state ()))
        ? '正在連接遊戲室…'
        : panic ('invalid io at get ready view')
-    :!! Z_ .isNothing (student) ?
+    :!! equals (Z_ .Nothing) (student) ?
        !! (L .isDefined (io_as_inert
        ) (io_state ()))
       ? setup_student_view
@@ -233,15 +233,15 @@ var playing_view = _ => so ((_=_=>
           :!! L .isDefined (question_as_image) (_current_question) ? <img src={ _question_image } />
           : panic ('bad question') }</question> </div>
     <div class="right-pane">
-      <board> { T (_board) (Z_ .map (_row => 
-        <row> { T (_row) (Z_ .map (_cell =>
+      <board> { T (_board) (R .map (_row => 
+        <row> { T (_row) (R .map (_cell =>
           so ((_=_=>
           !! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
           : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
-          , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+          , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
         <bingo> { T (_bingoes) ([ L .collect (L .chain (K (L .elems)) ([ L .elems, (_pattern, nth) => so ((
            define
            , [ first_y, first_x ] = L .get (L .first) (_pattern)
@@ -249,10 +249,10 @@ var playing_view = _ => so ((_=_=>
            , shape =
                !! equals (first_x) (last_x) ? 'vertical'
                :!! equals (first_y) (last_y) ? 'horizontal'
-               :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
-               :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
+               :!! first_x < last_x ? 'diagonal-down'
+               :!! first_x > last_x ? 'diagonal-up'
                : panic ('bad pattern') )=>
-           T (Z_ .range (1) (5 + 1)) (Z_ .map (_i => so ((_=_=>
+           T (Z_ .range (1) (5 + 1)) (R .map (_i => so ((_=_=>
              <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,
              where
              , left = !! equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
@@ -265,7 +265,7 @@ var playing_view = _ => so ((_=_=>
                         :!! equals (_i) (3) ? 'n'
                         :!! equals (_i) (4) ? 'g'
                         :!! equals (_i) (5) ? 'o'
-                        : panic ('bad letter') )=>_) )) ) ])), Z_ .reverse ]) } </bingo> </board> </div> </playing-etc>,
+                        : panic ('bad letter') )=>_) )) ) ])), R .reverse ]) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))
@@ -478,11 +478,11 @@ var attempt_problem = _position => {;
           if (problem_choice_matches (_problem) (_choice)) {
             var bingo_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'
             var correct_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'
-            var _solved_positions = Z_ .append (_position) (solved_positions (_board) (L .get (app_as_past) (S .sample (app_state))))
+            var _solved_positions = R .append (_position) (solved_positions (_board) (L .get (app_as_past) (S .sample (app_state))))
             var _size = T (S .sample (app_state)) (L .get ([ app_as_settings, settings_as_size ]))
             var _local_patterns = T (local_patterns (size_patterns (_size))
               ) (
-              L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem)))) ]))
+              L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions) (R .flip (R .includes)))) ]))
             ;(new Audio (correct_audio)) .play ()
             if (L .isDefined (L .elems) (_local_patterns)) {
               ;(new Audio (bingo_audio)) .play () } }
