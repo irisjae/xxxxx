@@ -242,7 +242,7 @@ var playing_view = _ => so ((_=_=>
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
           , _cell_solved = Z_ .elem (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-        <bingo> { T (_bingoes) ([ L .collect (L .chain (Z_ .K (L .elems)) ([ L .elems, (_pattern, nth) => so ((
+        <bingo> { T (_bingoes) ([ L .collect (L .chain (K (L .elems)) ([ L .elems, (_pattern, nth) => so ((
            define
            , [ first_y, first_x ] = L .get (L .first) (_pattern)
            , [ last_y, last_x ] = L .get (L .last) (_pattern)
@@ -630,14 +630,15 @@ S (_ => {;
         ) (
         student_app_setup_to_get_ready) ) })) } })
 
-;S (last_tick => {;
+;S (last_tick_left => {;
   var _app = app_state () 
   var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   
   if (L .isDefined (app_as_playing) (_app)) {
     //HACK
     var tick = (tick_state (), tick_fn ())
-    if (tick == time_limit - 3) {
+    var tick_left = time_limit - tick
+    if (tick_left == 3 && not (equals (tick_left) (last_tick_left))) {
       var countdown_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320'
       ;(new Audio (countdown_audio)) .play () }
     if (tick >= time_limit) {
