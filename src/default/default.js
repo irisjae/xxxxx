@@ -128,47 +128,39 @@ var data_lens = cons_memoize (cons =>
 	faux_lens,
 	where
 	, faux_lens = __data_lens .get (cons)
-	, $$1=
+	, $$X=
     !! not ((Z .is (Z$ .AnyFunction) (cons))) ? 'nothing'
     : so ((
       define
-      , template = so ((_=_=> 
-          T (cons) ([ apply, T (factors) ]),
+      , marked_template = so ((_=_=> 
+          T (cons) ([ apply, T (markers) ]),
           where
           , cons_length = __data_length .get (cons)
-          , factors = Z_ .range (1) (cons_length + 1) )=>_)
-      , records = T (template) ([ R .values, sole, R .keys ]) )=>
-      T (records
-      ) (
-      R .forEach (_x => {;faux_lens [_x] = [faux_lens, _x]})) ))=>_))
+          , markers = Z_ .range (1) (cons_length + 1) )=>_)
+      , factors = T (marked_template) ([ R .values, sole, R .keys ]) )=>
+      T (factors) (R .forEach (_x => {;
+        ;faux_lens [_x] = [ faux_lens, _x ]})) ))=>_))
 
 var data_iso = cons_memoize (cons =>
 	so ((_=_=>
 	faux_lens,
 	where
-  //, cons_as_fn = 
-	, template =
+  , cons_fn = factors =>
       !! not (Z .is (Z$ .AnyFunction) (cons)) ? cons
-      : so ((_=_=> 
-        T (cons) ([ apply, T (factors) ]),
-        where
-        , cons_length = __data_length .get (cons)
-        , factors = Z_ .range (1) (cons_length + 1) )=>_)
-	, inverted_template = T (template) ([ L .get ([ L .values, as_sole ]), R .invert ])
-	, ordered_factors = T (inverted_template) (L .collect ([ L .keyed, R .sortBy (L .get (L .first)), L .elems, L .last ]))
-  , order_record = record => T (ordered_factors) (L .modify () (_factor => record [_factor]))
-	, cons_label = sole (R .keys (template))
-	, read = _x =>
-      L .get (cons_label) (_x)
-	, write = record =>
-      !! not (Z .is (Z$ .AnyFunction) (cons)) ? cons
-      : so ((_=_=>
-        T (cons) ([ apply, T (record_list) ]),
-        where
-        , record_list = ordered_factors .map (_x => record [_x]) )=>_)
-	, faux_lens = L .iso (read) (write)
-	, $$X = T (ordered_factors) (R .forEach (_x => {{
-      ;faux_lens [_x] = [ faux_lens, _x ] }})) )=>_))
+      : T (cons) ([ apply, T (factors) ])
+	, marked_template = so ((_=_=> 
+      cons_fn (markers),
+      where
+      , cons_length = __data_length .get (cons)
+      , markers = Z_ .range (1) (cons_length + 1) )=>_)
+	, marked_factors = T (marked_template) ([ L .get ([ L .values, as_sole ]), R .invert ])
+	, ordered_factors = T (marked_factors) (L .collect ([ L .keyed, R .sortBy (L .get (L .first)), L .elems, L .last ]))
+  , order_record = record => T (ordered_factors) (L .modify (L .elems) (_factor => record [_factor]))
+	, cons_label = sole (R .keys (marked_template))
+	, faux_lens = L .iso (L .get (cons_label)) ($ ([ order_record, cons_fn ]))
+	, $$X=
+    T (ordered_factors) (R .forEach (_x => {;
+      ;faux_lens [_x] = [ faux_lens, _x ] })) )=>_))
 /*
 var data_iso = data =>
 	where ((
