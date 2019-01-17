@@ -164,22 +164,6 @@ var default_settings = settings .settings (default_problems, default_rules)
 
 
 //--------------------LENSES--------------------
-
-var pair_as_v = so ((_=_=>
-  L .iso (
-  _pair => !! Z_ .is (pair_type_$) (_pair) ? [ Z_ .fst (_pair), Z_ .snd (_pair) ] : undefined,
-  _v => !! Z_ .and (Z_ .is (array_type_$) (_v), Z_ .size (_v) === 2) ? Z_ .Pair (_v [0]) (_v [1]) : undefined),
-  where
-  , pair_type_$ = Z_ .PairType (Z$ .Any) (Z$ .Any)
-  , array_type_$ = Z$ .Array (Z$ .Any) )=>_)
-var pair_as_list = pair_as_v
-
-//var pair_as_first = [ L .ifElse ($ (Z_ .is (Z .PairType (Z$ .Any) (Z$ .Any)))) (L .reread (Z_ .fst)) (L .zero),  ]
-var pair_as_first = [ pair_as_list, L .first ]
-var pair_as_second = [ pair_as_list, L .last ]
-
-var list_as_pair = L .getInverse (pair_as_v)
-
 var map_v_as_key = L .first
 var map_v_as_value = L .last
 var as_value_of = key => 
