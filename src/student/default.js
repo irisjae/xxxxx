@@ -544,8 +544,8 @@ var connection = S (_ => {;
 
 
 
-S (_ => {;
-  T (just_now (feedback_state)
+;S (_ => {;
+  ;T (just_now (feedback_state)
   ) (
   L .transform (
     l_sum (

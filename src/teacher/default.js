@@ -529,8 +529,8 @@ var connection = S (_ => {;
 
 //TODO: add guard to warn against depending on datas other than feedback
 // replace with lens control structure
-S (_ => {;
-  T (just_now (feedback_state)
+;S (_ => {;
+  ;T (just_now (feedback_state)
   ) (
   L .transform (
     l_sum (
