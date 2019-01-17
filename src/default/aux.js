@@ -176,7 +176,7 @@ var as_defined_ = so ((_=_=>
   where
   , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
 
-var as_complete = L .reread (L .get (_x => !! L .none (Z_ .equals (undefined)) (L .values) (_x) ? _x : undefined)
+var as_complete = L .when (L .none (Z_ .equals (undefined)) (L .values))
 var complete_ = lens_shape =>
   [ L .reread ($ ([Z_ .flip (T (lens_shape) (Z_ .map (L .get))), L .get (as_complete)]))
   , L .identity // implement rewrite
@@ -823,8 +823,7 @@ window .stuff = { ...window .stuff,
 	teacher_app, student_app,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
-  pair_as_v, pair_as_list, pair_as_first, pair_as_second,
-  list_as_pair, map_v_as_key, map_v_as_value, as_value_of,
+  map_v_as_key, map_v_as_value, as_value_of,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 	settings_as_problems, settings_as_rules,
