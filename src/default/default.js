@@ -12,13 +12,13 @@ var Surplus = require ('surplus')
 //;Surplus .S .effect = S
 var memoize = require ('fast-memoize')
 var T = _x => _fn_obj =>
-	!! _x .constructor === Array //Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
-	? !! (equals ([]) (_fn_obj))
+	!! (_fn_obj .constructor === Array) //Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
+	? !! equals ([]) (_fn_obj)
 		? _x
 		: T (T (_x) (R .head (_fn_obj))) (R .tail (_fn_obj))
-	: !! _x .constructor === Function //Z_ .is (Z$ .AnyFunction) (_fn_obj)
+	: !! (_fn_obj .constructor === Function) //Z_ .is (Z$ .AnyFunction) (_fn_obj)
 		? _fn_obj (_x)
-		: panic ('T requires a function as its input')
+  : panic ('T requires a function as its input')
 var $ = form =>
   x =>
     T (x) (form)
