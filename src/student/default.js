@@ -559,8 +559,7 @@ S (_ => {;
       , L .chain (({ position: _position }) => {;
           ;attempt_problem (_position) }
         ) (feedback_as_attempt_problem)
-      , L .chain (
-          ;reset_game () }
+      , L .chain (reset_game
         ) (feedback_as_reset_game) ] ))) })
 
 
