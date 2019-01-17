@@ -550,8 +550,8 @@ var connection = S (_ => {;
   L .forEach (I) (
     l_sum (
       [ L .chain (K (L .modifyOp (({ room: _room }) => {;
-          ;setup_room (_room) })
-        ) (feedback_as_setup_room))
+          ;setup_room (_room) }))
+        ) (feedback_as_setup_room)
       , L .chain (K (L .modifyOp (({ icon: _icon, name: _name }) => {;
           ;go
           .then (_ => setup_student (_icon) (_name))
