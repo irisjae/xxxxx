@@ -7,7 +7,8 @@ var {
   focused_iso_,
 	n_reducer, l_sum,
 	map_defined_, map_defined, from_just, 
-	as_sole, sole, shuffle
+	as_sole, sole, shuffle,
+  I, K, not, equals
 } = window .stuff
 
 
@@ -167,16 +168,16 @@ var default_settings = settings .settings (default_problems, default_rules)
 var map_v_as_key = L .first
 var map_v_as_value = L .last
 var as_value_of = key => 
-  [ L .elems, L .when (([ _key, _val ]) => Z_ .equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
+  [ L .elems, L .when (([ _key, _val ]) => equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
 
-var as_maybe = [ L .rewrite (Z_ .maybe (undefined) (Z_ .I)), L .reread (by (Z_ .K (Z_ .Just))), L .valueOr (Z_ .Nothing) ]
-var as_defined = [ L .required (Z_ .Nothing), L .rewrite (by (Z_ .K (Z_ .Just))), L .reread (Z_ .maybe (undefined) (Z_ .I)) ]    
+var as_maybe = [ L .rewrite (Z_ .maybe (undefined) (I)), L .reread (by (K (Z_ .Just))), L .valueOr (Z_ .Nothing) ]
+var as_defined = [ L .required (Z_ .Nothing), L .rewrite (by (K (Z_ .Just))), L .reread (Z_ .maybe (undefined) (Z_ .I)) ]    
 var as_defined_ = so ((_=_=>
   L .ifElse (by (Z_ .K (Z_ .is (maybe_type_$)))) (as_defined) (L .identity),
   where
   , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
 
-var as_complete = L .when (L .none (Z_ .equals (undefined)) (L .values))
+var as_complete = L .when (L .none (equals (undefined)) (L .values))
 var complete_ = lens_shape =>
   [ L .pick (lens_shape)
   , L .when(L .none (Z_ .equals (undefined)) (L .props (L .get (L .keys) (lens_shape)))) ]

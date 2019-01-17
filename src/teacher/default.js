@@ -41,7 +41,8 @@ fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
 n_reducer, l_sum,
 map_defined_, map_defined, from_just, 
-as_sole, sole, shuffle
+as_sole, sole, shuffle,
+I, K, not, equals
 } = window .stuff
 
 

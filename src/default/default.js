@@ -13,7 +13,7 @@ var Surplus = require ('surplus')
 var memoize = require ('fast-memoize')
 var T = _x => _fn_obj =>
 	!! _x .constructor === Array //Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
-	? !! (Z_ .equals ([]) (_fn_obj))
+	? !! (equals ([]) (_fn_obj))
 		? _x
 		: T (T (_x) (R .head (_fn_obj))) (R .tail (_fn_obj))
 	: !! _x .constructor === Function //Z_ .is (Z$ .AnyFunction) (_fn_obj)
@@ -27,6 +27,8 @@ var apply = fn => arg_list =>
 
 var I = _x => _x // = L .get ([]) = Z_ .I
 var K = _x => _ => _x // = L .set ([]) = Z_ .K
+var not = _x => ! _x
+var equals = R .equals
 
 
 
@@ -127,7 +129,7 @@ var data_lens = cons_memoize (cons =>
 	where
 	, faux_lens = __data_lens .get (cons)
 	, $$1=
-    !! Z .not ((Z .is (Z$ .AnyFunction) (cons))) ? 'nothing'
+    !! not ((Z .is (Z$ .AnyFunction) (cons))) ? 'nothing'
     : so ((
       define
       , template = so ((_=_=> so ((_=_=>
@@ -144,7 +146,7 @@ var data_iso = cons_memoize (cons =>
 	faux_lens,
 	where
 	, template =
-      !! Z .not (Z .is (Z$ .AnyFunction) (cons)) ? cons
+      !! not (Z .is (Z$ .AnyFunction) (cons)) ? cons
       : so ((_=_=> so ((_=_=>
         T (cons) ([ apply, T (factors) ]),
         where
@@ -396,4 +398,5 @@ window .stuff = { ...window .stuff,
   focused_iso_,
 	n_reducer, l_sum,
 	map_defined_, map_defined, from_just, 
-	as_sole, sole, shuffle }
+	as_sole, sole, shuffle,
+  I, K, not, equals }
