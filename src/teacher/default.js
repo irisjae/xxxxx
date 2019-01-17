@@ -568,7 +568,7 @@ S (_ => {;
   var _room = L .get (app_as_room) (_app)
   var _progress = L .get (app_as_progress) (_app)
 	if (L .isDefined (app_as_playing) (_app)) {
-    if (Z_ .not (Z_ .equals (_progress) (last_progress))) {
+    if (not (equals (_progress) (last_progress))) {
       ;go
       .then (_ =>
         io_state (io .messaging) && api (_room,
