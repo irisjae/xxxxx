@@ -532,24 +532,24 @@ var connection = S (_ => {;
 ;S (_ => {;
   ;T (just_now (feedback_state)
   ) (
-  L .transform (
+  L .forEach (I) (
     l_sum (
-      [ L .chain (K (L .rewrite (_piece => {;
+      [ L .chain (K (L .modifyOp (_piece => {;
           var cleansed_piece = JSON .parse (JSON .stringify (_piece))
           ;app_state (
             T (S .sample (app_state)
             ) (
             L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) }))
         ) (feedback_as_settings_piece)
-      , L .chain (K (L .rewrite (_ => {;
+      , L .chain (K (L .modifyOp (_ => {;
           var _room = Math .floor (10000 * Math .random ())
           ;get_room (_room) }))
         ) (feedback_as_start)
-      , L .chain (K (L .rewrite (start_playing))
+      , L .chain (K (L .modifyOp (start_playing))
         ) (feedback_as_play)
-      , L .chain (K (L .rewrite (end_game))
+      , L .chain (K (L .modifyOp (end_game))
         ) (feedback_as_end)
-      , L .chain (K (L .rewrite (reset_game))
+      , L .chain (K (L .modifyOp (reset_game))
         ) (feedback_as_reset) ] ))) })
 
 

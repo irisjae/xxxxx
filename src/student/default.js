@@ -547,20 +547,20 @@ var connection = S (_ => {;
 ;S (_ => {;
   ;T (just_now (feedback_state)
   ) (
-  L .transform (
+  L .forEach (I) (
     l_sum (
-      [ L .chain (K (L .rewrite (({ room: _room }) => {;
+      [ L .chain (K (L .modifyOp (({ room: _room }) => {;
           ;setup_room (_room) })
         ) (feedback_as_setup_room))
-      , L .chain (K (L .rewrite (({ icon: _icon, name: _name }) => {;
+      , L .chain (K (L .modifyOp (({ icon: _icon, name: _name }) => {;
           ;go
           .then (_ => setup_student (_icon) (_name))
           .then (_ => connect_room ()) }))
         ) (feedback_as_setup_student)
-      , L .chain (K (L .rewrite (({ position: _position }) => {;
+      , L .chain (K (L .modifyOp (({ position: _position }) => {;
           ;attempt_problem (_position) }))
         ) (feedback_as_attempt_problem)
-      , L .chain (K (L .rewrite (reset_game))
+      , L .chain (K (L .modifyOp (reset_game))
         ) (feedback_as_reset_game) ] ))) })
 
 
