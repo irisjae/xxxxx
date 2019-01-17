@@ -247,24 +247,24 @@ var playing_view = _ => so ((_=_=>
            , [ first_y, first_x ] = L .get (L .first) (_pattern)
            , [ last_y, last_x ] = L .get (L .last) (_pattern)
            , shape =
-               !! Z_ .equals (first_x) (last_x) ? 'vertical'
-               :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
+               !! equals (first_x) (last_x) ? 'vertical'
+               :!! equals (first_y) (last_y) ? 'horizontal'
                :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
                :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
                : panic ('bad pattern') )=>
            T (Z_ .range (1) (5 + 1)) (Z_ .map (_i => so ((_=_=>
              <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,
              where
-             , left = !! Z_ .equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+             , left = !! equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                       : ((_i - 1) * 1 / 5) * 100 + '%'
-             , top = !! Z_ .equals (shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                     :!! Z_ .equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
+             , top = !! equals (shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                     :!! equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
                      : ((_i - 1) * 1 / 5) * 100 + '%'
-             , letter = !! Z_ .equals (_i) (1) ? 'b'
-                        :!! Z_ .equals (_i) (2) ? 'i'
-                        :!! Z_ .equals (_i) (3) ? 'n'
-                        :!! Z_ .equals (_i) (4) ? 'g'
-                        :!! Z_ .equals (_i) (5) ? 'o'
+             , letter = !! equals (_i) (1) ? 'b'
+                        :!! equals (_i) (2) ? 'i'
+                        :!! equals (_i) (3) ? 'n'
+                        :!! equals (_i) (4) ? 'g'
+                        :!! equals (_i) (5) ? 'o'
                         : panic ('bad letter') )=>_) )) ) ])), Z_ .reverse ]) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
@@ -400,7 +400,7 @@ var setup_room = _room => {;
 	;go 
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
-		.then (panic_on ([ [Z_ .equals ({}), 'empty room; expired code?'] ]))
+		.then (panic_on ([ [equals ({}), 'empty room; expired code?'] ]))
 		.then ($ ([
 			L .get (L .inverse (data_iso (ensemble .ensemble))),
 			_ensemble => {;
@@ -434,7 +434,7 @@ var connect_room = _ => {;
 		;return go 
 		.then (_ =>
 			io_state (io .connecting) && api (_room)
-      .then (panic_on ([ [Z_ .equals ({}), 'empty room; expired code?'] ]))
+      .then (panic_on ([ [equals ({}), 'empty room; expired code?'] ]))
 			.then ($ ([
 				 L .get (L .inverse (data_iso (ensemble .ensemble))),
 				 _ensemble => {;
@@ -465,7 +465,7 @@ var attempt_problem = _position => {;
 			  T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
         
       var _completed = L .get ([ point_as_position, board_choice (_board), problem_choice_matches (_problem), L .valueOr (false) ]) (_point)
-      if (Z_ .not (_completed)) {
+      if (not (_completed)) {
         var _choice = board_choice (_board) (_position)
         if (! L .get (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
           var latency = S .sample (tick_state) //lookbehind_latency ()
@@ -586,7 +586,7 @@ S (last_app => {;
 	var last_progress = T (last_app) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_progress !== undefined && progress !== undefined && Z_ .not (Z_ .equals (last_progress) (progress))) {
+		if (last_progress !== undefined && progress !== undefined && not (equals (last_progress) (progress))) {
 			;lookbehind_state (lookbehind .attempting (0, false)) } }
 	return app_state () }
 , app_state ())
@@ -653,7 +653,7 @@ S (_ => {;
   var _app_progress = T (_app) (L .get (app_as_progress))
   var _progress = T (_ensemble) (L .get (ensemble_as_progress))
   
-  if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
+  if (not (equals (_app_progress) (_progress))) {
     if (L .isDefined (app_as_get_ready) (_app)) {
       ;app_state (
         T (_app
@@ -718,10 +718,10 @@ S (_ => {;
 					L .get (L .inverse (data_iso (ensemble .ensemble))),
 					_x => {
             var current_room = T (S .sample (app_state)) (L .get (app_as_room))
-            if (Z_ .equals (_room) (current_room)) {
+            if (equals (_room) (current_room)) {
               ;ensemble_state (_x)} } ])) )
     .catch (_x => {;
-      if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
+      if (equals (L .get ('error') (_x)) ('timeout')) {;
         ;console .warn ('Room timed out') }
       else {;
         ;throw _x }})

@@ -140,7 +140,7 @@ var setup_view = _ => so ((_=_=>
         { T (io_state ()
           ) (
           [ L .get ([io_as_connecting, as_maybe])
-          , Z_ .maybe ([]) (Z_ .K (
+          , Z_ .maybe ([]) (K (
               <div style={{ height: 0 }}>遊戲正在開始…</div>)) ]) } </button></div>
     <div class="right-pane">
       <settings x-for="board-size">
@@ -170,8 +170,8 @@ var setup_view = _ => so ((_=_=>
       where
       , case_list_length = Z_ .size (case_v_img_list)
       , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
-      , data_img = T (case_v_img_list) (L .get ([ L .find (under (L .first) (Z_ .equals (_case))), L .last ]))
-      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (Z_ .equals (_case)))))
+      , data_img = T (case_v_img_list) (L .get ([ L .find (under (L .first) (equals (_case))), L .last ]))
+      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (equals (_case)))))
       , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), L .first ]))
       , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), L .first ]))
       , prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
@@ -200,7 +200,7 @@ var get_ready_view = _ => so ((_=_=>
             <student x-icon={
               !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
             >{ _name }</student> ))) } </students> </students-etc>
-    { !! Z_ .not (Z_ .size (_students) === 0)
+    { !! not (Z_ .size (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
 				: [] } </get-ready-etc>,
 	where
@@ -258,16 +258,16 @@ var playing_view = _ => so ((_=_=>
                   , [ first_y, first_x ] = L .get (L .first) (_pattern)
                   , [ last_y, last_x ] = L .get (L .last) (_pattern)
                   , shape =
-                      !! Z_ .equals (first_x) (last_x) ? 'vertical'
-                      :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
+                      !! equals (first_x) (last_x) ? 'vertical'
+                      :!! equals (first_y) (last_y) ? 'horizontal'
                       :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
                       :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
                       : panic ('bad pattern')
-                  , top = !! Z_ .equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                          :!! Z_ .equals (shape) ('vertical') ? '5%'
+                  , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
+                          :!! equals (shape) ('vertical') ? '5%'
                           : ''
-                  , left = !! Z_ .equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                          :!! Z_ .equals (shape) ('horizontal') ? '5%'
+                  , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
+                          :!! equals (shape) ('horizontal') ? '5%'
                           : '' )=>_))) } </bingo> </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
@@ -357,16 +357,16 @@ var game_over_view = _ => so ((_=_=>
                 , [ first_y, first_x ] = L .get (L .first) (_pattern)
                 , [ last_y, last_x ] = L .get (L .last) (_pattern)
                 , shape =
-                    !! Z_ .equals (first_x) (last_x) ? 'vertical'
-                    :!! Z_ .equals (first_y) (last_y) ? 'horizontal'
+                    !! equals (first_x) (last_x) ? 'vertical'
+                    :!! equals (first_y) (last_y) ? 'horizontal'
                     :!! Z_ .gt (first_x) (last_x) ? 'diagonal-down'
                     :!! Z_ .lt (first_x) (last_x) ? 'diagonal-up'
                     : panic ('bad pattern')
-                , top = !! Z_ .equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                        :!! Z_ .equals (shape) ('vertical') ? '5%'
+                , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
+                        :!! equals (shape) ('vertical') ? '5%'
                         : ''
-                , left = !! Z_ .equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                        :!! Z_ .equals (shape) ('horizontal') ? '5%'
+                , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
+                        :!! equals (shape) ('horizontal') ? '5%'
                         : '' )=>_))) } </bingo> </board> </student-etc>,
           where
           , _name = T (_student) (L .get (student_as_name))
@@ -437,7 +437,7 @@ var get_room = _room => {;
 	;return go
 	.then (_ =>
 		io_state (io .connecting) && api (_room)
-		.then (panic_on ([ [_x => Z_ .not (Z_ .equals ({}) (_x)), _room + ' taken'] ])) )
+		.then (panic_on ([ [_x => not (equals ({}) (_x)), _room + ' taken'] ])) )
 	.then (_ =>
 		api (_room,
 			post (message_encoding (
@@ -610,7 +610,7 @@ S (_ => {;
   
 	var _app = app_state ()
   var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
-  if (Z_ .equals (win_rule .first_bingo) (_win_rule)) {
+  if (equals (win_rule .first_bingo) (_win_rule)) {
     if (L .isDefined (app_as_playing) (_app)) {
       if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
         ;end_game () } } }
@@ -634,7 +634,7 @@ S (_ => {;
   var _progress = T (_ensemble) (L .get (ensemble_as_progress))
   // is there a more elegant way? this is not markovian 
   if (L .isDefined (app_as_get_ready) (_app)) {
-    if (Z_ .not (Z_ .equals (_app_progress) (_progress))) {
+    if (not (equals (_app_progress) (_progress))) {
 
       var _progress_step = L .get (progress_as_step) (_progress)
       ;app_state (
@@ -651,7 +651,7 @@ S (_ => {;
   var last_progress = T (last_app) (L .get (app_as_progress))
   
   if (L .isDefined (app_as_playing) (_app)) {
-    if (! Z_ .equals (_progress) (last_progress)) {
+    if (! equals (_progress) (last_progress)) {
       ;go
       .then (_ =>
         io_state (io .messaging) && api (_room,
@@ -712,11 +712,11 @@ S (_ => {;
   
   var ensemble_updates = $ (Z_ .join
   ) ( 
-  [ !! (_ensemble_students && Z_ .not (Z_ .equals (_ensemble_students) (_app_students)))
+  [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
     ? [ L .set (app_as_students) (_ensemble_students) ] : []
-  , !! (_ensemble_boards && Z_ .not (Z_ .equals (_ensemble_boards) (_app_boards)))
+  , !! (_ensemble_boards && not (equals (_ensemble_boards) (_app_boards)))
     ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
-  , !! (_ensemble_pasts && Z_ .not (Z_ .equals (_ensemble_pasts) (_app_pasts)))
+  , !! (_ensemble_pasts && not (equals (_ensemble_pasts) (_app_pasts)))
     ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
   
 	if (L .isDefined (L .elems) (ensemble_updates)) {
@@ -743,10 +743,10 @@ S (_ => {;
 						L .get (L .inverse (data_iso (ensemble .ensemble))),
 						_x => {
               var current_room = T (S .sample (app_state)) (L .get (app_as_room))
-              if (Z_ .equals (_room) (current_room)) {              
+              if (equals (_room) (current_room)) {              
                 ;ensemble_state (_x) } } ])) )
       .catch (_x => {;
-        if (Z_ .equals (L .get ('error') (_x)) ('timeout')) {;
+        if (equals (L .get ('error') (_x)) ('timeout')) {;
           ;console .warn ('Room timed out') }
         else {;
           ;throw _x }})

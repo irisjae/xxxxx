@@ -180,7 +180,7 @@ var as_defined_ = so ((_=_=>
 var as_complete = L .when (L .none (equals (undefined)) (L .values))
 var complete_ = lens_shape =>
   [ L .pick (lens_shape)
-  , L .when(L .none (Z_ .equals (undefined)) (L .props (L .get (L .keys) (lens_shape)))) ]
+  , L .when(L .none (equals (undefined)) (L .props (L .get (L .keys) (lens_shape)))) ]
 
 
 var app_as_setup = data_iso (teacher_app .setup)
@@ -292,12 +292,12 @@ var teacher_app_get_ready_to_playing = by (_app =>
 
 var teacher_app_playing_to_next = by (_app =>
   so ((_=_=>
-  !! Z_ .not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
+  !! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
   : teacher_app_playing_to_game_over,
   where
   , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   , [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
-  , game_over_ok = Z_ .not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_))
+  , game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_))
 
 var teacher_app_playing_to_game_over = by (_app => 
   $ (L .get
@@ -331,12 +331,12 @@ var student_app_get_ready_to_playing = by (_app =>
 
 var student_app_playing_to_next = by (_app => 
   so ((_=_=>
-  !! Z_ .not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
+  !! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
   : student_app_playing_to_game_over,
   where
   , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
   , [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
-  , game_over_ok = Z_ .not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
+  , game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
 
 var student_app_playing_to_game_over =  by (_app => 
   $ (L .get
@@ -485,9 +485,9 @@ var bingoes = _board => _past =>
 var problem_choice_matches = so ((_=_=>
   _problem => _choice => so ((_=_=>
     !! L .isDefined (question_as_text) (_question) 
-    ? Z_ .equals (normalize (_text)) (normalize (_choice))
+    ? equals (normalize (_text)) (normalize (_choice))
     :!! L .isDefined (question_as_image) (_question) 
-    ? Z_ .equals (_solution) (_choice)
+    ? equals (_solution) (_choice)
     : panic ('bad question'),
     where
     , _question = T (_problem) (L .get (problem_as_question))
@@ -559,7 +559,7 @@ var problem_choice_matches = so ((_=_=>
        [ L .zero ] )) 
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
-      !! Z_ .equals (b) (0)
+      !! equals (b) (0)
       ? a
       : gcd (b) (a % b) )=>_)
 
@@ -580,14 +580,14 @@ var message_encoding = by (message =>
   , _student = T (message) (L .get (message_as_student))
   , _student_id = T (_student) (L .get (student_as_id))
   , cases = 
-      [ L .chain (Z_ .K (L .getInverse (ensemble_as_ping))) (message_as_teacher_ping .ping)
-      , L .chain (Z_ .K (L .getInverse (ensemble_as_settings))) (message_as_teacher_settings .settings)
-      , L .chain (Z_ .K (L .getInverse (ensemble_as_progress))) (message_as_teacher_progress .progress)
-      , L .chain (Z_ .K (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+      [ L .chain (K (L .getInverse (ensemble_as_ping))) (message_as_teacher_ping .ping)
+      , L .chain (K (L .getInverse (ensemble_as_settings))) (message_as_teacher_settings .settings)
+      , L .chain (K (L .getInverse (ensemble_as_progress))) (message_as_teacher_progress .progress)
+      , L .chain (K (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
         ) (message_as_student_ping .ping)
-      , L .chain (Z_ .K (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+      , L .chain (K (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
         ) (message_as_student_join .board)
-      , L .chain (Z_ .K (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+      , L .chain (K (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
         ) (message_as_student_update .past) ] )=>_))
 
 var messages_encoding = list =>
@@ -681,7 +681,7 @@ var api = so ((_=_=>
     var id = new_id ()
 
     ;api .continuations [id] = signal
-    ;continuation .catch (Z_ .I) .then (_=> {;delete api .continuations [id]})
+    ;continuation .catch (I) .then (_=> {;delete api .continuations [id]})
 
     if (! api .sockets [room]) {
       ;api .sockets [room] = new_socket (room) }
@@ -689,10 +689,10 @@ var api = so ((_=_=>
 
     var begin, end
     ;go
-    .then (Z_ .K (api .sockets [room] .ready))
+    .then (K (api .sockets [room] .ready))
     .then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
     .then (_=> {;begin = performance .now ()})
-    .then (Z_ .K (continuation))
+    .then (K (continuation))
     .then (_=> {;end = performance .now ()})
     .then (_=> {;
       var sample = end - begin
@@ -704,7 +704,7 @@ var api = so ((_=_=>
 where
 , new_id = _ => {
     var id = '' + Math .floor (1000000 * Math .random ())
-    return !! Z_ .not (api .continuations [id])
+    return !! not (api .continuations [id])
     ? id
     : new_id () }
 //TODO: make this more elegant
@@ -762,7 +762,7 @@ where
   var continuation = (new Promise ((_resolve, _reject) => {;
     ;resolve = _resolve
     ;reject = _reject }))
-  ;continuation .catch (Z_ .I) .then (_ => {;done = true})
+  ;continuation .catch (I) .then (_ => {;done = true})
   
   ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
   
@@ -790,7 +790,7 @@ var map_zip = mash => a => b => {
   ;T (b) (R .forEach (([ _key, _val ]) => {;
     for (var i = 0; i < a .length; i ++) {
       var [ k, v ] = a [i]
-      if (Z_ .equals (k) (_key)) {
+      if (equals (k) (_key)) {
         ;_zip = _zip .concat ([ [ _key, mash (v) (_val) ] ]) } } }))
   
   return _zip }
