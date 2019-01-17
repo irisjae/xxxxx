@@ -5,7 +5,7 @@ var {
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
-	n_reducer, 
+	n_reducer, l_sum,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle
 } = window .stuff

@@ -7,8 +7,7 @@ attempt, point, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
-pair_as_v, pair_as_list, pair_as_first, pair_as_second,
-list_as_pair, map_v_as_key, map_v_as_value, as_value_of,
+map_v_as_key, map_v_as_value, as_value_of,
 as_maybe, as_defined, as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 settings_as_problems, settings_as_rules,
@@ -35,13 +34,13 @@ current_problem, problem_choice_matches,
 local_patterns, size_patterns,
 as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
 T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-so, by, and_by, under,
+so, by, under,
 go, never, panic, panic_on,
 just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
-n_reducer, 
-map_defined_, map_defined, from_just, maybe_all, 
+n_reducer, l_sum,
+map_defined_, map_defined, from_just, 
 as_sole, sole, shuffle
 } = window .stuff
 
@@ -545,10 +544,9 @@ var connection = S (_ => {;
 
 
 S (_ => {;
-  ;so ((
-  take
-  , cases = 
-      [ [ feedback_as_setup_room
+  L .forEach (
+    l_sum (
+      [ [ L .when (feedback_as_setup_room)
         , ({ room: _room }) => {;
             ;setup_room (_room) } ]
       , [ feedback_as_setup_student

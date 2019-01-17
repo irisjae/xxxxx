@@ -202,7 +202,7 @@ var n_reducer = binary => n =>
 			n_reducer (binary) (n - 1) (binary (_a) (_b))
 	
 var l_sum = traversals =>
-  [ L .pick (L .get ([ L .indexed,  ]) (traversals)), L .values ]
+  [ L .pick (T (traversals) (L .get ([ L .indexed, L .inverse (L .keyed) ]))), L .values ]
 	
 	
 	
@@ -394,6 +394,6 @@ window .stuff = { ...window .stuff,
   just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
-	n_reducer, 
+	n_reducer, l_sum,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle }
