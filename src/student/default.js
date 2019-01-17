@@ -464,7 +464,7 @@ var attempt_problem = _position => {;
       var board_choice = _board => _position =>
 			  T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
         
-      var _completed = L .get ([ point_as_position, board_choice (_board), problem_choice_matches (_problem), L .valueOr (false) ]) (_point)
+      var _completed = L .get (L .choice (L .chain (K ([ board_choice (_board), problem_choice_matches (_problem) ])) (point_as_position), K (false))) (_point)
       if (not (_completed)) {
         var _choice = board_choice (_board) (_position)
         if (! L .get (lookbehind_as_blocked) (S .sample (lookbehind_state))) {
