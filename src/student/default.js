@@ -109,6 +109,12 @@ var ambient_state = S .data (ambient .no_background_music)
 
  
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
+var audio = {
+  correct: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'),
+  incorrect: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'),
+  bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
+  countdown: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320'),
+  background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
 
 
 var setup_room_view = _ => so ((_=_=>
@@ -476,19 +482,16 @@ var attempt_problem = _position => {;
             ) ([app_as_last_point, point_as_attempts, L .appendTo]
             ) ([_position, latency]) ))
           if (problem_choice_matches (_problem) (_choice)) {
-            var bingo_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'
-            var correct_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570'
             var _solved_positions = R .append (_position) (solved_positions (_board) (L .get (app_as_past) (S .sample (app_state))))
             var _size = T (S .sample (app_state)) (L .get ([ app_as_settings, settings_as_size ]))
             var _local_patterns = T (local_patterns (size_patterns (_size))
               ) (
               L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions) (R .flip (R .includes)))) ]))
-            ;(new Audio (correct_audio)) .play ()
+            ;audio .correct .play ()
             if (L .isDefined (L .elems) (_local_patterns)) {
-              ;(new Audio (bingo_audio)) .play () } }
+              ;audio .bingo .play () } }
           else {
-            var incorrect_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539'
-            ;(new Audio (incorrect_audio)) .play ()
+            ;audio .incorrect .play ()
             ;lookbehind_state (lookbehind .attempting (latency, true)) } } } })) }
 
 var reset_game = _ => {
@@ -639,8 +642,7 @@ S (_ => {;
     var tick = (tick_state (), tick_fn ())
     var tick_left = time_limit - tick
     if (tick_left == 3 && not (equals (tick_left) (last_tick_left))) {
-      var countdown_audio = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320'
-      ;(new Audio (countdown_audio)) .play () }
+      ;audio .countdown .play () }
     if (tick >= time_limit) {
       ;app_state (
         student_app_playing_to_next (S .sample (app_state))) } } })
