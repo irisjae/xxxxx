@@ -150,7 +150,7 @@ var setup_view = _ => so ((_=_=>
         <setting x-of="board-size" x-be="3x3"><img src={ three_by_three_img } /></setting>
         <setting x-of="board-size" x-be="4x4"><img src={ four_by_four_img } /></setting>
         <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting> </settings> </div>
-    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>,
+    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>,
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
@@ -192,7 +192,11 @@ var setup_view = _ => so ((_=_=>
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .start) }) }) } )=>_)
+          ;feedback_state (feedback .start) }) }) }
+  , toggle_background_music = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_)
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
@@ -209,16 +213,24 @@ var get_ready_view = _ => so ((_=_=>
             >{ _name }</student> ))) } </students> </students-etc>
     { !! not (R .length (_students) === 0)
 				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
-				: [] } </get-ready-etc>,
+				: [] }
+    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </get-ready-etc>,
 	where
 	, _room = T (app_state ()) (L .get (app_as_room))
 	, _students = T (app_state ()
 		) (L .get ([ app_as_students, L .valueOr ([]) ]))
+  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
+  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
+  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
   , feedback_play = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .play) }) }) } )=>_)
+          ;feedback_state (feedback .play) }) }) } 
+  , toggle_background_music = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
   !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
@@ -236,7 +248,8 @@ var playing_view = _ => so ((_=_=>
             : panic ('bad question') }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
-        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
+        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options>
+      <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </playing-etc>
   :!! L .isDefined (lookbehind_as_view_students) (_lookbehind)
   ? <playing-etc>
       <title-etc>
@@ -283,7 +296,8 @@ var playing_view = _ => so ((_=_=>
             , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
       <options>
         <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
-        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options> </playing-etc>
+        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options>
+      <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </playing-etc>
   :!! L .isDefined (lookbehind_as_consider_end) (_lookbehind)
   ? <playing-etc>
       <abort-etc>
@@ -308,12 +322,15 @@ var playing_view = _ => so ((_=_=>
   , question = T (_problem) (L .get (problem_as_question))
   , question_text = T (question) (L .get (question_as_text))
   , question_image = T (question) (L .get (question_as_image))
+  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
   , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
   , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
   , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
   , cancel_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcancel.png?1541818700002'
+  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
+  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
   , show_problem = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
@@ -329,7 +346,11 @@ var playing_view = _ => so ((_=_=>
   , confirm_end = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .end) })})} )=>_)
+          ;feedback_state (feedback .end) })})}  
+  , toggle_background_music = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_)
     
 													 
 var game_over_view = _ => so ((_=_=>
@@ -381,7 +402,8 @@ var game_over_view = _ => so ((_=_=>
           , _solved_positions = solved_positions (_board) (_past)
           , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
     <options x-for="options">
-      <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
+      <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options>
+    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </game-over-etc>,
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
@@ -390,6 +412,7 @@ var game_over_view = _ => so ((_=_=>
   , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
   , _student = T (_app) (L .get (app_as_student))
   , _name = T (_student) (L .get (student_as_name))
+  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , show_results_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
   , show_results_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'                              
@@ -398,6 +421,8 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
   , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
   , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
+  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
+  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
   , show_results = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
@@ -413,7 +438,11 @@ var game_over_view = _ => so ((_=_=>
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .reset) })})} )=>_) 
+          ;feedback_state (feedback .reset) })})}  
+  , toggle_background_music = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_) 
 
 window .view = <teacher-app>
   { !! (L .isDefined (app_as_setup) (app_state ()))

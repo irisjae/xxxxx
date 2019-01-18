@@ -18,7 +18,7 @@ teacher-app > setup-etc {
     &[x-of=game-mode], &[x-of=time-limit] {
       & prev, & next {
         @extend %clickable; } }
-    &[x-of=board-size] {
+    &[x-of=board-size], &[x-for=background-music] {
       & img {
         @extend %clickable; } } }
   button {
@@ -104,8 +104,17 @@ teacher-app > setup-etc {
         display: block;
         & img {
           max-width: 100%;
-          max-height: 33%; } } } } }
+          max-height: 33%; } } } } 
+  & setting[x-for=background-music] {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translate(-50%, 50%); } }
 teacher-app > get-ready-etc {
+  setting {
+    &[x-for=background-music] {
+      & img {
+        @extend %clickable; } } }
   button {
     &[x-for=play] {
       &:focus {
@@ -153,8 +162,17 @@ teacher-app > get-ready-etc {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587); }
         &[x-icon=bunny] {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
-          padding-top: 21px; } } } } }
+          padding-top: 21px; } } } }  
+  & setting[x-for=background-music] {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translate(-50%, 50%); } }
 teacher-app > playing-etc {
+  setting {
+    &[x-for=background-music] {
+      & img {
+        @extend %clickable; } } }
   button {
     &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
       &:focus {
