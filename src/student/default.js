@@ -115,6 +115,7 @@ var audio = {
   bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
   countdown: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320'),
   background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
+;audio .background .loop = true
 
 
 var setup_room_view = _ => so ((_=_=>
@@ -570,7 +571,15 @@ var connection = S (_ => {;
 
 
 
-S (_ => {;
+;S (_ => {;
+  if (L .isDefined (ambient_as_background_music) (ambient_state ())) {
+    ;audio .background .play () }
+  else if (L .isDefined (ambient_as_no_background_music) (ambient_state ())) {
+    ;audio .background .pause () } })
+
+
+
+;S (_ => {;
 	if (L .isDefined (lookbehind_as_bad_room) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {;
 			;lookbehind_state (lookbehind .nothing) }
@@ -578,14 +587,14 @@ S (_ => {;
 		;S .cleanup (_ => {;
 			;clearTimeout (forget) }) } })
 
-S (last_app => {;
+;S (last_app => {;
 	if (! L .isDefined (app_as_room) (last_app)) {
 		if (L .isDefined (app_as_room) (app_state ())) {
 			;lookbehind_state (lookbehind .nothing) } }
 	return app_state () }
 , app_state ())
 
-S (last_app => {;
+;S (last_app => {;
 	var last_progress = T (last_app) (L .get (app_as_progress))
 	var progress = T (app_state ()) (L .get (app_as_progress))
 	if (L .isDefined (app_as_playing) (app_state ())) {
@@ -594,7 +603,7 @@ S (last_app => {;
 	return app_state () }
 , app_state ())
 
-S (_ => {;
+;S (_ => {;
 	if (L .get (lookbehind_as_blocked) (lookbehind_state ())) {
 		;var forget = setTimeout (_ => {;
 			var _since = T (lookbehind_state ()) (L .get (lookbehind_as_since))

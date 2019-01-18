@@ -109,6 +109,11 @@ var ambient_state = S .data (ambient .no_background_music)
 
 
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
+var audio = {
+  bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
+  countdown: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320'),
+  background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
+;audio .background .loop = true
 
 var setup_view = _ => so ((_=_=>
   <setup-etc>
@@ -551,6 +556,16 @@ var connection = S (_ => {;
         ) (feedback_as_end)
       , L .chain (K (L .modifyOp (reset_game))
         ) (feedback_as_reset) ] ))) })
+
+
+
+
+;S (_ => {;
+  if (L .isDefined (ambient_as_background_music) (ambient_state ())) {
+    ;audio .background .play () }
+  else if (L .isDefined (ambient_as_no_background_music) (ambient_state ())) {
+    ;audio .background .pause () } })
+
 
 
 ;S (_ => {;
