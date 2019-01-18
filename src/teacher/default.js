@@ -489,6 +489,7 @@ var get_room = _room => {;
 	.then (_ => {;
 		;app_state (teacher_app .get_ready (_room, _settings, [])) })
 	.catch (_e => {;
+;alert (_e) 
 		;console .error (_e) })
 	.then (_ => {;
 		;io_state (io .inert) }) }

@@ -3,7 +3,9 @@ body {
   background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541817247354);
   background-size: cover;
   color: white;
-  font-family: Microsoft JhengHei, Arial; }
+  font-family: Microsoft JhengHei, Arial;
+  height: 100vh;
+  width: 100vw; }
 
 %page-etc {
 	width: 80%;
