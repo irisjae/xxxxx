@@ -319,8 +319,16 @@ teacher-app > playing-etc {
       align-items: center;
       label {
         font-size: 70px;
-        font-weight: bold; } } } }
+        font-weight: bold; } } }  
+  & setting[x-for=background-music] {
+    position: absolute;
+    left: 0;
+    bottom: 0; } }
 teacher-app > game-over-etc {
+  setting {
+    &[x-for=background-music] {
+      & img {
+        @extend %clickable; } } }
   button {
     &[x-for=show-results], &[x-for=students-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
       &:focus {
@@ -426,7 +434,11 @@ teacher-app > game-over-etc {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    align-items: center; } }
+    align-items: center; }  
+  & setting[x-for=background-music] {
+    position: absolute;
+    left: 0;
+    bottom: 0; } }
 
 
 student-app > setup-etc {
