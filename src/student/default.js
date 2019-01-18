@@ -240,7 +240,7 @@ var playing_view = _ => so ((_=_=>
           :!! L .isDefined (question_as_image) (_current_question) ? <img src={ _question_image } />
           : panic ('bad question') }</question> </div>
     <div class="right-pane">
-      <board > { T (_board) (R .map (_row => 
+      <board x-disabled={ _disabled }> { T (_board) (R .map (_row => 
         <row> { T (_row) (R .map (_cell =>
           so ((_=_=>
           !! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
@@ -286,6 +286,7 @@ var playing_view = _ => so ((_=_=>
     , _solved_positions = solved_positions (_board) (_past)
     , _bingoes = bingoes (_board) (_past)
     , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+    , _disabled = L .and (lookbehind_as_blocked) (S .sample (lookbehind_state))
     , game_tick = tick_state ()
     , cell_feedback = cell => _dom => {;
         ;clicking .forEach (click => {;
