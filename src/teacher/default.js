@@ -150,7 +150,8 @@ var setup_view = _ => so ((_=_=>
       <settings x-for="board-size">
         <setting x-of="board-size" x-be="3x3"><img src={ three_by_three_img } /></setting>
         <setting x-of="board-size" x-be="4x4"><img src={ four_by_four_img } /></setting>
-        <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting></settings></div></setup-etc>,
+        <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting> </settings> </div>
+    <setting x-for="background-music"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100"></setting> </setup-etc>,
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
