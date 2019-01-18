@@ -111,7 +111,6 @@ var ambient_state = S .data (ambient .no_background_music)
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
 var audio = {
   bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
-  countdown: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320'),
   background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
 ;audio .background .loop = true
 
@@ -582,6 +581,21 @@ var connection = S (_ => {;
   if (L .isDefined (app_as_playing) (_app) && tick_state (), tick_fn () >= time_limit) {
     ;app_state (
       teacher_app_playing_to_next (S .sample (app_state))) } })
+
+;S (last_app => {;
+  var app_bingoes = _app =>
+    L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
+    T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
+    ) (
+    L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
+  
+  var _app = app_state ()
+  var last_bingoes = app_bingoes (last_app) || []
+  var _bingoes = app_bingoes (_app) || []
+  // HACK: replace with calculating whether difference exists
+  if (R .length (last_bingoes) > R .length (_bingoes)) {
+    ;audio .bingo .play () }  })
+
 ;S (last_app => {;
   var app_has_bingoes_ok = _app =>
     L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&

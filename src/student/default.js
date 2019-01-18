@@ -240,7 +240,7 @@ var playing_view = _ => so ((_=_=>
           :!! L .isDefined (question_as_image) (_current_question) ? <img src={ _question_image } />
           : panic ('bad question') }</question> </div>
     <div class="right-pane">
-      <board> { T (_board) (R .map (_row => 
+      <board > { T (_board) (R .map (_row => 
         <row> { T (_row) (R .map (_cell =>
           so ((_=_=>
           !! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
