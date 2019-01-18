@@ -65,8 +65,7 @@ var lookbehind = data ({
 	problems_analysis: () => lookbehind })
 
 var ambient = data ({
-  no_background_music: () => ambient,
-  background_music: () => ambient })
+  ambient: ( background_music_on =~ bool ) => ambient })
 
 var feedback_as_start = data_iso (feedback .start)
 var feedback_as_setup_settings = data_iso (feedback .setup_settings)
@@ -83,8 +82,8 @@ var lookbehind_as_show_results = data_iso (lookbehind .show_results)
 var lookbehind_as_students_analysis = data_iso (lookbehind .students_analysis)
 var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
 
-var ambient_as_no_background_music = data_iso (ambient .no_background_music)
-var ambient_as_background_music = data_iso (ambient .background_music)
+var ambient_as_ambient = data_iso (ambient .ambient)
+var ambient_as_background_music_on = data_lens (ambient .ambient) .background_music_on
 
 
 
@@ -100,7 +99,7 @@ var ensemble_state = S .data (ensemble .nothing)
 //var feedback_state = S .data (temporal ())
 var feedback_state = temporal ()
 var lookbehind_state = S .data (lookbehind .nothing)
-var ambient_state = S .data (ambient .no_background_music)
+var ambient_state = S .data (ambient .ambient (false))
 
 
 
@@ -151,10 +150,11 @@ var setup_view = _ => so ((_=_=>
         <setting x-of="board-size" x-be="3x3"><img src={ three_by_three_img } /></setting>
         <setting x-of="board-size" x-be="4x4"><img src={ four_by_four_img } /></setting>
         <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting> </settings> </div>
-    <setting x-for="background-music"><img src="https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100"></setting> </setup-etc>,
+    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>,
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
+  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
   , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
@@ -165,6 +165,8 @@ var setup_view = _ => so ((_=_=>
 	, three_by_three_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588'
 	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
 	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
+  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
+  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
 // TODO: fix layout of unloaded imgs
   , counter_setting = label => case_feedback => case_v_img_list => _case => so ((_=_=>
       [ <label>{ label }</label>
@@ -561,9 +563,9 @@ var connection = S (_ => {;
 
 
 ;S (_ => {;
-  if (L .isDefined (ambient_as_background_music) (ambient_state ())) {
+  if (L .get (ambient_as_background_music_on) (ambient_state ())) {
     ;audio .background .play () }
-  else if (L .isDefined (ambient_as_no_background_music) (ambient_state ())) {
+  else {
     ;audio .background .pause () } })
 
 

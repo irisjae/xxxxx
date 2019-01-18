@@ -61,8 +61,7 @@ var lookbehind = data ({
 	problems_analysis: () => lookbehind })
 
 var ambient = data ({
-  no_background_music: () => ambient,
-  background_music: () => ambient })
+  ambient: ( background_music_on =~ bool ) => ambient })
 
 
 var feedback_as_setup_room = data_iso (feedback .setup_room)
@@ -83,8 +82,8 @@ var lookbehind_as_room = data_lens (lookbehind .bad_room) .room
 var lookbehind_as_since = data_lens (lookbehind .attempting) .since
 var lookbehind_as_blocked = data_lens (lookbehind .attempting) .blocked
 
-var ambient_as_no_background_music = data_iso (ambient .no_background_music)
-var ambient_as_background_music = data_iso (ambient .background_music)
+var ambient_as_ambient = data_iso (ambient .ambient)
+var ambient_as_background_music_on = data_lens (ambient .ambient) .background_music_on
 
 
 
@@ -98,7 +97,7 @@ var ensemble_state = S .data (undefined)
 
 var feedback_state = temporal ()
 var lookbehind_state = S .data (lookbehind .nothing)
-var ambient_state = S .data (ambient .no_background_music)
+var ambient_state = S .data (ambient .ambient (false))
 
 
 
@@ -573,9 +572,9 @@ var connection = S (_ => {;
 
 
 ;S (_ => {;
-  if (L .isDefined (ambient_as_background_music) (ambient_state ())) {
+  if (L .get (ambient_as_background_music_on) (ambient_state ())) {
     ;audio .background .play () }
-  else if (L .isDefined (ambient_as_no_background_music) (ambient_state ())) {
+  else {
     ;audio .background .pause () } })
 
 
