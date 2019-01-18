@@ -657,6 +657,8 @@ board {
   border: solid white 5px;
   border-radius: 20px;
   position: relative;  
+  &[x-disabled] {
+    filter: brightness(80%); }
   & row {
     display: flex;
     align-items: stretch;
