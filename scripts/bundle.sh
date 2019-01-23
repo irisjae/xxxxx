@@ -17,7 +17,8 @@ done
 
 pnpx browserify ~/static/default/default.js -o ~/static/default.bundle.js
 echo ';' >> ~/static/default.js
-cat ~/static/default.bundle.js >> ~/static/default.js
+pnpx -p babel-cli babel ~/static/default.bundle.js -o ~/static/default.js
+#cat ~/static/default.bundle.js >> ~/static/default.js
 rm ~/static/default/default.js
 rm ~/static/default.bundle.js
 
