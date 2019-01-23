@@ -75,8 +75,8 @@ teacher-app > setup-etc {
           justify-content: space-evenly;
           & > * {
             display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+            flex-direction: row;
+            align-items: center;
             counter#{&} {
               flex-grow: 2;
               flex-basis: 40%; }
@@ -87,7 +87,6 @@ teacher-app > setup-etc {
               flex-grow: 2;
               flex-basis: 40%; }
             & img {
-              width: 100%;
               max-width: 100%;
               max-height: 100%; } } } } } }
 
