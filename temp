@@ -1,0 +1,23 @@
+Resolving: total 17, reused 0, downloaded 0
+Resolving: total 75, reused 8, downloaded 0
+Resolving: total 123, reused 34, downloaded 0
+Resolving: total 164, reused 57, downloaded 0
+Resolving: total 187, reused 71, downloaded 0
+Resolving: total 239, reused 117, downloaded 0
+Resolving: total 242, reused 170, downloaded 0
+Resolving: total 242, reused 230, downloaded 0
+Resolving: total 242, reused 239, downloaded 0
+Resolving: total 242, reused 241, downloaded 0
+Packages: +242
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Resolving: total 242, reused 242, downloaded 0
+Resolving: total 242, reused 242, downloaded 0
+Resolving: total 242, reused 242, downloaded 0
+Resolving: total 242, reused 242, downloaded 0, done
+registry.npmjs.org/fsevents/1.2.7        |     install$ node install
+registry.npmjs.org/fsevents/1.2.7        |     install: done
+
+/rbd/pnpm-volume/cf9cdaee-7478-4bba-afce-36fbc451e9d6/npm-cache/_npx/4119/pnpm-global/1:
++ babel-cli 6.26.0
++ babel-preset-env 1.7.0
+

@@ -34,4 +34,5 @@ done
 find ~/static/ -type d -empty -delete
 
 find ~/static/ -type f | grep \\.js | while read f; do
-  pnpx -p babel-cli -p babel-preset-env babel ~/static/default.bundle.js -o ~/static/default.js
+  pnpx -p babel-cli -p babel-preset-env babel "$f" > ~/temp
+  mv ~/temp "$f" ;done
