@@ -161,7 +161,8 @@ teacher-app > get-ready-etc {
         text-indent: 40px;
         font-size: 0.8em;
         &[x-icon=lion] {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587); }
+          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587);
+          padding-top: 12px; }
         &[x-icon=bunny] {
           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
           padding-top: 21px; } } } }  
