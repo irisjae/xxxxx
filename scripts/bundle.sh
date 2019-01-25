@@ -33,6 +33,6 @@ done
 
 find ~/static/ -type d -empty -delete
 
-# find ~/static/ -type f | grep \\.js | while read f; do
-#   pnpx -p babel-cli -p babel-preset-env babel "$f" > ~/temp
-#   mv ~/temp "$f" ;done
+find ~/static/ -type f | grep \\.js | while read f; do
+  pnpx -p babel-cli -p babel-preset-env babel "$f" --presets=@babel/preset-env > ~/temp
+  mv ~/temp "$f" ;done
