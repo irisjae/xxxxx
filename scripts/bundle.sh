@@ -36,5 +36,5 @@ find ~/static/ -type d -empty -delete
 
 find ~/static/ -type f | grep \\.js | while read f; do
   echo babeling...
-  pnpx -p babel-cli -p babel-preset-env -p @babel/plugin-proposal-object-rest-spread babel "$f" --presets=env --plugins @babel/plugin-proposal-object-rest-spread > ~/temp
+  pnpx -p babel-cli -p @babel/preset-env -p @babel/plugin-proposal-object-rest-spread babel "$f" --presets=@babel/preset-env --plugins @babel/plugin-proposal-object-rest-spread > ~/temp
   mv ~/temp "$f" ;done
