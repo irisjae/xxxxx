@@ -51,7 +51,7 @@ var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
-var win_rule = data ({ time_limit: () => win_rule, free: () => win_rule, first_bingo: () => win_rule })
+var win_rule = data ({ first_bingo: () => win_rule, limit_time: () => win_rule, all_problems: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
 
