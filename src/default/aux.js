@@ -54,7 +54,7 @@ var board = data ({ board: (choice =~ map (position) (choice)) => board })
 var win_rule = data ({ first_bingo: () => win_rule, limit_time: () => win_rule, all_problems: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
-
+  
 var avatar = data ({ 
   lion: () => avatar,
   bunny: () => avatar })
@@ -840,7 +840,7 @@ window .stuff = { ...window .stuff,
   app_as_last_point, point_as_attempts,
   avatar_as_lion, avatar_as_bunny, 
   student_as_student, student_as_id, student_as_name, student_as_icon, 
-	rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
+	rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position, cell_as_choice, 
 	message_encoding, messages_encoding, schedule_start,

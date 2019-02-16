@@ -24,7 +24,7 @@ app_as_boards, app_as_pasts,
 app_as_last_point, point_as_attempts,
 avatar_as_lion, avatar_as_bunny, 
 student_as_student, student_as_id, student_as_name, student_as_icon, 
-rules_as_size, rules_as_time_limit, settings_as_size, settings_as_time_limit,
+rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position, cell_as_choice, 
 message_encoding, messages_encoding, schedule_start,
@@ -122,9 +122,9 @@ var setup_view = _ => so ((_=_=>
       <setting x-of="game-mode">
         { $ (counter_setting
           ) ('遊戲模式：'
-          ) (_game_mode => {
-               
-              }
+          ) (_win_rule => {
+              var setting_delta = T (_win_rule) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .win_rule ])))
+              ;feedback_state (feedback .setup_settings (setting_delta)) }
           ) (
           [ [ win_rule .first_bingo, play_to_win_img ]
           , [ win_rule .all_problems, play_to_win_img ]
@@ -158,6 +158,7 @@ var setup_view = _ => so ((_=_=>
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
+  , _win_rule = T (_settings) (L .get ([ settings_as_rules, rules_as_win_rule ]))
   , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
