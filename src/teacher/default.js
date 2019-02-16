@@ -122,10 +122,14 @@ var setup_view = _ => so ((_=_=>
       <setting x-of="game-mode">
         { $ (counter_setting
           ) ('遊戲模式：'
-          ) (_game_mode => {}
+          ) (_game_mode => {
+               
+              }
           ) (
-          [ [ fiat, play_to_win_img ] ]
-          ) (fiat) } </setting>
+          [ [ win_rule .first_bingo, play_to_win_img ]
+          , [ win_rule .all_problems, play_to_win_img ]
+          , [ win_rule .time_limit, play_to_win_img ] ]
+          ) (_win_rule) } </setting>
       <setting x-of="time-limit">
         { $ (counter_setting
           ) ('各題作答時限：'
