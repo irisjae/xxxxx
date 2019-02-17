@@ -127,7 +127,7 @@ var setup_view = _ => so ((_=_=>
               ;feedback_state (feedback .setup_settings (setting_delta)) }
           ) (
           [ [ win_rule .first_bingo, play_to_win_img ]
-          , [ win_rule .time_limit, time_limit_play_img ]
+          , [ win_rule .limit_time, time_limit_play_img ]
           , [ win_rule .all_problems, free_play_img ] ]
           ) (_win_rule) } </setting>
       <setting x-of="time-limit">
@@ -571,7 +571,6 @@ var connection = S (_ => {;
 
 
 //TODO: add guard to warn against depending on datas other than feedback
-// replace with lens control structure
 ;S (_ => {;
   ;T (just_now (feedback_state)
   ) (
