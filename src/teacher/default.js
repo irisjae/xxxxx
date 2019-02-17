@@ -163,8 +163,8 @@ var setup_view = _ => so ((_=_=>
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
 	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
 	, time_limit_play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftime-limit-play.png?1550390641901'
-	, free_play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ffree-play.png?1550390642234'
-  , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
+	, free_play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ffree-play.png?1550392925661'
+  , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftime-limit-play.png?1550392930019'
   , twenty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F20-secs.png?1541563332669'
   , thirty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F30-secs.png?1541563332968'
 	, preview_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936'
@@ -577,11 +577,11 @@ var connection = S (_ => {;
   L .forEach (I) (
     l_sum (
       [ L .chain (K (L .modifyOp (_piece => {;
-          var cleansed_piece = (_piece)
+          var piece_details = T (_piece) ([ L .get (L .values), L .remove ([L .values, L .when (equals (undefined))]) ])
           ;app_state (
             T (S .sample (app_state)
             ) (
-            L .modify (app_as_settings) (R .mergeDeepLeft (cleansed_piece)) )) }))
+            L .modify ([ app_as_settings, L .values ]) (R .mergeLeft (piece_details)) )) }))
         ) (feedback_as_settings_piece)
       , L .chain (K (L .modifyOp (_ => {;
           var _room = Math .floor (10000 * Math .random ())
