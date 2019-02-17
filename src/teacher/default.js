@@ -577,7 +577,7 @@ var connection = S (_ => {;
   L .forEach (I) (
     l_sum (
       [ L .chain (K (L .modifyOp (_piece => {;
-          var cleansed_piece = JSON .parse (JSON .stringify (_piece))
+          var cleansed_piece = (_piece)
           ;app_state (
             T (S .sample (app_state)
             ) (
