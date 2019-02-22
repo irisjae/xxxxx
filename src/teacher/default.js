@@ -51,7 +51,7 @@ I, K, not, equals
 
 var feedback = data ({
   start: () => feedback,
-  setup_rules: ( settings_piece =~ piece (settings) ) => feedback,
+  setup_rules: ( rules_piece =~ piece (settings) ) => feedback,
   play: () => feedback,
   end: () => feedback,
   reset: () => feedback })
@@ -73,7 +73,7 @@ var feedback_as_play = data_iso (feedback .play)
 var feedback_as_end = data_iso (feedback .end)
 var feedback_as_reset = data_iso (feedback .reset)
 
-var feedback_as_settings_piece = data_lens (feedback .setup_rules) .settings_piece
+var feedback_as_rules_piece = data_lens (feedback .setup_rules) .rules_piece
 
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
 var lookbehind_as_view_students = data_iso (lookbehind .view_students)
@@ -123,7 +123,7 @@ var setup_view = _ => so ((_=_=>
         { $ (counter_setting
           ) ('遊戲模式：'
           ) (_win_rule => {
-              var rules_delta = T (_win_rule) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .win_rule ])))
+              var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
           [ [ win_rule .first_bingo, play_to_win_img ]
@@ -134,7 +134,7 @@ var setup_view = _ => so ((_=_=>
         { $ (counter_setting
           ) ('各題作答時限：'
           ) (_time_limit => {;
-              var rules_delta = T (_time_limit) (L .get (L.inverse ([ data_iso (settings .settings) .rules, data_iso (rules .rules) .time_limit ])))
+              var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
           [ [ 10, ten_secs_img ]
@@ -582,7 +582,7 @@ var connection = S (_ => {;
             T (S .sample (app_state)
             ) (
             L .modify ([ app_as_settings, settings_as_rules, L .values ]) (R .mergeLeft (piece_details)) )) }))
-        ) (feedback_as_settings_piece)
+        ) (feedback_as_rules_piece)
       , L .chain (K (L .modifyOp (_ => {;
           var _room = Math .floor (10000 * Math .random ())
           ;get_room (_room) }))
