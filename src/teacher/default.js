@@ -151,13 +151,14 @@ var setup_view = _ => so ((_=_=>
               <div style={{ height: 0 }}>遊戲正在開始…</div>)) ]) } </button></div>
     <div class="right-pane">
       <settings x-for="board-size">
-        <setting x-of="board-size" x-be="3x3"><img src={ three_by_three_img } /></setting>
-        <setting x-of="board-size" x-be="4x4"><img src={ four_by_four_img } /></setting>
-        <setting x-of="board-size" x-be="5x5"><img src={ five_by_five_img } /></setting> </settings> </div>
+        <setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ !! equals (_size) (3) ? three_by_three_on_img : three_by_three_off_img } /></setting>
+        <setting x-of="board-size" x-be="4x4"><img fn={ feedback_size (4) } src={ !! equals (_size) (4) ? four_by_four_on_img : four_by_four_off_img } /></setting>
+        <setting x-of="board-size" x-be="5x5"><img fn={ feedback_size (5) } src={ !! equals (_size) (5) ? five_by_five_on_img : five_by_five_off_img } /></setting> </settings> </div>
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>,
   where
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
+  , _size = T (_settings) (L .get ([ settings_as_rules, rules_as_size ]))
   , _win_rule = T (_settings) (L .get ([ settings_as_rules, rules_as_win_rule ]))
   , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
@@ -169,9 +170,12 @@ var setup_view = _ => so ((_=_=>
   , thirty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F30-secs.png?1541563332968'
 	, preview_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936'
 	, start_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
-	, three_by_three_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3.png?1541159540588'
-	, four_by_four_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4.png?1541159540274'
-	, five_by_five_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5.png?1541159540962'
+	, three_by_three_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-on.png?1550827378072'
+	, three_by_three_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-off.png?1550827377940'
+	, four_by_four_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-on.png?1550827378011'
+	, four_by_four_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-off.png?1550827378248'
+	, five_by_five_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-on.png?1550827377693'
+	, five_by_five_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-off.png?1550827379773'
   , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
   , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
 // TODO: fix layout of unloaded imgs
@@ -200,6 +204,11 @@ var setup_view = _ => so ((_=_=>
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .start) }) }) }
+  , feedback_size = _size => _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          var rules_delta = T (_size) (L .get (L.inverse (data_iso (rules .rules) .size)))
+          ;feedback_state (feedback .setup_rules (rules_delta)) }) }) }
   , toggle_background_music = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
