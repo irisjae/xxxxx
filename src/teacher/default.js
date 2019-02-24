@@ -544,13 +544,15 @@ var [ time_state, flowing_state ] = timer ()
 //var time_interval = time_intervals (time_state)
 var tick_fn = _ => Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_as_progress, progress_as_timestamp ]))) / 1000)
 var tick_state = S .value ()
-;S (_ => {;
-  var _app = app_state ()
-  if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
-    var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
-    var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
-    if (_tick >= 0) {
-      ;tick_state (_tick) } } })
+S .root (die => {;
+  ;window .die = { ... (window .die || {}), clock: die }
+  ;S (_ => {;
+    var _app = app_state ()
+    if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
+      var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
+      var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
+      if (_tick >= 0) {
+        ;tick_state (_tick) } } }) })
 /*var tick_state = S .subclock (_ => {;
   var _ticker = S .value ()
   S (_ => {;
@@ -565,7 +567,7 @@ var tick_state = S .value ()
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 	
-var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }),
+var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }) &&
   S (_ => {;
   ;return T (app_state ()) (
     under (app_as_room) (_room => {;

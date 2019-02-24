@@ -535,7 +535,7 @@ S .root (die => {;
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
-var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }),
+var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }) &&
   S (_ => {;
     ;return T (app_state ()
       ) (under (app_as_room

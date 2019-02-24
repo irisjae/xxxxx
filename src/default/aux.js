@@ -635,11 +635,12 @@ var timer = _ => {;
   //  ;S (_=> {;val (_flowing ())})
   //  return val })
   //var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
-  var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
-  ;tick_S (_=> {;
-    ;_timer (+ (new Date))
-    ;requestAnimationFrame (_ => {;
-      ;_flowing (_flowing ()) }) })
+  ;S .root (immortal => {; 
+    var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
+    ;tick_S (_=> {;
+      ;_timer (+ (new Date))
+      ;requestAnimationFrame (_ => {;
+        ;_flowing (_flowing ()) }) }) })
   return [ _timer, _flowing, ] } //_S, tick_S ] }
 var timer_since = _timer => S .subclock (_=> {;
   var _since = S .data ()

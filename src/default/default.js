@@ -50,10 +50,9 @@ var panic = err => {{
 var panic_on = cases =>
 	_x =>
 		so ((
-		take
+		suppose
 		, triggered_case = T (cases) (R .find (([cond, _]) => cond (_x))) ) =>
-		!! (triggered_case === undefined)
-		? _x
+		!! equals (triggered_case) (undefined) ? _x
 		: T (triggered_case
 			) (([_, err]) => {{
 				;throw new Error (err) }}) )
@@ -97,7 +96,7 @@ var data = cons_definitions =>
 	T (cons_definitions
 	) (L .modify (L .values) ((def_fn, cons_label) => 
 		so ((
-		take
+		suppose
 		, args_match = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1] )=>
 		!! args_match ? so ((_=_=> 
       faux_cons,
@@ -131,7 +130,7 @@ var data_lens = cons_memoize (cons =>
 	, $$X=
     !! not (Z .is (Z$ .AnyFunction) (cons)) ? 'nothing'
     : so ((
-      define
+      suppose
       , marked_template = so ((_=_=> 
           T (cons) ([ apply, T (markers) ]),
           where
@@ -281,11 +280,11 @@ var temporal = _init_val => so ((_=_=>
       else {
         return _backing () } }
         //return _backing () && _backing () .ref () } }
-  , $$1= S (_ => {;
-      _gone (_backing (), {}) })
-  , $$2= S (_ => {;
+  , $$1= S .root (immortal => S (_ => {;
+      _gone (_backing (), {}) }))
+  /*, $$2= S (_ => {;
       // disable for now
-      /*_gone (), S .sample (_backing) && (S .sample (_backing) .ref = _ => {;panic ('value is gone')})*/ }) )=>_)
+      _gone (), S .sample (_backing) && (S .sample (_backing) .ref = _ => {;panic ('value is gone')}) })*/ )=>_)
 
 
 
@@ -300,7 +299,7 @@ var temporal = _init_val => so ((_=_=>
 
 /*var every = _x =>
 	so ((
-	take
+	suppose
 	, every = S .data (false)
 	, next = _ => {{
 			;every (true)
