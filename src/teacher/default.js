@@ -565,226 +565,230 @@ var tick_state = S .value ()
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 	
-var connection = S (_ => {;
-	;return T (app_state ()) (
-		under (app_as_room) (_room => {;
-			if (! connection [_room]) {
-				;connection [_room] = S .data ()
-				;api .listen_ping (_room) (connection [_room]) }
-			if (connection [_room] ()) {
-				return so ((_=()=>
-				[ timestamp, mean, Math .sqrt (variance) ],
-				where
-				, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } } ) ) }) 
+var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }),
+  S (_ => {;
+  ;return T (app_state ()) (
+    under (app_as_room) (_room => {;
+      if (! connection [_room]) {
+        ;connection [_room] = S .data ()
+        ;api .listen_ping (_room) (connection [_room]) }
+      if (connection [_room] ()) {
+        return so ((_=()=>
+        [ timestamp, mean, Math .sqrt (variance) ],
+        where
+        , [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } } ) ) }) )
 
 
 
-//TODO: add guard to warn against depending on datas other than feedback
-;S (_ => {;
-  ;T (just_now (feedback_state)
-  ) (
-  L .forEach (I) (
-    l_sum (
-      [ L .chain (K (L .modifyOp (_piece => {;
-          var piece_details = T (_piece) ([ L .get (L .values), L .remove ([L .values, L .when (equals (undefined))]) ])
-          ;app_state (
-            T (S .sample (app_state)
-            ) (
-            L .modify ([ app_as_settings, settings_as_rules, L .values ]) (R .mergeLeft (piece_details)) )) }))
-        ) (feedback_as_rules_piece)
-      , L .chain (K (L .modifyOp (_ => {;
-          var _room = Math .floor (10000 * Math .random ())
-          ;get_room (_room) }))
-        ) (feedback_as_start)
-      , L .chain (K (L .modifyOp (start_playing))
-        ) (feedback_as_play)
-      , L .chain (K (L .modifyOp (end_game))
-        ) (feedback_as_end)
-      , L .chain (K (L .modifyOp (reset_game))
-        ) (feedback_as_reset) ] ))) })
-
-
-
-
-;S (_ => {;
-  if (L .get (ambient_as_background_music_on) (ambient_state ())) {
-    ;audio .background .play () }
-  else {
-    ;audio .background .pause () } })
-
-
-
-;S (_ => {;
-	if (L .isDefined (app_as_get_ready) (app_state ())) {
-		;flowing_state (false) }
-	else if (L .isDefined (app_as_playing) (app_state ())) {
-		;flowing_state (true) }
-	else if (L .isDefined (app_as_game_over) (app_state ())) {
-		;flowing_state (false) } })
-
-;S (last_tick => {;
-  var _app = app_state () 
-  var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  if (L .isDefined (app_as_playing) (_app) && tick_state (), tick_fn () >= time_limit) {
-    ;app_state (
-      teacher_app_playing_to_next (S .sample (app_state))) } })
-
-;S (last_app => {;
-  var app_bingoes = _app =>
-    L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
-    T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
+S .root (die => {;
+  ;window .die = { ... (window .die || {}), rules: die }
+                 
+  //TODO: add guard to warn against depending on datas other than feedback
+  ;S (_ => {;
+    ;T (just_now (feedback_state)
     ) (
-    L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
-  
-  var _app = app_state ()
-  var last_bingoes = app_bingoes (last_app) || []
-  var _bingoes = app_bingoes (_app) || []
-  // HACK: replace with calculating whether difference exists
-  if (R .length (last_bingoes) > R .length (_bingoes)) {
-    ;audio .bingo .play () }  })
-
-;S (last_app => {;
-  var app_has_bingoes_ok = _app =>
-    L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
-    T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
-    ) (
-    L .isDefined ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
-  
-	var _app = app_state ()
-  var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
-  if (equals (win_rule .first_bingo) (_win_rule)) {
-    if (L .isDefined (app_as_playing) (_app)) {
-      if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-        ;setTimeout (_=>{;end_game ()}, 8000) } } }
-	return _app })
+    L .forEach (I) (
+      l_sum (
+        [ L .chain (K (L .modifyOp (_piece => {;
+            var piece_details = T (_piece) ([ L .get (L .values), L .remove ([L .values, L .when (equals (undefined))]) ])
+            ;app_state (
+              T (S .sample (app_state)
+              ) (
+              L .modify ([ app_as_settings, settings_as_rules, L .values ]) (R .mergeLeft (piece_details)) )) }))
+          ) (feedback_as_rules_piece)
+        , L .chain (K (L .modifyOp (_ => {;
+            var _room = Math .floor (10000 * Math .random ())
+            ;get_room (_room) }))
+          ) (feedback_as_start)
+        , L .chain (K (L .modifyOp (start_playing))
+          ) (feedback_as_play)
+        , L .chain (K (L .modifyOp (end_game))
+          ) (feedback_as_end)
+        , L .chain (K (L .modifyOp (reset_game))
+          ) (feedback_as_reset) ] ))) })
 
 
-;S (last_app => {;
-	var _app = app_state ()
-  if (! L .isDefined (app_as_game_over) (last_app)) {
-    if (L .isDefined (app_as_game_over) (_app)) {
-      ;lookbehind_state (lookbehind .show_results) } }
-	return _app })
 
 
-    
-;S (_ => {;
-  var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _progress = T (_ensemble) (L .get (ensemble_as_progress))
-  // is there a more elegant way? this is not markovian 
-  if (L .isDefined (app_as_get_ready) (_app)) {
-    if (not (equals (_app_progress) (_progress))) {
+  ;S (_ => {;
+    if (L .get (ambient_as_background_music_on) (ambient_state ())) {
+      ;audio .background .play () }
+    else {
+      ;audio .background .pause () } })
 
-      var _progress_step = L .get (progress_as_step) (_progress)
+
+
+  ;S (_ => {;
+    if (L .isDefined (app_as_get_ready) (app_state ())) {
+      ;flowing_state (false) }
+    else if (L .isDefined (app_as_playing) (app_state ())) {
+      ;flowing_state (true) }
+    else if (L .isDefined (app_as_game_over) (app_state ())) {
+      ;flowing_state (false) } })
+
+  ;S (last_tick => {;
+    var _app = app_state () 
+    var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+    if (L .isDefined (app_as_playing) (_app) && tick_state (), tick_fn () >= time_limit) {
       ;app_state (
-        T (_app
-        ) (
-        [ teacher_app_get_ready_to_playing
-        , L .set (app_as_progress) (_progress) ])) } } })
+        teacher_app_playing_to_next (S .sample (app_state))) } })
 
-;S (last_app => {;
-  var _app = app_state () 
-  var _room = T (_app) (L .get (app_as_room))
+  ;S (last_app => {;
+    var app_bingoes = _app =>
+      L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
+      T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
+      ) (
+      L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
 
-  var _progress = T (_app) (L .get (app_as_progress))
-  var last_progress = T (last_app) (L .get (app_as_progress))
-  
-  if (L .isDefined (app_as_playing) (_app)) {
-    if (! equals (_progress) (last_progress)) {
-      ;go
-      .then (_ =>
-        io_state (io .messaging) && api (_room,
-          post (message_encoding (message .teacher_progress (_progress))))
-        .then (panic_on ([
-          [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-      .catch (_e => {;
-        ;console .error (_e) })
-      .then (_ => {;
-        ;io_state (io .inert) }) } }
-  else if (L .isDefined (app_as_game_over) (_app)) {
+    var _app = app_state ()
+    var last_bingoes = app_bingoes (last_app) || []
+    var _bingoes = app_bingoes (_app) || []
+    // HACK: replace with calculating whether difference exists
+    if (R .length (last_bingoes) > R .length (_bingoes)) {
+      ;audio .bingo .play () }  })
+
+  ;S (last_app => {;
+    var app_has_bingoes_ok = _app =>
+      L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
+      T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
+      ) (
+      L .isDefined ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
+
+    var _app = app_state ()
+    var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
+    if (equals (win_rule .first_bingo) (_win_rule)) {
+      if (L .isDefined (app_as_playing) (_app)) {
+        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
+          ;setTimeout (_=>{;end_game ()}, 8000) } } }
+    return _app })
+
+
+  ;S (last_app => {;
+    var _app = app_state ()
     if (! L .isDefined (app_as_game_over) (last_app)) {
-      ;go
-      .then (_ =>
-        io_state (io .messaging) && api (_room,
-          post (message_encoding (message .teacher_progress ([ -1, + (new Date) ]))))
-        .then (panic_on ([
-          [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-      .catch (_e => {;
-        ;console .error (_e) })
-      .then (_ => {;
-        ;io_state (io .inert) }) } }
-  return _app })
-  
+      if (L .isDefined (app_as_game_over) (_app)) {
+        ;lookbehind_state (lookbehind .show_results) } }
+    return _app })
 
 
-;S (_ => {;
-	var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-	
-	var _app_students = T (_app) (L .get (app_as_students))
-  var _app_boards = T (_app) (L .get (app_as_boards))
-  var _app_pasts = T (_app) (L .get (app_as_pasts))
-	var _ensemble_students =
-    L .get (L .choice (app_as_get_ready, app_as_playing, app_as_game_over)) (_app)
-    && T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_key ]))
-  var _ensemble_boards =
-    L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
-    && T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))
-  var _ensemble_pasts =
-    L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
-    && T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
-  
-  var ensemble_updates = $ (R .flatten
-  ) ( 
-  [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
-    ? [ L .set (app_as_students) (_ensemble_students) ] : []
-  , !! (_ensemble_boards && not (equals (_ensemble_boards) (_app_boards)))
-    ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
-  , !! (_ensemble_pasts && not (equals (_ensemble_pasts) (_app_pasts)))
-    ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
-  
-	if (L .isDefined (L .elems) (ensemble_updates)) {
-		;app_state (
-			T (_app) ($ (ensemble_updates))) } })
 
-;S (_ => {;
-  if (L .isDefined (app_as_setup) (app_state ())) {
-    ;lookbehind_state (lookbehind .nothing)
-    ;ensemble_state (undefined) } })
+  ;S (_ => {;
+    var _app = S .sample (app_state)
+    var _ensemble = ensemble_state ()
 
-;S (_ => {;
-	;T (app_state ()
-  ) (under (app_as_room) (_room => {;
-			var phase = heartbeat ()
-			var critical = phase === 1
-			;go
-			.then (_ =>
-				!! critical
-				? io_state (io .messaging) && api (_room,
-						post (message_encoding (message .teacher_ping (S .sample (connection)))))
-				: io_state (io .heartbeat) && api (_room)
-					.then ($ ([
-						L .get (L .inverse (data_iso (ensemble .ensemble))),
-						_x => {
-              var current_room = T (S .sample (app_state)) (L .get (app_as_room))
-              if (equals (_room) (current_room)) {              
-                ;ensemble_state (_x) } } ])) )
-      .catch (_x => {;
-        if (equals (L .get ('error') (_x)) ('timeout')) {;
-          ;console .warn ('Room timed out') }
-        else {;
-          ;throw _x }})
-			.then (_ => {;
-				;setTimeout (_ => {;
-					;heartbeat (!! critical ? reping_period : phase - 1) }
-				, 300) })
-			.catch (_e => {;
-				;console .error (_e)
-				;setTimeout (_ => {;
-					;heartbeat (phase) }
-				, 300) })
-			.then (_ => {;
-				;io_state (io .inert) }) })) })
+    var _app_progress = T (_app) (L .get (app_as_progress))
+    var _progress = T (_ensemble) (L .get (ensemble_as_progress))
+    // is there a more elegant way? this is not markovian 
+    if (L .isDefined (app_as_get_ready) (_app)) {
+      if (not (equals (_app_progress) (_progress))) {
+
+        var _progress_step = L .get (progress_as_step) (_progress)
+        ;app_state (
+          T (_app
+          ) (
+          [ teacher_app_get_ready_to_playing
+          , L .set (app_as_progress) (_progress) ])) } } })
+
+  ;S (last_app => {;
+    var _app = app_state () 
+    var _room = T (_app) (L .get (app_as_room))
+
+    var _progress = T (_app) (L .get (app_as_progress))
+    var last_progress = T (last_app) (L .get (app_as_progress))
+
+    if (L .isDefined (app_as_playing) (_app)) {
+      if (! equals (_progress) (last_progress)) {
+        ;go
+        .then (_ =>
+          io_state (io .messaging) && api (_room,
+            post (message_encoding (message .teacher_progress (_progress))))
+          .then (panic_on ([
+            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+        .catch (_e => {;
+          ;console .error (_e) })
+        .then (_ => {;
+          ;io_state (io .inert) }) } }
+    else if (L .isDefined (app_as_game_over) (_app)) {
+      if (! L .isDefined (app_as_game_over) (last_app)) {
+        ;go
+        .then (_ =>
+          io_state (io .messaging) && api (_room,
+            post (message_encoding (message .teacher_progress ([ -1, + (new Date) ]))))
+          .then (panic_on ([
+            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
+        .catch (_e => {;
+          ;console .error (_e) })
+        .then (_ => {;
+          ;io_state (io .inert) }) } }
+    return _app })
+
+
+
+  ;S (_ => {;
+    var _app = S .sample (app_state)
+    var _ensemble = ensemble_state ()
+
+    var _app_students = T (_app) (L .get (app_as_students))
+    var _app_boards = T (_app) (L .get (app_as_boards))
+    var _app_pasts = T (_app) (L .get (app_as_pasts))
+    var _ensemble_students =
+      L .get (L .choice (app_as_get_ready, app_as_playing, app_as_game_over)) (_app)
+      && T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_key ]))
+    var _ensemble_boards =
+      L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
+      && T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))
+    var _ensemble_pasts =
+      L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
+      && T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
+
+    var ensemble_updates = $ (R .flatten
+    ) ( 
+    [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
+      ? [ L .set (app_as_students) (_ensemble_students) ] : []
+    , !! (_ensemble_boards && not (equals (_ensemble_boards) (_app_boards)))
+      ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
+    , !! (_ensemble_pasts && not (equals (_ensemble_pasts) (_app_pasts)))
+      ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
+
+    if (L .isDefined (L .elems) (ensemble_updates)) {
+      ;app_state (
+        T (_app) ($ (ensemble_updates))) } })
+
+  ;S (_ => {;
+    if (L .isDefined (app_as_setup) (app_state ())) {
+      ;lookbehind_state (lookbehind .nothing)
+      ;ensemble_state (undefined) } })
+
+  ;S (_ => {;
+    ;T (app_state ()
+    ) (under (app_as_room) (_room => {;
+        var phase = heartbeat ()
+        var critical = phase === 1
+        ;go
+        .then (_ =>
+          !! critical
+          ? io_state (io .messaging) && api (_room,
+              post (message_encoding (message .teacher_ping (S .sample (connection)))))
+          : io_state (io .heartbeat) && api (_room)
+            .then ($ ([
+              L .get (L .inverse (data_iso (ensemble .ensemble))),
+              _x => {
+                var current_room = T (S .sample (app_state)) (L .get (app_as_room))
+                if (equals (_room) (current_room)) {              
+                  ;ensemble_state (_x) } } ])) )
+        .catch (_x => {;
+          if (equals (L .get ('error') (_x)) ('timeout')) {;
+            ;console .warn ('Room timed out') }
+          else {;
+            ;throw _x }})
+        .then (_ => {;
+          ;setTimeout (_ => {;
+            ;heartbeat (!! critical ? reping_period : phase - 1) }
+          , 300) })
+        .catch (_e => {;
+          ;console .error (_e)
+          ;setTimeout (_ => {;
+            ;heartbeat (phase) }
+          , 300) })
+        .then (_ => {;
+          ;io_state (io .inert) }) })) }) })

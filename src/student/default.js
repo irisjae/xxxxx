@@ -533,218 +533,222 @@ var tick_state = S .value ()
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 
-var connection = S (_ => {;
-	;return T (app_state ()
-    ) (under (app_as_room
-    ) (_room => {;
-			if (! connection [_room]) {
-				;connection [_room] = S .data ()
-				;api .listen_ping (_room) (connection [_room]) }
-			return connection [_room] () && so ((_=_=>
-			[ timestamp, mean, Math .sqrt (variance) ],
-			where
-			, [ mean, variance, n, timestamp ] = connection [_room] () )=>_) })) })
+var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }),
+  S (_ => {;
+    ;return T (app_state ()
+      ) (under (app_as_room
+      ) (_room => {;
+        if (! connection [_room]) {
+          ;connection [_room] = S .data ()
+          ;api .listen_ping (_room) (connection [_room]) }
+        return connection [_room] () && so ((_=_=>
+        [ timestamp, mean, Math .sqrt (variance) ],
+        where
+        , [ mean, variance, n, timestamp ] = connection [_room] () )=>_) })) }) )
 
 
 
 
-;S (_ => {;
-  ;T (just_now (feedback_state)
-  ) (
-  L .forEach (I) (
-    l_sum (
-      [ L .chain (K (L .modifyOp (({ room: _room }) => {;
-          ;setup_room (_room) }))
-        ) (feedback_as_setup_room)
-      , L .chain (K (L .modifyOp (({ icon: _icon, name: _name }) => {;
-          ;go
-          .then (_ => setup_student (_icon) (_name))
-          .then (_ => connect_room ()) }))
-        ) (feedback_as_setup_student)
-      , L .chain (K (L .modifyOp (({ position: _position }) => {;
-          ;attempt_problem (_position) }))
-        ) (feedback_as_attempt_problem)
-      , L .chain (K (L .modifyOp (reset_game))
-        ) (feedback_as_reset_game) ] ))) })
-
-
-
-
-
-;S (_ => {;
-  if (L .get (ambient_as_background_music_on) (ambient_state ())) {
-    ;audio .background .play () }
-  else {
-    ;audio .background .pause () } })
-
-
-
-;S (_ => {;
-	if (L .isDefined (lookbehind_as_bad_room) (lookbehind_state ())) {
-		;var forget = setTimeout (_ => {;
-			;lookbehind_state (lookbehind .nothing) }
-		, 1500)
-		;S .cleanup (_ => {;
-			;clearTimeout (forget) }) } })
-
-;S (last_app => {;
-	if (! L .isDefined (app_as_room) (last_app)) {
-		if (L .isDefined (app_as_room) (app_state ())) {
-			;lookbehind_state (lookbehind .nothing) } }
-	return app_state () }
-, app_state ())
-
-;S (last_app => {;
-	var last_progress = T (last_app) (L .get (app_as_progress))
-	var progress = T (app_state ()) (L .get (app_as_progress))
-	if (L .isDefined (app_as_playing) (app_state ())) {
-		if (last_progress !== undefined && progress !== undefined && not (equals (last_progress) (progress))) {
-			;lookbehind_state (lookbehind .attempting (0, false)) } }
-	return app_state () }
-, app_state ())
-
-;S (_ => {;
-	if (L .get (lookbehind_as_blocked) (lookbehind_state ())) {
-		;var forget = setTimeout (_ => {;
-			var _since = T (lookbehind_state ()) (L .get (lookbehind_as_since))
-			;lookbehind_state (lookbehind .attempting (_since, false)) }
-		, 3000)
-		;S .cleanup (_ => {;
-			;clearTimeout (forget) }) } })
-
-
-;S (last_app => {;
-	var _app = app_state ()
-  if (! L .isDefined (app_as_game_over) (last_app)) {
-    if (L .isDefined (app_as_game_over) (_app)) {
-      ;lookbehind_state (lookbehind .overall_analysis) } }
-	return _app })
-
-
-
-;S (_ => {;
-	if (L .isDefined (app_as_get_ready) (app_state ())) {
-		;flowing_state (false) }
-	else if (L .isDefined (app_as_playing) (app_state ())) {
-		;flowing_state (true) }
-	else if (L .isDefined (app_as_game_over) (app_state ())) {
-		;flowing_state (false) } })
-
-
-;S (_ => {
-  var _app = app_state ()
-  if (L .isDefined (app_as_setup) (_app)) {
-    T (_app
+S .root (die => {;
+  ;window .die = { ... (window .die || {}), rules: die }
+                 
+  ;S (_ => {;
+    ;T (just_now (feedback_state)
     ) (
-    under (complete_ ({ app_as_student, app_as_room, app_as_settings })) (_ => {;
-      ;app_state (
-        T (S .sample (app_state)
-        ) (
-        student_app_setup_to_get_ready) ) })) } })
-
-;S (last_tick_left => {;
-  var _app = app_state () 
-  var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  
-  if (L .isDefined (app_as_playing) (_app)) {
-    //HACK
-    var tick = (tick_state (), tick_fn ())
-    var tick_left = time_limit - tick
-    if (tick_left == 3 && not (equals (tick_left) (last_tick_left))) {
-      ;audio .countdown .play () }
-    if (tick >= time_limit) {
-      ;app_state (
-        student_app_playing_to_next (S .sample (app_state))) } } })
+    L .forEach (I) (
+      l_sum (
+        [ L .chain (K (L .modifyOp (({ room: _room }) => {;
+            ;setup_room (_room) }))
+          ) (feedback_as_setup_room)
+        , L .chain (K (L .modifyOp (({ icon: _icon, name: _name }) => {;
+            ;go
+            .then (_ => setup_student (_icon) (_name))
+            .then (_ => connect_room ()) }))
+          ) (feedback_as_setup_student)
+        , L .chain (K (L .modifyOp (({ position: _position }) => {;
+            ;attempt_problem (_position) }))
+          ) (feedback_as_attempt_problem)
+        , L .chain (K (L .modifyOp (reset_game))
+          ) (feedback_as_reset_game) ] ))) })
 
 
 
-;S (_ => {;
-  var _app = S .sample (app_state)
-	var _ensemble = ensemble_state ()
-  
-  var _app_progress = T (_app) (L .get (app_as_progress))
-  var _progress = T (_ensemble) (L .get (ensemble_as_progress))
-  
-  if (not (equals (_app_progress) (_progress))) {
-    if (L .isDefined (app_as_get_ready) (_app)) {
-      ;app_state (
-        T (_app
-        ) (
-        [ student_app_get_ready_to_playing
-        , L .set (app_as_progress) (_progress) ])) }
-    else if (L .isDefined (app_as_playing) (_app)) {
-      var _progress_step = L .get (progress_as_step) (_progress)
-      if (_progress_step !== -1) {
-        if (_progress_step > L .get (progress_as_step) (_app_progress)) {
-          ;app_state (
-            T (_app
-            ) (
-            L .set (app_as_progress) (_progress) )) } }
-      else {
+
+
+  ;S (_ => {;
+    if (L .get (ambient_as_background_music_on) (ambient_state ())) {
+      ;audio .background .play () }
+    else {
+      ;audio .background .pause () } })
+
+
+
+  ;S (_ => {;
+    if (L .isDefined (lookbehind_as_bad_room) (lookbehind_state ())) {
+      ;var forget = setTimeout (_ => {;
+        ;lookbehind_state (lookbehind .nothing) }
+      , 1500)
+      ;S .cleanup (_ => {;
+        ;clearTimeout (forget) }) } })
+
+  ;S (last_app => {;
+    if (! L .isDefined (app_as_room) (last_app)) {
+      if (L .isDefined (app_as_room) (app_state ())) {
+        ;lookbehind_state (lookbehind .nothing) } }
+    return app_state () }
+  , app_state ())
+
+  ;S (last_app => {;
+    var last_progress = T (last_app) (L .get (app_as_progress))
+    var progress = T (app_state ()) (L .get (app_as_progress))
+    if (L .isDefined (app_as_playing) (app_state ())) {
+      if (last_progress !== undefined && progress !== undefined && not (equals (last_progress) (progress))) {
+        ;lookbehind_state (lookbehind .attempting (0, false)) } }
+    return app_state () }
+  , app_state ())
+
+  ;S (_ => {;
+    if (L .get (lookbehind_as_blocked) (lookbehind_state ())) {
+      ;var forget = setTimeout (_ => {;
+        var _since = T (lookbehind_state ()) (L .get (lookbehind_as_since))
+        ;lookbehind_state (lookbehind .attempting (_since, false)) }
+      , 3000)
+      ;S .cleanup (_ => {;
+        ;clearTimeout (forget) }) } })
+
+
+  ;S (last_app => {;
+    var _app = app_state ()
+    if (! L .isDefined (app_as_game_over) (last_app)) {
+      if (L .isDefined (app_as_game_over) (_app)) {
+        ;lookbehind_state (lookbehind .overall_analysis) } }
+    return _app })
+
+
+
+  ;S (_ => {;
+    if (L .isDefined (app_as_get_ready) (app_state ())) {
+      ;flowing_state (false) }
+    else if (L .isDefined (app_as_playing) (app_state ())) {
+      ;flowing_state (true) }
+    else if (L .isDefined (app_as_game_over) (app_state ())) {
+      ;flowing_state (false) } })
+
+
+  ;S (_ => {
+    var _app = app_state ()
+    if (L .isDefined (app_as_setup) (_app)) {
+      T (_app
+      ) (
+      under (complete_ ({ app_as_student, app_as_room, app_as_settings })) (_ => {;
+        ;app_state (
+          T (S .sample (app_state)
+          ) (
+          student_app_setup_to_get_ready) ) })) } })
+
+  ;S (last_tick_left => {;
+    var _app = app_state () 
+    var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+
+    if (L .isDefined (app_as_playing) (_app)) {
+      //HACK
+      var tick = (tick_state (), tick_fn ())
+      var tick_left = time_limit - tick
+      if (tick_left == 3 && not (equals (tick_left) (last_tick_left))) {
+        ;audio .countdown .play () }
+      if (tick >= time_limit) {
+        ;app_state (
+          student_app_playing_to_next (S .sample (app_state))) } } })
+
+
+
+  ;S (_ => {;
+    var _app = S .sample (app_state)
+    var _ensemble = ensemble_state ()
+
+    var _app_progress = T (_app) (L .get (app_as_progress))
+    var _progress = T (_ensemble) (L .get (ensemble_as_progress))
+
+    if (not (equals (_app_progress) (_progress))) {
+      if (L .isDefined (app_as_get_ready) (_app)) {
         ;app_state (
           T (_app
           ) (
-          student_app_playing_to_game_over)) } } } })
-
-
-
-
-;S (_ => {;
-  if (L .isDefined (app_as_setup) (app_state ())) {
-    ;lookbehind_state (lookbehind .nothing)
-    ;ensemble_state (undefined) } })
-
-;S (_ => {;
-	;T (app_state ()
-  ) (
-  under (
-    complete_ ({
-      _student: app_as_student,
-      _room: app_as_room })
-	) (({ _student, _room }) => {;
-		var phase = heartbeat ()
-		var critical = phase === 1
-		go
-		.then (_ =>
-			!! critical && S .sample (connection)
-			? so ((_=_=>
-        io_state (io .messaging) && api (_room, 
-          post (messages_encoding (
-            !! not_playing
-						? [ message .student_ping (_student, S .sample (connection)) ]
-						: [ message .student_ping (_student, S .sample (connection))
-							, message .student_join (_student, _board)
-							, message .student_update (_student, _past) ]))),
-        where
-        , { _board, _past, not_playing } =
-            T (app_state ()
+          [ student_app_get_ready_to_playing
+          , L .set (app_as_progress) (_progress) ])) }
+      else if (L .isDefined (app_as_playing) (_app)) {
+        var _progress_step = L .get (progress_as_step) (_progress)
+        if (_progress_step !== -1) {
+          if (_progress_step > L .get (progress_as_step) (_app_progress)) {
+            ;app_state (
+              T (_app
+              ) (
+              L .set (app_as_progress) (_progress) )) } }
+        else {
+          ;app_state (
+            T (_app
             ) (
-            L .get (
-              L .choice (
-                complete_ (
-                  { _board: app_as_board
-                  , _past: app_as_past }),
-                K ({ not_playing: 'not playing' }) ))) )=>_)
-			: io_state (io .heartbeat) && api (_room)
-				.then ($ ([
-					L .get (L .inverse (data_iso (ensemble .ensemble))),
-					_x => {
-            var current_room = T (S .sample (app_state)) (L .get (app_as_room))
-            if (equals (_room) (current_room)) {
-              ;ensemble_state (_x)} } ])) )
-    .catch (_x => {;
-      if (equals (L .get ('error') (_x)) ('timeout')) {;
-        ;console .warn ('Room timed out') }
-      else {;
-        ;throw _x }})
- 		.then (_ => {;
-			;setTimeout (_ => {;
-				;heartbeat (!! critical ? reping_period : phase - 1) }
-			, 300) })
-		.catch (_e => {;
-			;console .error (_e)
-			;setTimeout (_ => {;
-				;heartbeat (phase) }
-			, 300) })
-		.then (_ => {;
-			;io_state (io .inert) }) })) })
+            student_app_playing_to_game_over)) } } } })
+
+
+
+
+  ;S (_ => {;
+    if (L .isDefined (app_as_setup) (app_state ())) {
+      ;lookbehind_state (lookbehind .nothing)
+      ;ensemble_state (undefined) } })
+
+  ;S (_ => {;
+    ;T (app_state ()
+    ) (
+    under (
+      complete_ ({
+        _student: app_as_student,
+        _room: app_as_room })
+    ) (({ _student, _room }) => {;
+      var phase = heartbeat ()
+      var critical = phase === 1
+      go
+      .then (_ =>
+        !! critical && S .sample (connection)
+        ? so ((_=_=>
+          io_state (io .messaging) && api (_room, 
+            post (messages_encoding (
+              !! not_playing
+              ? [ message .student_ping (_student, S .sample (connection)) ]
+              : [ message .student_ping (_student, S .sample (connection))
+                , message .student_join (_student, _board)
+                , message .student_update (_student, _past) ]))),
+          where
+          , { _board, _past, not_playing } =
+              T (app_state ()
+              ) (
+              L .get (
+                L .choice (
+                  complete_ (
+                    { _board: app_as_board
+                    , _past: app_as_past }),
+                  K ({ not_playing: 'not playing' }) ))) )=>_)
+        : io_state (io .heartbeat) && api (_room)
+          .then ($ ([
+            L .get (L .inverse (data_iso (ensemble .ensemble))),
+            _x => {
+              var current_room = T (S .sample (app_state)) (L .get (app_as_room))
+              if (equals (_room) (current_room)) {
+                ;ensemble_state (_x)} } ])) )
+      .catch (_x => {;
+        if (equals (L .get ('error') (_x)) ('timeout')) {;
+          ;console .warn ('Room timed out') }
+        else {;
+          ;throw _x }})
+      .then (_ => {;
+        ;setTimeout (_ => {;
+          ;heartbeat (!! critical ? reping_period : phase - 1) }
+        , 300) })
+      .catch (_e => {;
+        ;console .error (_e)
+        ;setTimeout (_ => {;
+          ;heartbeat (phase) }
+        , 300) })
+      .then (_ => {;
+        ;io_state (io .inert) }) })) }) })
