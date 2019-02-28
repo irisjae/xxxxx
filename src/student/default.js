@@ -347,11 +347,15 @@ var game_over_view = _ => so ((_=_=>
       ?
       <problems-analysis>
         { T (_points
-          ) (L .collect ([ L .elems, x =>
+          ) (L .collect ([ L .elems, _point => so ((_=_=>
           <problem>
-            <question>{ attempted_points_amount }</question>
-            <number-of-attempts>{ solved_points_amount }</number-of-attempts>
-            <solved-time>{ mean_solved_point_latency }秒</solved-time> </problem> ])) } </problems-analysis>
+            <question>{ _question }</question>
+            <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
+            <solved-time>{ _solved_time }秒</solved-time> </problem>,
+          where
+          , _question = T (_point) (L .get (point_as_question))
+          , _number_of_attempts = T (_point) (L .count (point_as_attempts))
+          , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 ])) || '-' )=>_) } </problems-analysis>
       : [] }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
