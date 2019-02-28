@@ -339,10 +339,19 @@ var game_over_view = _ => so ((_=_=>
       <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind_as_problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     { !! L .isDefined (lookbehind_as_overall_analysis) (_lookbehind)
       ? 
-      <analysis>
+      <overall-analysis>
         <div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
         <div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
-        <div><span>平均答對時間：</span> <span>{ mean_solved_point_latency }秒</span></div> </analysis>
+        <div><span>平均答對時間：</span> <span>{ mean_solved_point_latency }秒</span></div> </overall-analysis>
+      :!! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
+      ?
+      <problems-analysis>
+        { T (_points
+          ) (L .collect ([ L .elems, x =>
+          <problem>
+            <question>{ attempted_points_amount }</question>
+            <number-of-attempts>{ solved_points_amount }</number-of-attempts>
+            <solved-time>{ mean_solved_point_latency }秒</solved-time> </problem> ])) } </problems-analysis>
       : [] }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
@@ -352,9 +361,10 @@ var game_over_view = _ => so ((_=_=>
   , _student = T (_app) (L .get (app_as_student))
   , _name = T (_student) (L .get (student_as_name))
   , _board = T (_app) (L .get (app_as_board)) 
-  , attempted_points_amount = T (_app) (L .count ([ app_as_past, past_as_points, L .elems, point_as_attempts, L .last ]))
-  , solved_points_amount = T (_app) (L .count ([ app_as_past, past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
-  , mean_solved_point_latency = T (_app) (L .mean ([ app_as_past, past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) .toFixed (2) * 1 || '0'
+  , _points = T (_app) (L .get ([ app_as_past, past_as_points ]))  
+  , attempted_points_amount = T (_points) (L .count ([ L .elems, point_as_attempts, L .last ]))
+  , solved_points_amount = T (_points) (L .count ([ L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
+  , mean_solved_point_latency = T (_points) (L .mean ([ L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) .toFixed (2) * 1 || '0'
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , overall_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-analysis-on.png?1547306859997'                             
   , overall_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-anlysis-off.png?1547306860589'                             
