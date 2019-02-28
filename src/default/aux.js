@@ -1,6 +1,6 @@
 var {
 	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-	so, by, under,
+	so, by, 
 	go, never, panic, panic_on,
   just_now, temporary,
 	fiat, data, data_lens, data_iso, data_kind,
@@ -516,6 +516,7 @@ var problem_choice_matches = so ((_=_=>
             , left = str_parse (str .slice (0, at))                                      
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
         ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
+  , under = $ ([])
   , ast_as_normal = data_iso (ast .normal)
   , ast_as_add = data_iso (ast .add)
   , ast_as_minus = data_iso (ast .minus)
