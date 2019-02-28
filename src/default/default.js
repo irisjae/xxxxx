@@ -65,7 +65,7 @@ var so = fn_form =>
 	: fn_form ()
 var by = _meta_fn => x => T (x) (_meta_fn (x))
 //var and_by = $ ([ by, Z .flip ])
-var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
+//var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
 var go = Promise .resolve ()
 var never = new Promise (_ => {})
 
@@ -382,7 +382,7 @@ document .addEventListener ('DOMContentLoaded', _ => {;
 window .Surplus = Surplus
 window .stuff = { ...window .stuff,
 	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-	so, by, under,
+	so, by, 
 	go, never, panic, panic_on,
   just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
