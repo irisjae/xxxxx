@@ -657,8 +657,17 @@ S .root (die => {;
       L .isDefined ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
 
     var _app = app_state ()
+    var game_tick = tick_state ()
     var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
     if (equals (win_rule .first_bingo) (_win_rule)) {
+      if (L .isDefined (app_as_playing) (_app)) {
+        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
+          ;setTimeout (_=>{;end_game ()}, 8000) } } }
+    else if (equals (win_rule .limit_time) (_win_rule)) {
+      if (L .isDefined (app_as_playing) (_app)) {
+        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
+          ;setTimeout (_=>{;end_game ()}, 8000) } } }
+    else if (equals (win_rule .all_problems) (_win_rule)) {
       if (L .isDefined (app_as_playing) (_app)) {
         if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
           ;setTimeout (_=>{;end_game ()}, 8000) } } }
