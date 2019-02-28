@@ -255,8 +255,8 @@ var playing_view = _ => so ((_=_=>
            , shape =
                !! equals (first_x) (last_x) ? 'vertical'
                :!! equals (first_y) (last_y) ? 'horizontal'
-               :!! first_x < last_x ? 'diagonal-down'
-               :!! first_x > last_x ? 'diagonal-up'
+               :!! (first_x < last_x) ? 'diagonal-down'
+               :!! (first_x > last_x) ? 'diagonal-up'
                : panic ('bad pattern') )=>
            T (Z_ .range (1) (5 + 1)) (R .map (_i => so ((_=_=>
              <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,

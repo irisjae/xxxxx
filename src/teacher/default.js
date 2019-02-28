@@ -296,8 +296,8 @@ var playing_view = _ => so ((_=_=>
                   , shape =
                       !! equals (first_x) (last_x) ? 'vertical'
                       :!! equals (first_y) (last_y) ? 'horizontal'
-                      :!! first_x < last_x ? 'diagonal-down'
-                      :!! first_x > last_x ? 'diagonal-up'
+                      :!! (first_x < last_x) ? 'diagonal-down'
+                      :!! (first_x > last_x) ? 'diagonal-up'
                       : panic ('bad pattern')
                   , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
                           :!! equals (shape) ('vertical') ? '5%'
@@ -403,8 +403,8 @@ var game_over_view = _ => so ((_=_=>
                 , shape =
                     !! equals (first_x) (last_x) ? 'vertical'
                     :!! equals (first_y) (last_y) ? 'horizontal'
-                    :!! first_x < last_x ? 'diagonal-down'
-                    :!! first_x > last_x ? 'diagonal-up'
+                    :!! (first_x < last_x) ? 'diagonal-down'
+                    :!! (first_x > last_x) ? 'diagonal-up'
                     : panic ('bad pattern')
                 , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
                         :!! equals (shape) ('vertical') ? '5%'
