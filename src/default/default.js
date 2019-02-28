@@ -24,6 +24,7 @@ var $ = form =>
     T (x) (form)
 var apply = fn => arg_list =>
   fn .apply (null, arg_list)
+var impure = _fn => {;_fn ()}
 
 var I = _x => _x // = L .get ([]) = Z_ .I
 var K = _x => _ => _x // = L .set ([]) = Z_ .K
@@ -45,17 +46,13 @@ var sole = list =>
 
 
 
-var panic = err => {{
-	; throw new Error (err) }}
-var panic_on = cases =>
-	_x =>
-		so ((
-		suppose
-		, triggered_case = T (cases) (R .find (([cond, _]) => cond (_x))) ) =>
-		!! equals (triggered_case) (undefined) ? _x
-		: T (triggered_case
-			) (([_, err]) => {{
-				;throw new Error (err) }}) )
+var panic = err => {;throw new Error (err)}
+var panic_on = mandates =>
+  _x => so ((
+  suppose
+  , [ mandate, infraction ] = T (mandates) (R .find (([ charge, _ ]) => charge (_x))) || [] ) =>
+  !! equals (infraction) (undefined) ? _x
+  : impure (X=>{;throw new Error (infraction)}) )
 
 
 
