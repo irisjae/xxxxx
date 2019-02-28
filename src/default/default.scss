@@ -644,7 +644,7 @@ student-app > game-over-etc {
     align-items: center;
     & > * {
       margin: 0 10px; } }
-  & overall-analysis {
+  & overall-analysis, & problems-analysis {
     position: absolute;
     top: 30%;
     left: 50%;
@@ -660,12 +660,45 @@ student-app > game-over-etc {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    box-shadow: 0px 0px 50px rgba(0,0,0,0.1); 
+    box-shadow: 0px 0px 50px rgba(0,0,0,0.1); }
+  & overall-analysis {
+    flex-wrap: wrap;
+    justify-content: center;
     & div {
       width: 80%;
       display: flex;
       justify-content: space-between;
       font-size: 2em; } }
+  & problems-analysis {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow: auto;
+    problem {
+      width: 80%;
+      flex-basis: 2em;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.75em;
+      padding: 10px 10%;
+
+      &:not(:last-child) {
+        border-bottom: dashed 1px #ff7b44; }
+      question {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center; }
+      number-of-attempts {
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        align-items: center; }
+      solved-time {
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        align-items: center; } } }
   & options[x-for=options] {
     position: absolute;
     right: 0;
