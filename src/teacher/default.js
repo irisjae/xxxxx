@@ -1,6 +1,6 @@
 var { bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece,
-shuffle, uuid, map_zip, api, post,
+shuffle, uuid, map_zip, under, api, post,
 timer, timer_since, time_intervals, 
 avatar, student, problem, choice, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
@@ -659,18 +659,24 @@ S .root (die => {;
     var _app = app_state ()
     var game_tick = tick_state ()
     var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
+    //var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
     if (equals (win_rule .first_bingo) (_win_rule)) {
       if (L .isDefined (app_as_playing) (_app)) {
         if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
           ;setTimeout (_=>{;end_game ()}, 8000) } } }
+/* 
     else if (equals (win_rule .limit_time) (_win_rule)) {
       if (L .isDefined (app_as_playing) (_app)) {
+Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_as_progress, progress_as_timestamp ]))) / 1000)        
         if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
           ;setTimeout (_=>{;end_game ()}, 8000) } } }
+*/
     else if (equals (win_rule .all_problems) (_win_rule)) {
-      if (L .isDefined (app_as_playing) (_app)) {
-        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-          ;setTimeout (_=>{;end_game ()}, 8000) } } }
+//      if (L .isDefined (app_as_playing) (_app)) {
+//        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
+//          ;setTimeout (_=>{;end_game ()}, 8000) } }
+    
+    }
     return _app })
 
 
