@@ -17,7 +17,7 @@ ensemble_as_ping, ensemble_as_settings, ensemble_as_progress,
 ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
 question_as_text, question_as_image, question_as_solution, 
-attempt_as_position, attempt_as_latency, point_as_attempts, point_as_position, past_as_points,
+attempt_as_position, attempt_as_latency, point_as_problem, point_as_attempts, point_as_position, past_as_points,
 app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 app_as_board, app_as_past, app_as_progress,
 app_as_boards, app_as_pasts, 
@@ -351,11 +351,11 @@ var game_over_view = _ => so ((_=_=>
           <problem>
             <question>{ _question }</question>
             <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
-            <solved-time>{ _solved_time }秒</solved-time> </problem>,
+            <solved-time>{ _solved_time }</solved-time> </problem>,
           where
-          , _question = T (_point) (L .get (point_as_question))
+          , _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
           , _number_of_attempts = T (_point) (L .count (point_as_attempts))
-          , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 ])) || '-' )=>_) } </problems-analysis>
+          , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis>
       : [] }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
