@@ -516,7 +516,6 @@ var problem_choice_matches = so ((_=_=>
             , left = str_parse (str .slice (0, at))                                      
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
         ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
-  , under = $ ([])
   , ast_as_normal = data_iso (ast .normal)
   , ast_as_add = data_iso (ast .add)
   , ast_as_minus = data_iso (ast .minus)
@@ -798,6 +797,9 @@ var map_zip = mash => a => b => {
   return _zip }
 
 
+var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
+
+
 
 var uuid = _ =>
 	'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
@@ -818,7 +820,7 @@ var uuid = _ =>
 window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
 	list, map, maybe, nat, id, v, piece,
-	shuffle, uuid, map_zip, api, post,
+	shuffle, uuid, map_zip, under, api, post,
   timer, timer_since, time_intervals, 
 	avatar, student, problem, choice, latency, ping, position,
 	attempt, point, past, board, win_rule, rules, settings,
