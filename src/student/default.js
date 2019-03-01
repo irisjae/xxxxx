@@ -353,8 +353,8 @@ var game_over_view = _ => so ((_=_=>
             <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
             <solved-time>{ _solved_time }</solved-time> </problem>,
           where
-          , _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
-          , _number_of_attempts = T (_point) (L .count (point_as_attempts))
+          , _question = T (_point) (L .get ([ point_as_problem, problem_as_question, question_as_image ]))
+          , _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
           , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis>
       : [] }
     <options x-for="options">
