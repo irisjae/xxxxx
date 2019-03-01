@@ -239,8 +239,8 @@ teacher-app > playing-etc {
       font-size: 40px;
       box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
       & img {
-        max-width: 100%;
-        max-height: 100%; } } }
+        max-width: 80%;
+        max-height: 80%; } } }
   & students {
     position: absolute;
     top: 20%;
@@ -532,6 +532,7 @@ student-app > playing-etc {
       flex-grow: 0; }
     & question {
       flex-grow: 1;
+      padding: 10%;
       background: #fae383;
       border-radius: 20px;
       text-align: center;
@@ -673,9 +674,9 @@ student-app > game-over-etc {
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow: auto;
-    problem {
+    & problem {
       width: 80%;
-      flex-basis: 2em;
+      min-height: 2em;
       flex-shrink: 0;
       display: flex;
       justify-content: space-between;
@@ -684,17 +685,20 @@ student-app > game-over-etc {
 
       &:not(:last-child) {
         border-bottom: dashed 1px #ff7b44; }
-      question {
+      & question {
         width: 50%;
         display: flex;
         justify-content: center;
-        align-items: center; }
-      number-of-attempts {
+        align-items: center;
+        & img {
+          max-width: 80%;
+          max-height: 5em; } }
+      & number-of-attempts {
         width: 25%;
         display: flex;
         justify-content: center;
         align-items: center; }
-      solved-time {
+      & solved-time {
         width: 25%;
         display: flex;
         justify-content: center;
