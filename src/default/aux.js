@@ -128,8 +128,8 @@ var default_problems = shuffle ([/*
 	[question .text ('4/6'), ['2/3', '6/9']],
 	[question .text ('5/6'), ['10/12', '15/18']],
   [question .text ('1/7'), ['2/14', '3/21']],/**/
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1547414777420', '11'), ['11']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1547414777721', '4'), ['4']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1551418719974', '11'), ['11']],
+  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1551418720246', '4'), ['4']],
   [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1551418718368', '5'), ['5']],
   [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-04.png?1551418719719', '41'), ['41']],
   [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-05.png?1551418717084', '1'), ['1']],
