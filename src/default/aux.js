@@ -36,6 +36,8 @@ var question = data ({
   image: (image =~ url, solution =~ choice) => question })
 var problem = v (question, list (choice))
 
+var order = props => list// (v (... props, 'ascending' | 'descending'))
+
 var time_interval = data ({ time_interval: (from =~ timestamp, to =~ timestamp) => time_interval })
 
 var time_amount = number
@@ -771,6 +773,24 @@ where
 
 
 
+var order_sort = _ordering => by (list => so ((_=_=>
+  R .sortWith (comp),
+  where
+  , comp = T (_ordering) (R .map (([ prop, direction ]) =>
+      !! equals (direction) ('ascending') ? R .ascend (prop)
+      : equals (direction) ('descending') ? R .descend (prop)
+      : panic ('unknown direction') )) )=>_))
+var direction_opposite = _direction =>
+  !! equals (_direction) ('ascending') ? 'descending'
+  : equals (_direction) ('descending') ? 'ascending'
+  : panic ('unknown direction')
+var toggle_order = prop => _ordering => so ((_=_=>
+  [ [prop, opposite_direction], ... irrelevant_orderings ],
+  where
+  , irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
+  , opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
+
+
 var post = x => ({
 	method: 'POST',
 	headers: {
@@ -819,7 +839,8 @@ var uuid = _ =>
 
 window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
-	list, map, maybe, nat, id, v, piece,
+	list, map, maybe, nat, id, v, piece, order,
+  order_sort, direction_opposite, toggle_order, 
 	shuffle, uuid, map_zip, under, api, post,
   timer, timer_since, time_intervals, 
 	avatar, student, problem, choice, latency, ping, position,
