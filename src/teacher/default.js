@@ -245,7 +245,7 @@ var setup_view = _ => so ((_=_=>
   , preview_back = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;lookbehhind_state (lookbehind .nothing) }) }) }
+          ;lookbehind_state (lookbehind .nothing) }) }) }
   , toggle_background_music = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
