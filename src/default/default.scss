@@ -645,14 +645,15 @@ student-app > game-over-etc {
     align-items: center;
     & > * {
       margin: 0 10px; } }
-  & overall-analysis, & problems-analysis {
+  & overall-analysis, & problems-analysis-etc {
     position: absolute;
     top: 30%;
     left: 50%;
     transform: translateX(-50%);
     width: 60%;
     max-width: 500px;
-    height: 40%;
+    height: 40%; }
+  & overall-analysis, & problems-analysis {
     background: #FFF;
     color: #ff7b44;
     border-radius: 80px;
@@ -670,29 +671,19 @@ student-app > game-over-etc {
       display: flex;
       justify-content: space-between;
       font-size: 2em; } }
-  & problems-analysis {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow: auto;
-    & problem {
+  & problems-analysis-etc {
+    overflow: visible;
+    & labels, & problem {
       width: 80%;
-      min-height: 2em;
-      flex-shrink: 0;
       display: flex;
       justify-content: space-between;
-      font-size: 1.75em;
       padding: 10px 10%;
-
-      &:not(:last-child) {
-        border-bottom: dashed 1px #ff7b44; }
+      transform: translateY(-100%);
       & question {
         width: 50%;
         display: flex;
         justify-content: center;
-        align-items: center;
-        & img {
-          max-width: 80%;
-          max-height: 5em; } }
+        align-items: center; }
       & number-of-attempts {
         width: 25%;
         display: flex;
@@ -702,7 +693,27 @@ student-app > game-over-etc {
         width: 25%;
         display: flex;
         justify-content: center;
-        align-items: center; } } }
+        align-items: center; } }
+    & labels {
+      font-size: 1.25em;
+      position: absolute; }
+    & problems-analysis {
+      height: 100%;
+      width: 100%;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow: auto;
+      & problem {
+        min-height: 2em;
+        flex-shrink: 0;
+        font-size: 1.75em;
+
+        &:not(:last-child) {
+          border-bottom: dashed 1px #ff7b44; }
+        & question {
+          & img {
+            max-width: 80%;
+            max-height: 5em; } } } } }
   & options[x-for=options] {
     position: absolute;
     right: 0;

@@ -355,11 +355,10 @@ var game_over_view = _ => so ((_=_=>
       :!! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
       ? so ((_=_=>
       <problems-analysis-etc>
-        <ordering>
+        <labels>
           <question>題目 <img src={ toggle_ordering_img } /></question>
-          <number-of-attempts>題目 <img src={ toggle_ordering_img } /></number-of-attempts>
-          <solved-time>題目 <img src={ toggle_ordering_img } /></solved-time>
-        </ordering>
+          <number-of-attempts>作答次數 <img src={ toggle_ordering_img } /></number-of-attempts>
+          <solved-time>答對時間 <img src={ toggle_ordering_img } /></solved-time> </labels>
         <problems-analysis>
           { T (_points
             ) (L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
@@ -402,7 +401,7 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .problems_analysis ('ascending', 'ascending', 'ascending')) })})}
+          ;lookbehind_state (lookbehind .problems_analysis ([ [ 'ascending'], [], [] ])) })})}
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
