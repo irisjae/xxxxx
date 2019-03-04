@@ -356,9 +356,9 @@ var game_over_view = _ => so ((_=_=>
       ? so ((_=_=>
       <problems-analysis-etc>
         <ordering>
-          <question> </question>
-          <number-of-attempts> </number-of-attempts>
-          <solved-time> </solved-time>
+          <question>題目 <img src={ toggle_ordering_img } /></question>
+          <number-of-attempts>題目 <img src={ toggle_ordering_img } /></number-of-attempts>
+          <solved-time>題目 <img src={ toggle_ordering_img } /></solved-time>
         </ordering>
         <problems-analysis>
           { T (_points
@@ -394,6 +394,7 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
   , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
   , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
+  , toggle_ordering_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png?1551692617218'
   , overall_analysis = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
