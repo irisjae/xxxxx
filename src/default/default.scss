@@ -659,8 +659,6 @@ student-app > game-over-etc {
     border-radius: 80px;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 50px rgba(0,0,0,0.1); }
   & overall-analysis {
@@ -678,7 +676,6 @@ student-app > game-over-etc {
       display: flex;
       justify-content: space-between;
       padding: 10px 10%;
-      transform: translateY(-100%);
       & question {
         width: 50%;
         display: flex;
@@ -695,8 +692,9 @@ student-app > game-over-etc {
         justify-content: center;
         align-items: center; } }
     & labels {
-      font-size: 1.25em;
-      position: absolute; }
+      font-size: 1.2em;
+      position: absolute;
+      transform: translateY(-100%); }
     & problems-analysis {
       height: 100%;
       width: 100%;

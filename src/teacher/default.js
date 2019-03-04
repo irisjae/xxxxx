@@ -663,7 +663,7 @@ S .root (die => {;
     if (equals (win_rule .first_bingo) (_win_rule)) {
       if (L .isDefined (app_as_playing) (_app)) {
         if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-          ;setTimeout (_=>{;end_game ()}, 8000) } } }
+          ;setTimeout (_=>{;if (L .isDefined (app_as_playing) (S .sample (app_state))) {;end_game ()}}, 8000) } } }
 /* 
     else if (equals (win_rule .limit_time) (_win_rule)) {
       if (L .isDefined (app_as_playing) (_app)) {
