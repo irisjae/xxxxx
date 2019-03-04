@@ -677,21 +677,16 @@ student-app > game-over-etc {
       display: flex;
       justify-content: space-between;
       padding: 10px 10%;
+      & question, & number-of-attempts, & solved-time {
+        display: flex;
+        justify-content: center;
+        align-items: center; }
       & question {
         width: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
       & number-of-attempts {
-        width: 25%;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
+        width: 25%; }
       & solved-time {
-        width: 25%;
-        display: flex;
-        justify-content: center;
-        align-items: center; } }
+        width: 25%; } }
     & labels {
       font-size: 1.2em;
       position: absolute;
