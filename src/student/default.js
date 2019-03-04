@@ -46,7 +46,7 @@ I, K, not, equals
 } = window .stuff
 
 var order = props => list// (v (... props, 'ascending' | 'descending'))
-var sort = _ordering => by (list => so ((_=_=>
+var order_sort = _ordering => by (list => so ((_=_=>
   R .sortWith (comp),
   where
   , comp = T (_ordering) (R .map (([ lens, direction ]) =>
@@ -89,6 +89,7 @@ var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
 var lookbehind_as_room = data_lens (lookbehind .bad_room) .room
 var lookbehind_as_since = data_lens (lookbehind .attempting) .since
 var lookbehind_as_blocked = data_lens (lookbehind .attempting) .blocked
+var lookbehind_as_ordering = data_iso (lookbehind .problems_analysis) .ordering
 
 var ambient_as_ambient = data_iso (ambient .ambient)
 var ambient_as_background_music_on = data_lens (ambient .ambient) .background_music_on
@@ -352,20 +353,28 @@ var game_over_view = _ => so ((_=_=>
         <div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
         <div><span>平均答對時間：</span> <span>{ mean_solved_point_latency }秒</span></div> </overall-analysis>
       :!! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
-      ?
-      <problems-analysis>
-        { T (_points
-          ) (L .collect ([ L .elems, _point => so ((_=_=>
-          <problem>
-            <question>{ T (_question) (L .get (L .choice (
-                L .chain (K (_image => <img src={ _image } />)) (question_as_image),
-                L .chain (K (I)) (question_as_text)))) }</question>
-            <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
-            <solved-time>{ _solved_time }</solved-time> </problem>,
-          where
-          , _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
-          , _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
-          , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis>
+      ? so ((_=_=>
+      <problems-analysis-etc>
+        <ordering>
+          <question> </question>
+          <number-of-attempts> </number-of-attempts>
+          <solved-time> </solved-time>
+        </ordering>
+        <problems-analysis>
+          { T (_points
+            ) (L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
+            <problem>
+              <question>{ T (_question) (L .get (L .choice (
+                  L .chain (K (_image => <img src={ _image } />)) (question_as_image),
+                  L .chain (K (I)) (question_as_text)))) }</question>
+              <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
+              <solved-time>{ _solved_time }</solved-time> </problem>,
+            where
+            , _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
+            , _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
+            , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
+      where
+      , _ordering = T (_lookbehind) (lookbehind_as_ordering) )=>_)
       : [] }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
