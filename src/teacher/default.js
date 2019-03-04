@@ -492,11 +492,19 @@ var game_over_view = _ => so ((_=_=>
           <problems-analysis>
             { T (_problems
               ) (
-              [ L .collect ([ order_sort (_ordering), L .elems, ({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => 
+              [ L .collectAs ((_problem, _index) => so ((_=_=>
+                  { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
+                  , _number_of_solvers: T (_students_boards_pasts
+                      ) (L .count ([ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )) ]))
+                  , _average_number_of_attempts
+                  , _average_solved_time },
+                  where
+                  , _index )=>_)) (L .elems)
+              , L .collect ([ order_sort (_ordering), L .elems, ({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => 
               <problem>
-                <name>{ _name }</name>
-                <number-of-solved>{ _number_of_solved }</number-of-solved>
-                <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
+                <question><img src={ _question }/></question>
+                <number-of-solvers>{ _number_of_solvers }</number-of-solvers>
+                <average-number-of-attempts>{ _average_number_of_attempts }</average-number-of-attempts>
                 <average-solved-time>{ _average_solved_time }</average-solved-time> </problem> ]) ]) } </problems-analysis> </problems-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
