@@ -45,8 +45,14 @@ as_sole, sole, shuffle,
 I, K, not, equals
 } = window .stuff
 
-var order = props => props * 'ascending' | 'descending'
-var sort = _ordering => list => 
+var order = props => list// (v (... props, 'ascending' | 'descending'))
+var sort = _ordering => by (list => so ((_=_=>
+  R .sortWith (comp),
+  where
+  , comp = T (_ordering) (R .map (([ lens, direction ]) =>
+      !! equals (direction) ('ascending') ? R .ascend (L .get (lens))
+      :!! equals (direction) ('descending') ? R .descend (L .get (lens))
+      : panic ('unknown direction') )) )=>_))
 
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
