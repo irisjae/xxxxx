@@ -49,10 +49,20 @@ var order = props => list// (v (... props, 'ascending' | 'descending'))
 var order_sort = _ordering => by (list => so ((_=_=>
   R .sortWith (comp),
   where
-  , comp = T (_ordering) (R .map (([ lens, direction ]) =>
-      !! equals (direction) ('ascending') ? R .ascend (L .get (lens))
-      :!! equals (direction) ('descending') ? R .descend (L .get (lens))
+  , comp = T (_ordering) (R .map (([ prop, direction ]) =>
+      !! equals (direction) ('ascending') ? R .ascend (prop)
+      :!! equals (direction) ('descending') ? R .descend (prop)
       : panic ('unknown direction') )) )=>_))
+var direction_opposite = _direction =>
+  !! equals (_direction) ('ascending') ? 'descending'
+  :!! equals (_direction) ('descending') ? 'ascending'
+  : panic ('unknown direction')
+var toggle_order = prop => _ordering => so ((_=_=>
+  [ [prop, opposite_direction], ... irrelevant_orderings ],
+  where
+  , irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
+  , opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
+    
 
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
@@ -401,7 +411,7 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .problems_analysis ([ [ 'ascending'], [], [] ])) })})}
+          ;lookbehind_state (lookbehind .problems_analysis ([])) })})}
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
