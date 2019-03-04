@@ -360,8 +360,8 @@ var game_over_view = _ => so ((_=_=>
     <a-title><img src={ logo_img }/></a-title>
     <student><label>{ _name }</label></student> 
     <options x-for="tabs">
-      <button x-custom x-for="overall-analysis" fn={ overall_analysis } ><img src={ !! L .isDefined (lookbehind_as_overall_analysis) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+      <button x-custom x-for="overall-analysis" fn={ overall_analysis }><img src={ !! L .isDefined (lookbehind_as_overall_analysis) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis }><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     { !! L .isDefined (lookbehind_as_overall_analysis) (_lookbehind)
       ? 
       <overall-analysis>
@@ -372,9 +372,9 @@ var game_over_view = _ => so ((_=_=>
       ? so ((_=_=>
       <problems-analysis-etc>
         <labels>
-          <question>題目 <img src={ toggle_ordering_img } /></question>
-          <number-of-attempts>作答次數 <img src={ toggle_ordering_img } /></number-of-attempts>
-          <solved-time>答對時間 <img src={ toggle_ordering_img } /></solved-time> </labels>
+          <question fn={ toggle_question_order }>題目 <img src={ toggle_ordering_img } /></question>
+          <number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ toggle_ordering_img } /></number-of-attempts>
+          <solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ toggle_ordering_img } /></solved-time> </labels>
         <problems-analysis>
           { T (_points
             ) (L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
@@ -392,7 +392,7 @@ var game_over_view = _ => so ((_=_=>
       , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)
       : [] }
     <options x-for="options">
-      <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
+      <button x-custom x-for="play-again" fn={ play_again_feedback } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
@@ -418,7 +418,19 @@ var game_over_view = _ => so ((_=_=>
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;lookbehind_state (lookbehind .problems_analysis ([])) })})}
-  , play_again = _dom => {;
+  , toggle_question_order = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (T (_lookbehind) (L .modify (lookbehind_as_ordering) (toggle_order (question_order)))) })})}
+  , toggle_number_of_attempts_order = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (T (_lookbehind) (L .modify (lookbehind_as_ordering) (toggle_order (number_of_attempts_order)))) })})}
+  , toggle_solved_time_order = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (T (_lookbehind) (L .modify (lookbehind_as_ordering) (toggle_order (solved_time_order)))) })})}
+  , play_again_feedback = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .reset_game) })})} )=>_) 
