@@ -414,35 +414,12 @@ var game_over_view = _ => so ((_=_=>
       <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L .isDefined (lookbehind_as_show_results) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
       <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (lookbehind_as_students_analysis) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
       <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
-      { /*so ((_=_=>
-      <problems-analysis-etc>
-        <labels>
-          <question fn={ toggle_question_order }>題目 <img src={ toggle_ordering_img } /></question>
-          <number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ toggle_ordering_img } /></number-of-attempts>
-          <solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ toggle_ordering_img } /></solved-time> </labels>
-        <problems-analysis>
-          { T (_points
-            ) (L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
-            <problem>
-              <question>{ T (_question) (L .get (L .choice (
-                  L .chain (K (_image => <img src={ _image } />)) (question_as_image),
-                  L .chain (K (I)) (question_as_text)))) }</question>
-              <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
-              <solved-time>{ _solved_time }</solved-time> </problem>,
-            where
-            , _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
-            , _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
-            , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
-      where
-      , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)*/ }
+      { /**/ }
       { !! L .isDefined (lookbehind_as_show_results) (_lookbehind)
         ? 
         <students>
-        { T (_students_boards_pasts
-            ) (
-            L .collect (
-            [ L .elems
-            , ([ _student, [_board, _past] ]) => so ((_=_=>
+          { T (_students_boards_pasts
+            ) (L .collect ([ L .elems, ([ _student, [_board, _past] ]) => so ((_=_=>
               <student-etc>
                 <label x-icon={
                   !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('unknown icon') }
@@ -476,6 +453,32 @@ var game_over_view = _ => so ((_=_=>
               , _icon = T (_student) (L .get (student_as_icon))
               , _solved_positions = solved_positions (_board) (_past)
               , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
+        : L .isDefined (lookbehind_as_students_analysis) (_lookbehind)
+        ? so ((_=_=>
+        <students-analysis-etc>
+          <labels>
+            <name fn={ toggle_name_order }>名稱 <img src={ toggle_ordering_img } /></name>
+            <number-of-solved fn={ toggle_number_of_solved_order }>答對題數 <img src={ toggle_ordering_img } /></number-of-solved>
+            <number-of-bingoes fn={ toggle_number_of_bingoes_order }>BINGO <img src={ toggle_ordering_img } /></number-of-bingoes>
+            <average-solved-time fn={ toggle_average_solved_time_order }>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
+          <students-analysis>
+            { T (_students_boards_pasts
+              ) (L .collect ([ order_sort (_ordering), L .elems, ([ _student, [_board, _past] ]) => so ((_=_=>
+              <problem>
+                <name>{ _name }</name>
+                <number-of-solved>{ _number_of_solved }</number-of-solved>
+                <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
+                <average-solved-time>{ _average_solved_time }</average-solved-time> </problem>,
+              where
+              , _name = T (_student) (L .get (student_as_name))
+              , _number_of_solved = T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
+              , _number_of_bingoes = T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
+              , _average_solved_time = T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </students-analysis> </students-analysis-etc>,
+        where
+        , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
+        : L .isDefined (lookbehind_as_students_analysis) (_lookbehind)
+        ?
+        : panic ('unknown lookbehind') }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options>
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </game-over-etc>,
