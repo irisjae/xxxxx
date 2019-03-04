@@ -146,7 +146,7 @@ var setup_view = _ => so ((_=_=>
           , [ 20, twenty_secs_img ]
           , [ 30, thirty_secs_img ] ]
           ) (_time_limit) } </setting></settings>
-      <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }}><img src={ preview_img } /></button>
+      <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }} fn={ setup_preview }><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_start }>
         <img src={ start_img } />
         { T (io_state ()
@@ -166,7 +166,7 @@ var setup_view = _ => so ((_=_=>
     <title-etc>
       <a-title><img src={ logo_img }/></a-title> </title-etc>
     <preview-questions-etc>
-      <button x-custom="true" x-for="back"><img src={ back_img } /></button>
+      <button x-custom="true" x-for="back" fn={ preview_back }><img src={ back_img } /></button>
       <preview-questions>
         <labels><question>題目</question><answer>答案</answer></labels>
         { T (_problems
@@ -174,8 +174,8 @@ var setup_view = _ => so ((_=_=>
           L .collect ([ L .elems, (_problem, i) => so ((_=_=>
             <problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem>,
             where
-            , question_image = T (_problem) (L .get (problem_as_image))
-            , answer = T (_problem) (L .get (problem_as_image))
+            , question_image = T (_problem) (L .get ([ problem_as_question, question_as_image ]))
+            , answer = T (_problem) (L .get ([ problem_as_question, question_as_solution ]))
           )=>_) ])) }
       </preview-questions>
       </preview-questions-etc> 
@@ -238,6 +238,14 @@ var setup_view = _ => so ((_=_=>
         ;_dom .addEventListener (click, _ => {;
           var rules_delta = T (_size) (L .get (L.inverse (data_iso (rules .rules) .size)))
           ;feedback_state (feedback .setup_rules (rules_delta)) }) }) }
+  , setup_preview = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehind_state (lookbehind .preview_questions) }) }) }
+  , preview_back = _dom => {;
+      ;clicking .forEach (click => {;
+        ;_dom .addEventListener (click, _ => {;
+          ;lookbehhind_state (lookbehind .nothing) }) }) }
   , toggle_background_music = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
