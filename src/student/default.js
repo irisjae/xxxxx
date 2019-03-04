@@ -51,11 +51,11 @@ var order_sort = _ordering => by (list => so ((_=_=>
   where
   , comp = T (_ordering) (R .map (([ prop, direction ]) =>
       !! equals (direction) ('ascending') ? R .ascend (prop)
-      :!! equals (direction) ('descending') ? R .descend (prop)
+      : equals (direction) ('descending') ? R .descend (prop)
       : panic ('unknown direction') )) )=>_))
 var direction_opposite = _direction =>
   !! equals (_direction) ('ascending') ? 'descending'
-  :!! equals (_direction) ('descending') ? 'ascending'
+  : equals (_direction) ('descending') ? 'ascending'
   : panic ('unknown direction')
 var toggle_order = prop => _ordering => so ((_=_=>
   [ [prop, opposite_direction], ... irrelevant_orderings ],
@@ -218,25 +218,22 @@ var setup_student_view = _ => so ((_=_=>
 
 var setup_view = <setup-etc>
   { so ((
-    define
+    suppose
     , room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
-    , student = T (app_state ()) (L .get ([ app_as_student, as_maybe ])) ) =>
+    , student = T (app_state ()) (L .get ([ app_as_student, as_maybe ]))
+    , _io = io_state () ) =>
     !! equals (Z_ .Nothing) (room) ?
-       !! (L .isDefined (io_as_inert
-       ) (io_state ()))
+      !! (L .isDefined (io_as_inert) (_io))
       ? setup_room_view
-      : !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
-       ) (io_state ()))
-       ? '正在連接遊戲室…'
-       : panic ('invalid io at get ready view')
-    :!! equals (Z_ .Nothing) (student) ?
-       !! (L .isDefined (io_as_inert
-       ) (io_state ()))
+      : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
+      ? '正在連接遊戲室…'
+      : panic ('invalid io at get ready view')
+    : equals (Z_ .Nothing) (student) ?
+      !! (L .isDefined (io_as_inert) (_io))
       ? setup_student_view
-      : !! (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)
-       ) (io_state ()))
-       ? '正在加入遊戲室…'
-       : panic ('invalid io at get ready view')
+      : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
+      ? '正在加入遊戲室…'
+      : panic ('invalid io at get ready view')
     // blank for now    
     : [] ) } </setup-etc>
 
@@ -255,7 +252,7 @@ var playing_view = _ => so ((_=_=>
         <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
       <question>
         { !! L .isDefined (question_as_text) (_current_question) ? _question_text
-          :!! L .isDefined (question_as_image) (_current_question) ? <img src={ _question_image } />
+          : L .isDefined (question_as_image) (_current_question) ? <img src={ _question_image } />
           : panic ('bad question') }</question> </div>
     <div class="right-pane">
       <board x-disabled={ _disabled }> { T (_board) (R .map (_row => 
@@ -273,9 +270,9 @@ var playing_view = _ => so ((_=_=>
            , [ last_y, last_x ] = L .get (L .last) (_pattern)
            , shape =
                !! equals (first_x) (last_x) ? 'vertical'
-               :!! equals (first_y) (last_y) ? 'horizontal'
-               :!! (first_x < last_x) ? 'diagonal-down'
-               :!! (first_x > last_x) ? 'diagonal-up'
+               : equals (first_y) (last_y) ? 'horizontal'
+               : (first_x < last_x) ? 'diagonal-down'
+               : (first_x > last_x) ? 'diagonal-up'
                : panic ('bad pattern') )=>
            T (Z_ .range (1) (5 + 1)) (R .map (_i => so ((_=_=>
              <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,
@@ -283,13 +280,13 @@ var playing_view = _ => so ((_=_=>
              , left = !! equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
                       : ((_i - 1) * 1 / 5) * 100 + '%'
              , top = !! equals (shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                     :!! equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
+                     : equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
                      : ((_i - 1) * 1 / 5) * 100 + '%'
              , letter = !! equals (_i) (1) ? 'b'
-                        :!! equals (_i) (2) ? 'i'
-                        :!! equals (_i) (3) ? 'n'
-                        :!! equals (_i) (4) ? 'g'
-                        :!! equals (_i) (5) ? 'o'
+                        : equals (_i) (2) ? 'i'
+                        : equals (_i) (3) ? 'n'
+                        : equals (_i) (4) ? 'g'
+                        : equals (_i) (5) ? 'o'
                         : panic ('bad letter') )=>_) )) ) ])), R .reverse ]) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
@@ -362,7 +359,7 @@ var game_over_view = _ => so ((_=_=>
         <div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
         <div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
         <div><span>平均答對時間：</span> <span>{ mean_solved_point_latency }秒</span></div> </overall-analysis>
-      :!! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
+      : L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
       ? so ((_=_=>
       <problems-analysis-etc>
         <labels>
@@ -421,11 +418,11 @@ var game_over_view = _ => so ((_=_=>
 window .view = <student-app>
 	{ !! (L .isDefined (app_as_setup) (app_state ()))
 		? setup_view
-    :!! (L .isDefined (app_as_get_ready) (app_state ()))
+    : (L .isDefined (app_as_get_ready) (app_state ()))
 		? get_ready_view   
-		:!! (L .isDefined (app_as_playing) (app_state ()))
+		: (L .isDefined (app_as_playing) (app_state ()))
 		? playing_view
-		:!! (L .isDefined (app_as_game_over) (app_state ()))
+		: (L .isDefined (app_as_game_over) (app_state ()))
 		? game_over_view
 		: panic ('undefined app state in view') } </student-app>
 
