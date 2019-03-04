@@ -163,6 +163,11 @@ var setup_view = _ => so ((_=_=>
   : L .isDefined (lookbehind_as_preview_questions) (_lookbehind)
   ? 
   <setup-etc>
+    <title-etc>
+      <a-title><img src={ logo_img }/></a-title> </title-etc>
+    <preview-questions-etc>
+      <bu
+      </preview-questions-etc> 
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
   : panic ('unknown lookbehind state'),
   where
