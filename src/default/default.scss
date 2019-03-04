@@ -651,7 +651,8 @@ student-app > game-over-etc {
     left: 50%;
     transform: translateX(-50%);
     width: 60%;
-    max-width: 500px;
+    min-width: 500px;
+    max-width: 600px;
     height: 40%; }
   & overall-analysis, & problems-analysis {
     background: #FFF;
