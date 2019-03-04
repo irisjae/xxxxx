@@ -225,9 +225,9 @@ var get_ready_view = _ => so ((_=_=>
           R .map (under (student_as_student
           ) (({ icon: _icon, name: _name }) => 
             <student x-icon={
-              !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' : (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+              !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
             >{ _name }</student> ))) } </students> </students-etc>
-    { !! not (R .length (_students) === 0)
+    { !! L .isDefined (L .elems) (_students)
       ? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
       : [] }
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </get-ready-etc>,
@@ -279,7 +279,7 @@ var playing_view = _ => so ((_=_=>
           , ([ _student, [_board, _past] ]) => so ((_=_=>
             <student-etc>
               <label x-icon={
-                !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' : (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+                !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
               >{ _name }</label>
               <board> { T (_board) (R .map (_row => 
                 <row> { T (_row) (R .map (_cell => so ((_=_=>
@@ -758,9 +758,10 @@ Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_
       L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
       && T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
 
+    //rewrite with transforms
     var ensemble_updates = $ (R .flatten
     ) ( 
-    [ !! (L .and (l_sum ([ L])) _ensemble_students && not (equals (_ensemble_students) (_app_students)))
+    [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
       ? [ L .set (app_as_students) (_ensemble_students) ] : []
     , !! (_ensemble_boards && not (equals (_ensemble_boards) (_app_boards)))
       ? [ L .set (app_as_boards) (_ensemble_boards) ] : []

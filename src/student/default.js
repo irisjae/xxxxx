@@ -223,13 +223,13 @@ var setup_view = <setup-etc>
     , student = T (app_state ()) (L .get ([ app_as_student, as_maybe ]))
     , _io = io_state () ) =>
     !! equals (Z_ .Nothing) (room) ?
-      !! (L .isDefined (io_as_inert) (_io))
+      !! L .isDefined (io_as_inert) (_io)
       ? setup_room_view
       : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
       ? '正在連接遊戲室…'
       : panic ('invalid io at get ready view')
     : equals (Z_ .Nothing) (student) ?
-      !! (L .isDefined (io_as_inert) (_io))
+      !! L .isDefined (io_as_inert) (_io)
       ? setup_student_view
       : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
       ? '正在加入遊戲室…'
@@ -258,7 +258,7 @@ var playing_view = _ => so ((_=_=>
       <board x-disabled={ _disabled }> { T (_board) (R .map (_row => 
         <row> { T (_row) (R .map (_cell =>
           so ((_=_=>
-          !! (_cell_solved) ? <cell x-solved>{ _cell_choice }</cell>
+          !! _cell_solved ? <cell x-solved>{ _cell_choice }</cell>
           : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
@@ -351,8 +351,8 @@ var game_over_view = _ => so ((_=_=>
     <a-title><img src={ logo_img }/></a-title>
     <student><label>{ _name }</label></student> 
     <options x-for="tabs">
-      <button x-custom x-for="overall-analysis" fn={ overall_analysis } ><img src={ !! (L .isDefined (lookbehind_as_overall_analysis)) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind_as_problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+      <button x-custom x-for="overall-analysis" fn={ overall_analysis } ><img src={ !! L .isDefined (lookbehind_as_overall_analysis) (_lookbehind) ? overall_analysis_on_img : overall_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     { !! L .isDefined (lookbehind_as_overall_analysis) (_lookbehind)
       ? 
       <overall-analysis>
@@ -380,7 +380,7 @@ var game_over_view = _ => so ((_=_=>
             , _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
             , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
       where
-      , _ordering = T (_lookbehind) (lookbehind_as_ordering) )=>_)
+      , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)
       : [] }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
@@ -416,13 +416,13 @@ var game_over_view = _ => so ((_=_=>
 
 
 window .view = <student-app>
-	{ !! (L .isDefined (app_as_setup) (app_state ()))
+	{ !! L .isDefined (app_as_setup) (app_state ())
 		? setup_view
-    : (L .isDefined (app_as_get_ready) (app_state ()))
+    : L .isDefined (app_as_get_ready) (app_state ())
 		? get_ready_view   
-		: (L .isDefined (app_as_playing) (app_state ()))
+		: L .isDefined (app_as_playing) (app_state ())
 		? playing_view
-		: (L .isDefined (app_as_game_over) (app_state ()))
+		: L .isDefined (app_as_game_over) (app_state ())
 		? game_over_view
 		: panic ('undefined app state in view') } </student-app>
 
