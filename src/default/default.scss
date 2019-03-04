@@ -107,7 +107,99 @@ teacher-app > setup-etc {
         & img {
           max-width: 100%;
           max-height: 100%;
-          object-fit: contain; } } } } 
+          object-fit: contain; } } } }
+  
+  & > title-etc {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 25%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateY(-50%);
+    & a-title {
+      flex-grow: 0.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      font-size: 40px;
+      & img {
+        max-width: 100%;
+        max-height: 100%; } } }
+
+  & preview-questions-etc {
+    position: absolute;
+    height: 90%;
+    width: 100%;
+    top: 5%;
+    bottom: 5%;
+    & button[x-for=back] {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%); }
+    & preview-questions {
+      position: absolute;
+      left: 100px;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      background: #FFF;
+      color: #ff7b44;
+      border-radius: 80px;
+      align-items: center;
+      box-shadow: 0px 0px 50px rgba(0,0,0,0.1);
+      overflow: auto;
+      font-size: 1.5em;
+      & question {
+        width: 60%;
+        display: flex;
+        align-items: center;
+        border-right: dashed 1px #ff7b44;
+        padding: 10px;
+        justify-content: flex-start; }
+      & answer {
+        width: 40%;
+        display: flex;
+        justify-content: center;
+        align-items: center; }
+      & labels {
+        height: 80px;
+        width: 100%;
+        flex-shrink: 0;
+        display: flex;
+        border-bottom: dashed 1px #ff7b44;
+        & question {
+          justify-content: center; } }
+      & problem {
+        max-height: 300px;
+        width: 100%;
+        display: flex;
+        flex-shrink: 0;
+        & number {
+          width: 2.2em;
+          height: 2.2em;
+          text-align: center;
+          line-height: 2.1em;
+          display: block;
+          margin: 0 5%;
+          background: #f581ac;
+          color: white;
+          border-radius: 2.2em;
+          align-self: flex-start; }
+        & img {
+          max-width: 60%;
+          max-height: 90%;
+          width: auto;
+          height: auto;
+          object-fit: contain; }
+        &:not(:last-child) {
+          border-bottom: dashed 1px #ff7b44; } } } }
   & setting[x-for=background-music] {
     position: absolute;
     left: 0;
