@@ -130,7 +130,7 @@ var audio = {
 
 
 var setup_room_view = _ => so ((_=_=>
-  <setup-room-etc fn={ setup_room_feedback }>
+  <setup-room-etc fn={ feedback_setup_room }>
     <a-title><img src={ logo_img }/></a-title>
     <sub-title>除法（一）</sub-title>
     <room style={{ margin: '30px 0' }}>
@@ -144,7 +144,7 @@ var setup_room_view = _ => so ((_=_=>
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , join_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734'
   , bad_room = T (lookbehind_state ()) (L .get (lookbehind_as_room))
-  , setup_room_feedback = _dom => so ((_=_=>
+  , feedback_setup_room = _dom => so ((_=_=>
       (_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
           ;let_room_enter () } }),
@@ -160,7 +160,7 @@ var setup_room_view = _ => so ((_=_=>
           ;feedback_state (feedback .setup_room (value)) } )=>_))=>_)
 
 var setup_student_view = _ => so ((_=_=>
-  <setup-student-etc fn={ setup_student_feedback }>
+  <setup-student-etc fn={ feedback_setup_student }>
     <a-title><img src={ logo_img }/></a-title>
     <sub-title>除法（一）</sub-title>
     <name style={{ marginTop: '30px' }}>
@@ -183,7 +183,7 @@ var setup_student_view = _ => so ((_=_=>
   , lion_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
   , bunny_avatar_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
   , connect_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
-  , setup_student_feedback = _dom => so ((_=_=>
+  , feedback_setup_student = _dom => so ((_=_=>
       (_name_input .addEventListener ('keypress', _e => {;
         if (_e .keyCode === 13) {
           ;let_name_enter () } }),
@@ -252,7 +252,7 @@ var playing_view = _ => so ((_=_=>
         <row> { T (_row) (R .map (_cell =>
           so ((_=_=>
           !! _cell_solved ? <cell x-solved>{ _cell_choice }</cell>
-          : <cell fn={ cell_feedback (_cell) }>{ _cell_choice }</cell>,
+          : <cell fn={ feedback_cell (_cell) }>{ _cell_choice }</cell>,
           where
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
@@ -296,7 +296,7 @@ var playing_view = _ => so ((_=_=>
     , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
     , _disabled = L .and (lookbehind_as_blocked) (S .sample (lookbehind_state))
     , game_tick = tick_state ()
-    , cell_feedback = cell => _dom => {;
+    , feedback_cell = cell => _dom => {;
         ;clicking .forEach (click => {;
           ;_dom .addEventListener (click, _ => {;
             ;feedback_state (feedback .attempt_problem (T (cell) (L .get (cell_as_position)))) }) }) } )=>_) 
@@ -376,7 +376,7 @@ var game_over_view = _ => so ((_=_=>
       , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)
       : [] }
     <options x-for="options">
-      <button x-custom x-for="play-again" fn={ play_again_feedback } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
+      <button x-custom x-for="play-again" fn={ feedback_play_again } ><img src={ play_again_img } /></button> </options> </game-over-etc>,
   where
   , _lookbehind = lookbehind_state () 
   , _app = app_state ()
@@ -414,7 +414,7 @@ var game_over_view = _ => so ((_=_=>
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;lookbehind_state (T (_lookbehind) (L .modify (lookbehind_as_ordering) (toggle_order (solved_time_order)))) })})}
-  , play_again_feedback = _dom => {;
+  , feedback_play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
           ;feedback_state (feedback .reset_game) })})} )=>_) 

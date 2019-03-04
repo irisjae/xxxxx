@@ -59,6 +59,7 @@ var feedback = data ({
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
+	preview_questions: () => lookbehind,
 	view_students: () => lookbehind,
 	consider_end: () => lookbehind,
 	show_results: () => lookbehind,
@@ -77,6 +78,7 @@ var feedback_as_reset = data_iso (feedback .reset)
 var feedback_as_rules_piece = data_lens (feedback .setup_rules) .rules_piece
 
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
+var lookbehind_as_preview_questions = data_iso (lookbehind .preview_questions)
 var lookbehind_as_view_students = data_iso (lookbehind .view_students)
 var lookbehind_as_consider_end = data_iso (lookbehind .consider_end)
 var lookbehind_as_show_results = data_iso (lookbehind .show_results)
@@ -115,6 +117,8 @@ var audio = {
 ;audio .background .loop = true
 
 var setup_view = _ => so ((_=_=>
+  !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
+  ? 
   <setup-etc>
     <div class="left-pane">
       <a-title><img src={ logo_img }/></a-title>
@@ -155,8 +159,14 @@ var setup_view = _ => so ((_=_=>
         <setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ !! equals (_size) (3) ? three_by_three_on_img : three_by_three_off_img } /></setting>
         <setting x-of="board-size" x-be="4x4"><img fn={ feedback_size (4) } src={ !! equals (_size) (4) ? four_by_four_on_img : four_by_four_off_img } /></setting>
         <setting x-of="board-size" x-be="5x5"><img fn={ feedback_size (5) } src={ !! equals (_size) (5) ? five_by_five_on_img : five_by_five_off_img } /></setting> </settings> </div>
-    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>,
+    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
+  : L .isDefined (lookbehind_as_preview_questions) (_lookbehind)
+  ? 
+  <setup-etc>
+    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
+  : panic ('unknown lookbehind state'),
   where
+  , _lookbehind = lookbehind_state () 
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
   , _size = T (_settings) (L .get ([ settings_as_rules, rules_as_size ]))
@@ -180,7 +190,7 @@ var setup_view = _ => so ((_=_=>
   , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
   , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
 // TODO: fix layout of unloaded imgs
-  , counter_setting = label => case_feedback => case_v_img_list => _case => so ((_=_=>
+  , counter_setting = label => feedback_case => case_v_img_list => _case => so ((_=_=>
       [ <label>{ label }</label>
       , <control>
           <prev fn={ feedback_prev }><img src={ prev_img } /></prev>
@@ -197,10 +207,10 @@ var setup_view = _ => so ((_=_=>
       , next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
       , feedback_prev = _dom => {;
           ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;case_feedback (prev_case)}) }) }
+            ;_dom .addEventListener (click, _ => {;feedback_case (prev_case)}) }) }
       , feedback_next = _dom => {;
           ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;case_feedback (next_case)}) }) } )=>_)
+            ;_dom .addEventListener (click, _ => {;feedback_case (next_case)}) }) } )=>_)
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
