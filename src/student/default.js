@@ -62,10 +62,15 @@ var toggle_order = prop => _ordering => so ((_=_=>
   where
   , irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
   , opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
-var point_order = _point => so ((_=_=>
+var question_order = _point => so ((_=_=>
   R .indexOf (_point) (_points),
   where
   , _points = T (S .sample (app_state)) (L .get ([app_as_past, past_as_points])) )=>_)
+var number_of_attempts_order = L .count (point_as_attempts)
+var solved_time_order = by (_ => so ((_=_=>
+  L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ]),
+  where
+  , _board = T (S .sample (app_state)) (L .get (app_as_board)) )=>_))
     
 
 var feedback = data ({
