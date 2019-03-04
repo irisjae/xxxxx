@@ -166,13 +166,25 @@ var setup_view = _ => so ((_=_=>
     <title-etc>
       <a-title><img src={ logo_img }/></a-title> </title-etc>
     <preview-questions-etc>
-      <bu
+      <button x-custom="true" x-for="back"><img src={ back_img } /></button>
+      <preview-questions>
+        <labels><question>題目</question><answer>答案</answer></labels>
+        { T (_problems
+          ) (
+          L .collect ([ L .elems, (_problem, i) => so ((_=_=>
+            <problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem>,
+            where
+            , question_image = T (_problem) (L .get (problem_as_image))
+            , answer = T (_problem) (L .get (problem_as_image))
+          )=>_) ])) }
+      </preview-questions>
       </preview-questions-etc> 
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
   : panic ('unknown lookbehind state'),
   where
   , _lookbehind = lookbehind_state () 
   , _settings = T (app_state ()) (L .get (app_as_settings))
+  , _problems = T (_settings) (L .get (settings_as_problems))
   , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
   , _size = T (_settings) (L .get ([ settings_as_rules, rules_as_size ]))
   , _win_rule = T (_settings) (L .get ([ settings_as_rules, rules_as_win_rule ]))
@@ -186,6 +198,7 @@ var setup_view = _ => so ((_=_=>
   , thirty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F30-secs.png?1541563332968'
 	, preview_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936'
 	, start_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
+	, back_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
 	, three_by_three_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-on.png?1550827378072'
 	, three_by_three_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-off.png?1550827377940'
 	, four_by_four_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-on.png?1550827378011'
