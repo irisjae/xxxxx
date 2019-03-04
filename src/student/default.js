@@ -45,6 +45,7 @@ as_sole, sole, shuffle,
 I, K, not, equals
 } = window .stuff
 
+var order = 'ascending' | 'descending'
 
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
@@ -58,7 +59,7 @@ var lookbehind = data ({
 	bad_room: (room =~ room) => lookbehind,
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind,
 	overall_analysis: () => lookbehind,
-	problems_analysis: () => lookbehind })
+	problems_analysis: (questions =~ order, number_of_attempts =~ order, solved_time =~ order) => lookbehind })
 
 var ambient = data ({
   ambient: ( background_music_on =~ bool ) => ambient })
@@ -384,7 +385,7 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .problems_analysis) })})}                              
+          ;lookbehind_state (lookbehind .problems_analysis ('ascending', 'ascending', 'ascending')) })})}
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
