@@ -45,7 +45,8 @@ as_sole, sole, shuffle,
 I, K, not, equals
 } = window .stuff
 
-var order = 'ascending' | 'descending'
+var order = props => props * 'ascending' | 'descending'
+var sort = _ordering => list => 
 
 var feedback = data ({
   setup_room: (room =~ room) => feedback,
@@ -59,7 +60,7 @@ var lookbehind = data ({
 	bad_room: (room =~ room) => lookbehind,
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind,
 	overall_analysis: () => lookbehind,
-	problems_analysis: (questions =~ order, number_of_attempts =~ order, solved_time =~ order) => lookbehind })
+	problems_analysis: (ordering =~ order ([ 'questions', 'number_of_attempts', 'solved_time' ])) => lookbehind })
 
 var ambient = data ({
   ambient: ( background_music_on =~ bool ) => ambient })
