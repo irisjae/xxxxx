@@ -464,20 +464,49 @@ var game_over_view = _ => so ((_=_=>
           <students-analysis>
             { T (_students_boards_pasts
               ) (L .collect ([ order_sort (_ordering), L .elems, ([ _student, [_board, _past] ]) => so ((_=_=>
-              <problem>
+              <student>
                 <name>{ _name }</name>
                 <number-of-solved>{ _number_of_solved }</number-of-solved>
                 <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
-                <average-solved-time>{ _average_solved_time }</average-solved-time> </problem>,
+                <average-solved-time>{ _average_solved_time }</average-solved-time> </student>,
               where
               , _name = T (_student) (L .get (student_as_name))
               , _number_of_solved = T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
               , _number_of_bingoes = T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
-              , _average_solved_time = T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </students-analysis> </students-analysis-etc>,
+              , _average_solved_time =
+                  T (_past
+                  ) (
+                  [ L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])
+                  , _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒']) )=>_) ])) } </students-analysis> </students-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
-        : L .isDefined (lookbehind_as_students_analysis) (_lookbehind)
+        : L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
         ?
+        <problems-analysis-etc>
+          <labels>
+            <question fn={ toggle_question_order }>題目 <img src={ toggle_ordering_img } /></question>
+            <number-of-solvers fn={ toggle_number_of_solvers_order }>答對人數 <img src={ toggle_ordering_img } /></number-of-solvers>
+            <average-number-of-attempts fn={ toggle_number_of_attempts_order }>平均作答次數 <img src={ toggle_ordering_img } /></average-number-of-attempts>
+            <average-solved-time fn={ toggle_average_solved_time_order }>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
+          <students-analysis>
+            { T (_students_boards_pasts
+              ) (L .collect ([ order_sort (_ordering), L .elems, ([ _student, [_board, _past] ]) => so ((_=_=>
+              <student>
+                <name>{ _name }</name>
+                <number-of-solved>{ _number_of_solved }</number-of-solved>
+                <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
+                <average-solved-time>{ _average_solved_time }</average-solved-time> </student>,
+              where
+              , _name = T (_student) (L .get (student_as_name))
+              , _number_of_solved = T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
+              , _number_of_bingoes = T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
+              , _average_solved_time =
+                  T (_past
+                  ) (
+                  [ L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])
+                  , _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒']) )=>_) ])) } </students-analysis> </problems-analysis-etc>,
+        where
+        , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
         : panic ('unknown lookbehind') }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options>
