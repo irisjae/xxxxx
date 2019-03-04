@@ -62,6 +62,10 @@ var toggle_order = prop => _ordering => so ((_=_=>
   where
   , irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
   , opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
+var point_order = _point => so ((_=_=>
+  R .indexOf (_point) (_points),
+  where
+  , _points = T (S .sample (app_state)) (L .get ([app_as_past, past_as_points])) )=>_)
     
 
 var feedback = data ({
