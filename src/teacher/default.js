@@ -426,7 +426,8 @@ var game_over_view = _ => so ((_=_=>
                 >{ _name }</label>
                 <board> { T (_board) (R .map (_row => 
                   <row> { T (_row) (R .map (_cell => so ((_=_=>
-                    !! _cell_solved ? <cell x-solved />
+                    !! _cell_solved
+                    ? <cell x-solved />
                     : <cell />,
                     where
                     , _cell_position = T (_cell) (L .get (cell_as_position))
@@ -488,7 +489,7 @@ var game_over_view = _ => so ((_=_=>
             <number-of-solvers fn={ toggle_number_of_solvers_order }>答對人數 <img src={ toggle_ordering_img } /></number-of-solvers>
             <average-number-of-attempts fn={ toggle_number_of_attempts_order }>平均作答次數 <img src={ toggle_ordering_img } /></average-number-of-attempts>
             <average-solved-time fn={ toggle_average_solved_time_order }>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
-          <students-analysis>
+          <problems-analysis>
             { T (_students_boards_pasts
               ) (L .collect ([ order_sort (_ordering), L .elems, ([ _student, [_board, _past] ]) => so ((_=_=>
               <student>
@@ -504,7 +505,7 @@ var game_over_view = _ => so ((_=_=>
                   T (_past
                   ) (
                   [ L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])
-                  , _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒']) )=>_) ])) } </students-analysis> </problems-analysis-etc>,
+                  , _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒']) )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
         : panic ('unknown lookbehind') }

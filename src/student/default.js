@@ -360,7 +360,8 @@ var game_over_view = _ => so ((_=_=>
           <number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ toggle_ordering_img } /></number-of-attempts>
           <solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ toggle_ordering_img } /></solved-time> </labels>
         <problems-analysis>
-          { T (_points
+          { //reimplement order in terms of free object
+            T (_points
             ) (L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
             <problem>
               <question>{ T (_question) (L .get (L .choice (
