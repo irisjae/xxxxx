@@ -410,50 +410,72 @@ var game_over_view = _ => so ((_=_=>
   <game-over-etc>
     <title-etc>
       <a-title><img src={ logo_img }/></a-title> </title-etc>
-    <student><label>{ _name }</label></student>                                 
     <options x-for="tabs">
       <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L .isDefined (lookbehind_as_show_results) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
       <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (lookbehind_as_students_analysis) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
       <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
-    <students>
-      { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
-        ) (
-        L .collect (
-        [ L .elems
-        , ([ _student, [_board, _past] ]) => so ((_=_=>
-          <student-etc>
-            <label x-icon={
-              !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
-            >{ _name }</label>
-            <board> { T (_board) (R .map (_row => 
-              <row> { T (_row) (R .map (_cell => so ((_=_=>
-                !! _cell_solved ? <cell x-solved />
-                : <cell />,
-                where
-                , _cell_position = T (_cell) (L .get (cell_as_position))
-                , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-              <bingo> { T (_bingoes) (R .map (_pattern => so ((_=_=> 
-                <line x-shape={ shape } style={{ top: top, left: left }} />,
-                where
-                , [ first_y, first_x ] = L .get (L .first) (_pattern)
-                , [ last_y, last_x ] = L .get (L .last) (_pattern)
-                , shape =
-                    !! equals (first_x) (last_x) ? 'vertical'
-                    : equals (first_y) (last_y) ? 'horizontal'
-                    : (first_x < last_x) ? 'diagonal-down'
-                    : (first_x > last_x) ? 'diagonal-up'
-                    : panic ('bad pattern')
-                , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                        : equals (shape) ('vertical') ? '5%'
-                        : ''
-                , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                        : equals (shape) ('horizontal') ? '5%'
-                        : '' )=>_))) } </bingo> </board> </student-etc>,
-          where
-          , _name = T (_student) (L .get (student_as_name))
-          , _icon = T (_student) (L .get (student_as_icon))
-          , _solved_positions = solved_positions (_board) (_past)
-          , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
+      { /*so ((_=_=>
+      <problems-analysis-etc>
+        <labels>
+          <question fn={ toggle_question_order }>題目 <img src={ toggle_ordering_img } /></question>
+          <number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ toggle_ordering_img } /></number-of-attempts>
+          <solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ toggle_ordering_img } /></solved-time> </labels>
+        <problems-analysis>
+          { T (_points
+            ) (L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
+            <problem>
+              <question>{ T (_question) (L .get (L .choice (
+                  L .chain (K (_image => <img src={ _image } />)) (question_as_image),
+                  L .chain (K (I)) (question_as_text)))) }</question>
+              <number-of-attempts>{ _number_of_attempts }</number-of-attempts>
+              <solved-time>{ _solved_time }</solved-time> </problem>,
+            where
+            , _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
+            , _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
+            , _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
+      where
+      , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)*/ }
+      { !! L .isDefined (lookbehind_as_show_results) (_lookbehind)
+        ? 
+        <students>
+        { T (_students_boards_pasts
+            ) (
+            L .collect (
+            [ L .elems
+            , ([ _student, [_board, _past] ]) => so ((_=_=>
+              <student-etc>
+                <label x-icon={
+                  !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('unknown icon') }
+                >{ _name }</label>
+                <board> { T (_board) (R .map (_row => 
+                  <row> { T (_row) (R .map (_cell => so ((_=_=>
+                    !! _cell_solved ? <cell x-solved />
+                    : <cell />,
+                    where
+                    , _cell_position = T (_cell) (L .get (cell_as_position))
+                    , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+                  <bingo> { T (_bingoes) (R .map (_pattern => so ((_=_=> 
+                    <line x-shape={ shape } style={{ top: top, left: left }} />,
+                    where
+                    , [ first_y, first_x ] = L .get (L .first) (_pattern)
+                    , [ last_y, last_x ] = L .get (L .last) (_pattern)
+                    , shape =
+                        !! equals (first_x) (last_x) ? 'vertical'
+                        : equals (first_y) (last_y) ? 'horizontal'
+                        : (first_x < last_x) ? 'diagonal-down'
+                        : (first_x > last_x) ? 'diagonal-up'
+                        : panic ('bad pattern')
+                    , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
+                            : equals (shape) ('vertical') ? '5%'
+                            : ''
+                    , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
+                            : equals (shape) ('horizontal') ? '5%'
+                            : '' )=>_))) } </bingo> </board> </student-etc>,
+              where
+              , _name = T (_student) (L .get (student_as_name))
+              , _icon = T (_student) (L .get (student_as_icon))
+              , _solved_positions = solved_positions (_board) (_past)
+              , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options>
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </game-over-etc>,
@@ -462,9 +484,8 @@ var game_over_view = _ => so ((_=_=>
   , _app = app_state ()
   , _boards = T (_app) (L .get (app_as_boards)) 
   , _pasts = T (_app) (L .get (app_as_pasts)) 
+  , _students_boards_pasts = map_zip (a => b => [a, b]) (_boards) (_pasts)
   , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
-  , _student = T (_app) (L .get (app_as_student))
-  , _name = T (_student) (L .get (student_as_name))
   , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
   , show_results_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
