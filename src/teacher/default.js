@@ -225,11 +225,11 @@ var get_ready_view = _ => so ((_=_=>
           R .map (under (student_as_student
           ) (({ icon: _icon, name: _name }) => 
             <student x-icon={
-              !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+              !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' : (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
             >{ _name }</student> ))) } </students> </students-etc>
     { !! not (R .length (_students) === 0)
-				? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
-				: [] }
+      ? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
+      : [] }
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </get-ready-etc>,
 	where
 	, _room = T (app_state ()) (L .get (app_as_room))
@@ -260,13 +260,13 @@ var playing_view = _ => so ((_=_=>
           <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
         <question>
           { !! L .isDefined (question_as_text) (question) ? question_text
-            :!! L .isDefined (question_as_image) (question) ? <img src={ question_image } />
+            : L .isDefined (question_as_image) (question) ? <img src={ question_image } />
             : panic ('bad question') }</question> </problem-etc>
       <options>
         <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options>
       <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </playing-etc>
-  :!! L .isDefined (lookbehind_as_view_students) (_lookbehind)
+  : L .isDefined (lookbehind_as_view_students) (_lookbehind)
   ? <playing-etc>
       <title-etc>
         <a-title><img src={ logo_img }/></a-title>
@@ -279,7 +279,7 @@ var playing_view = _ => so ((_=_=>
           , ([ _student, [_board, _past] ]) => so ((_=_=>
             <student-etc>
               <label x-icon={
-                !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+                !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' : (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
               >{ _name }</label>
               <board> { T (_board) (R .map (_row => 
                 <row> { T (_row) (R .map (_cell => so ((_=_=>
@@ -295,15 +295,15 @@ var playing_view = _ => so ((_=_=>
                   , [ last_y, last_x ] = L .get (L .last) (_pattern)
                   , shape =
                       !! equals (first_x) (last_x) ? 'vertical'
-                      :!! equals (first_y) (last_y) ? 'horizontal'
-                      :!! (first_x < last_x) ? 'diagonal-down'
-                      :!! (first_x > last_x) ? 'diagonal-up'
+                      : equals (first_y) (last_y) ? 'horizontal'
+                      : (first_x < last_x) ? 'diagonal-down'
+                      : (first_x > last_x) ? 'diagonal-up'
                       : panic ('bad pattern')
                   , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                          :!! equals (shape) ('vertical') ? '5%'
+                          : equals (shape) ('vertical') ? '5%'
                           : ''
                   , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                          :!! equals (shape) ('horizontal') ? '5%'
+                          : equals (shape) ('horizontal') ? '5%'
                           : '' )=>_))) } </bingo> </board> </student-etc>,
             where
             , _name = T (_student) (L .get (student_as_name))
@@ -314,7 +314,7 @@ var playing_view = _ => so ((_=_=>
         <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
         <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options>
       <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </playing-etc>
-  :!! L .isDefined (lookbehind_as_consider_end) (_lookbehind)
+  : L .isDefined (lookbehind_as_consider_end) (_lookbehind)
   ? <playing-etc>
       <abort-etc>
         <div class="box">
@@ -375,9 +375,9 @@ var game_over_view = _ => so ((_=_=>
       <a-title><img src={ logo_img }/></a-title> </title-etc>
     <student><label>{ _name }</label></student>                                 
     <options x-for="tabs">
-      <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! (L .isDefined (lookbehind_as_show_results)) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
-      <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! (L .isDefined (lookbehind_as_students_analysis)) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! (L .isDefined (lookbehind_as_problems_analysis)) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
+      <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L .isDefined (lookbehind_as_show_results) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
+      <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (lookbehind_as_students_analysis) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
+      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
     <students>
       { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
         ) (
@@ -386,7 +386,7 @@ var game_over_view = _ => so ((_=_=>
         , ([ _student, [_board, _past] ]) => so ((_=_=>
           <student-etc>
             <label x-icon={
-              !! (L .isDefined (avatar_as_lion) (_icon)) ? 'lion' :!! (L .isDefined (avatar_as_bunny) (_icon)) ? 'bunny' : panic ('...') }
+              !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
             >{ _name }</label>
             <board> { T (_board) (R .map (_row => 
               <row> { T (_row) (R .map (_cell => so ((_=_=>
@@ -402,15 +402,15 @@ var game_over_view = _ => so ((_=_=>
                 , [ last_y, last_x ] = L .get (L .last) (_pattern)
                 , shape =
                     !! equals (first_x) (last_x) ? 'vertical'
-                    :!! equals (first_y) (last_y) ? 'horizontal'
-                    :!! (first_x < last_x) ? 'diagonal-down'
-                    :!! (first_x > last_x) ? 'diagonal-up'
+                    : equals (first_y) (last_y) ? 'horizontal'
+                    : (first_x < last_x) ? 'diagonal-down'
+                    : (first_x > last_x) ? 'diagonal-up'
                     : panic ('bad pattern')
                 , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                        :!! equals (shape) ('vertical') ? '5%'
+                        : equals (shape) ('vertical') ? '5%'
                         : ''
                 , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                        :!! equals (shape) ('horizontal') ? '5%'
+                        : equals (shape) ('horizontal') ? '5%'
                         : '' )=>_))) } </bingo> </board> </student-etc>,
           where
           , _name = T (_student) (L .get (student_as_name))
@@ -461,13 +461,13 @@ var game_over_view = _ => so ((_=_=>
           ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_) 
 
 window .view = <teacher-app>
-  { !! (L .isDefined (app_as_setup) (app_state ()))
+  { !! L .isDefined (app_as_setup) (app_state ())
     ? setup_view
-    :!! (L .isDefined (app_as_get_ready) (app_state ()))
+    : L .isDefined (app_as_get_ready) (app_state ())
     ? get_ready_view
-    :!! (L .isDefined (app_as_playing) (app_state ()))
+    : L .isDefined (app_as_playing) (app_state ())
     ? playing_view
-    :!! (L .isDefined (app_as_game_over) (app_state ()))
+    : L .isDefined (app_as_game_over) (app_state ())
     ? game_over_view
     : panic ('undefined app state in view')  } </teacher-app>
 												 
