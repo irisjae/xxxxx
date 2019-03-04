@@ -760,7 +760,7 @@ Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_
 
     var ensemble_updates = $ (R .flatten
     ) ( 
-    [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
+    [ !! (L .and (l_sum ([ L])) _ensemble_students && not (equals (_ensemble_students) (_app_students)))
       ? [ L .set (app_as_students) (_ensemble_students) ] : []
     , !! (_ensemble_boards && not (equals (_ensemble_boards) (_app_boards)))
       ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
