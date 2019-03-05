@@ -134,9 +134,9 @@ var setup_view = _ => so ((_=_=>
               var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
-          [ [ win_rule .first_bingo, play_to_win_img ]
-          , [ win_rule .limit_time, time_limit_play_img ]
-          , [ win_rule .all_problems, free_play_img ] ]
+          [ [ win_rule_as_first_bingo, play_to_win_img ]
+          , [ [ L .normalize (L .modify (win_rule_as_time_limit) (x => !! equals (x) (undefined) ? 15 )), win_rule_as_limit_time ], time_limit_play_img ]
+          , [ win_rule_as_all_problems, free_play_img ] ]
           ) (_win_rule) } </setting>
       <setting x-of="time-limit">
         { $ (counter_setting
@@ -145,9 +145,9 @@ var setup_view = _ => so ((_=_=>
               var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
-          [ [ 10, ten_secs_img ]
-          , [ 20, twenty_secs_img ]
-          , [ 30, thirty_secs_img ] ]
+          [ [ L .is (10), ten_secs_img ]
+          , [ L .is (20), twenty_secs_img ]
+          , [ L .is (30), thirty_secs_img ] ]
           ) (_time_limit) } </setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }} fn={ setup_preview }><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_start }>
