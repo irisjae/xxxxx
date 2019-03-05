@@ -182,7 +182,7 @@ var setup_view = _ => so ((_=_=>
       </preview-questions>
       </preview-questions-etc> 
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
-  : panic ('unknown lookbehind state'),
+  : (lookbehind_state (lookbehind .nothing), []),
   where
   , _lookbehind = lookbehind_state () 
   , _settings = T (app_state ()) (L .get (app_as_settings))
@@ -489,7 +489,7 @@ var game_over_view = _ => so ((_=_=>
                 <problem>
                   <question><img src={ _question }/></question>
                   <number-of-solvers>{ _number_of_solvers }</number-of-solvers>
-                  <average-number-of-attempts>{ show_time (_average_number_of_attempts) }</average-number-of-attempts>
+                  <average-number-of-attempts>{ show_unit (_average_number_of_attempts) }</average-number-of-attempts>
                   <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </problem> ])) } </problems-analysis> </problems-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
@@ -517,6 +517,7 @@ var game_over_view = _ => so ((_=_=>
   , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
   , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
   , toggle_ordering_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png?1551692617218'                            
+  , show_unit = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1
   , show_time = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒'
   , show_results = _dom => {;
       ;clicking .forEach (click => {;
@@ -548,16 +549,16 @@ var game_over_view = _ => so ((_=_=>
       L .collect ([ L .elems, (_problem, _index) => (
         { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
         , _number_of_solvers: T (_students_boards_pasts
-            ) (L .count ([ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ) ]))
+            ) (L .count ([ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index, as_solved_on (_board) ] ) ]))
         , _average_number_of_attempts: T (_students_boards_pasts
             ) (
             L .mean (
-            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), _index ] )
+            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index ] )
             , point_as_attempts, L .count (L .elems) ]))
         , _average_solved_time: T (_students_boards_pasts
             ) (
             L .mean (
-            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )
+            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index, as_solved_on (_board) ] )
             , point_as_attempts, L .last, attempt_as_latency ])) }) ])) )=>_) 
 
 window .view = <teacher-app>
