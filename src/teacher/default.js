@@ -416,7 +416,6 @@ var game_over_view = _ => so ((_=_=>
       <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L .isDefined (lookbehind_as_show_results) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
       <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (lookbehind_as_students_analysis) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
       <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
-      { /**/ }
       { !! L .isDefined (lookbehind_as_show_results) (_lookbehind)
         ? 
         <students>
@@ -465,19 +464,14 @@ var game_over_view = _ => so ((_=_=>
             <number-of-bingoes>BINGO <img src={ toggle_ordering_img } /></number-of-bingoes>
             <average-solved-time>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
           <students-analysis>
-            { T (_students_boards_pasts
+            { T (analyse_students (_students_boards_pasts)
               ) (
-              [ R .map (([ _student, [_board, _past] ]) => (
-                  { _name: T (_student) (L .get (student_as_name))
-                  , _number_of_solved: T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
-                  , _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
-                  , _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }))
-              , L .collect ([ order_sort (_ordering), L .elems, ({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => 
-              <student>
-                <name>{ _name }</name>
-                <number-of-solved>{ _number_of_solved }</number-of-solved>
-                <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
-                <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </student> ]) ]) } </students-analysis> </students-analysis-etc>,
+              L .collect ([ order_sort (_ordering), L .elems, ({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => 
+                <student>
+                  <name>{ _name }</name>
+                  <number-of-solved>{ _number_of_solved }</number-of-solved>
+                  <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
+                  <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </student> ])) } </students-analysis> </students-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
         : L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
@@ -489,31 +483,17 @@ var game_over_view = _ => so ((_=_=>
             <average-number-of-attempts>平均作答次數 <img src={ toggle_ordering_img } /></average-number-of-attempts>
             <average-solved-time>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
           <problems-analysis>
-            { T (_problems
+            { T (analyse_problems (_students_boards_pasts) (_problems)
               ) (
-              [ L .collect ([ L .elems, (_problem, _index) => (
-                  { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
-                  , _number_of_solvers: T (_students_boards_pasts
-                      ) (L .count ([ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )) ]))
-                  , _average_number_of_attempts: T (_students_boards_pasts
-                      ) (
-                      L .mean (
-                      [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index ] ))
-                      , point_as_attempts, L .count (L .elems) ]))
-                  , _average_solved_time: T (_students_boards_pasts
-                      ) (
-                      L .mean (
-                      [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ))
-                      , point_as_attempts, L .last, attempt_as_latency ])) }) ])
-              , L .collect ([ order_sort (_ordering), L .elems, ({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => 
-              <problem>
-                <question><img src={ _question }/></question>
-                <number-of-solvers>{ _number_of_solvers }</number-of-solvers>
-                <average-number-of-attempts>{ show_time (_average_number_of_attempts) }</average-number-of-attempts>
-                <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </problem> ]) ]) } </problems-analysis> </problems-analysis-etc>,
+              L .collect ([ order_sort (_ordering), L .elems, ({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => 
+                <problem>
+                  <question><img src={ _question }/></question>
+                  <number-of-solvers>{ _number_of_solvers }</number-of-solvers>
+                  <average-number-of-attempts>{ show_time (_average_number_of_attempts) }</average-number-of-attempts>
+                  <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </problem> ])) } </problems-analysis> </problems-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
-        : panic ('unknown lookbehind') }
+        : (lookbehind_state (lookbehind .show_results), []) }
     <options x-for="options">
       <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options>
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </game-over-etc>,
@@ -557,7 +537,28 @@ var game_over_view = _ => so ((_=_=>
   , toggle_background_music = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_) 
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) }
+  , analyse_students = by (_students_boards_pasts =>
+      L .collect ([ L .elems, ([ _student, [_board, _past] ]) => (
+        { _name: T (_student) (L .get (student_as_name))
+        , _number_of_solved: T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
+        , _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
+        , _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }) ]) )
+  , analyse_problems = _students_boards_pasts => by (_problems =>
+      L .collect ([ L .elems, (_problem, _index) => (
+        { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
+        , _number_of_solvers: T (_students_boards_pasts
+            ) (L .count ([ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )) ]))
+        , _average_number_of_attempts: T (_students_boards_pasts
+            ) (
+            L .mean (
+            [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index ] ))
+            , point_as_attempts, L .count (L .elems) ]))
+        , _average_solved_time: T (_students_boards_pasts
+            ) (
+            L .mean (
+            [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ))
+            , point_as_attempts, L .last, attempt_as_latency ])) }) ])) )=>_) 
 
 window .view = <teacher-app>
   { !! L .isDefined (app_as_setup) (app_state ())
