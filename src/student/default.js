@@ -212,17 +212,16 @@ var setup_student_view = _ => so ((_=_=>
 var setup_view = <setup-etc>
   { so ((
     suppose
-    , room = T (app_state ()) (L .get ([ app_as_room, as_maybe ]))
-    , student = T (app_state ()) (L .get ([ app_as_student, as_maybe ]))
+    , _app = app_state ()
     , _io = io_state () ) =>
-    !! equals (Z_ .Nothing) (room) ?
-      !! L .isDefined (io_as_inert) (_io)
+    !! not (L .isDefined (app_as_room) (_app))
+    ? !! L .isDefined (io_as_inert) (_io)
       ? setup_room_view
       : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
       ? <message>正在連接遊戲室…</message>
       : panic ('invalid io at get ready view')
-    : equals (Z_ .Nothing) (student) ?
-      !! L .isDefined (io_as_inert) (_io)
+    : not (L .isDefined (app_as_student) (_app))
+    ? !! L .isDefined (io_as_inert) (_io)
       ? setup_student_view
       : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
       ? <message>正在加入遊戲室…</message>
