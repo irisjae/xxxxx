@@ -888,7 +888,7 @@ board {
   border-radius: 20px;
   position: relative;  
   &[x-disabled=true] {
-    filter: brightness(80%); }
+    filter: brightness(20%); }
   & row {
     display: flex;
     align-items: stretch;
