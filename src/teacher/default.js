@@ -502,8 +502,8 @@ var game_over_view = _ => so ((_=_=>
   , _app = app_state ()
   , _boards = T (_app) (L .get (app_as_boards)) 
   , _pasts = T (_app) (L .get (app_as_pasts)) 
-  , _problems = T (_app) (L .get ([ app_as_settings, settings_as_problems ])) 
   , _students_boards_pasts = map_zip (a => b => [a, b]) (_boards) (_pasts)
+  , _problems = T (_app) (L .get ([ app_as_settings, settings_as_problems ])) 
   , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
   , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
   , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
@@ -548,16 +548,16 @@ var game_over_view = _ => so ((_=_=>
       L .collect ([ L .elems, (_problem, _index) => (
         { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
         , _number_of_solvers: T (_students_boards_pasts
-            ) (L .count ([ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )) ]))
+            ) (L .count ([ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ) ]))
         , _average_number_of_attempts: T (_students_boards_pasts
             ) (
             L .mean (
-            [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index ] ))
+            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), _index ] )
             , point_as_attempts, L .count (L .elems) ]))
         , _average_solved_time: T (_students_boards_pasts
             ) (
             L .mean (
-            [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ))
+            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )
             , point_as_attempts, L .last, attempt_as_latency ])) }) ])) )=>_) 
 
 window .view = <teacher-app>
