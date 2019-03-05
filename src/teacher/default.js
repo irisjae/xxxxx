@@ -135,7 +135,7 @@ var setup_view = _ => so ((_=_=>
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
           [ [ win_rule_as_first_bingo, play_to_win_img ]
-          , [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)), win_rule_as_limit_time ], time_limit_play_img ]
+          , [ win_rule_as_limit_time, time_limit_play_img ]
           , [ win_rule_as_all_problems, free_play_img ] ]
           ) (_win_rule) } </setting>
       <setting x-of="time-limit">
@@ -185,6 +185,13 @@ var setup_view = _ => so ((_=_=>
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
   : (lookbehind_state (lookbehind .nothing), []),
   where
+                           
+      , _case_v_img = T (case_v_img_list) (L .get (L .find (under (L .first) (iso => L .and (iso) (_case)))))
+      , _case_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (iso => L .and (iso) (_case)))))
+      , _case_iso = T (_case_v_img) (L .get (L .first))
+      , _case_img = T (_case_v_img) (L .get (L .last))
+            ;_dom .addEventListener (click, _ => {;feedback_case (T (_case) (L .get ([_case_iso, L .inverse (prev_case_iso)])))}) }) }
+          , [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)), win_rule_as_limit_time ], time_limit_play_img ]
   , _lookbehind = lookbehind_state () 
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _problems = T (_settings) (L .get (settings_as_problems))
@@ -215,25 +222,23 @@ var setup_view = _ => so ((_=_=>
       [ <label>{ label }</label>
       , <control>
           <prev fn={ feedback_prev }><img src={ prev_img } /></prev>
-          <counter><img src={ _case_img } /></counter>
+          <counter><img src={ data_img } /></counter>
           <next fn={ feedback_next }><img src={ next_img } /></next></control> ],
       where
       , case_list_length = R .length (case_v_img_list)
       , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
-      , _case_v_img = T (case_v_img_list) (L .get (L .find (under (L .first) (iso => L .isDefined (iso) (_case)))))
-      , _case_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (iso => L .isDefined (iso) (_case)))))
-      , _case_iso = T (_case_v_img) (L .get (L .last))
-      , _case_img = T (_case_v_img) (L .get (L .last))
-      , prev_case_iso = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (_case_index - 1)), L .first ]))
-      , next_case_iso = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (_case_index + 1)), L .first ]))
+      , data_img = T (case_v_img_list) (L .get ([ L .find (under (L .first) (equals (_case))), L .last ]))
+      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (equals (_case)))))
+      , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), L .first ]))
+      , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), L .first ]))
       , prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
       , next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
       , feedback_prev = _dom => {;
           ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;feedback_case (T (_case) (L .get ([_case_iso, L .inverse (prev_case_iso)])))}) }) }
+            ;_dom .addEventListener (click, _ => {;feedback_case (prev_case)}) }) }
       , feedback_next = _dom => {;
           ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;feedback_case (T (_case) (L .get ([_case_iso, L .inverse (next_case_iso)])))}) }) } )=>_)
+            ;_dom .addEventListener (click, _ => {;feedback_case (next_case)}) }) } )=>_)
   , feedback_start = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
