@@ -134,9 +134,9 @@ var setup_view = _ => so ((_=_=>
               var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
-          [ [ win_rule_as_first_bingo, play_to_win_img ]
-          , [ win_rule_as_limit_time, time_limit_play_img ]
-          , [ win_rule_as_all_problems, free_play_img ] ]
+          [ [ win_rule .first_bingo, play_to_win_img ]
+          , [ win_rule .limit_time, time_limit_play_img ]
+          , [ win_rule .all_problems, free_play_img ] ]
           ) (_win_rule) } </setting>
       <setting x-of="time-limit">
         { $ (counter_setting
@@ -145,9 +145,9 @@ var setup_view = _ => so ((_=_=>
               var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
               ;feedback_state (feedback .setup_rules (rules_delta)) }
           ) (
-          [ [ L .is (10), ten_secs_img ]
-          , [ L .is (20), twenty_secs_img ]
-          , [ L .is (30), thirty_secs_img ] ]
+          [ [ 10, ten_secs_img ]
+          , [ 20, twenty_secs_img ]
+          , [ 30, thirty_secs_img ] ]
           ) (_time_limit) } </setting></settings>
       <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }} fn={ setup_preview }><img src={ preview_img } /></button>
       <button x-custom="true" x-for="start" fn={ feedback_start }>
@@ -185,13 +185,14 @@ var setup_view = _ => so ((_=_=>
     <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
   : (lookbehind_state (lookbehind .nothing), []),
   where
-                           
+/*                           
       , _case_v_img = T (case_v_img_list) (L .get (L .find (under (L .first) (iso => L .and (iso) (_case)))))
       , _case_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (iso => L .and (iso) (_case)))))
       , _case_iso = T (_case_v_img) (L .get (L .first))
       , _case_img = T (_case_v_img) (L .get (L .last))
             ;_dom .addEventListener (click, _ => {;feedback_case (T (_case) (L .get ([_case_iso, L .inverse (prev_case_iso)])))}) }) }
           , [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)), win_rule_as_limit_time ], time_limit_play_img ]
+*/
   , _lookbehind = lookbehind_state () 
   , _settings = T (app_state ()) (L .get (app_as_settings))
   , _problems = T (_settings) (L .get (settings_as_problems))
