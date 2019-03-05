@@ -63,8 +63,8 @@ var lookbehind = data ({
 	view_students: () => lookbehind,
 	consider_end: () => lookbehind,
 	show_results: () => lookbehind,
-	students_analysis: () => lookbehind,
-	problems_analysis: () => lookbehind })
+	students_analysis: (ordering =~ order ([ 'name', 'number_of_solved', 'number_of_bingoes', 'average_solved_time' ])) => lookbehind,
+	problems_analysis: (ordering =~ order ([ 'question', 'number_of_solvers', 'average_number_of_attempts', 'average_solved_time' ])) => lookbehind })
 
 var ambient = data ({
   ambient: ( background_music_on =~ bool ) => ambient })
@@ -84,6 +84,8 @@ var lookbehind_as_consider_end = data_iso (lookbehind .consider_end)
 var lookbehind_as_show_results = data_iso (lookbehind .show_results)
 var lookbehind_as_students_analysis = data_iso (lookbehind .students_analysis)
 var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
+
+var lookbehind_as_ordering = L .choice (data_iso (lookbehind .students_analysis) .ordering, data_iso (lookbehind .problems_analysis) .ordering)
 
 var ambient_as_ambient = data_iso (ambient .ambient)
 var ambient_as_background_music_on = data_lens (ambient .ambient) .background_music_on
@@ -458,10 +460,10 @@ var game_over_view = _ => so ((_=_=>
         ? so ((_=_=>
         <students-analysis-etc>
           <labels>
-            <name fn={ toggle_name_order }>名稱 <img src={ toggle_ordering_img } /></name>
-            <number-of-solved fn={ toggle_number_of_solved_order }>答對題數 <img src={ toggle_ordering_img } /></number-of-solved>
-            <number-of-bingoes fn={ toggle_number_of_bingoes_order }>BINGO <img src={ toggle_ordering_img } /></number-of-bingoes>
-            <average-solved-time fn={ toggle_average_solved_time_order }>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
+            <name>名稱 <img src={ toggle_ordering_img } /></name>
+            <number-of-solved>答對題數 <img src={ toggle_ordering_img } /></number-of-solved>
+            <number-of-bingoes>BINGO <img src={ toggle_ordering_img } /></number-of-bingoes>
+            <average-solved-time>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
           <students-analysis>
             { T (_students_boards_pasts
               ) (
@@ -469,51 +471,46 @@ var game_over_view = _ => so ((_=_=>
                   { _name: T (_student) (L .get (student_as_name))
                   , _number_of_solved: T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
                   , _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
-                  , _average_solved_time: T (_past
-                      ) (
-                      [ L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])
-                      , show_time ]) }))
+                  , _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }))
               , L .collect ([ order_sort (_ordering), L .elems, ({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => 
               <student>
                 <name>{ _name }</name>
                 <number-of-solved>{ _number_of_solved }</number-of-solved>
                 <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
-                <average-solved-time>{ _average_solved_time }</average-solved-time> </student> ]) ]) } </students-analysis> </students-analysis-etc>,
+                <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </student> ]) ]) } </students-analysis> </students-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
         : L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
         ? so ((_=_=>
         <problems-analysis-etc>
           <labels>
-            <question fn={ toggle_question_order }>題目 <img src={ toggle_ordering_img } /></question>
-            <number-of-solvers fn={ toggle_number_of_solvers_order }>答對人數 <img src={ toggle_ordering_img } /></number-of-solvers>
-            <average-number-of-attempts fn={ toggle_number_of_attempts_order }>平均作答次數 <img src={ toggle_ordering_img } /></average-number-of-attempts>
-            <average-solved-time fn={ toggle_average_solved_time_order }>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
+            <question>題目 <img src={ toggle_ordering_img } /></question>
+            <number-of-solvers>答對人數 <img src={ toggle_ordering_img } /></number-of-solvers>
+            <average-number-of-attempts>平均作答次數 <img src={ toggle_ordering_img } /></average-number-of-attempts>
+            <average-solved-time>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
           <problems-analysis>
             { T (_problems
               ) (
-              [ L .collect ((_problem, _index) => (
+              [ L .collect ([ L .elems, (_problem, _index) => (
                   { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
                   , _number_of_solvers: T (_students_boards_pasts
                       ) (L .count ([ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )) ]))
                   , _average_number_of_attempts: T (_students_boards_pasts
                       ) (
-                      [ L .mean (
-                        [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index ] ))
-                        , point_as_attempts, L .count (L .elems) ])
-                      , show_time ])
+                      L .mean (
+                      [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index ] ))
+                      , point_as_attempts, L .count (L .elems) ]))
                   , _average_solved_time: T (_students_boards_pasts
                       ) (
-                      [ L .mean (
-                        [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ))
-                        , point_as_attempts, L .last, attempt_as_latency ])
-                      , show_time ]) })) (L .elems)
+                      L .mean (
+                      [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ))
+                      , point_as_attempts, L .last, attempt_as_latency ])) }) ])
               , L .collect ([ order_sort (_ordering), L .elems, ({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => 
               <problem>
                 <question><img src={ _question }/></question>
                 <number-of-solvers>{ _number_of_solvers }</number-of-solvers>
-                <average-number-of-attempts>{ _average_number_of_attempts }</average-number-of-attempts>
-                <average-solved-time>{ _average_solved_time }</average-solved-time> </problem> ]) ]) } </problems-analysis> </problems-analysis-etc>,
+                <average-number-of-attempts>{ show_time (_average_number_of_attempts) }</average-number-of-attempts>
+                <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </problem> ]) ]) } </problems-analysis> </problems-analysis-etc>,
         where
         , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
         : panic ('unknown lookbehind') }
@@ -539,6 +536,7 @@ var game_over_view = _ => so ((_=_=>
   , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
   , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
   , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
+  , toggle_ordering_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png?1551692617218'                            
   , show_time = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒'
   , show_results = _dom => {;
       ;clicking .forEach (click => {;
@@ -547,11 +545,11 @@ var game_over_view = _ => so ((_=_=>
   , problems_analysis = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .problems_analysis) })})}                              
+          ;lookbehind_state (lookbehind .problems_analysis ([])) })})}                              
   , students_analysis = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .students_analysis) })})}                              
+          ;lookbehind_state (lookbehind .students_analysis ([])) })})}                              
   , play_again = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
