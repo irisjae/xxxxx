@@ -782,9 +782,10 @@ Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_
           ;setTimeout (_=>{;end_game ()}, 8000) } } }
 */
     else if (equals (win_rule .all_problems) (_win_rule)) {
-//      if (L .isDefined (app_as_playing) (_app)) {
-//        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-//          ;setTimeout (_=>{;end_game ()}, 8000) } }
+      if (L .isDefined (app_as_playing) (_app)) {
+        var _size = L .get ([app_as_settings, settings_as_size]) (_app)
+        if (L .get (app_as_progress) (_app) >= (_size * _size)) {
+          ;end_game () } }
     
     }
     return _app })
