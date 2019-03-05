@@ -53,7 +53,7 @@ var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 
-var win_rule = data ({ first_bingo: () => win_rule, limit_time: () => win_rule, all_problems: () => win_rule })
+var win_rule = data ({ first_bingo: () => win_rule, limit_time: (time_limit =~ time_amount) => win_rule, all_problems: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
   
@@ -228,6 +228,12 @@ var ensemble_as_pasts = data_iso (ensemble .ensemble) .pasts
 
 var avatar_as_lion = data_iso (avatar .lion)
 var avatar_as_bunny = data_iso (avatar .bunny)
+
+var win_rule_as_first_bingo = data_iso (win_rule .first_bingo)
+var win_rule_as_limit_time = data_iso (win_rule .limit_time)
+var win_rule_as_all_problems = data_iso (win_rule .all_problems)
+
+var win_rule_as_time_limit = data_lens (win_rule .limit_time) .time_limit
 
 var student_as_student = data_iso (student .student)
 
@@ -864,6 +870,7 @@ window .stuff = { ...window .stuff,
 	app_as_boards, app_as_pasts, 
   app_as_last_point, point_as_attempts,
   avatar_as_lion, avatar_as_bunny, 
+  win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
   student_as_student, student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
