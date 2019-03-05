@@ -136,7 +136,7 @@ var setup_room_view = _ => so ((_=_=>
     <room style={{ margin: '30px 0' }}>
       <label>遊戲室編號：</label>
       { !! L .isDefined (lookbehind_as_bad_room) (lookbehind_state ())
-        ? <message>不能連接遊戲室{ bad_room }</message>
+        ? <message x-error="true">不能連接遊戲室{ bad_room }</message>
         : [] }
       <input style={{ margin: { top: '10px' } }} /> </room>
     <button x-custom x-for="join"><img src={ join_img } /></button> </setup-room-etc>,
@@ -219,13 +219,13 @@ var setup_view = <setup-etc>
       !! L .isDefined (io_as_inert) (_io)
       ? setup_room_view
       : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
-      ? '正在連接遊戲室…'
+      ? <message>正在連接遊戲室…</message>
       : panic ('invalid io at get ready view')
     : equals (Z_ .Nothing) (student) ?
       !! L .isDefined (io_as_inert) (_io)
       ? setup_student_view
       : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
-      ? '正在加入遊戲室…'
+      ? <message>正在加入遊戲室…</message>
       : panic ('invalid io at get ready view')
     // blank for now    
     : [] ) } </setup-etc>

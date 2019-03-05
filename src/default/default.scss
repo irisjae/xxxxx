@@ -589,6 +589,14 @@ student-app > setup-etc {
         outline: none; }
       & img {
         @extend %clickable; } } }
+  message[x-error] {
+    color: red;
+    font-weight: bold;
+    font-size: 1.25em; }
+  & > message {
+    text-align: 
+  
+  }
   
   @extend %page-etc;
   & setup-room-etc, setup-student-etc {
@@ -647,7 +655,13 @@ student-app > setup-etc {
           background: #222; } } } } }
 
 student-app > get-ready-etc {
-  @extend %page-etc; }
+  @extend %page-etc;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em; }
 
 student-app > playing-etc {
   display: flex;
