@@ -472,7 +472,7 @@ var game_over_view = _ => so ((_=_=>
                   , _average_solved_time: T (_past
                       ) (
                       [ L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])
-                      , _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒']) }))
+                      , show_time ]) }))
               , L .collect ([ order_sort (_ordering), L .elems, ({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => 
               <student>
                 <name>{ _name }</name>
@@ -492,14 +492,22 @@ var game_over_view = _ => so ((_=_=>
           <problems-analysis>
             { T (_problems
               ) (
-              [ L .collectAs ((_problem, _index) => so ((_=_=>
+              [ L .collect ((_problem, _index) => (
                   { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
                   , _number_of_solvers: T (_students_boards_pasts
                       ) (L .count ([ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] )) ]))
-                  , _average_number_of_attempts
-                  , _average_solved_time },
-                  where
-                  , _index )=>_)) (L .elems)
+                  , _average_number_of_attempts: T (_students_boards_pasts
+                      ) (
+                      [ L .mean (
+                        [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index ] ))
+                        , point_as_attempts, L .count (L .elems) ])
+                      , show_time ])
+                  , _average_solved_time: T (_students_boards_pasts
+                      ) (
+                      [ L .mean (
+                        [ L .elems, L .choose (by (([ _student, [_board, _past] ]) => [ K (_past), _index, as_solved_on (_board) ] ))
+                        , point_as_attempts, L .last, attempt_as_latency ])
+                      , show_time ]) })) (L .elems)
               , L .collect ([ order_sort (_ordering), L .elems, ({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => 
               <problem>
                 <question><img src={ _question }/></question>
@@ -531,6 +539,7 @@ var game_over_view = _ => so ((_=_=>
   , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
   , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
   , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
+  , show_time = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒'
   , show_results = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
