@@ -508,22 +508,25 @@ var problem_choice_matches = so ((_=_=>
       minus: (left =~ ast, right =~ ast) => ast,
       multiply: (left =~ ast, right =~ ast) => ast,
       divide: (left =~ ast, right =~ ast) => ast })
-  , str_parse = so ((
-      suppose
-      , order = [ '+', '-', '*', '/' ]
-      , operation = 
-          { '+': 'add'
-          , '-': 'minus'
-          , '*': 'multiply'
-          , '/': 'divide' } ) =>
-      L .get (apply (L .cond) (Z_ .concat (T (order) (Z_ .map (symbol => 
+  , str_parse = so ((_=_=>
+      $ (L .get
+      ) (
+      L .cond (
+        ...T (order) (Z_ .map (symbol => 
         [ R .includes (symbol), [ str => so ((_=_=>
             ast [operation [symbol]] (left, right),
             where
             , at = R .indexOf (symbol) (str) 
             , left = str_parse (str .slice (0, at))                                      
             , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
-        ) ([ [ str => ast .normal ( str * 1, 1 ) ] ]) ) )) //assuming str is integer
+        , [ [ str => ast .normal ( str * 1, 1 ) ] ] )),
+      where
+      , order = [ '+', '-', '*', '/' ]
+      , operation = 
+          { '+': 'add'
+          , '-': 'minus'
+          , '*': 'multiply'
+          , '/': 'divide' } )=>_) //assuming str is integer
   , ast_as_normal = data_iso (ast .normal)
   , ast_as_add = data_iso (ast .add)
   , ast_as_minus = data_iso (ast .minus)
@@ -545,26 +548,30 @@ var problem_choice_matches = so ((_=_=>
   , ast_normalize = by (ast =>
       L .get (L .choice 
         ( L .when (ast_as_normal)
-        , [ L .when (ast_as_add), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_denominator + right_numerator * left_denominator
-            , d = left_denominator * right_denominator ) =>
-            ast_simplify (n) (d) ) ])) (ast_as_add)
-        , L .chain ($ ([ left_right_ast_normalize, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_denominator - right_numerator * left_denominator
-            , d = left_denominator * right_denominator ) =>
-            ast_simplify (n) (d) ) ])) (ast_as_minus)
-        , L .chain ($ ([ left_right_ast_normalize, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_numerator
-            , d = left_denominator * right_denominator ) =>
-            ast_simplify (n) (d) ) ])) (ast_as_multiply)
-        , L .chain ($ ([ left_right_ast_normalize, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_denominator
-            , d = left_denominator * right_numerator ) =>
-            ast_simplify (n) (d) ) ])) (ast_as_divide) )))
+        , [ L .when (ast_as_add)
+          , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+              suppose
+              , n = left_numerator * right_denominator + right_numerator * left_denominator
+              , d = left_denominator * right_denominator ) =>
+              ast_simplify (n) (d) ) ]
+        , [ L .when (ast_as_minus)
+          , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+              suppose
+              , n = left_numerator * right_denominator - right_numerator * left_denominator
+              , d = left_denominator * right_denominator ) =>
+              ast_simplify (n) (d) ) ]
+        , [ L .when (ast_as_multiply)
+          , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+              suppose
+              , n = left_numerator * right_numerator
+              , d = left_denominator * right_denominator ) =>
+              ast_simplify (n) (d) ) ]
+        , [ L .when (ast_as_divide)
+          , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+              suppose
+              , n = left_numerator * right_denominator
+              , d = left_denominator * right_numerator ) =>
+              ast_simplify (n) (d) ) ] )))
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
       !! equals (b) (0)
