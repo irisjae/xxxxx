@@ -637,7 +637,7 @@ S .root (die => {;
         ;lookbehind_state (lookbehind .nothing) }
       , 1500)
       ;S .cleanup (_ => {;
-        ;clearTimeout (forget) }) } */ })
+        ;clearTimeout (forget) }) } */ } })
 
   ;S (last_app => {;
     if (! L .isDefined (app_as_room) (last_app)) {
