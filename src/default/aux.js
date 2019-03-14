@@ -444,7 +444,6 @@ var solved_positions = _board => by (_past =>
 var bingoed_positions = _board => _past => 
 	L .collect ([ L .elems, L .elems ]) (bingoes (_board) (_past))
 
-// make more elegant
 var bingoes = _board => _past => 
   so ((_=_=>
   final_solved_patterns,
