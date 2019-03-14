@@ -509,7 +509,7 @@ var problem_choice_matches = so ((_=_=>
       multiply: (left =~ ast, right =~ ast) => ast,
       divide: (left =~ ast, right =~ ast) => ast })
   , str_parse = so ((
-      define
+      suppose
       , order = [ '+', '-', '*', '/' ]
       , operation = 
           { '+': 'add'
