@@ -215,13 +215,13 @@ var setup_view = <setup-etc>
     !! not (L .isDefined (app_as_room) (_app))
     ? !! L .isDefined (io_as_inert) (_io)
       ? setup_room_view
-      : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
+      : L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io)
       ? <message>正在連接遊戲室…</message>
       : panic ('invalid io at get ready view')
     : not (L .isDefined (app_as_student) (_app))
     ? !! L .isDefined (io_as_inert) (_io)
       ? setup_student_view
-      : (L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io))
+      : L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (_io)
       ? <message>正在加入遊戲室…</message>
       : panic ('invalid io at get ready view')
     : <message>正在加入遊戲室…</message>,
