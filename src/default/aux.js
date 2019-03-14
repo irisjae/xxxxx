@@ -435,31 +435,13 @@ var as_solved_on = memoize (_board =>
     where
     , _problem = T (_point) (L .get (point_as_problem))
     , _position = T (_point) (L .get (point_as_position))
-    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))))
+    , _choice = _position && T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))) )
 
 var solved_positions = _board => by (_past => 
   L .collect ([ past_as_points, L .elems, as_solved_on (_board), point_as_position ]))
-/*by (_past => 
-  $ (L .collect
-  ) (
-  [ past_as_points, L .elems, L .choose (_point => 
-    L .chain (Z_ .K (L .when (_position => so ((_=_=>
-      problem_choice_matches (_problem) (_choice),
-      where
-      , _problem = T (_point) (L .get (point_as_problem))
-      , _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_)))
-    ) (
-    point_as_position)) ]))*/
 
 var bingoed_positions = _board => _past => 
-	L .collect ([ L .elems, L .elems ]) (bingoes (_board) (_past))/*so ((_=_=> 
-	T (bingo_patterns
-  ) (
-  L .collect ([ L .elems, L .when (R .all (T (_solved_positions) (Z_ .flip (Z_ .elem)))), L .elems ])),
-  where
-	, _size = T (_board) (Z_ .size)
-  , bingo_patterns = size_patterns (_size)    
-	, _solved_positions = solved_positions (_board) (_past) )=>_)*/
+	L .collect ([ L .elems, L .elems ]) (bingoes (_board) (_past))
 
 // make more elegant
 var bingoes = _board => _past => 
