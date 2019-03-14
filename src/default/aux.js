@@ -447,26 +447,20 @@ var bingoed_positions = _board => _past =>
 // make more elegant
 var bingoes = _board => _past => 
   so ((_=_=>
-  result
-  T (_solved_positions
-  ) (
-  [ $ (Z_ .reduce
-    ) (
-    memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
-      [ positions, Z_ .concat (solved_local_patterns) (solved_patterns) ],
-      where
-      , positions = Z_ .append (_position) (solved_positions)
-      , solved_local_patterns = 
-          T (_local_patterns
-          ) (
-          L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) ) )=>_))
-    ) (
-    [ [], [] ])
-  , L .get (L .last) ]),
+  final_solved_patterns,
   where
   , _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
-  , _local_patterns = local_patterns (size_patterns (_size)) )=>_)
+  , _local_patterns = local_patterns (size_patterns (_size))
+  , [ __, final_solved_patterns ] = T (_solved_positions) (T ([ [], [] ]
+      ) (Z_ .reduce (memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
+        [ positions, [ ...solved_local_patterns, solved_patterns ] ],
+        where
+        , positions = [ ...solved_positions, _position ]
+        , solved_local_patterns = 
+            T (_local_patterns
+            ) (
+            L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) ) )=>_)) ) )) )=>_)
 
 
 
@@ -822,7 +816,7 @@ var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
 var uuid = _ =>
 	'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
 		so ((
-		take
+		suppose
 		, r = Math .random () * 16 | 0
 		, v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
 		v .toString (16) ))
