@@ -52,6 +52,12 @@ var point = data ({ point: (problem =~ problem, attempts =~ list (attempt)) => p
 var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
+var ast = data ({
+    normal: (numerator =~ integer, denominator =~ integer) => ast,
+    add: (left =~ ast, right =~ ast) => ast,
+    minus: (left =~ ast, right =~ ast) => ast,
+    multiply: (left =~ ast, right =~ ast) => ast,
+    divide: (left =~ ast, right =~ ast) => ast })
 
 var win_rule = data ({ first_bingo: () => win_rule, limit_time: (time_limit =~ time_amount) => win_rule, all_problems: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
@@ -243,6 +249,12 @@ var student_as_icon = data_lens (student .student) .icon
 
 var progress_as_step = [ 0 ]
 var progress_as_timestamp = [ 1 ]
+
+var ast_as_normal = data_iso (ast .normal)
+var ast_as_add = data_iso (ast .add)
+var ast_as_minus = data_iso (ast .minus)
+var ast_as_multiply = data_iso (ast .multiply)
+var ast_as_divide = data_iso (ast .divide)
 
 var question_as_text = data_lens (question .text) .text
 var question_as_image = data_lens (question .image) .image
@@ -466,7 +478,6 @@ var bingoes = _board => _past =>
 
 
 
-// TODO: simplify this
 var problem_choice_matches = _problem => _choice => so ((_=_=>
     !! L .isDefined (question_as_text) (_question) 
     ? equals (normal_parse_problem (_text)) (normal_parse_problem (_choice))
@@ -477,18 +488,12 @@ var problem_choice_matches = _problem => _choice => so ((_=_=>
     , _question = T (_problem) (L .get (problem_as_question))
     , _text = T (_question) (L .get (question_as_text))
     , _solution = T (_question) (L .get (question_as_solution)) )=>_)
+
+
+
+
+
                                   
-var ast = data ({
-    normal: (numerator =~ integer, denominator =~ integer) => ast,
-    add: (left =~ ast, right =~ ast) => ast,
-    minus: (left =~ ast, right =~ ast) => ast,
-    multiply: (left =~ ast, right =~ ast) => ast,
-    divide: (left =~ ast, right =~ ast) => ast })
-var ast_as_normal = data_iso (ast .normal)
-var ast_as_add = data_iso (ast .add)
-var ast_as_minus = data_iso (ast .minus)
-var ast_as_multiply = data_iso (ast .multiply)
-var ast_as_divide = data_iso (ast .divide)
 var ast_simplify = n => d => so ((
     suppose
     , factor = gcd (n) (d) ) =>
@@ -693,47 +698,47 @@ var api = so ((_=_=>
     .catch (_ => {})
     
     return continuation },
-where
-, new_id = _ => {
-    var id = '' + Math .floor (1000000 * Math .random ())
-    return !! not (api .continuations [id])
-    ? id
-    : new_id () }
-//TODO: make this more elegant
-, new_socket = room => so ((_=_=>(
-    rec =
-    { _socket: _
-    , ready: _
-    , refresh: refresh
-    , send: _x => _socket .send (_x) } , refresh (), rec),
-    where
-    , rec = _
-    , _socket = _
-    , refresh = _ => {;
-        if (! (_socket instanceof WebSocket)
-        || _socket .readyState === WebSocket .CLOSED
-        || _socket .readyState === WebSocket .CLOSING) {
-          ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
-          rec ._socket = _socket
-          rec .ready = new Promise ((resolve, reject) => {;
-            _socket .onopen = _ => {;resolve ()} })
-          _socket .onmessage = _event => {;
-            var _packet = JSON .parse (_event .data)
-            var id = _packet .id
-            var data = _packet .body
-            if (api .continuations [id]) {;
-               ;api .continuations [id] (data) } } } } )=>_)
-      
-, update_pings = sample =>
-  $ (
-  [ L .get (L .valueOr ([0, 0, 0, 0]))
-  , ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
-    [ mean * carry + sample / (n + 1)
-    , sqr_mean * carry + (sample * sample) / (n + 1)
-    , n + 1
-    , (new Date) .getTime () ],
-    where 
-    , carry = n / (n + 1) )=>_) ]))=>_) 
+  where
+  , new_id = _ => {
+      var id = '' + Math .floor (1000000 * Math .random ())
+      return !! not (api .continuations [id])
+      ? id
+      : new_id () }
+  //TODO: make this more elegant
+  , new_socket = room => so ((_=_=>(
+      rec =
+      { _socket: _
+      , ready: _
+      , refresh: refresh
+      , send: _x => _socket .send (_x) } , refresh (), rec),
+      where
+      , rec = _
+      , _socket = _
+      , refresh = _ => {;
+          if (! (_socket instanceof WebSocket)
+          || _socket .readyState === WebSocket .CLOSED
+          || _socket .readyState === WebSocket .CLOSING) {
+            ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+            rec ._socket = _socket
+            rec .ready = new Promise ((resolve, reject) => {;
+              _socket .onopen = _ => {;resolve ()} })
+            _socket .onmessage = _event => {;
+              var _packet = JSON .parse (_event .data)
+              var id = _packet .id
+              var data = _packet .body
+              if (api .continuations [id]) {;
+                 ;api .continuations [id] (data) } } } } )=>_)
+
+  , update_pings = sample =>
+    $ (
+    [ L .get (L .valueOr ([0, 0, 0, 0]))
+    , ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
+      [ mean * carry + sample / (n + 1)
+      , sqr_mean * carry + (sample * sample) / (n + 1)
+      , n + 1
+      , (new Date) .getTime () ],
+      where 
+      , carry = n / (n + 1) )=>_) ]))=>_)
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
