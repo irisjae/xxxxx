@@ -236,7 +236,32 @@ var get_ready_view = _ => so ((_=_=>
   where
   , room = T (app_state ()) (L .get (app_as_room)) )=>_)
 
-
+var bingoes_view = _size => _bingoes =>
+  <bingo> { 
+    T (_bingoes) ([ L .collect ([ L .elems, (_pattern, nth) => so ((_=_=>
+      T (Z_ .range (1) (5 + 1)) (R .map (_i => so ((_=_=>
+        <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,
+        where
+        , letter = !! equals (_i) (1) ? 'b'
+                   : equals (_i) (2) ? 'i'
+                   : equals (_i) (3) ? 'n'
+                   : equals (_i) (4) ? 'g'
+                   : equals (_i) (5) ? 'o'
+                   : panic ('bad letter')
+        , left = !! equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                 : ((_i - 1) * 1 / 5) * 100 + '%'
+        , top = !! equals (shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+                : equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
+                : ((_i - 1) * 1 / 5) * 100 + '%' )=>_) )),
+    where
+    , [ first_y, first_x ] = L .get (L .first) (_pattern)
+    , [ last_y, last_x ] = L .get (L .last) (_pattern)
+    , shape =
+        !! equals (first_x) (last_x) ? 'vertical'
+        : equals (first_y) (last_y) ? 'horizontal'
+        : (first_x < last_x) ? 'diagonal-down'
+        : (first_x > last_x) ? 'diagonal-up'
+        : panic ('bad pattern') )=>_) ]) ]) } </bingo>
 
 var playing_view = _ => so ((_=_=>
   <playing-etc>
@@ -258,31 +283,7 @@ var playing_view = _ => so ((_=_=>
           , _cell_position = T (_cell) (L .get (cell_as_position))
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
           , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-        <bingo> { 
-          T (_bingoes) ([ L .collect ([ L .elems, (_pattern, nth) => so ((_=_=>
-            T (Z_ .range (1) (5 + 1)) (R .map (_i => so ((_=_=>
-              <letter x-nth={ nth } x-as={ letter } style={{ left: left, top: top }} />,
-              where
-              , letter = !! equals (_i) (1) ? 'b'
-                         : equals (_i) (2) ? 'i'
-                         : equals (_i) (3) ? 'n'
-                         : equals (_i) (4) ? 'g'
-                         : equals (_i) (5) ? 'o'
-                         : panic ('bad letter')
-              , left = !! equals (shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                       : ((_i - 1) * 1 / 5) * 100 + '%'
-              , top = !! equals (shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
-                      : equals (shape) ('diagonal-up') ? ((5 - _i) * 1 / 5) * 100 + '%'
-                      : ((_i - 1) * 1 / 5) * 100 + '%' )=>_) )),
-          where
-          , [ first_y, first_x ] = L .get (L .first) (_pattern)
-          , [ last_y, last_x ] = L .get (L .last) (_pattern)
-          , shape =
-              !! equals (first_x) (last_x) ? 'vertical'
-              : equals (first_y) (last_y) ? 'horizontal'
-              : (first_x < last_x) ? 'diagonal-down'
-              : (first_x > last_x) ? 'diagonal-up'
-              : panic ('bad pattern') )=>_) ]) ]) } </bingo> </board> </div> </playing-etc>,
+        { bingoes_view (_size) (_bingoes) } </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))
