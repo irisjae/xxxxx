@@ -533,37 +533,38 @@ var problem_choice_matches = so ((_=_=>
       suppose
       , factor = gcd (n) (d) ) =>
       ast .normal (n / factor, d / factor) ) 
-  , ast_normalize = L .get (L .choice (
-      [ L .isDefined (ast_as_normal), [] ],
-      [ L .isDefined (ast_as_add), [ ast_as_add, ({ left, right }) => so ((
-          suppose
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
-          , n = left_numerator * right_denominator + right_numerator * left_denominator
-          , d = left_denominator * right_denominator ) =>
-          ast_simplify (n) (d) ) ] ],
-      [ L .isDefined (ast_as_minus), [ ast_as_minus, ({ left, right }) => so ((
-          suppose
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
-          , n = left_numerator * right_denominator - right_numerator * left_denominator
-          , d = left_denominator * right_denominator ) =>
-          ast_simplify (n) (d) ) ] ],
-      [ L .isDefined (ast_as_multiply), [ ast_as_multiply, ({ left, right }) => so ((
-          suppose
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
-          , n = left_numerator * right_numerator
-          , d = left_denominator * right_denominator ) =>
-          ast_simplify (n) (d) ) ] ],
-      [ L .isDefined (ast_as_divide), [ ast_as_divide, ({ left, right }) => so ((
-          suppose
-          , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
-          , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
-          , n = left_numerator * right_denominator
-          , d = left_denominator * right_numerator ) =>
-          ast_simplify (n) (d) ) ] ],
-       )) 
+  , ast_normalize = by (ast =>
+      L .get (L .choice 
+        ( [ L .when (ast_as_normal), L .inverse (ast_as_normal) ]
+        , L .choose ()
+        , L .chain (({ left, right }) => so ((
+            suppose
+            , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+            , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
+            , n = left_numerator * right_denominator + right_numerator * left_denominator
+            , d = left_denominator * right_denominator ) =>
+            ast_simplify (n) (d) )) (ast_as_add)
+        , L .chain (({ left, right }) => so ((
+            suppose
+            , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+            , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
+            , n = left_numerator * right_denominator - right_numerator * left_denominator
+            , d = left_denominator * right_denominator ) =>
+            ast_simplify (n) (d) )) (ast_as_minus)
+        , L .chain (({ left, right }) => so ((
+            suppose
+            , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+            , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
+            , n = left_numerator * right_numerator
+            , d = left_denominator * right_denominator ) =>
+            ast_simplify (n) (d) )) (ast_as_multiply)
+        , L .chain (({ left, right }) => so ((
+            suppose
+            , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (ast_normalize (left))
+            , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (ast_normalize (right))
+            , n = left_numerator * right_denominator
+            , d = left_denominator * right_numerator ) =>
+            ast_simplify (n) (d) )) (ast_as_divide) )))
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
       !! equals (b) (0)
