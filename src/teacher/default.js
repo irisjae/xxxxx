@@ -218,7 +218,6 @@ var setup_view = _ => so ((_=_=>
 	, five_by_five_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-off.png?1550827379773'
   , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
   , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
-// TODO: fix layout of unloaded imgs
   , counter_setting = label => feedback_case => case_v_img_list => _case => so ((_=_=>
       [ <label>{ label }</label>
       , <control>
@@ -260,7 +259,7 @@ var setup_view = _ => so ((_=_=>
   , toggle_background_music = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_)
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (not))) }) }) } )=>_)
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
@@ -294,7 +293,7 @@ var get_ready_view = _ => so ((_=_=>
   , toggle_background_music = _dom => {;
       ;clicking .forEach (click => {;
         ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_)
+          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (not))) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
   !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
