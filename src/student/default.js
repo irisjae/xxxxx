@@ -258,7 +258,7 @@ var playing_view = _ => so ((_=_=>
           , _cell_choice = T (_cell) (L .get (cell_as_choice))
           , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
         <bingo> { T (_bingoes) ([ L .collect (L .chain (K (L .elems)) ([ L .elems, (_pattern, nth) => so ((
-           define
+           suppose
            , [ first_y, first_x ] = L .get (L .first) (_pattern)
            , [ last_y, last_x ] = L .get (L .last) (_pattern)
            , shape =
@@ -280,7 +280,7 @@ var playing_view = _ => so ((_=_=>
                         : equals (_i) (3) ? 'n'
                         : equals (_i) (4) ? 'g'
                         : equals (_i) (5) ? 'o'
-                        : panic ('bad letter') )=>_) )) ) ])), R .reverse ]) } </bingo> </board> </div> </playing-etc>,
+                        : panic ('bad letter') )=>_) )) ) ])) ]) } </bingo> </board> </div> </playing-etc>,
     where
     , _app = app_state ()
     , _board = T (_app) (L .get (app_as_board))

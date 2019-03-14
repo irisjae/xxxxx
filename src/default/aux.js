@@ -494,7 +494,7 @@ var problem_choice_matches = so ((_=_=>
   _problem => _choice => so ((_=_=>
     !! L .isDefined (question_as_text) (_question) 
     ? equals (normalize (_text)) (normalize (_choice))
-    :!! L .isDefined (question_as_image) (_question) 
+    : L .isDefined (question_as_image) (_question) 
     ? equals (_solution) (_choice)
     : panic ('bad question'),
     where
@@ -508,25 +508,6 @@ var problem_choice_matches = so ((_=_=>
       minus: (left =~ ast, right =~ ast) => ast,
       multiply: (left =~ ast, right =~ ast) => ast,
       divide: (left =~ ast, right =~ ast) => ast })
-  , str_parse = so ((_=_=>
-      $ (L .get
-      ) (
-      L .cond (
-        ...T (order) (Z_ .map (symbol => 
-        [ R .includes (symbol), [ str => so ((_=_=>
-            ast [operation [symbol]] (left, right),
-            where
-            , at = R .indexOf (symbol) (str) 
-            , left = str_parse (str .slice (0, at))                                      
-            , right = str_parse (str .slice (at + 1, Infinity)) )=>_) ] ] ))
-        , [ [ str => ast .normal ( str * 1, 1 ) ] ] )),
-      where
-      , order = [ '+', '-', '*', '/' ]
-      , operation = 
-          { '+': 'add'
-          , '-': 'minus'
-          , '*': 'multiply'
-          , '/': 'divide' } )=>_) //assuming str is integer
   , ast_as_normal = data_iso (ast .normal)
   , ast_as_add = data_iso (ast .add)
   , ast_as_minus = data_iso (ast .minus)
@@ -572,6 +553,26 @@ var problem_choice_matches = so ((_=_=>
               , n = left_numerator * right_denominator
               , d = left_denominator * right_numerator ) =>
               ast_simplify (n) (d) ) ] )))
+  , chop_and_cons = symbol => cons => str => so ((
+      suppose
+      , loc = R .indexOf (symbol) (str) 
+      , left = str_parse (str .slice (0, loc))                                      
+      , right = str_parse (str .slice (loc + 1, Infinity)) ) =>
+      cons (left, right) )
+  , str_parse = so ((_=_=>
+      $ (L .get
+      ) (
+      L .cond (
+        ...T (order) (Z_ .map (symbol => 
+          [ R .includes (symbol), chop_and_cons (symbol) (ast (operation [symbol])) ] ))
+        , [ str => ast .normal ( str * 1, 1 ) ] )),
+      where
+      , order = [ '+', '-', '*', '/' ]
+      , operation = 
+          { '+': 'add'
+          , '-': 'minus'
+          , '*': 'multiply'
+          , '/': 'divide' } )=>_) //assuming str is integer
   , normalize = $ ([ str_parse, ast_normalize ])
   , gcd = a => b =>
       !! equals (b) (0)
