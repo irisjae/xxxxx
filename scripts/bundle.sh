@@ -16,7 +16,9 @@ find ~/static/ -type f | grep \\.scss | while read f; do
 done
 
 echo browserifying...
-pnpx browserify ~/static/default/default.js -x react -o ~/static/default.bundle.js
+pnpx browserify ~/static/default/default.js -x s-js -x react -o ~/static/default.bundle.js
+echo ';' >> ~/static/default.js
+cat ~/scripts/s-js-withsubclocks.js >> ~/static/default.js
 echo ';' >> ~/static/default.js
 cat ~/static/default.bundle.js >> ~/static/default.js
 rm ~/static/default/default.js
