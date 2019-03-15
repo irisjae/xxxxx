@@ -6,29 +6,13 @@ var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: false, env: [] })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
-var S = require ('s-js/dist/withsubclocks')
+//var S = require ('s-js/dist/withsubclocks')
+var { L_, S 
+	, T, Y, $, apply, I, K, not, equals, impure, panic, panic_on, by
+  , faith, belief, show, mark, please } = require ('camarche')
 ;Surplus .S = S
 ;Surplus .S .effect = S
 var memoize = require ('fast-memoize')
-var T = _x => _fn_obj =>
-	!! (_fn_obj .constructor === Array) //Z_ .is (Z$ .Array (Z$ .Any)) (_fn_obj)
-	? !! equals ([]) (_fn_obj)
-		? _x
-		: T (T (_x) (R .head (_fn_obj))) (R .tail (_fn_obj))
-	: !! (_fn_obj .constructor === Function) //Z_ .is (Z$ .AnyFunction) (_fn_obj)
-		? _fn_obj (_x)
-  : panic ('T requires a function as its input')
-var $ = form =>
-  x =>
-    T (x) (form)
-var apply = fn => arg_list =>
-  fn .apply (null, arg_list)
-var impure = _fn => {;_fn ()}
-
-var I = _x => _x // = L .get ([]) = Z_ .I
-var K = _x => _ => _x // = L .set ([]) = Z_ .K
-var not = _x => ! _x
-var equals = R .equals
 
 
 
@@ -40,31 +24,12 @@ var sole = list =>
 
 
 
-
-
-
-
-
-var panic = err => {;throw new Error (err)}
-var panic_on = mandates =>
-  _x => so ((
-  suppose
-  , [ mandate, infraction ] = T (mandates) (R .find (([ charge, _ ]) => charge (_x))) || [] ) =>
-  !! equals (infraction) (undefined) ? _x
-  : impure (X=>{;throw new Error (infraction)}) )
-
-
-
-
-
 //TODO: check form of fn_form
 var so = fn_form => 
 	!! (fn_form .toString () .endsWith ('=>_'))
 	? fn_form () ()
 	: fn_form ()
-var by = _meta_fn => x => T (x) (_meta_fn (x))
 //var and_by = $ ([ by, Z .flip ])
-//var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
 var go = Promise .resolve ()
 var never = new Promise (_ => {})
 
@@ -83,9 +48,9 @@ var never = new Promise (_ => {})
 
 
 
-var WeakMap = window .WeakMap
-var __data_length = new WeakMap
-var __data_lens = new WeakMap
+var Map = window .Map
+var __data_length = new Map
+var __data_lens = new Map
 
 var fiat = {}
 var data = cons_definitions =>
