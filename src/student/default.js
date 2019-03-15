@@ -1,4 +1,16 @@
-var { bool, number, timestamp, string,
+var { T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
+faith, belief, show, mark, please, 
+Y, impure, suppose,
+so, by, 
+go, never, panic, panic_on,
+just_now, temporal,
+fiat, data, data_lens, data_iso, data_kind,
+focused_iso_,
+n_reducer, l_sum,
+map_defined_, map_defined, from_just, 
+as_sole, sole, shuffle,
+I, K, not, equals,
+bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece, order,
 order_sort, direction_opposite, toggle_order, 
 shuffle, uuid, map_zip, under, api, post,
@@ -34,17 +46,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 current_problem, problem_choice_matches,
 local_patterns, size_patterns,
-as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
-T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
-so, by, 
-go, never, panic, panic_on,
-just_now, temporal,
-fiat, data, data_lens, data_iso, data_kind,
-focused_iso_,
-n_reducer, l_sum,
-map_defined_, map_defined, from_just, 
-as_sole, sole, shuffle,
-I, K, not, equals
+as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
 
 var question_order = _point => so ((_=_=>
