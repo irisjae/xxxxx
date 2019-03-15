@@ -6,12 +6,12 @@ var Z$ = require ('sanctuary-def')
 var Z = sanc .create ({ checkTypes: false, env: [] })
 var Z_ = Z .unchecked
 var Surplus = require ('surplus')
-//var S = require ('s-js/dist/withsubclocks')  
+//var S = require ('s-js/dist/withsubclocks')
 var { L_, S 
 	, T, Y, $, apply, I, K, not, equals, impure, panic, panic_on, by
   , faith, belief, show, mark, please } = require ('camarche')
 ;Surplus .S = S
-;Surplus .S .effect = S
+;Surplus .S .effect = S    
 var memoize = require ('fast-memoize')
 
 
