@@ -424,16 +424,18 @@ var game_over_view = _ => so ((_=_=>
           ;feedback_state (feedback .reset_game) })})} )=>_) 
 
 
-window .view = <student-app>
-	{ !! L .isDefined (app_as_setup) (app_state ())
-		? setup_view
-    : L .isDefined (app_as_get_ready) (app_state ())
-		? get_ready_view   
-		: L .isDefined (app_as_playing) (app_state ())
-		? playing_view
-		: L .isDefined (app_as_game_over) (app_state ())
-		? game_over_view
-		: panic ('undefined app state in view') } </student-app>
+S .root (die => {;
+  ;window .die = { ... (window .die || {}), view: die }
+  ;window .view = <student-app>
+    { !! L .isDefined (app_as_setup) (app_state ())
+      ? setup_view
+      : L .isDefined (app_as_get_ready) (app_state ())
+      ? get_ready_view   
+      : L .isDefined (app_as_playing) (app_state ())
+      ? playing_view
+      : L .isDefined (app_as_game_over) (app_state ())
+      ? game_over_view
+      : panic ('undefined app state in view') } </student-app> })
 
 
 

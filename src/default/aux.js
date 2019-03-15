@@ -545,7 +545,7 @@ var parse_to_ast = so ((_=_=>
     ) (
     L .cond (
       ...T (order) (Z_ .map (symbol => 
-        [ R .includes (symbol), analyze_to_ast (symbol) (ast (operation [symbol])) ] ))
+        [ R .includes (symbol), analyze_to_ast (symbol) (ast [operation [symbol]]) ] ))
       , [ str => ast .normal ( str * 1, 1 ) ] )),
     where
     , order = [ '+', '-', '*', '/' ]

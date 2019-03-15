@@ -569,17 +569,19 @@ var game_over_view = _ => so ((_=_=>
             [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index, as_solved_on (_board) ] )
             , point_as_attempts, L .last, attempt_as_latency ])) }) ])) )=>_) 
 
-window .view = <teacher-app>
-  { !! L .isDefined (app_as_setup) (app_state ())
-    ? setup_view
-    : L .isDefined (app_as_get_ready) (app_state ())
-    ? get_ready_view
-    : L .isDefined (app_as_playing) (app_state ())
-    ? playing_view
-    : L .isDefined (app_as_game_over) (app_state ())
-    ? game_over_view
-    : panic ('undefined app state in view')  } </teacher-app>
-												 
+S .root (die => {;
+  ;window .die = { ... (window .die || {}), view: die }
+  ;window .view = <teacher-app>
+    { !! L .isDefined (app_as_setup) (app_state ())
+      ? setup_view
+      : L .isDefined (app_as_get_ready) (app_state ())
+      ? get_ready_view
+      : L .isDefined (app_as_playing) (app_state ())
+      ? playing_view
+      : L .isDefined (app_as_game_over) (app_state ())
+      ? game_over_view
+      : panic ('undefined app state in view')  } </teacher-app> })
+
 												 
 												 
 												 
