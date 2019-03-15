@@ -210,7 +210,7 @@ var setup_student_view = _ => so ((_=_=>
             ;_name_input .value = ''
             ;feedback_state (feedback .setup_student (_icon, _name)) } } )=>_))=>_)
 
-var setup_view = <setup-etc>
+var setup_view = _ => <setup-etc>
   { so ((_=_=>
     !! not (L .isDefined (app_as_room) (_app))
     ? !! L .isDefined (io_as_inert) (_io)

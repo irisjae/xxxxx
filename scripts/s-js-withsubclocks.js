@@ -659,7 +659,10 @@ require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c=
 
 })));
 
-},{}],"subclocks":[function(require,module,exports){
+},{}],"s-js/dist/withsubclocks":[function(require,module,exports){
+module .exports = require('s-js/dist/withsubclocks')
+
+},{"s-js/dist/withsubclocks":1}],"s-js":[function(require,module,exports){
 module .exports = require('s-js/dist/withsubclocks')
 
 },{"s-js/dist/withsubclocks":1}]},{},[]);
