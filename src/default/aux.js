@@ -1,8 +1,10 @@
 var {
-	T, $, apply, L, R, S, Z, Z_, Z$, sanc, memoize, 
+  T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
+  faith, belief, show, mark, please, 
+	Y, impure, suppose,
 	so, by, 
 	go, never, panic, panic_on,
-  just_now, temporary,
+  just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
   focused_iso_,
 	n_reducer, l_sum,
