@@ -1,16 +1,16 @@
 var {
-  T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
-  faith, belief, show, mark, please, 
+	T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
+	faith, belief, show, mark, please, 
 	Y, impure, suppose,
 	so, by, 
 	go, never, panic, panic_on,
-  just_now, temporal,
+	just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
-  focused_iso_,
-	n_reducer, l_sum,
+	focused_iso_,
+	last_n, n_reducer, l_sum, pinpoint,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle,
-  I, K, not, equals
+	I, K, not, equals
 } = window .stuff
 
 
@@ -34,8 +34,8 @@ var room = string
 var url = string
 var choice = string
 var question = data ({
-  text: (text =~ string) => question,
-  image: (image =~ url, solution =~ choice) => question })
+	text: (text =~ string) => question,
+	image: (image =~ url, solution =~ choice) => question })
 var problem = v (question, list (choice))
 
 var order = props => list// (v (... props, 'ascending' | 'descending'))
@@ -55,29 +55,29 @@ var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 var ast = data ({
-    normal: (numerator =~ integer, denominator =~ integer) => ast,
-    add: (left =~ ast, right =~ ast) => ast,
-    minus: (left =~ ast, right =~ ast) => ast,
-    multiply: (left =~ ast, right =~ ast) => ast,
-    divide: (left =~ ast, right =~ ast) => ast })
+		normal: (numerator =~ integer, denominator =~ integer) => ast,
+		add: (left =~ ast, right =~ ast) => ast,
+		minus: (left =~ ast, right =~ ast) => ast,
+		multiply: (left =~ ast, right =~ ast) => ast,
+		divide: (left =~ ast, right =~ ast) => ast })
 
 var win_rule = data ({ first_bingo: () => win_rule, limit_time: (time_limit =~ time_amount) => win_rule, all_problems: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
 var settings = data ({ settings: ( problems =~ list (problem), rules =~ rules ) => settings })
-  
+	
 var avatar = data ({ 
-  lion: () => avatar,
-  bunny: () => avatar })
+	lion: () => avatar,
+	bunny: () => avatar })
 var student = data ({
-  student: (id =~ id, name =~ string, icon =~ avatar) => student })
+	student: (id =~ id, name =~ string, icon =~ avatar) => student })
 
 var teacher_app = data ({
-  setup: ( settings =~ settings ) => teacher_app,
+	setup: ( settings =~ settings ) => teacher_app,
 	get_ready: ( room =~ room, settings =~ settings, students =~ list (student) ) => teacher_app,
 	playing: ( room =~ room, settings =~ settings, students =~ list (student)
-           , boards =~ map (student) (board), pasts =~ map (student) (past), progress =~ progress ) => teacher_app,
+		 , boards =~ map (student) (board), pasts =~ map (student) (past), progress =~ progress ) => teacher_app,
 	game_over: ( room =~ room, settings =~ settings, students =~ list (student)
-             , boards =~ map (student) (board), pasts =~ map (student) (past) ) => teacher_app })
+		 , boards =~ map (student) (board), pasts =~ map (student) (past) ) => teacher_app })
 
 var student_app = data ({
 	setup: ( room =~ maybe (room), settings =~ maybe (settings), student =~ maybe (student) ) => student_app,
@@ -110,7 +110,7 @@ var ensemble = data ({
 		ping =~ ping,
 		pings =~ map (student) (ping),
 		settings =~ settings,
-    progress =~ progress,
+		progress =~ progress,
 		boards =~ map (student) (board),
 		pasts =~ map (student) (past) ) => ensemble })
 
@@ -137,37 +137,37 @@ var default_problems = shuffle ([/*
 	[question .text ('3/6'), ['1/2', '2/4']],
 	[question .text ('4/6'), ['2/3', '6/9']],
 	[question .text ('5/6'), ['10/12', '15/18']],
-  [question .text ('1/7'), ['2/14', '3/21']],/**/
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1551418719974', '11'), ['11']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1551418720246', '4'), ['4']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1551418718368', '5'), ['5']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-04.png?1551418719719', '41'), ['41']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-05.png?1551418717084', '1'), ['1']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-06.png?1551418716071', '0'), ['0']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-07.png?1551418715724', '25'), ['25']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-08.png?1551418715504', '23'), ['23']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-09.png?1551418714885', '10'), ['10']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-10.png?1551418714335', '80'), ['80']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-11.png?1551418713882', '1'), ['1']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-12.png?1551418713432', '31'), ['31']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-13.png?1551418713081', '20'), ['20']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-14.png?1551418712479', '33'), ['33']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-15.png?1551418711525', '4'), ['4']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-16.png?1551418710773', '3'), ['3']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-17.png?1551418709978', '300'), ['300']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-18.png?1551418708978', '100'), ['100']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-19.png?1551418707820', '714'), ['714']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-20.png?1551418706968', '2'), ['2']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-21.png?1551418704300', '456'), ['456']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-22.png?1551418702559', '30'), ['30']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-23.png?1551418701239', '5'), ['5']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-24.png?1551418706671', '2'), ['2']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-25.png?1551418706209', '51'), ['51']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-26.png?1551418705894', '40'), ['40']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-27.png?1551418704883', '6'), ['6']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-28.png?1551418700089', '70'), ['70']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-29.png?1551418701615', '21'), ['21']],
-  [question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-30.png?1551418700665', '50'), ['50']] ])
+	[question .text ('1/7'), ['2/14', '3/21']],/**/
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-01.png?1551418719974', '11'), ['11']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-02.png?1551418720246', '4'), ['4']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-03.png?1551418718368', '5'), ['5']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-04.png?1551418719719', '41'), ['41']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-05.png?1551418717084', '1'), ['1']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-06.png?1551418716071', '0'), ['0']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-07.png?1551418715724', '25'), ['25']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-08.png?1551418715504', '23'), ['23']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-09.png?1551418714885', '10'), ['10']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-10.png?1551418714335', '80'), ['80']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-11.png?1551418713882', '1'), ['1']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-12.png?1551418713432', '31'), ['31']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-13.png?1551418713081', '20'), ['20']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-14.png?1551418712479', '33'), ['33']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-15.png?1551418711525', '4'), ['4']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-16.png?1551418710773', '3'), ['3']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-17.png?1551418709978', '300'), ['300']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-18.png?1551418708978', '100'), ['100']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-19.png?1551418707820', '714'), ['714']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-20.png?1551418706968', '2'), ['2']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-21.png?1551418704300', '456'), ['456']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-22.png?1551418702559', '30'), ['30']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-23.png?1551418701239', '5'), ['5']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-24.png?1551418706671', '2'), ['2']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-25.png?1551418706209', '51'), ['51']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-26.png?1551418705894', '40'), ['40']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-27.png?1551418704883', '6'), ['6']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-28.png?1551418700089', '70'), ['70']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-29.png?1551418701615', '21'), ['21']],
+	[question .image ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foup-question-30.png?1551418700665', '50'), ['50']] ])
 var default_rules = rules .rules (10, 4, win_rule .first_bingo)
 
 var default_settings = settings .settings (default_problems, default_rules)
@@ -178,20 +178,17 @@ var default_settings = settings .settings (default_problems, default_rules)
 var map_v_as_key = L .first
 var map_v_as_value = L .last
 var as_value_of = key => 
-  [ L .elems, L .when (([ _key, _val ]) => equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
+	[ L .elems, L .when (([ _key, _val ]) => equals (key) (_key)), L .valueOr ([ key, undefined ]), L .last ]
 
 var as_maybe = [ L .rewrite (Z_ .maybe (undefined) (I)), L .reread (by (K (Z_ .Just))), L .valueOr (Z_ .Nothing) ]
-var as_defined = [ L .required (Z_ .Nothing), L .rewrite (by (K (Z_ .Just))), L .reread (Z_ .maybe (undefined) (Z_ .I)) ]    
+var as_defined = [ L .required (Z_ .Nothing), L .rewrite (by (K (Z_ .Just))), L .reread (Z_ .maybe (undefined) (Z_ .I)) ]		 
 var as_defined_ = so ((_=_=>
-  L .ifElse (by (Z_ .K (Z_ .is (maybe_type_$)))) (as_defined) (L .identity),
-  where
-  , maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
+	L .ifElse (by (Z_ .K (Z_ .is (maybe_type_$)))) (as_defined) (L .identity),
+	where
+	, maybe_type_$ = Z_ .MaybeType (Z$ .Any) )=>_)
 
 var as_complete = L .when (L .none (equals (undefined)) (L .values))
-var complete_ = lens_shape =>
-  [ L .pick (lens_shape)
-  , L .when(L .none (equals (undefined)) (L .props (L .get (L .keys) (lens_shape)))) ]
-
+var complete_ = L .get (as_complete)
 
 var app_as_setup = data_iso (teacher_app .setup)
 var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
@@ -203,9 +200,9 @@ var app_as_student = [ L .choices ('setup', 'get_ready', 'playing', 'game_over')
 var app_as_room = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'room', as_defined_ ]
 var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_progress = L .choose (_app =>
-  !! L .isDefined (app_as_board) (_app) // check is student_app, TODO: create Z_ .is () for data ()
-  ? [ L .rewrite (progress_past), data_lens (student_app .playing) .progress ]
-  : data_lens (teacher_app .playing) .progress)
+	!! L .isDefined (app_as_board) (_app) // check is student_app, TODO: create Z_ .is () for data ()
+	? [ L .rewrite (progress_past), data_lens (student_app .playing) .progress ]
+	: data_lens (teacher_app .playing) .progress)
 var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
 var app_as_boards = [ L .choices ('playing', 'game_over'), 'boards' ]
@@ -305,66 +302,66 @@ var ping_as_mean = [ 1 ]
 
 
 var teacher_app_get_ready_to_playing = by (_app =>
-  $ (
-  [ $ (L .get
-    ) (
-    [ data_iso (teacher_app .get_ready)
-    , L .inverse (data_iso (teacher_app .playing)) ])
-  , L .set (app_as_progress) ([ 0, fiat ]) ]))
+	$ (
+	[ $ (L .get
+		) (
+		[ data_iso (teacher_app .get_ready)
+		, L .inverse (data_iso (teacher_app .playing)) ])
+	, L .set (app_as_progress) ([ 0, fiat ]) ]))
 
 var teacher_app_playing_to_next = by (_app =>
-  so ((_=_=>
-  !! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
-  : teacher_app_playing_to_game_over,
-  where
-  , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  , [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
-  , game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_))
+	so ((_=_=>
+	!! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
+	: teacher_app_playing_to_game_over,
+	where
+	, time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+	, [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
+	, game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_))
 
 var teacher_app_playing_to_game_over = by (_app => 
-  $ (L .get
-  ) (
-  [ data_iso (teacher_app .playing)
-  , L .inverse (data_iso (teacher_app .game_over)) ])) 
+	$ (L .get
+	) (
+	[ data_iso (teacher_app .playing)
+	, L .inverse (data_iso (teacher_app .game_over)) ])) 
 
 var student_app_setup_to_get_ready = by (_app => 
-  $ (L .get
-  ) (
-  [ data_iso (student_app .setup)
-  , L .inverse (data_iso (student_app .get_ready)) ])) 
+	$ (L .get
+	) (
+	[ data_iso (student_app .setup)
+	, L .inverse (data_iso (student_app .get_ready)) ])) 
 
 var student_app_get_ready_to_playing = by (_app =>
-  so ((_=_=>
-  $ (
-  [ $ (L .get
-    ) (
-    [ data_iso (student_app .get_ready)
-    , L .inverse (data_iso (student_app .playing)) ])
-  , L .set (app_as_board) (random_board)
-  , L .set (app_as_past) (fresh_past)
-  , L .set (app_as_progress) ([ 0, fiat ]) ]),
-  where 
-  , _settings = L .get (app_as_settings) (_app)
-  , _size = L .get (settings_as_size) (_settings)
-  , _problems = L .get (settings_as_problems) (_settings)
-  , random_board = generate_board (_size) (_problems)
-  , first_problem = L .get (L .first) (_problems)
-  , fresh_past = past .past ([point .point (first_problem, [])]) )=>_))
+	so ((_=_=>
+	$ (
+	[ $ (L .get
+		) (
+		[ data_iso (student_app .get_ready)
+		, L .inverse (data_iso (student_app .playing)) ])
+	, L .set (app_as_board) (random_board)
+	, L .set (app_as_past) (fresh_past)
+	, L .set (app_as_progress) ([ 0, fiat ]) ]),
+	where 
+	, _settings = L .get (app_as_settings) (_app)
+	, _size = L .get (settings_as_size) (_settings)
+	, _problems = L .get (settings_as_problems) (_settings)
+	, random_board = generate_board (_size) (_problems)
+	, first_problem = L .get (L .first) (_problems)
+	, fresh_past = past .past ([point .point (first_problem, [])]) )=>_))
 
 var student_app_playing_to_next = by (_app => 
-  so ((_=_=>
-  !! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
-  : student_app_playing_to_game_over,
-  where
-  , time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  , [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
-  , game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
+	so ((_=_=>
+	!! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
+	: student_app_playing_to_game_over,
+	where
+	, time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
+	, [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
+	, game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
 
-var student_app_playing_to_game_over =  by (_app => 
-  $ (L .get
-  ) (
-  [ data_iso (student_app .playing)
-  , L .inverse (data_iso (student_app .game_over)) ]))
+var student_app_playing_to_game_over =	by (_app => 
+	$ (L .get
+	) (
+	[ data_iso (student_app .playing)
+	, L .inverse (data_iso (student_app .game_over)) ]))
 
 
 
@@ -407,73 +404,73 @@ var size_patterns = memoize (size =>
 				T (range) (Z_ .map (x =>
 					[x, y] ))))
 	, diagonal_patterns =
-      [ T (range) (Z_ .map (_x => [_x, _x]))
-      , T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
+			[ T (range) (Z_ .map (_x => [_x, _x]))
+			, T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
 
 var local_patterns = memoize (patterns =>
 	so ((_=_=>
-  T (patterns
-  ) (
-  $ (L .foldl
-  ) (
-  (a, b) => map_zip (Z_ .concat) (a) (b)
-  ) (
-  T (_positions) (Z_ .map (_pos => [ _pos, [] ]))
-  ) (
-  [ L .elems
-  , _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_pos) (_pattern) ? [ _pattern ] : [] ] )) ])),
+	T (patterns
+	) (
+	$ (L .foldl
+	) (
+	(a, b) => map_zip (Z_ .concat) (a) (b)
+	) (
+	T (_positions) (Z_ .map (_pos => [ _pos, [] ]))
+	) (
+	[ L .elems
+	, _pattern => T (_positions) (Z_ .map (_pos => [ _pos, Z_ .elem (_pos) (_pattern) ? [ _pattern ] : [] ] )) ])),
 	where
 	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
 
 // var current_problem = by (_past =>
-//     L .get ([ past_as_points, L .last, point_as_problem ]))
+//		 L .get ([ past_as_points, L .last, point_as_problem ]))
 var current_problem = by (_app =>
-  so ((_=_=>
-  L .get ([ app_as_problems, progress_step ]),
-  where
-  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_))
+	so ((_=_=>
+	L .get ([ app_as_problems, progress_step ]),
+	where
+	, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_))
 
 /*var current_problem_solved_ok = _app =>
-  so ((_=_=>
-  Z_ .equals (Z_ .size (L .get (past_as_points))) (progress_step + 1),
-  where
-  , progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_)*/
+	so ((_=_=>
+	Z_ .equals (Z_ .size (L .get (past_as_points))) (progress_step + 1),
+	where
+	, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_)*/
 
 var attempted_positions = by (_past =>
-  L .collect ([ past_as_points, L .elems, point_as_position ]))
+	L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 var as_solved_on = memoize (_board =>
-  L .choose (_point =>
-    L .chain (_position =>
-      L .when (so ((_=_=>
-        problem_choice_matches (_problem) (_choice),
-        where
-        , _problem = T (_point) (L .get (point_as_problem))
-        , _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))
-    ) (point_as_position)) )
+	L .choose (_point =>
+		L .chain (_position =>
+			L .when (so ((_=_=>
+				problem_choice_matches (_problem) (_choice),
+				where
+				, _problem = T (_point) (L .get (point_as_problem))
+				, _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_))
+		) (point_as_position)) )
 
 var solved_positions = _board => by (_past => 
-  L .collect ([ past_as_points, L .elems, as_solved_on (_board), point_as_position ]))
+	L .collect ([ past_as_points, L .elems, as_solved_on (_board), point_as_position ]))
 
 var bingoed_positions = _board => _past => 
 	L .collect ([ L .elems, L .elems ]) (bingoes (_board) (_past))
 
 var bingoes = _board => _past => 
-  so ((_=_=>
-  final_solved_patterns,
-  where
-  , _solved_positions = solved_positions (_board) (_past)
+	so ((_=_=>
+	final_solved_patterns,
+	where
+	, _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
-  , _local_patterns = local_patterns (size_patterns (_size))
-  , [ __, final_solved_patterns ] = T (_solved_positions) (T ([ [], [] ]
-      ) (Z_ .reduce (memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
-        [ positions, [ ...solved_local_patterns, solved_patterns ] ],
-        where
-        , positions = [ ...solved_positions, _position ]
-        , solved_local_patterns = 
-            T (_local_patterns
-            ) (
-            L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) ) )=>_)) ) )) )=>_)
+	, _local_patterns = local_patterns (size_patterns (_size))
+	, [ __, final_solved_patterns ] = T (_solved_positions) (T ([ [], [] ]
+			) (Z_ .reduce (memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
+				[ positions, [ ...solved_local_patterns, solved_patterns ] ],
+				where
+				, positions = [ ...solved_positions, _position ]
+				, solved_local_patterns = 
+						T (_local_patterns
+						) (
+						L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) ) )=>_)) ) )) )=>_)
 
 
 
@@ -481,86 +478,86 @@ var bingoes = _board => _past =>
 
 
 var problem_choice_matches = _problem => _choice => so ((_=_=>
-    !! L .isDefined (question_as_text) (_question) 
-    ? equals (normal_parse_problem (_text)) (normal_parse_problem (_choice))
-    : L .isDefined (question_as_image) (_question) 
-    ? equals (_solution) (_choice)
-    : panic ('bad question'),
-    where
-    , _question = T (_problem) (L .get (problem_as_question))
-    , _text = T (_question) (L .get (question_as_text))
-    , _solution = T (_question) (L .get (question_as_solution)) )=>_)
+		!! L .isDefined (question_as_text) (_question) 
+		? equals (normal_parse_problem (_text)) (normal_parse_problem (_choice))
+		: L .isDefined (question_as_image) (_question) 
+		? equals (_solution) (_choice)
+		: panic ('bad question'),
+		where
+		, _question = T (_problem) (L .get (problem_as_question))
+		, _text = T (_question) (L .get (question_as_text))
+		, _solution = T (_question) (L .get (question_as_solution)) )=>_)
 
 
 
 
 
-                                  
+																	
 var ast_simplify = n => d => so ((
-    suppose
-    , factor = gcd (n) (d) ) =>
-    ast .normal (n / factor, d / factor) ) 
+		suppose
+		, factor = gcd (n) (d) ) =>
+		ast .normal (n / factor, d / factor) ) 
 var ast_left_right_normalized_parts = by (ast =>
-    $ (L .get
-    ) (
-    [ L .choices (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
-    , ({ left, right }) => so ((
-        suppose
-        , { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (normalize_ast (left))
-        , { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (normalize_ast (right)) ) =>
-        { left_numerator, left_denominator, right_numerator, right_denominator } ) ]))
+		$ (L .get
+		) (
+		[ L .choices (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
+		, ({ left, right }) => so ((
+				suppose
+				, { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (normalize_ast (left))
+				, { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (normalize_ast (right)) ) =>
+				{ left_numerator, left_denominator, right_numerator, right_denominator } ) ]))
 var normalize_ast = by (ast =>
-    L .get (L .choice 
-      ( L .when (ast_as_normal)
-      , [ L .when (ast_as_add)
-        , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_denominator + right_numerator * left_denominator
-            , d = left_denominator * right_denominator ) =>
-            ast_simplify (n) (d) ) ]
-      , [ L .when (ast_as_minus)
-        , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_denominator - right_numerator * left_denominator
-            , d = left_denominator * right_denominator ) =>
-            ast_simplify (n) (d) ) ]
-      , [ L .when (ast_as_multiply)
-        , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_numerator
-            , d = left_denominator * right_denominator ) =>
-            ast_simplify (n) (d) ) ]
-      , [ L .when (ast_as_divide)
-        , ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-            suppose
-            , n = left_numerator * right_denominator
-            , d = left_denominator * right_numerator ) =>
-            ast_simplify (n) (d) ) ] )))
+		L .get (L .choice 
+			( L .when (ast_as_normal)
+			, [ L .when (ast_as_add)
+				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+						suppose
+						, n = left_numerator * right_denominator + right_numerator * left_denominator
+						, d = left_denominator * right_denominator ) =>
+						ast_simplify (n) (d) ) ]
+			, [ L .when (ast_as_minus)
+				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+						suppose
+						, n = left_numerator * right_denominator - right_numerator * left_denominator
+						, d = left_denominator * right_denominator ) =>
+						ast_simplify (n) (d) ) ]
+			, [ L .when (ast_as_multiply)
+				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+						suppose
+						, n = left_numerator * right_numerator
+						, d = left_denominator * right_denominator ) =>
+						ast_simplify (n) (d) ) ]
+			, [ L .when (ast_as_divide)
+				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+						suppose
+						, n = left_numerator * right_denominator
+						, d = left_denominator * right_numerator ) =>
+						ast_simplify (n) (d) ) ] )))
 var analyze_to_ast = symbol => cons => str => so ((
-    suppose
-    , loc = R .indexOf (symbol) (str) 
-    , left = parse_to_ast (str .slice (0, loc))                                      
-    , right = parse_to_ast (str .slice (loc + 1, Infinity)) ) =>
-    cons (left, right) )
+		suppose
+		, loc = R .indexOf (symbol) (str) 
+		, left = parse_to_ast (str .slice (0, loc))																			 
+		, right = parse_to_ast (str .slice (loc + 1, Infinity)) ) =>
+		cons (left, right) )
 var parse_to_ast = so ((_=_=>
-    $ (L .get
-    ) (
-    L .cond (
-      ...T (order) (Z_ .map (symbol => 
-        [ R .includes (symbol), analyze_to_ast (symbol) (ast [operation [symbol]]) ] ))
-      , [ str => ast .normal ( str * 1, 1 ) ] )),
-    where
-    , order = [ '+', '-', '*', '/' ]
-    , operation = 
-        { '+': 'add'
-        , '-': 'minus'
-        , '*': 'multiply'
-        , '/': 'divide' } )=>_) //assuming str is integer
+		$ (L .get
+		) (
+		L .cond (
+			...T (order) (Z_ .map (symbol => 
+				[ R .includes (symbol), analyze_to_ast (symbol) (ast [operation [symbol]]) ] ))
+			, [ str => ast .normal ( str * 1, 1 ) ] )),
+		where
+		, order = [ '+', '-', '*', '/' ]
+		, operation = 
+				{ '+': 'add'
+				, '-': 'minus'
+				, '*': 'multiply'
+				, '/': 'divide' } )=>_) //assuming str is integer
 var normal_parse_problem = $ ([ parse_to_ast, normalize_ast ])
 var gcd = a => b =>
-    !! equals (b) (0)
-    ? a
-    : gcd (b) (a % b)
+		!! equals (b) (0)
+		? a
+		: gcd (b) (a % b)
 
 
 
@@ -571,22 +568,22 @@ var gcd = a => b =>
 var message_encoding = by (message => 
 	so ((_=_=>
 	$ (
-  [ L .get ([ L .choices (...cases), data_iso (ensemble .ensemble) ])
+	[ L .get ([ L .choices (...cases), data_iso (ensemble .ensemble) ])
 	, strip ]),
 	where
 	, strip = $ ([ JSON .stringify, JSON .parse ]) 
-  , _student = T (message) (L .get (message_as_student))
-  , _student_id = T (_student) (L .get (student_as_id))
-  , cases = 
-      [ L .chain (K (L .getInverse (ensemble_as_ping))) (message_as_teacher_ping .ping)
-      , L .chain (K (L .getInverse (ensemble_as_settings))) (message_as_teacher_settings .settings)
-      , L .chain (K (L .getInverse (ensemble_as_progress))) (message_as_teacher_progress .progress)
-      , L .chain (K (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-        ) (message_as_student_ping .ping)
-      , L .chain (K (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-        ) (message_as_student_join .board)
-      , L .chain (K (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-        ) (message_as_student_update .past) ] )=>_))
+	, _student = T (message) (L .get (message_as_student))
+	, _student_id = T (_student) (L .get (student_as_id))
+	, cases = 
+			[ L .chain (K (L .getInverse (ensemble_as_ping))) (message_as_teacher_ping .ping)
+			, L .chain (K (L .getInverse (ensemble_as_settings))) (message_as_teacher_settings .settings)
+			, L .chain (K (L .getInverse (ensemble_as_progress))) (message_as_teacher_progress .progress)
+			, L .chain (K (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+				) (message_as_student_ping .ping)
+			, L .chain (K (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+				) (message_as_student_join .board)
+			, L .chain (K (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
+				) (message_as_student_update .past) ] )=>_))
 
 var messages_encoding = list =>
 	Z_ .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
@@ -606,19 +603,19 @@ var schedule_start = _ensemble =>
 	, confidence_interval = Z_ .min (1000) (Z_ .reduce (Z_ .max) (0) (pings)) )=>_)
 
 var progress_past = so ((_=_=>
-  by (_app =>
-    so ((_=_=>
-    $ (L .modify
-    ) (
-    [ app_as_past, past_as_points, natural_slice (_points_count) (_progress_step + 1), L .elems ]
-    ) (
-    (_, i) => point .point (L .get (_points_count + i) (_problems), []) ),
-    where
-    , _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-    , _problems = T (_app) (L .get (app_as_problems))
-    , _points_count = T (_app) (L .count ([ app_as_past, past_as_points, L .elems ])) )=>_)),
-  where
-  , natural_slice = a => b => [ L .slice (a, b), L .reread (xs => b < a ? xs : xs .concat (Array (b - a - xs .length))) ] )=>_)
+	by (_app =>
+		so ((_=_=>
+		$ (L .modify
+		) (
+		[ app_as_past, past_as_points, natural_slice (_points_count) (_progress_step + 1), L .elems ]
+		) (
+		(_, i) => point .point (L .get (_points_count + i) (_problems), []) ),
+		where
+		, _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
+		, _problems = T (_app) (L .get (app_as_problems))
+		, _points_count = T (_app) (L .count ([ app_as_past, past_as_points, L .elems ])) )=>_)),
+	where
+	, natural_slice = a => b => [ L .slice (a, b), L .reread (xs => b < a ? xs : xs .concat (Array (b - a - xs .length))) ] )=>_)
 
 //var schedule_tick = 
 
@@ -626,30 +623,30 @@ var progress_past = so ((_=_=>
 
 
 var timer = _ => {;
-  var _timer = S .data ()
-  var _flowing = S .data (true)
-  //var _flowing_ok = S .subclock (_=> {
-  //  var val = S .value (_flowing ())
-  //  ;S (_=> {;val (_flowing ())})
-  //  return val })
-  //var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
-  ;S .root (immortal => {; 
-    var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
-    ;tick_S (_=> {;
-      ;_timer (+ (new Date))
-      ;requestAnimationFrame (_ => {;
-        ;_flowing (_flowing ()) }) }) })
-  return [ _timer, _flowing, ] } //_S, tick_S ] }
+	var _timer = S .data ()
+	var _flowing = S .data (true)
+	//var _flowing_ok = S .subclock (_=> {
+	//	var val = S .value (_flowing ())
+	//	;S (_=> {;val (_flowing ())})
+	//	return val })
+	//var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
+	;S .root (immortal => {; 
+		var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
+		;tick_S (_=> {;
+			;_timer (+ (new Date))
+			;requestAnimationFrame (_ => {;
+				;_flowing (_flowing ()) }) }) })
+	return [ _timer, _flowing, ] } //_S, tick_S ] }
 var timer_since = _timer => S .subclock (_=> {;
-  var _since = S .data ()
+	var _since = S .data ()
 	;S (_=> {;
-    ;_since (_since .next || - Infinity)
-    ;_since .next = _timer () })
-  return _since })
+		;_since (_since .next || - Infinity)
+		;_since .next = _timer () })
+	return _since })
 var time_intervals = _timer => so ((_=_=>
-  S (_ => time_interval .time_interval (_timer_since (), _timer ())),
-  where
-  , _timer_since = timer_since (_timer) )=>_)
+	S (_ => time_interval .time_interval (_timer_since (), _timer ())),
+	where
+	, _timer_since = timer_since (_timer) )=>_)
 
 
 
@@ -671,76 +668,76 @@ var _ping_listeners = {}
 		return _x .json () }}) }*/
 //add retire code for sockets?
 var api = so ((_=_=>
-  (room, _x) => {;
-    ;_x = _x || { method: 'GET' }
-    if (_x .body) {
-      ;_x .body = JSON .parse (_x .body) }
+	(room, _x) => {;
+		;_x = _x || { method: 'GET' }
+		if (_x .body) {
+			;_x .body = JSON .parse (_x .body) }
 
-    var [ continuation, signal ] = api .new_continuation ()
-    var id = new_id ()
+		var [ continuation, signal ] = api .new_continuation ()
+		var id = new_id ()
 
-    ;api .continuations [id] = signal
-    ;continuation .catch (I) .then (_=> {;delete api .continuations [id]})
+		;api .continuations [id] = signal
+		;continuation .catch (I) .then (_=> {;delete api .continuations [id]})
 
-    if (! api .sockets [room]) {
-      ;api .sockets [room] = new_socket (room) }
-    ;api .sockets [room] .refresh ()
+		if (! api .sockets [room]) {
+			;api .sockets [room] = new_socket (room) }
+		;api .sockets [room] .refresh ()
 
-    var begin, end
-    ;go
-    .then (K (api .sockets [room] .ready))
-    .then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
-    .then (_=> {;begin = performance .now ()})
-    .then (K (continuation))
-    .then (_=> {;end = performance .now ()})
-    .then (_=> {;
-      var sample = end - begin
-      ;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-      ;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
-    .catch (_ => {})
-    
-    return continuation },
-  where
-  , new_id = _ => {
-      var id = '' + Math .floor (1000000 * Math .random ())
-      return !! not (api .continuations [id])
-      ? id
-      : new_id () }
-  //TODO: make this more elegant
-  , new_socket = room => so ((_=_=>(
-      rec =
-      { _socket: _
-      , ready: _
-      , refresh: refresh
-      , send: _x => _socket .send (_x) } , refresh (), rec),
-      where
-      , rec = _
-      , _socket = _
-      , refresh = _ => {;
-          if (! (_socket instanceof WebSocket)
-          || _socket .readyState === WebSocket .CLOSED
-          || _socket .readyState === WebSocket .CLOSING) {
-            ;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
-            rec ._socket = _socket
-            rec .ready = new Promise ((resolve, reject) => {;
-              _socket .onopen = _ => {;resolve ()} })
-            _socket .onmessage = _event => {;
-              var _packet = JSON .parse (_event .data)
-              var id = _packet .id
-              var data = _packet .body
-              if (api .continuations [id]) {;
-                 ;api .continuations [id] (data) } } } } )=>_)
+		var begin, end
+		;go
+		.then (K (api .sockets [room] .ready))
+		.then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
+		.then (_=> {;begin = performance .now ()})
+		.then (K (continuation))
+		.then (_=> {;end = performance .now ()})
+		.then (_=> {;
+			var sample = end - begin
+			;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
+			;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
+		.catch (_ => {})
+		
+		return continuation },
+	where
+	, new_id = _ => {
+			var id = '' + Math .floor (1000000 * Math .random ())
+			return !! not (api .continuations [id])
+			? id
+			: new_id () }
+	//TODO: make this more elegant
+	, new_socket = room => so ((_=_=>(
+			rec =
+			{ _socket: _
+			, ready: _
+			, refresh: refresh
+			, send: _x => _socket .send (_x) } , refresh (), rec),
+			where
+			, rec = _
+			, _socket = _
+			, refresh = _ => {;
+					if (! (_socket instanceof WebSocket)
+					|| _socket .readyState === WebSocket .CLOSED
+					|| _socket .readyState === WebSocket .CLOSING) {
+						;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+						rec ._socket = _socket
+						rec .ready = new Promise ((resolve, reject) => {;
+							_socket .onopen = _ => {;resolve ()} })
+						_socket .onmessage = _event => {;
+							var _packet = JSON .parse (_event .data)
+							var id = _packet .id
+							var data = _packet .body
+							if (api .continuations [id]) {;
+								 ;api .continuations [id] (data) } } } } )=>_)
 
-  , update_pings = sample =>
-    $ (
-    [ L .get (L .valueOr ([0, 0, 0, 0]))
-    , ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
-      [ mean * carry + sample / (n + 1)
-      , sqr_mean * carry + (sample * sample) / (n + 1)
-      , n + 1
-      , (new Date) .getTime () ],
-      where 
-      , carry = n / (n + 1) )=>_) ]))=>_)
+	, update_pings = sample =>
+		$ (
+		[ L .get (L .valueOr ([0, 0, 0, 0]))
+		, ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
+			[ mean * carry + sample / (n + 1)
+			, sqr_mean * carry + (sample * sample) / (n + 1)
+			, n + 1
+			, (new Date) .getTime () ],
+			where 
+			, carry = n / (n + 1) )=>_) ]))=>_)
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
@@ -750,41 +747,41 @@ var api = so ((_=_=>
 ;api .sockets = []
 ;api .continuations = {}
 ;api .new_continuation = timeout => {;
-  ;timeout = timeout || 5000
-                                     
-  var resolve, reject
-  var done = false
-  var faux_resolve = _x => {
-    if (! done) {
-      ;resolve (_x) } }
-  
-  var continuation = (new Promise ((_resolve, _reject) => {;
-    ;resolve = _resolve
-    ;reject = _reject }))
-  ;continuation .catch (I) .then (_ => {;done = true})
-  
-  ;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
-  
-  return [ continuation, faux_resolve ] }
+	;timeout = timeout || 5000
+																		 
+	var resolve, reject
+	var done = false
+	var faux_resolve = _x => {
+		if (! done) {
+			;resolve (_x) } }
+	
+	var continuation = (new Promise ((_resolve, _reject) => {;
+		;resolve = _resolve
+		;reject = _reject }))
+	;continuation .catch (I) .then (_ => {;done = true})
+	
+	;setTimeout (_ => {;reject ({ error: 'timeout' })}, timeout)
+	
+	return [ continuation, faux_resolve ] }
 
 
 
 var order_sort = _ordering => by (list => so ((_=_=>
-  R .sortWith (comp),
-  where
-  , comp = T (_ordering) (R .map (([ prop, direction ]) =>
-      !! equals (direction) ('ascending') ? R .ascend (prop)
-      : equals (direction) ('descending') ? R .descend (prop)
-      : panic ('unknown direction') )) )=>_))
+	R .sortWith (comp),
+	where
+	, comp = T (_ordering) (R .map (([ prop, direction ]) =>
+			!! equals (direction) ('ascending') ? R .ascend (prop)
+			: equals (direction) ('descending') ? R .descend (prop)
+			: panic ('unknown direction') )) )=>_))
 var direction_opposite = _direction =>
-  !! equals (_direction) ('ascending') ? 'descending'
-  : equals (_direction) ('descending') ? 'ascending'
-  : panic ('unknown direction')
+	!! equals (_direction) ('ascending') ? 'descending'
+	: equals (_direction) ('descending') ? 'ascending'
+	: panic ('unknown direction')
 var toggle_order = prop => _ordering => so ((_=_=>
-  [ [prop, opposite_direction], ... irrelevant_orderings ],
-  where
-  , irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
-  , opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
+	[ [prop, opposite_direction], ... irrelevant_orderings ],
+	where
+	, irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
+	, opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
 
 
 var post = x => ({
@@ -803,18 +800,17 @@ var post = x => ({
 
 // rewrite functionally?
 var map_zip = mash => a => b => {
-  var _zip = []
-  ;T (b) (R .forEach (([ _key, _val ]) => {;
-    for (var i = 0; i < a .length; i ++) {
-      var [ k, v ] = a [i]
-      if (equals (k) (_key)) {
-        ;_zip = _zip .concat ([ [ _key, mash (v) (_val) ] ]) } } }))
-  
-  return _zip }
+	var _zip = []
+	;T (b) (R .forEach (([ _key, _val ]) => {;
+		for (var i = 0; i < a .length; i ++) {
+			var [ k, v ] = a [i]
+			if (equals (k) (_key)) {
+				;_zip = _zip .concat ([ [ _key, mash (v) (_val) ] ]) } } }))
+	
+	return _zip }
 
 
-var under = _lens => _fn => $ ([ L .get (_lens), map_defined (_fn) ])
-
+var chain_el = el_fn => [ L .chain ($ ([ el_fn, K ])) ([]), L .valueOr ([]) ]
 
 
 var uuid = _ =>
@@ -836,38 +832,38 @@ var uuid = _ =>
 window .stuff = { ...window .stuff,
 	bool, number, timestamp, string,
 	list, map, maybe, nat, id, v, piece, order,
-  order_sort, direction_opposite, toggle_order, 
-	shuffle, uuid, map_zip, under, api, post,
-  timer, timer_since, time_intervals, 
+	order_sort, direction_opposite, toggle_order, 
+	shuffle, uuid, map_zip, chain_el, api, post,
+	timer, timer_since, time_intervals, 
 	avatar, student, problem, choice, latency, ping, position,
 	attempt, point, past, board, win_rule, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
-  map_v_as_key, map_v_as_value, as_value_of,
+	map_v_as_key, map_v_as_value, as_value_of,
 	as_maybe, as_defined, as_complete, complete_,
 	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 	settings_as_problems, settings_as_rules,
-  settings_as_size, settings_as_time_limit, settings_as_win_rule,
+	settings_as_size, settings_as_time_limit, settings_as_win_rule,
 	io_as_inert, io_as_connecting, io_as_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
 	ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
-  progress_as_step, progress_as_timestamp, 
-  question_as_text, question_as_image, question_as_solution, 
-  attempt_as_position, attempt_as_latency, point_as_problem, point_as_attempts, point_as_position, past_as_points,
+	progress_as_step, progress_as_timestamp, 
+	question_as_text, question_as_image, question_as_solution, 
+	attempt_as_position, attempt_as_latency, point_as_problem, point_as_attempts, point_as_position, past_as_points,
 	app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 	app_as_board, app_as_past, app_as_progress,
 	app_as_boards, app_as_pasts, 
-  app_as_last_point, point_as_attempts,
-  avatar_as_lion, avatar_as_bunny, 
-  win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
-  student_as_student, student_as_id, student_as_name, student_as_icon, 
+	app_as_last_point, point_as_attempts,
+	avatar_as_lion, avatar_as_bunny, 
+	win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
+	student_as_student, student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position, cell_as_choice, 
 	message_encoding, messages_encoding, schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 	student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-  current_problem, problem_choice_matches,
-  local_patterns, size_patterns,
-  as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes }
+	current_problem, problem_choice_matches,
+	local_patterns, size_patterns,
+	as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes }

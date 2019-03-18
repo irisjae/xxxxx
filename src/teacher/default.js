@@ -6,14 +6,14 @@ go, never, panic, panic_on,
 just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
-n_reducer, l_sum,
+last_n, n_reducer, l_sum, pinpoint,
 map_defined_, map_defined, from_just, 
 as_sole, sole, shuffle,
 I, K, not, equals,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece, order,
 order_sort, direction_opposite, toggle_order, 
-shuffle, uuid, map_zip, under, api, post,
+shuffle, uuid, map_zip, chain_el, api, post,
 timer, timer_since, time_intervals, 
 avatar, student, problem, choice, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
@@ -50,15 +50,70 @@ as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
 
 
+// resources
+
+var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
+var audio = {
+	bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
+	background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
+;audio .background .loop = true
+
+var img =
+	{ logo: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
+
+	, music_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
+	, music_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
+
+	, start: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
+	, preview: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936'
+	, back: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
+
+	, play: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
+
+	, prev: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
+	, next: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
+
+	, three_by_three_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-off.png?1550827377940'
+	, three_by_three_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-on.png?1550827378072'
+	, four_by_four_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-on.png?1550827378011'
+	, four_by_four_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-off.png?1550827378248'
+	, five_by_five_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-on.png?1550827377693'
+	, five_by_five_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-off.png?1550827379773'
+
+	, ten_secs: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
+	, twenty_secs: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F20-secs.png?1541563332669'
+	, thirty_secs: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F30-secs.png?1541563332968'
+
+	, time_limit_play: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftime-limit-play.png?1550392930019'
+	, play_to_win: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
+	, free_play: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ffree-play.png?1550392925661'
+
+	, view_students: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
+	, show_problem: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
+	, end_game: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
+	, cancel: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcancel.png?1541818700002'
+	, confirm: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
+
+	, show_results_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'
+	, show_results_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'
+	, students_analysis_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-on.png?1546759645196'
+	, students_analysis_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-off.png?1546759645007'
+	, problems_analysis_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'
+	, problems_analysis_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'
+
+	, toggle_ordering: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png?1551692617218'														
+	, play_again: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987' }
 
 
+
+// interactive datas
 
 var feedback = data ({
-  start: () => feedback,
-  setup_rules: ( rules_piece =~ piece (settings) ) => feedback,
-  play: () => feedback,
-  end: () => feedback,
-  reset: () => feedback })
+	start: () => feedback,
+	setup_rules: ( rules_piece =~ piece (settings) ) => feedback,
+	play: () => feedback,
+	end: () => feedback,
+	reset: () => feedback })
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
@@ -70,7 +125,7 @@ var lookbehind = data ({
 	problems_analysis: (ordering =~ order ([ 'question', 'number_of_solvers', 'average_number_of_attempts', 'average_solved_time' ])) => lookbehind })
 
 var ambient = data ({
-  ambient: ( background_music_on =~ bool ) => ambient })
+	ambient: ( background_music_on =~ bool ) => ambient })
 
 var feedback_as_start = data_iso (feedback .start)
 var feedback_as_setup_rules = data_iso (feedback .setup_rules)
@@ -95,830 +150,802 @@ var ambient_as_background_music_on = data_lens (ambient .ambient) .background_mu
 
 
 
+// states and beliefs
+
+var state = faith (
+	{ app: teacher_app .setup (default_settings)
+	, lookbehind: lookbehind .nothing
+	, ambient: ambient .ambient (true)
+	, io: io .inert
+	, ensemble: ensemble .nothing
+	, feedback: undefined } )
+
+
+var app_state = belief ('app') (state)
+var lookbehind_state = belief ('lookbehind') (state)
+var ambient_state = belief ('ambient') (state)
+var io_state = belief ('io') (state)
+var ensemble_state = belief ('ensemble') (state)
+var feedback_state = belief ('feedback') (state)
+
+
+var app_setup_state = belief (app_as_setup) (app_state)
+var app_get_ready_state = belief (app_as_get_ready) (app_state)
+var app_playing_state = belief (app_as_playing) (app_state)
+var app_game_over_state = belief (app_as_game_over) (app_state)
+var app_progress_state = belief (app_as_progress) (app_state)
+
+var app_progress_timestamp_state = belief (progress_as_timestamp) (app_progress_state)
+var app_progress_step_state = belief (progress_as_step) (app_progress_state)
+
+var app_settings_state = belief (app_as_settings) (app_state)
+
+var app_settings_problems_state = belief (settings_as_problems) (app_settings_state)
+var app_settings_rules_state = belief (settings_as_rules) (app_settings_state) 
+
+var app_settings_rules_time_limit_state = belief (rules_as_time_limit) (app_settings_rules_state) 
+var app_settings_rules_size_state = belief (rules_as_size) (app_settings_rules_state) 
+var app_settings_rules_win_rule_state = belief (rules_as_win_rule) (app_settings_rules_state) 
+
+var app_students_state = belief (app_as_students) (app_state)
+var app_room_state = belief (app_as_room) (app_state)
+var app_boards_state = belief (app_as_boards) (app_state)
+var app_pasts_state = belief (app_as_pasts) (app_state)
+
+var app_current_problem_state = belief (current_problem) (app_state)
+var app_students_map_boards_v_pasts_state = belief ([ L .pick ({ boards: app_boards_state, pasts: app_pasts_state }), ({ boards, pasts }) => map_zip (a => b => [a, b]) (boards) (pasts) ]) (app_state)
+
+var lookbehind_nothing_state = belief (lookbehind_as_nothing) (lookbehind_state)
+var lookbehind_preview_questions_state = belief (lookbehind_as_preview_questions) (lookbehind_state)
+var lookbehind_view_students_state = belief (lookbehind_as_view_students) (lookbehind_state)
+var lookbehind_consider_end_state = belief (lookbehind_as_consider_end) (lookbehind_state)
+var lookbehind_show_results_state = belief (lookbehind_as_show_results) (lookbehind_state)
+var lookbehind_students_analysis_state = belief (lookbehind_as_students_analysis) (lookbehind_state)
+var lookbehind_problems_analysis_state = belief (lookbehind_as_problems_analysis) (lookbehind_state)
+
+var lookbehind_ordering_state = belief (lookbehind_as_ordering) (lookbehind_state)
+
+var ambient_background_music_on_state = belief (ambient_as_background_music_on) (ambient_state)
+
+var io_inert_state = belief (io_as_inert) (io_state)
+var io_connecting_state = belief (io_as_connecting) (io_state)
+var io_heartbeat_state = belief (io_as_heartbeat) (io_state)
+
+var ensemble_progress_state = belief (ensemble_as_progress) (ensemble_state)
+var ensemble_pings_state = belief (ensemble_as_pings) (ensemble_state)
+var ensemble_boards_state = belief (ensemble_as_boards) (ensemble_state)
+var ensemble_pasts_state = belief (ensemble_as_pasts) (ensemble_state)
+
+var feedback_start_state = belief (feedback_as_start) (feedback_state) 
+var feedback_setup_rules_state = belief (feedback_as_setup_rules) (feedback_state) 
+var feedback_play_state = belief (feedback_as_play) (feedback_state) 
+var feedback_end_state = belief (feedback_as_end) (feedback_state) 
+var feedback_reset_state = belief (feedback_as_reset) (feedback_state) 
+
+var feedback_rules_piece_state = belief (feedback_as_rules_piece) (feedback_state)
 
 
 
 
-var app_state = S .data (teacher_app .setup (default_settings))
+// views
 
-var io_state = S .data (io .inert)
-var ensemble_state = S .data (ensemble .nothing)
-
-//var feedback_state = S .data (temporal ())
-var feedback_state = temporal ()
-var lookbehind_state = S .data (lookbehind .nothing)
-var ambient_state = S .data (ambient .ambient (true))
-
-
-
+var counter_setting_view = so ((_=_=>
+	label => please_feedback => iso_v_img_list => _setting =>
+		[ <label>{ label }</label>
+		, <control>
+			<prev fn={ feedback_prev }><img src={ img .prev } /></prev>
+			<counter><img src={ data_img } /></counter>
+			<next fn={ feedback_next }><img src={ img .next } /></next></control> ],
+	where
 
 
-
-
-var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
-var audio = {
-  bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
-  background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
-;audio .background .loop = true
+	, match_setting = ([ _iso, _ ]) => L .and (_iso) (_setting)
+	, _iso_v_img = T (iso_v_img_list) (L .get (L .find (match_setting)))
+	, _index = T (iso_v_img_list) (L .getAs ((_, i) => i) (L .find (match_setting)))
+	, [ _iso, _img ] = _iso_v_img
+	, list_length = R .length (iso_v_img_list)
+	, index_q_list = i => ((i % list_length) + list_length) % list_length
+	, [ prev_iso, ] = T (iso_v_img_list) (L .get (index_q_list (data_index - 1)))
+	, [ next_iso, ] = T (iso_v_img_list) (L .get (index_q_list (data_index + 1)))
+	, feedback_prev = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please_feedback (T (_setting) (L .get ([ _iso, L .inverse (prev_iso) ]))) }) }) }
+	, feedback_next = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please_feedback (T (_setting) (L .get ([ _iso, L .inverse (next_iso) ]))) }) }) } )=>_)
 
 var setup_view = _ => so ((_=_=>
-  !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
-  ? 
-  <setup-etc>
-    <div class="left-pane">
-      <a-title><img src={ logo_img }/></a-title>
-      <sub-title>除法（一）</sub-title>
-      <settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
-      <setting x-of="game-mode">
-        { $ (counter_setting
-          ) ('遊戲模式：'
-          ) (_win_rule => {
-              var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
-              ;feedback_state (feedback .setup_rules (rules_delta)) }
-          ) (
-          [ [ win_rule .first_bingo, play_to_win_img ]
-          , [ win_rule .limit_time, time_limit_play_img ]
-          , [ win_rule .all_problems, free_play_img ] ]
-          ) (_win_rule) } </setting>
-      <setting x-of="time-limit">
-        { $ (counter_setting
-          ) ('各題作答時限：'
-          ) (_time_limit => {;
-              var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
-              ;feedback_state (feedback .setup_rules (rules_delta)) }
-          ) (
-          [ [ 10, ten_secs_img ]
-          , [ 20, twenty_secs_img ]
-          , [ 30, thirty_secs_img ] ]
-          ) (_time_limit) } </setting></settings>
-      <button x-custom="true" x-for="preview" style={{ marginTop: '25px' }} fn={ setup_preview }><img src={ preview_img } /></button>
-      <button x-custom="true" x-for="start" fn={ feedback_start }>
-        <img src={ start_img } />
-        { T (io_state ()
-          ) (
-          [ L .get ([io_as_connecting, as_maybe])
-          , Z_ .maybe ([]) (K (
-              <div style={{ height: 0 }}>遊戲正在開始…</div>)) ]) } </button></div>
-    <div class="right-pane">
-      <settings x-for="board-size">
-        <setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ !! equals (_size) (3) ? three_by_three_on_img : three_by_three_off_img } /></setting>
-        <setting x-of="board-size" x-be="4x4"><img fn={ feedback_size (4) } src={ !! equals (_size) (4) ? four_by_four_on_img : four_by_four_off_img } /></setting>
-        <setting x-of="board-size" x-be="5x5"><img fn={ feedback_size (5) } src={ !! equals (_size) (5) ? five_by_five_on_img : five_by_five_off_img } /></setting> </settings> </div>
-    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
-  : L .isDefined (lookbehind_as_preview_questions) (_lookbehind)
-  ? 
-  <setup-etc>
-    <title-etc>
-      <a-title><img src={ logo_img }/></a-title> </title-etc>
-    <preview-questions-etc>
-      <button x-custom="true" x-for="back" fn={ preview_back }><img src={ back_img } /></button>
-      <preview-questions>
-        <labels><question>題目</question><answer>答案</answer></labels>
-        { T (_problems
-          ) (
-          L .collect ([ L .elems, (_problem, i) => so ((_=_=>
-            <problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem>,
-            where
-            , question_image = T (_problem) (L .get ([ problem_as_question, question_as_image ]))
-            , answer = T (_problem) (L .get ([ problem_as_question, question_as_solution ]))
-          )=>_) ])) }
-      </preview-questions>
-      </preview-questions-etc> 
-    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </setup-etc>
-  : (lookbehind_state (lookbehind .nothing), []),
-  where
-/*                           
-      , _case_v_img = T (case_v_img_list) (L .get (L .find (under (L .first) (iso => L .and (iso) (_case)))))
-      , _case_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (iso => L .and (iso) (_case)))))
-      , _case_iso = T (_case_v_img) (L .get (L .first))
-      , _case_img = T (_case_v_img) (L .get (L .last))
-            ;_dom .addEventListener (click, _ => {;feedback_case (T (_case) (L .get ([_case_iso, L .inverse (prev_case_iso)])))}) }) }
-          , [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)), win_rule_as_limit_time ], time_limit_play_img ]
-*/
-  , _lookbehind = lookbehind_state () 
-  , _settings = T (app_state ()) (L .get (app_as_settings))
-  , _problems = T (_settings) (L .get (settings_as_problems))
-  , _time_limit = T (_settings) (L .get ([ settings_as_rules, rules_as_time_limit ]))
-  , _size = T (_settings) (L .get ([ settings_as_rules, rules_as_size ]))
-  , _win_rule = T (_settings) (L .get ([ settings_as_rules, rules_as_win_rule ]))
-  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
-  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
-	, play_to_win_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-to-win.png?1541182355223'
-	, time_limit_play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftime-limit-play.png?1550392930019'
-	, free_play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ffree-play.png?1550392925661'
-  , ten_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F10-secs.png?1541182690288'
-  , twenty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F20-secs.png?1541563332669'
-  , thirty_secs_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F30-secs.png?1541563332968'
-	, preview_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-preview.png?1541183674936'
-	, start_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
-	, back_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
-	, three_by_three_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-on.png?1550827378072'
-	, three_by_three_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F3x3-off.png?1550827377940'
-	, four_by_four_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-on.png?1550827378011'
-	, four_by_four_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F4x4-off.png?1550827378248'
-	, five_by_five_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-on.png?1550827377693'
-	, five_by_five_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2F5x5-off.png?1550827379773'
-  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
-  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
-  , counter_setting = label => feedback_case => case_v_img_list => _case => so ((_=_=>
-      [ <label>{ label }</label>
-      , <control>
-          <prev fn={ feedback_prev }><img src={ prev_img } /></prev>
-          <counter><img src={ data_img } /></counter>
-          <next fn={ feedback_next }><img src={ next_img } /></next></control> ],
-      where
-      , case_list_length = R .length (case_v_img_list)
-      , wrap_case_index = i => ((i % case_list_length) + case_list_length) % case_list_length
-      , data_img = T (case_v_img_list) (L .get ([ L .find (under (L .first) (equals (_case))), L .last ]))
-      , data_index = T (case_v_img_list) (L .getAs ((_, i) => i) (L .find (under (L .first) (equals (_case)))))
-      , prev_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index - 1)), L .first ]))
-      , next_case = T (case_v_img_list) (L .get ([ L .index (wrap_case_index (data_index + 1)), L .first ]))
-      , prev_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-prev.png?1541181538486'
-      , next_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcounter-next.png?1541181537950'
-      , feedback_prev = _dom => {;
-          ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;feedback_case (prev_case)}) }) }
-      , feedback_next = _dom => {;
-          ;clicking .forEach (click => {;
-            ;_dom .addEventListener (click, _ => {;feedback_case (next_case)}) }) } )=>_)
-  , feedback_start = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .start) }) }) }
-  , feedback_size = _size => _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          var rules_delta = T (_size) (L .get (L.inverse (data_iso (rules .rules) .size)))
-          ;feedback_state (feedback .setup_rules (rules_delta)) }) }) }
-  , setup_preview = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .preview_questions) }) }) }
-  , preview_back = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .nothing) }) }) }
-  , toggle_background_music = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (not))) }) }) } )=>_)
+	!! L_ .isDefined (mark (lookbehind_nothing_state))
+	? <setup-etc>
+		<div class="left-pane">
+			<a-title><img src={ img .logo }/></a-title>
+			<sub-title>除法（一）</sub-title>
+			<settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
+			<setting x-of="game-mode">
+				{ $ (counter_setting_view
+				) ('遊戲模式：'
+				) (_win_rule => {
+					var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
+					;please (L_ .set (feedback .setup_rules (rules_delta))) (feedback_state) }
+				) (
+				[ [ win_rule_as_first_bingo, img .play_to_win ]
+				, [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)) , win_rule_as_limit_time ]
+					, img .time_limit_play ]
+				, [ win_rule_as_all_problems, img .free_play ] ]
+				) (mark (app_settings_rules_win_rule_state)) } </setting>
+			<setting x-of="time-limit">
+				{ $ (counter_setting_view
+				) ('各題作答時限：'
+				) (_time_limit => {
+					var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
+					;please (L_ .set (feedback .setup_rules (rules_delta))) (feedback_state) }
+				) (
+				[ [ L .is (10), img .ten_secs ]
+				, [ L .is (20), img .twenty_secs ]
+				, [ L .is (30), img .thirty_secs ] ]
+				) (mark (app_settings_rules_time_limit_state)) } </setting></settings>
+			<button x-custom="true" x-for="preview" style={{ marginTop: '25px' }} fn={ setup_preview }><img src={ img .preview } /></button>
+			<button x-custom="true" x-for="start" fn={ feedback_start }>
+				<img src={ img .start } />
+				{ L .get (chain_el (K (
+				<div style={{ height: 0 }}>遊戲正在開始…</div> ) )
+				) (
+				mark (io_connecting_state) ) } </button></div>
+		<div class="right-pane">
+			<settings x-for="board-size">
+				<setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ !! equals (_size) (3) ? img .three_by_three_on : img .three_by_three_off } /></setting>
+				<setting x-of="board-size" x-be="4x4"><img fn={ feedback_size (4) } src={ !! equals (_size) (4) ? img .four_by_four_on : img .four_by_four_off } /></setting>
+				<setting x-of="board-size" x-be="5x5"><img fn={ feedback_size (5) } src={ !! equals (_size) (5) ? img .five_by_five_on : img .five_by_five_off } /></setting> </settings> </div>
+		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </setup-etc>
+	: L_ .isDefined (mark (lookbehind_preview_questions_state))
+	? <setup-etc>
+		<title-etc>
+			<a-title><img src={ img .logo }/></a-title> </title-etc>
+		<preview-questions-etc>
+			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .back } /></button>
+			<preview-questions>
+				<labels><question>題目</question><answer>答案</answer></labels>
+				{ L .collect (L .chain ((_problem, i) => so ((_=_=>
+				<problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem>,
+				where
+				, question_image = T (_problem) (L .get ([ problem_as_question, question_as_image ]))
+				, answer = T (_problem) (L .get ([ problem_as_question, question_as_solution ])) )=>_)
+				) (
+				L .elems
+				) ) (
+				mark (app_settings_problems_state)) } </preview-questions> </preview-questions-etc> 
+		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
+			<img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </setup-etc>
+	// MAJOR HACK
+	: (please (L_ .set (lookbehind .nothing)) (lookbehind_state), []),
+	where
+	, _size = mark (app_settings_rules_size_state)
+	, _background_music_on = mark (ambient_background_music_on_state)
+	, feedback_start = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (feedback .start)) (feedback_state) }) }) }
+	, feedback_size = _size => _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				var rules_delta = T (_size) (L .get (L.inverse (data_iso (rules .rules) .size)))
+				;please (L_ .set (feedback .setup_rules (rules_delta))) (feedback_state) }) }) }
+	, setup_preview = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .preview_questions)) (lookbehind_state) }) }) }
+	, preview_back = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .nothing)) (lookbehind_state) }) }) }
+	, toggle_background_music = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (not) (ambient_background_music_on_state) }) }) } )=>_)
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<room>遊戲室編號：{ _room }</room>
-    <students-etc>
-      <label>人數：{ R .length (_students) }</label>
-      <students>
-        { T (_students
-          ) (
-          R .map (under (student_as_student
-          ) (({ icon: _icon, name: _name }) => 
-            <student x-icon={
-              !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
-            >{ _name }</student> ))) } </students> </students-etc>
-    { !! L .isDefined (L .elems) (_students)
-      ? <button x-custom x-for="play" fn={ feedback_play }><img src={ play_img } /></button>
-      : [] }
-    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </get-ready-etc>,
+		<room>遊戲室編號：{ mark (app_room_state) }</room>
+		<students-etc>
+			<label>人數：{ R .length (_students) }</label>
+			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
+				<student x-icon={
+					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
+				>{ _name }</student> )
+				) (
+				[ L .elems, student_as_student ]) (_students) } </students> </students-etc>
+		{ L .get ([ L .elems, chain_el (K (
+		<button x-custom x-for="play" fn={ feedback_play }><img src={ img .play } /></button> )) ]
+		) (
+		_students ) }
+		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </get-ready-etc>,
 	where
-	, _room = T (app_state ()) (L .get (app_as_room))
-	, _students = T (app_state ()
-		) (L .get ([ app_as_students, L .valueOr ([]) ]))
-  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
-  , play_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fgo-start.png?1541183674879'
-  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
-  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
-  , feedback_play = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .play) }) }) } 
-  , toggle_background_music = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (not))) }) }) } )=>_)
+	, _students = mark (app_students_state) || []
+	, _background_music_on = mark (ambient_background_music_on_state)
+	, feedback_play = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (feedback .play)) (feedback_state) }) }) } 
+	, toggle_background_music = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (not) (ambient_background_music_on_state) }) }) } )=>_)
+
+var bingoes_view = so ((_=_=> _bingoes =>
+	<bingo> { T (_bingoes) (R .map (_pattern => 
+		<line x-shape={ shape } style={ line_pos (_pattern) } /> } </bingo>,
+	where
+	, line_pos = _pattern => so ((_=_=> (
+		{ left: left, top: top } ),
+		where
+		, _size = R .length (_pattern)
+		, _shape= pattern_shape (_pattern)
+		, top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / _size) * 100 + '%'
+			: equals (shape) ('vertical') ? '5%'
+			: ''
+		, left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / _size) * 100 + '%'
+			: equals (shape) ('horizontal') ? '5%'
+			: '' )=>_) 
+	, pattern_shape = _pattern => suppose (
+		( [ first_y, first_x ] = L .get (L .first) (_pattern)
+		, [ last_y, last_x ] = L .get (L .last) (_pattern)
+		) =>
+		!! equals (first_x) (last_x) ? 'vertical'
+		: equals (first_y) (last_y) ? 'horizontal'
+		: (first_x < last_x) ? 'diagonal-down'
+		: (first_x > last_x) ? 'diagonal-up'
+		: panic ('bad pattern') ) )=>_)
+
+var students_view = _ =>
+	<students> { L .collect (L .chain (([ _student, [_board, _past] ]) => so ((_=_=> K (
+		<student-etc>
+			<label x-icon={ _icon_attr }>{ _name }</label>
+			<board> { T (_board) (R .map (_row => 
+				<row> { T (_row) (R .map (_cell => so ((_=_=>
+					!! _cell_solved ? <cell x-solved />
+					: <cell />,
+					where
+					, _cell_position = T (_cell) (L .get (cell_as_position))
+					, _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+				<bingo> { bingoes_view (_bingoes) } </bingo> </board> </student-etc> ),
+		where
+		, _name = T (_student) (L .get (student_as_name))
+		, _icon = T (_student) (L .get (student_as_icon))
+		, _icon_attr = 
+			!! L .isDefined (avatar_as_lion) (_icon)
+			? 'lion'
+			: L .isDefined (avatar_as_bunny) (_icon)
+			? 'bunny'
+			: panic ('...')
+		, _solved_positions = solved_positions (_board) (_past)
+		, _bingoes = bingoes (_board) (_past) )=>_)
+		) (
+		L .elems
+		) ) (
+		mark (app_students_map_boards_v_pasts_state) ) } </students>
 
 var playing_view = _ => so ((_=_=>
-  !! L .isDefined (lookbehind_as_nothing) (_lookbehind)
-  ? <playing-etc>
-      <title-etc>
-        <a-title><img src={ logo_img }/></a-title>
-        <problem-number>第{ problem_number }題</problem-number> </title-etc>
-      <problem-etc>
-        <ticker-etc>
-          { T (game_tick) (map_defined_ ([]) (t => time_limit - t)) }
-          <ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
-        <question>
-          { !! L .isDefined (question_as_text) (question) ? question_text
-            : L .isDefined (question_as_image) (question) ? <img src={ question_image } />
-            : panic ('bad question') }</question> </problem-etc>
-      <options>
-        <button x-custom x-for="view-students" fn={ view_students }><img src={ view_students_img } /></button>
-        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options>
-      <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </playing-etc>
-  : L .isDefined (lookbehind_as_view_students) (_lookbehind)
-  ? <playing-etc>
-      <title-etc>
-        <a-title><img src={ logo_img }/></a-title>
-        <problem-number>第{ problem_number }題</problem-number> </title-etc>
-      <students>
-        { T (map_zip (a => b => [a, b]) (_boards) (_pasts)
-          ) (
-          L .collect (
-          [ L .elems
-          , ([ _student, [_board, _past] ]) => so ((_=_=>
-            <student-etc>
-              <label x-icon={
-                !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
-              >{ _name }</label>
-              <board> { T (_board) (R .map (_row => 
-                <row> { T (_row) (R .map (_cell => so ((_=_=>
-                  !! _cell_solved ? <cell x-solved />
-                  : <cell />,
-                  where
-                  , _cell_position = T (_cell) (L .get (cell_as_position))
-                  , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-                <bingo> { T (_bingoes) (R .map (_pattern => so ((_=_=> 
-                  <line x-shape={ shape } style={{ top: top, left: left }} />,
-                  where
-                  , [ first_y, first_x ] = L .get (L .first) (_pattern)
-                  , [ last_y, last_x ] = L .get (L .last) (_pattern)
-                  , shape =
-                      !! equals (first_x) (last_x) ? 'vertical'
-                      : equals (first_y) (last_y) ? 'horizontal'
-                      : (first_x < last_x) ? 'diagonal-down'
-                      : (first_x > last_x) ? 'diagonal-up'
-                      : panic ('bad pattern')
-                  , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                          : equals (shape) ('vertical') ? '5%'
-                          : ''
-                  , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                          : equals (shape) ('horizontal') ? '5%'
-                          : '' )=>_))) } </bingo> </board> </student-etc>,
-            where
-            , _name = T (_student) (L .get (student_as_name))
-            , _icon = T (_student) (L .get (student_as_icon))
-            , _solved_positions = solved_positions (_board) (_past)
-            , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
-      <options>
-        <button x-custom x-for="show-problem" fn={ show_problem }><img src={ show_problem_img } /></button>
-        <button x-custom x-for="end-game" fn={ consider_end }><img src={ end_game_img } /></button> </options>
-      <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </playing-etc>
-  : L .isDefined (lookbehind_as_consider_end) (_lookbehind)
-  ? <playing-etc>
-      <abort-etc>
-        <div class="box">
-          <label>結束遊戲？</label>
-          <options>
-            <button x-custom x-for="confirm" fn={ confirm_end }><img src={ confirm_img } /></button>
-            <button x-custom x-for="show-problem" fn={ show_problem }><img src={ cancel_img } /></button></options></div></abort-etc></playing-etc>
-  : panic ('unknown lookbehind state'),
-  where
-  , _lookbehind = lookbehind_state () 
-  , _app = app_state ()
-  , _progress = T (_app) (L .get (app_as_progress))
-  , _time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  , _problem = T (_app) (current_problem)
-  , _boards = T (_app) (L .get (app_as_boards)) 
-  , _pasts = T (_app) (L .get (app_as_pasts)) 
-  , problem_number = T (_app) (L .get ([ app_as_progress, progress_as_step ])) + 1
-  , time_limit = T (app_state ()) (L .get ([ app_as_settings, settings_as_time_limit ]))
-  , size = T (app_state ()) (L .get ([ app_as_settings, settings_as_size ]))
-  , game_tick = tick_state ()
-  , question = T (_problem) (L .get (problem_as_question))
-  , question_text = T (question) (L .get (question_as_text))
-  , question_image = T (question) (L .get (question_as_image))
-  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
-  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
-  , show_problem_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-problem.png?1543385405259'
-  , view_students_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fview-students.png?1541802335642'
-  , end_game_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fend-game.png?1541802334772'
-  , confirm_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconfirm.png?1541818699969'
-  , cancel_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fcancel.png?1541818700002'
-  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
-  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
-  , show_problem = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .nothing) })})}
-  , view_students = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .view_students) })})}
-  , consider_end = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .consider_end) })})}
-  , confirm_end = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .end) })})}  
-  , toggle_background_music = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) } )=>_)
-    
+	!! L_ .isDefined (mark (lookbehind_nothing_state))
+	? <playing-etc>
+		<title-etc>
+			<a-title><img src={ img .logo }/></a-title>
+			<problem-number>第{ _problem_number }題</problem-number> </title-etc>
+		<problem-etc>
+			<ticker-etc>
+				{ L .get (chain_el (_t =>
+				_time_limit - _t )) (clock ()) }
+				<ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
+			<question>
+				{ L .get ([ question_as_text, chain_el (_question_text =>
+				_question_text ) ]) (_question) }
+				{ L .get ([ question_as_image, chain_el (_question_image =>
+				<img src={ _question_image } /> ) ]) (_question) } </question> </problem-etc>
+		<options>
+			<button x-custom x-for="view-students" fn={ view_students }><img src={ img .view_students } /></button>
+			<button x-custom x-for="end-game" fn={ consider_end }><img src={ img .end_game } /></button> </options>
+		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </playing-etc>
+	: L_ .isDefined (mark (lookbehind_view_students_state))
+	? <playing-etc>
+		<title-etc>
+			<a-title><img src={ img .logo }/></a-title>
+			<problem-number>第{ _problem_number }題</problem-number> </title-etc>
+		{ students_view  }
+		<options>
+			<button x-custom x-for="show-problem" fn={ show_problem }><img src={ img .show_problem } /></button>
+			<button x-custom x-for="end-game" fn={ consider_end }><img src={ img .end_game } /></button> </options>
+		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
+			<img src={ !! _background_music_on ? img .music_on : img .music_off } /> </setting> </playing-etc>
+	: L_ .isDefined (mark (lookbehind_consider_end_state))
+	? <playing-etc>
+		<abort-etc>
+			<div class="box">
+				<label>結束遊戲？</label>
+				<options>
+					<button x-custom x-for="confirm" fn={ confirm_end }><img src={ img .confirm } /></button>
+					<button x-custom x-for="show-problem" fn={ show_problem }><img src={ img .cancel } /></button></options></div></abort-etc></playing-etc>
+	// MAJOR HACK
+	: (please (L_ .set (lookbehind .nothing)) (lookbehind_state), []),
+	where
+	, _problem_number = mark (app_progress_step_state) + 1
+	, _question = L .get (problem_as_question) (mark (app_current_problem_state))
+	, _time_limit = mark (app_settings_rules_time_limit_state)
+	, _background_music_on = mark (ambient_background_music_on_state)
+	, show_problem = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .nothing)) (lookbehind_state) })})}
+	, view_students = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .view_students)) (lookbehind_state) })})}
+	, consider_end = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .consider_end)) (lookbehind_state) })})}
+	, confirm_end = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (feedback .end)) (feedback_state) })})}  
+	, toggle_background_music = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (not) (ambient_background_music_on_state) }) }) } )=>_)
+		
+
+var show_unit = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1
+var show_time = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒'
+
+var students_analysis_view = so ((_=_=>
+	_ordering =>
+		<students-analysis-etc>
+			<labels>
+				<name>名稱 <img src={ img .toggle_ordering } /></name>
+				<number-of-solved>答對題數 <img src={ img .toggle_ordering } /></number-of-solved>
+				<number-of-bingoes>BINGO <img src={ img .toggle_ordering } /></number-of-bingoes>
+				<average-solved-time>平均答對時間 <img src={ img .toggle_ordering } /></average-solved-time> </labels>
+			<students-analysis> { L .collect (L .chain (({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => K (
+				<student>
+					<name>{ _name }</name>
+					<number-of-solved>{ _number_of_solved }</number-of-solved>
+					<number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
+					<average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </student> )
+				) (
+				order_sort (_ordering), L .elems
+				) ) (
+				analyse_students (mark (app_students_map_boards_v_pasts_state))) } </students-analysis> </students-analysis-etc>,
+	where
+	, analyse_students = by (_students_map_boards_v_pasts =>
+		L .collect ([ L .elems, ([ _student, [_board, _past] ]) => (
+			{ _name: T (_student) (L .get (student_as_name))
+			, _number_of_solved: T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
+			, _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
+			, _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }) ]) ) )=>_)
+
+var problems_analysis_view = so ((_=_=>
+	_ordering => 
+		<problems-analysis-etc>
+			<labels>
+				<question>題目 <img src={ img .toggle_ordering } /></question>
+				<number-of-solvers>答對人數 <img src={ img .toggle_ordering } /></number-of-solvers>
+				<average-number-of-attempts>平均作答次數 <img src={ img .toggle_ordering } /></average-number-of-attempts>
+				<average-solved-time>平均答對時間 <img src={ img .toggle_ordering } /></average-solved-time> </labels>
+			<problems-analysis> { L .collect (L .chain (({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => K (
+				<problem>
+					<question><img src={ _question }/></question>
+					<number-of-solvers>{ _number_of_solvers }</number-of-solvers>
+					<average-number-of-attempts>{ show_unit (_average_number_of_attempts) }</average-number-of-attempts>
+					<average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </problem> )
+				) (
+				[ order_sort (_ordering), L .elems ]
+				) ) (
+				analyse_problems (mark (app_students_map_boards_v_pasts_state)) (_problems) ) } </problems-analysis> </problems-analysis-etc>,
+	where
+	, analyse_problems = _students_map_boards_v_pasts => by (_problems =>
+		L .collect ([ L .elems, (_problem, _index) => so ((_=_=> (
+			{ _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
+			, _number_of_solvers:
+				T (_students_map_boards_v_pasts
+				) (
+				L .count (
+				[ L .elems, L .choose (([ _, [_board, _past] ]) => [ as_corresponding_point (_past), as_solved_on (_board) ] ) ]))
+			, _average_number_of_attempts:
+				T (_students_map_boards_v_pasts
+				) (
+				L .mean (
+				[ L .elems, L .choose (([ _, [__, _past] ]) => as_corresponding_point (_past) )
+				, point_as_attempts, L .count (L .elems) ]))
+			, _average_solved_time:
+				T (_students_map_boards_v_pasts
+				) (
+				L .mean (
+				[ L .elems, L .choose (([ _, [_board, _past] ]) => [ as_corresponding_point (_past), as_solved_on (_board) ])
+				, point_as_attempts, L .last, attempt_as_latency ])) } ),
+			where
+			, as_corresponding_point = _past => [ K (_past), past_as_points, _index ] )=>_) ])) )=>_)
 													 
 var game_over_view = _ => so ((_=_=>
-  <game-over-etc>
-    <title-etc>
-      <a-title><img src={ logo_img }/></a-title> </title-etc>
-    <options x-for="tabs">
-      <button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L .isDefined (lookbehind_as_show_results) (_lookbehind) ? show_results_on_img : show_results_off_img } /></button>
-      <button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (lookbehind_as_students_analysis) (_lookbehind) ? students_analysis_on_img : students_analysis_off_img } /></button>
-      <button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (lookbehind_as_problems_analysis) (_lookbehind) ? problems_analysis_on_img : problems_analysis_off_img } /></button> </options>
-      { !! L .isDefined (lookbehind_as_show_results) (_lookbehind)
-        ? 
-        <students>
-          { T (_students_boards_pasts
-            ) (L .collect ([ L .elems, ([ _student, [_board, _past] ]) => so ((_=_=>
-              <student-etc>
-                <label x-icon={
-                  !! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('unknown icon') }
-                >{ _name }</label>
-                <board> { T (_board) (R .map (_row => 
-                  <row> { T (_row) (R .map (_cell => so ((_=_=>
-                    !! _cell_solved
-                    ? <cell x-solved />
-                    : <cell />,
-                    where
-                    , _cell_position = T (_cell) (L .get (cell_as_position))
-                    , _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-                  <bingo> { T (_bingoes) (R .map (_pattern => so ((_=_=> 
-                    <line x-shape={ shape } style={{ top: top, left: left }} />,
-                    where
-                    , [ first_y, first_x ] = L .get (L .first) (_pattern)
-                    , [ last_y, last_x ] = L .get (L .last) (_pattern)
-                    , shape =
-                        !! equals (first_x) (last_x) ? 'vertical'
-                        : equals (first_y) (last_y) ? 'horizontal'
-                        : (first_x < last_x) ? 'diagonal-down'
-                        : (first_x > last_x) ? 'diagonal-up'
-                        : panic ('bad pattern')
-                    , top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / size) * 100 + '%'
-                            : equals (shape) ('vertical') ? '5%'
-                            : ''
-                    , left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / size) * 100 + '%'
-                            : equals (shape) ('horizontal') ? '5%'
-                            : '' )=>_))) } </bingo> </board> </student-etc>,
-              where
-              , _name = T (_student) (L .get (student_as_name))
-              , _icon = T (_student) (L .get (student_as_icon))
-              , _solved_positions = solved_positions (_board) (_past)
-              , _bingoes = bingoes (_board) (_past) )=>_)])) } </students>
-        : L .isDefined (lookbehind_as_students_analysis) (_lookbehind)
-        ? so ((_=_=>
-        <students-analysis-etc>
-          <labels>
-            <name>名稱 <img src={ toggle_ordering_img } /></name>
-            <number-of-solved>答對題數 <img src={ toggle_ordering_img } /></number-of-solved>
-            <number-of-bingoes>BINGO <img src={ toggle_ordering_img } /></number-of-bingoes>
-            <average-solved-time>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
-          <students-analysis>
-            { T (analyse_students (_students_boards_pasts)
-              ) (
-              L .collect ([ order_sort (_ordering), L .elems, ({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => 
-                <student>
-                  <name>{ _name }</name>
-                  <number-of-solved>{ _number_of_solved }</number-of-solved>
-                  <number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
-                  <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </student> ])) } </students-analysis> </students-analysis-etc>,
-        where
-        , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
-        : L .isDefined (lookbehind_as_problems_analysis) (_lookbehind)
-        ? so ((_=_=>
-        <problems-analysis-etc>
-          <labels>
-            <question>題目 <img src={ toggle_ordering_img } /></question>
-            <number-of-solvers>答對人數 <img src={ toggle_ordering_img } /></number-of-solvers>
-            <average-number-of-attempts>平均作答次數 <img src={ toggle_ordering_img } /></average-number-of-attempts>
-            <average-solved-time>平均答對時間 <img src={ toggle_ordering_img } /></average-solved-time> </labels>
-          <problems-analysis>
-            { T (analyse_problems (_students_boards_pasts) (_problems)
-              ) (
-              L .collect ([ order_sort (_ordering), L .elems, ({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => 
-                <problem>
-                  <question><img src={ _question }/></question>
-                  <number-of-solvers>{ _number_of_solvers }</number-of-solvers>
-                  <average-number-of-attempts>{ show_unit (_average_number_of_attempts) }</average-number-of-attempts>
-                  <average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </problem> ])) } </problems-analysis> </problems-analysis-etc>,
-        where
-        , _ordering = T (_lookbehind) (L .get (lookbehind_as_ordering)) )=>_)                           
-        : (lookbehind_state (lookbehind .show_results), []) }
-    <options x-for="options">
-      <button x-custom x-for="play-again" fn={ play_again } ><img src={ play_again_img } /></button> </options>
-    <setting x-for="background-music" x-be={ _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ _background_music_on ? music_on_img : music_off_img } /></setting> </game-over-etc>,
-  where
-  , _lookbehind = lookbehind_state () 
-  , _app = app_state ()
-  , _boards = T (_app) (L .get (app_as_boards)) 
-  , _pasts = T (_app) (L .get (app_as_pasts)) 
-  , _students_boards_pasts = map_zip (a => b => [a, b]) (_boards) (_pasts)
-  , _problems = T (_app) (L .get ([ app_as_settings, settings_as_problems ])) 
-  , size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
-  , _background_music_on = L .get (ambient_as_background_music_on) (ambient_state ())
-  , logo_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
-  , show_results_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'                             
-  , show_results_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'                              
-  , students_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-on.png?1546759645196'                             
-  , students_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudents-analysis-off.png?1546759645007'                             
-  , problems_analysis_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'                             
-  , problems_analysis_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'                             
-  , play_again_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987'                             
-  , music_on_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-on.png?1546759646100'
-  , music_off_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fmusic-off.png?1547792522660'
-  , toggle_ordering_img = 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png?1551692617218'                            
-  , show_unit = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1
-  , show_time = _x => !! equals (_x) (NaN) ? '-' : _x .toFixed (2) * 1 + '秒'
-  , show_results = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .show_results) })})}                              
-  , problems_analysis = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .problems_analysis ([])) })})}                              
-  , students_analysis = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;lookbehind_state (lookbehind .students_analysis ([])) })})}                              
-  , play_again = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;feedback_state (feedback .reset) })})}  
-  , toggle_background_music = _dom => {;
-      ;clicking .forEach (click => {;
-        ;_dom .addEventListener (click, _ => {;
-          ;ambient_state (T (S .sample (ambient_state)) (L .modify (ambient_as_background_music_on) (R .not))) }) }) }
-  , analyse_students = by (_students_boards_pasts =>
-      L .collect ([ L .elems, ([ _student, [_board, _past] ]) => (
-        { _name: T (_student) (L .get (student_as_name))
-        , _number_of_solved: T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
-        , _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
-        , _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }) ]) )
-  , analyse_problems = _students_boards_pasts => by (_problems =>
-      L .collect ([ L .elems, (_problem, _index) => (
-        { _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
-        , _number_of_solvers: T (_students_boards_pasts
-            ) (L .count ([ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index, as_solved_on (_board) ] ) ]))
-        , _average_number_of_attempts: T (_students_boards_pasts
-            ) (
-            L .mean (
-            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index ] )
-            , point_as_attempts, L .count (L .elems) ]))
-        , _average_solved_time: T (_students_boards_pasts
-            ) (
-            L .mean (
-            [ L .elems, L .choose (([ _student, [_board, _past] ]) => [ K (_past), past_as_points, _index, as_solved_on (_board) ] )
-            , point_as_attempts, L .last, attempt_as_latency ])) }) ])) )=>_) 
+	<game-over-etc>
+		<title-etc>
+			<a-title><img src={ img .logo }/></a-title> </title-etc>
+		<options x-for="tabs">
+			<button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L_ .isDefined (mark (lookbehind_show_results_state)) ? img .show_results_on : img .show_results_off } /></button>
+			<button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (mark (lookbehind_students_analysis_state)) ? img .students_analysis_on : img .students_analysis_off } /></button>
+			<button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (mark (lookbehind_problems_analysis_state)) ? img .problems_analysis_on : img .problems_analysis_off } /></button> </options>
+			{ !! L_ .isDefined (mark (lookbehind_show_results_state))
+			? students_view 
+			: L_ .isDefined (mark (lookbehind_students_analysis_state))
+			? students_analysis_view (mark (lookbehind_ordering_state))
+			: L_ .isDefined (mark (lookbehind_problems_analysis_state))
+			? problems_analysis_view (mark (lookbehind_ordering_state))
+			// MAJOR HACK
+			: (please (L_ .set (lookbehind .show_results)) (lookbehind_state), []) }
+		<options x-for="options">
+			<button x-custom x-for="play-again" fn={ play_again } ><img src={ img .play_again } /></button> </options>
+		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
+			<img src={ !! _background_music_on ? img .music_on : img .music_off } /> </setting> </game-over-etc>,
+	where
+	, _background_music_on = mark (ambient_background_music_on_state)
+	, show_results = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .show_results)) (lookbehind_state) })})}															
+	, problems_analysis = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .problems_analysis ([]))) (lookbehind_state) })})}															
+	, students_analysis = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .students_analysis ([]))) (lookbehind_state) })})}															
+	, play_again = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (feedback .reset)) (feedback_state) })})}  
+	, toggle_background_music = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (not) (ambient_background_music_on_state) }) }) } )=>_) 
 
-S .root (die => {;
-  ;window .die = { ... (window .die || {}), view: die }
-  ;window .view = <teacher-app>
-    { !! L .isDefined (app_as_setup) (app_state ())
-      ? setup_view
-      : L .isDefined (app_as_get_ready) (app_state ())
-      ? get_ready_view
-      : L .isDefined (app_as_playing) (app_state ())
-      ? playing_view
-      : L .isDefined (app_as_game_over) (app_state ())
-      ? game_over_view
-      : panic ('undefined app state in view')  } </teacher-app> })
 
+S .root (die => {
+	;window .die = { ... (window .die || {}), view: die }
+	;window .view = <teacher-app>
+		{ !! L_ .isDefined (mark (app_setup_state))
+		? setup_view
+		: L_ .isDefined (mark (app_get_ready_state))
+		? get_ready_view
+		: L_ .isDefined (mark (app_playing_state))
+		? playing_view
+		: L_ .isDefined (mark (app_game_over_state))
+		? game_over_view
+		: panic ('undefined app state in view')  } </teacher-app> })
 												 
 												 
 												 
 												 
 												 
+// transitions												 
 												 
-												 
-												 
-												 
-												 
-												 
-												 
-var get_room = _room => {;
-	var _settings = T (S .sample (app_state)) (L .get (app_as_settings))
-
-	;return go
+var get_room = impure (_room => 
+	suppose (
+	( _settings = show (app_settings_state)
+	) =>
+	go
+	.then (_ => {
+		;please (L_ .set (io .connecting)) (io_state) })
 	.then (_ =>
-		io_state (io .connecting) && api (_room)
-		.then (panic_on ([ [_x => not (equals ({}) (_x)), _room + ' taken'] ])) )
-	.then (_ =>
-		api (_room,
-			post (message_encoding (
-				so ((_=_=>
-				message .teacher_settings (settings .settings (_problems, _rules)),
-				where
-				, { _problems, _rules } = T (_settings
-          ) (L .get (L .pick (
-            { _problems: settings_as_problems
-            , _rules: settings_as_rules }))) )=>_) ) ))
+		api (_room)
+		.then (panic_on ([ [ L .get ([ L .is ({}), L .complement ]), _room + ' taken'] ])) )
+	// RACE CONDITION
+	.then (_ => so ((_=_=>
+		api (_room, post (_create_message))
 		.then (panic_on ([
-			[ _x => ! _x .ok, 'cannot post to ' + _room ] ])) )
-	.then (_ => {;
-		;app_state (teacher_app .get_ready (_room, _settings, [])) })
-	.catch (_e => {;
+			[ L .get ([ 'ok', L .complement ]), 'cannot post to ' + _room ] ])),
+		where
+		, _problems = T (_settings) (L .get (settings_as_problems))
+		, _rules = T (_settings) (L .get (settings_as_rules ))
+		, _create_message = message_encoding (message .teacher_settings (settings .settings (_problems, _rules))) )=>_) )
+	.then (_ => {
+		;please (L_ .set (teacher_app .get_ready (_room, _settings, []))) (app_state) })
+	.catch (_e => {
 		;console .error (_e) })
-	.then (_ => {;
-		;io_state (io .inert) }) }
+	.then (_ => {
+		;please (L_ .set (io .inert)) (io_state) }) ))
 
-var start_playing = _ => {;
-  var _room = T (S .sample (app_state)) (L .get (app_as_room))
-  
-  ;go
-  .then (_ =>
-    io_state (io .messaging) && api (_room,
-      post (message_encoding (message .teacher_progress ([ 0, schedule_start (S .sample (ensemble_state)) ]))))
-    .then (panic_on ([
-      [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-  .catch (_e => {;
-    ;console .error (_e) })
-  .then (_ => {;
-    ;io_state (io .inert) }) }
+var start_playing = impure (_ =>
+	suppose (
+	( _room = show (app_room_state)
+	) =>
+	go
+	.then (_ => {
+		;please (L_ .set (io .messaging)) (io_state) })
+	.then (_ => so ((_=_=>
+		api (_room,
+			post (playing_message))
+		.then (panic_on ([
+			[ L .get ([ 'ok', L .complement ]), 'cannot post to ' + _room ] ]) ),
+		where
+		, playing_message = message_encoding (message .teacher_progress ([ 0, schedule_start (S .sample (ensemble_state)) ])) )=>_) )
+	.catch (_e => {
+		;console .error (_e) })
+	.then (_ => {
+		;please (L_ .set (io .inert)) (io_state) }) ) )
 
-var end_game = _ => {;
-  ;app_state (
-    T (S .sample (app_state)
-    ) (
-    teacher_app_playing_to_game_over)) }
+var broadcast_progress = impure (_progress =>
+	go
+	.then (_ => {
+		;please (L_ .set (io .messaging)) (io_state) })
+	.then (_ => so ((_=_=>
+		api (_room, post (progress_message))
+		.then (panic_on ([
+			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
+		where
+		, progress_message = message_encoding (message .teacher_progress (_progress)) )=>_) )
+	.catch (_e => {
+		;console .error (_e) })
+	.then (_ => {
+		;please (L_ .set (io .inert)) (io_state) }) )
 
-var reset_game = _ => {;
-  ;app_state (
-    teacher_app .setup (default_settings)) }
+var end_game = _ => {
+	;please (teacher_app_playing_to_game_over) (app_state) }
+
+var broadcast_game_over = impure (_ =>
+	go
+	.then (_ => {
+		;please (L_ .set (io .messaging)) (io_state) })
+	.then (_ => so ((_=_=>
+		api (_room, post (progress_message))
+		.then (panic_on ([
+			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
+		where
+		, progress_message = message_encoding (message .teacher_progress ([ -1, + (new Date) ])) )=>_) )
+	.catch (_e => {
+		;console .error (_e) })
+	.then (_ => {
+		;please (L_ .set (io .inert)) (io_state)) )
+
+var reset_game = _ => {
+	;please (L_ .set (teacher_app .setup (default_settings))) (app_state) }
 
 				
 				
 				
-				
-				
-				
+// resource rules				
 
-var [ time_state, flowing_state ] = timer ()
-//var time_interval = time_intervals (time_state)
-var tick_fn = _ => Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_as_progress, progress_as_timestamp ]))) / 1000)
-var tick_state = S .value ()
-S .root (die => {;
-  ;window .die = { ... (window .die || {}), clock: die }
-  ;S (_ => {;
-    var _app = app_state ()
-    if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
-      var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
-      var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
-      if (_tick >= 0) {
-        ;tick_state (_tick) } } }) })
-/*var tick_state = S .subclock (_ => {;
-  var _ticker = S .value ()
-  S (_ => {;
-    var _app = app_state ()
-    if (flowing_state () && L .isDefined (app_as_progress) (_app)) {
-      var _progress_timestamp = T (_app) (L .get ([ app_as_progress, progress_as_timestamp ]))
-      var _tick = Math .floor ((time_state () - _progress_timestamp) / 1000)
-      if (_tick >= 0) {
-        ;_ticker (_tick) } } })
-  return _ticker })*/
+var [ time, ticking ] = timer ()
+var [ clock, fine_clock ] = S .root (die => 
+	( (window .die = { ... (window .die || {}), clock: die })
+	, S .subclock (_ => 
+		suppose (
+		( _clock = S .value ()
+		, _fine_clock = S .value ()
+		, $__ticking = S (_ => {
+			if (ticking () && L_ .isDefined (mark (app_progress_timestamp_state))) {
+				var _timestamp = mark (app_progress_timestamp_state)
+				var _fine_tick = (time () - _timestamp) / 1000
+				var _tick = Math .floor (_fine_tick)
+				if (_tick >= 0) {
+					;_clock (_tick)
+					;_fine_clock (_fine_tick) } } })
+		) =>
+		[ _clock, _fine_clock ] ) ) ))
+
+
 				
 var reping_period = 3
 var heartbeat = S .data (reping_period) 
 	
-var connection = S .root (die => (window .die = { ... (window .die || {}), connection: die }) &&
-  S (_ => {;
-  ;return T (app_state ()) (
-    under (app_as_room) (_room => {;
-      if (! connection [_room]) {
-        ;connection [_room] = S .data ()
-        ;api .listen_ping (_room) (connection [_room]) }
-      if (connection [_room] ()) {
-        return so ((_=()=>
-        [ timestamp, mean, Math .sqrt (variance) ],
-        where
-        , [ mean, variance, n, timestamp ] = connection [_room] () )=>_) } } ) ) }) )
+var connection = S .root (die =>
+	( (window .die = { ... (window .die || {}), connection: die })
+	, S (_ => 
+		T (mark (app_room_state)
+		) (
+		pinpoint (
+		[ L .when (I)
+		, _room => {
+			if (! connection [_room]) {
+				;connection [_room] = S .data ()
+				;api .listen_ping (_room) (connection [_room]) }
+			if (connection [_room] ()) {
+				[ mean, variance, n, timestamp ] = connection [_room] ()
+				return [ timestamp, mean, Math .sqrt (variance) ] } } ])) ) ) )
 
 
 
-S .root (die => {;
-  ;window .die = { ... (window .die || {}), rules: die }
-                 
-  //TODO: add guard to warn against depending on datas other than feedback
-  ;S (_ => {;
-    ;T (just_now (feedback_state)
-    ) (
-    L .forEach (I) (
-      l_sum (
-        [ L .chain (K (L .modifyOp (_piece => {;
-            var piece_details = T (_piece) ([ L .get (L .values), L .remove ([L .values, L .when (equals (undefined))]) ])
-            ;app_state (
-              T (S .sample (app_state)
-              ) (
-              L .modify ([ app_as_settings, settings_as_rules, L .values ]) (R .mergeLeft (piece_details)) )) }))
-          ) (feedback_as_rules_piece)
-        , L .chain (K (L .modifyOp (_ => {;
-            var _room = Math .floor (10000 * Math .random ())
-            ;get_room (_room) }))
-          ) (feedback_as_start)
-        , L .chain (K (L .modifyOp (start_playing))
-          ) (feedback_as_play)
-        , L .chain (K (L .modifyOp (end_game))
-          ) (feedback_as_end)
-        , L .chain (K (L .modifyOp (reset_game))
-          ) (feedback_as_reset) ] ))) })
+// rules
+
+S .root (die => {
+	;window .die = { ... (window .die || {}), rules: die }
+
+	// handle user
+								 
+	;S (_ => 
+		T (mark (feedback_state)
+		) (
+		pinpoint (
+		l_sum (
+		[ [ feedback_as_rules_piece, L .when (I)
+			, _piece => {
+				var piece_details = T (_piece) ([ L .get (L .values), L .remove ([L .values, L .when (equals (undefined))]) ])
+				;please (L .modify (L .values) (R .mergeLeft (piece_details))) (app_settings_rules_state) } ]
+		, [ feedback_as_start, L .when (I)
+			, impure (_ =>
+				suppose (
+				( _room = Math .floor (10000 * Math .random ())
+				) =>
+				get_room (_room) ) ) ]
+		, [ feedback_as_play, L .when (I)
+			, impure (start_playing) ]
+		, [ feedback_as_end, L .when (I)
+			, impure (end_game) ]
+		, [ feedback_as_reset, L .when (I)
+			, impure (reset_game) ] ] ))) )
+
+	;S (_ => {
+		if (mark (ambient_background_music_on_state)) {
+			;audio .background .play () }
+		else {
+			;audio .background .pause () } })
 
 
 
 
-  ;S (_ => {;
-    if (L .get (ambient_as_background_music_on) (ambient_state ())) {
-      ;audio .background .play () }
-    else {
-      ;audio .background .pause () } })
+
+	// game rules
+
+	;S (_ => {
+		var _app_progress = show (app_progress_state)
+		var _progress = mark (ensemble_progress_state)
+		// is there a more elegant way? this is not markovian 
+		if (L_ .isDefined (mark (app_get_ready_state))) {
+			if (not (equals (_app_progress) (_progress))) {
+				;please (teacher_app_get_ready_to_playing) (app_state)
+				;please (L_ .set (_progress)) (app_progress_state) } } })
+
+	;S (_ => {
+		if (L_ .isDefined (app_setup_state)) {
+			;please (L_ .set (lookbehind .nothing)) (lookbehind_state)
+			;please (L_ .remove) (ensemble_state) } })
+
+	;S (_ => {
+		if (L_ .isDefined (mark (app_get_ready_state))
+		|| L_ .isDefined (mark (app_playing_state))
+		|| L_ .isDefined (mark (app_game_over_state))) {
+			var _ensemble_students = T (mark (ensemble_pings_state)) (L .collect ([ L .values, map_v_as_key ]))
+			;please (L_ .set (_ensemble_students)) (app_students_state) } })
+
+	;S (last_progress => {
+		var _progress = mark (app_progress_state)
+		if (L_ .isDefined (mark (app_playing_state))) {
+			if (! equals (_progress) (last_progress)) {
+				;broadcast_progress (_progress) } }
+		return _progress })
+
+	;S (_ => {
+		if (L_ .isDefined (mark (app_playing_state))
+		|| L_ .isDefined (mark (app_game_over_state))) {
+			var _ensemble_boards = T (mark (ensemble_boards_state)) (L .collect (L .values))
+			var _ensemble_pasts T (mark (ensemble_pasts_state)) (L .collect (L .values))
+			;please (L_ .set (_ensemble_boards)) (app_boards_state)
+			;please (L_ .set (_ensemble_pasts)) (app_pasts_state) } })
+
+	;S (last_bingoes => {
+		if (L_ .isDefined (mark (app_students_map_boards_v_pasts_state))) {
+			var _bingoes =
+				T (mark (app_students_map_boards_v_pasts_state)
+				) (
+				L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
+			// replace with calculating whether difference exists?
+			if (L .count (L .elems) (bingoes) > L .count (L .elems) (last_bingoes)) {
+				;audio .bingo .play () }
+			return _bingoes } })
+
+	;S (last_tick => {
+		var time_limit = mark (app_settings_rules_time_limit_state)
+		if (L_ .isDefined (mark (app_playing_state)) && clock () >= time_limit) {
+			;please (teacher_app_playing_to_next) (app_state) } })
+
+	;S (last_app_has_bingoes_ok => {
+		if (L_ .isDefined (mark (app_students_map_boards_v_pasts_state))) {
+			var app_has_bingoes_ok = 
+				T (mark (app_students_map_boards_v_pasts_state)
+				) (
+				L .isDefined ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
+
+			var game_tick = clock ()
+			var _win_rule = mark (app_settings_rules_win_rule_state)
+			if (equals (win_rule .first_bingo) (_win_rule)) {
+				if (L_ .isDefined (mark (app_playing_state))) {
+					if (! last_app_has_bingoes_ok && app_has_bingoes_ok) {
+						;setTimeout (_=>{
+							if (L_ .isDefined (show (app_playing_state))) {
+								;end_game ()}}, 8000) } } }
+	/* 
+			else if (equals (win_rule .limit_time) (_win_rule)) {
+				if (L_ .isDefined (mark (app_playing_state))) {
+	Math .floor ((S .sample (time) - T (show (app_progress_state)) (L .get (progress_as_timestamp))) / 1000)				 
+					if (! last_app_has_bingoes_ok && app_has_bingoes_ok) {
+						;setTimeout (_=>{;end_game ()}, 8000) } } }
+	*/
+			else if (equals (win_rule .all_problems) (_win_rule)) { }
+
+			return app_has_bingoes_ok } })
+	
+	;S (_ => {
+		if (L_ .isDefined (mark (app_playing_state))) {
+			var _size = show (app_settings_rules_size_state)
+			if (mark (app_progress_state) >= (_size * _size)) {
+				;end_game () } } })
+
+	;S (last_app_game_over_state => {
+		if (L_ .isDefined (mark (app_game_over_state))) {
+			if (! L_ .isDefined (last_app_game_over_state)) {
+				;broadcast_game_over () } }
+		return mark (app_game_over_state) })
+
+	;S (last_app_game_over_state => {
+		if (! L_ .isDefined (last_app_game_over_state)) {
+			if (L_ .isDefined (mark (app_game_over_state))) {
+				;please (L_ .set (lookbehind .show_results)) (lookbehind_state) } }
+		return mark (app_game_over_state) })
 
 
 
-  ;S (_ => {;
-    if (L .isDefined (app_as_get_ready) (app_state ())) {
-      ;flowing_state (false) }
-    else if (L .isDefined (app_as_playing) (app_state ())) {
-      ;flowing_state (true) }
-    else if (L .isDefined (app_as_game_over) (app_state ())) {
-      ;flowing_state (false) } })
-
-  ;S (last_tick => {;
-    var _app = app_state () 
-    var time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
-    if (L .isDefined (app_as_playing) (_app) && tick_state (), tick_fn () >= time_limit) {
-      ;app_state (
-        teacher_app_playing_to_next (S .sample (app_state))) } })
-
-  ;S (last_app => {;
-    var app_bingoes = _app =>
-      L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
-      T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
-      ) (
-      L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
-
-    var _app = app_state ()
-    var last_bingoes = app_bingoes (last_app) || []
-    var _bingoes = app_bingoes (_app) || []
-    // HACK: replace with calculating whether difference exists
-    if (R .length (last_bingoes) > R .length (_bingoes)) {
-      ;audio .bingo .play () }  })
-
-  ;S (last_app => {;
-    var app_has_bingoes_ok = _app =>
-      L .isDefined (app_as_boards) (_app) && L .isDefined (app_as_pasts) (_app) &&
-      T (map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))
-      ) (
-      L .isDefined ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
-
-    var _app = app_state ()
-    var game_tick = tick_state ()
-    var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
-    //var _win_rule = T (_app) (L .get ([ app_as_settings, settings_as_win_rule ]))
-    if (equals (win_rule .first_bingo) (_win_rule)) {
-      if (L .isDefined (app_as_playing) (_app)) {
-        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-          ;setTimeout (_=>{;if (L .isDefined (app_as_playing) (S .sample (app_state))) {;end_game ()}}, 8000) } } }
-/* 
-    else if (equals (win_rule .limit_time) (_win_rule)) {
-      if (L .isDefined (app_as_playing) (_app)) {
-Math .floor ((S .sample (time_state) - T (S .sample (app_state)) (L .get ([ app_as_progress, progress_as_timestamp ]))) / 1000)        
-        if (! app_has_bingoes_ok (last_app) && app_has_bingoes_ok (_app)) {
-          ;setTimeout (_=>{;end_game ()}, 8000) } } }
-*/
-    else if (equals (win_rule .all_problems) (_win_rule)) { }
-    if (L .isDefined (app_as_playing) (_app)) {
-      var _size = L .get ([app_as_settings, settings_as_size]) (_app)
-      if (L .get (app_as_progress) (_app) >= (_size * _size)) {
-        ;end_game () } }                  
-    return _app })
 
 
-  ;S (last_app => {;
-    var _app = app_state ()
-    if (! L .isDefined (app_as_game_over) (last_app)) {
-      if (L .isDefined (app_as_game_over) (_app)) {
-        ;lookbehind_state (lookbehind .show_results) } }
-    return _app })
+	// misc
+	
+	// time
+	;S (_ => {
+		if (L_ .isDefined (mark (app_get_ready_state))) {
+			;ticking (false) }
+		else if (L_ .isDefined (mark (app_playing_state))) {
+			;ticking (true) }
+		else if (L_ .isDefined (mark (app_game_over_state))) {
+			;ticking (false) } })
 
-
-
-  ;S (_ => {;
-    var _app = S .sample (app_state)
-    var _ensemble = ensemble_state ()
-
-    var _app_progress = T (_app) (L .get (app_as_progress))
-    var _progress = T (_ensemble) (L .get (ensemble_as_progress))
-    // is there a more elegant way? this is not markovian 
-    if (L .isDefined (app_as_get_ready) (_app)) {
-      if (not (equals (_app_progress) (_progress))) {
-
-        var _progress_step = L .get (progress_as_step) (_progress)
-        ;app_state (
-          T (_app
-          ) (
-          [ teacher_app_get_ready_to_playing
-          , L .set (app_as_progress) (_progress) ])) } } })
-
-  ;S (last_app => {;
-    var _app = app_state () 
-    var _room = T (_app) (L .get (app_as_room))
-
-    var _progress = T (_app) (L .get (app_as_progress))
-    var last_progress = T (last_app) (L .get (app_as_progress))
-
-    if (L .isDefined (app_as_playing) (_app)) {
-      if (! equals (_progress) (last_progress)) {
-        ;go
-        .then (_ =>
-          io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_progress (_progress))))
-          .then (panic_on ([
-            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-        .catch (_e => {;
-          ;console .error (_e) })
-        .then (_ => {;
-          ;io_state (io .inert) }) } }
-    else if (L .isDefined (app_as_game_over) (_app)) {
-      if (! L .isDefined (app_as_game_over) (last_app)) {
-        ;go
-        .then (_ =>
-          io_state (io .messaging) && api (_room,
-            post (message_encoding (message .teacher_progress ([ -1, + (new Date) ]))))
-          .then (panic_on ([
-            [ _x => ! _x .ok, 'cannot post to ' + _room ] ]) ))
-        .catch (_e => {;
-          ;console .error (_e) })
-        .then (_ => {;
-          ;io_state (io .inert) }) } }
-    return _app })
-
-
-
-  ;S (_ => {;
-    var _app = S .sample (app_state)
-    var _ensemble = ensemble_state ()
-
-    var _app_students = T (_app) (L .get (app_as_students))
-    var _app_boards = T (_app) (L .get (app_as_boards))
-    var _app_pasts = T (_app) (L .get (app_as_pasts))
-    var _ensemble_students =
-      L .get (L .choice (app_as_get_ready, app_as_playing, app_as_game_over)) (_app)
-      && T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_key ]))
-    var _ensemble_boards =
-      L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
-      && T (_ensemble) (L .collect ([ ensemble_as_boards, L .values ]))
-    var _ensemble_pasts =
-      L .get (L .choice (app_as_playing, app_as_game_over)) (_app)
-      && T (_ensemble) (L .collect ([ ensemble_as_pasts, L .values ]))
-
-    //rewrite with transforms
-    var ensemble_updates = $ (R .flatten
-    ) ( 
-    [ !! (_ensemble_students && not (equals (_ensemble_students) (_app_students)))
-      ? [ L .set (app_as_students) (_ensemble_students) ] : []
-    , !! (_ensemble_boards && not (equals (_ensemble_boards) (_app_boards)))
-      ? [ L .set (app_as_boards) (_ensemble_boards) ] : []
-    , !! (_ensemble_pasts && not (equals (_ensemble_pasts) (_app_pasts)))
-      ? [ L .set (app_as_pasts) (_ensemble_pasts) ] : [] ])
-
-    if (L .isDefined (L .elems) (ensemble_updates)) {
-      ;app_state (
-        T (_app) ($ (ensemble_updates))) } })
-
-  ;S (_ => {;
-    if (L .isDefined (app_as_setup) (app_state ())) {
-      ;lookbehind_state (lookbehind .nothing)
-      ;ensemble_state (undefined) } })
-
-  ;S (_ => {;
-    ;T (app_state ()
-    ) (under (app_as_room) (_room => {;
-        var phase = heartbeat ()
-        var critical = phase === 1
-        ;go
-        .then (_ =>
-          !! critical
-          ? io_state (io .messaging) && api (_room,
-              post (message_encoding (message .teacher_ping (S .sample (connection)))))
-          : io_state (io .heartbeat) && api (_room)
-            .then ($ ([
-              L .get (L .inverse (data_iso (ensemble .ensemble))),
-              _x => {
-                var current_room = T (S .sample (app_state)) (L .get (app_as_room))
-                if (equals (_room) (current_room)) {              
-                  ;ensemble_state (_x) } } ])) )
-        .catch (_x => {;
-          if (equals (L .get ('error') (_x)) ('timeout')) {;
-            ;console .warn ('Room timed out') }
-          else {;
-            ;throw _x }})
-        .then (_ => {;
-          ;setTimeout (_ => {;
-            ;heartbeat (!! critical ? reping_period : phase - 1) }
-          , 300) })
-        .catch (_e => {;
-          ;console .error (_e)
-          ;setTimeout (_ => {;
-            ;heartbeat (phase) }
-          , 300) })
-        .then (_ => {;
-          ;io_state (io .inert) }) })) }) })
+	// communication
+	;S (_ => 
+		T (mark (app_room_state)
+		) (
+		pinpoint (
+		[ L .when (I)
+		, _room => {
+			var phase = heartbeat ()
+			var critical = phase === 1
+			( !! critical
+			? go
+				.then (_ => {
+					;please (L_ .set (io .messaging)) (io_state) })
+				.then (_ => so ((_=_=>
+					api (_room, post (ping_message)),
+					where
+					, ping_message = message_encoding (message .teacher_ping (S .sample (connection))) )=>_))
+			: go
+				.then (_ => {
+					;please (L_ .set (io .heartbeat)) (io_state) })
+				.then (_ =>
+					api (_room) )
+				.then (pinpoint (
+					[ L .inverse (data_iso (ensemble .ensemble)),
+					, L .when (_ => equals (_room) (show (app_room_state)))
+					, _ensemble => {;please (L_ .set (_ensemble)) (ensemble_state)} ]) ) )
+			.catch (
+				pinpoint (
+				L .cond (
+				[ L .get ([ 'error', L .is ('timeout') ]), _ => {
+					;console .warn ('Room timed out') } ],
+				[ panic ] ) ) )
+			.then (_ => {
+				;setTimeout (_ => {
+					;heartbeat (!! critical ? reping_period : phase - 1) }
+				, 300) })
+			.catch (_e => {
+				;console .error (_e)
+				;setTimeout (_ => {
+					;heartbeat (phase) }
+				, 300) })
+			.then (_ => {
+				;please (L_ .set (io .inert)) (io_state) }) } ])) ) })
