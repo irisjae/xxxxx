@@ -1,5 +1,5 @@
 dependencies:
-  camarche: 0.0.24
+  camarche: 0.0.25
   diff-dom: 2.5.0
   fast-memoize: 2.4.0
   http-status-codes: 1.3.0
@@ -51,7 +51,7 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=
-  /camarche/0.0.24:
+  /camarche/0.0.25:
     dependencies:
       partial.lenses: 14.17.0
       ramda: 0.26.1
@@ -60,7 +60,7 @@ packages:
     peerDependencies:
       react: '*'
     resolution:
-      integrity: sha512-hG62qduhAWPWapSfJTiGxNslkYaXS86JI/f8KtZf3fwqFqC0VrnSAtGJu/4KptxXFpJ/P6Rfm3LaNBYYKI3cmQ==
+      integrity: sha512-pDA4KArybbYnmr/qTcgHdCFipdXguDohKHx6j3M70xpxIjPI7SWZZanOHbclZYx7a9VuQiCHJXq/KBd4DtUUNQ==
   /co-body/6.0.0:
     dependencies:
       inflation: 2.0.0
@@ -715,7 +715,7 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  camarche: ^0.0.24
+  camarche: ^0.0.25
   diff-dom: ^2.5.0
   fast-memoize: ^2.4.0
   http-status-codes: ^1.3.0
