@@ -486,7 +486,7 @@ var setup_room = _room => {
 		;please (L_ .set (lookbehind .bad_room (_room))) (lookbehind_state)
 		;console .error (_e) })
 	.then (_ => {
-		;please (L_ .set (io .inert)) (io_state) }) ) }
+		;please (L_ .set (io .inert)) (io_state) }) }
 
 var setup_student = _icon => _name => {
 	;please (L_ .set (student .student (uuid (), _name, _icon))) (app_student_state) } 

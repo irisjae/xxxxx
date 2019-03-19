@@ -704,7 +704,7 @@ var broadcast_game_over = impure (_ =>
 	.catch (_e => {
 		;console .error (_e) })
 	.then (_ => {
-		;please (L_ .set (io .inert)) (io_state)) )
+		;please (L_ .set (io .inert)) (io_state) }) )
 
 var reset_game = _ => {
 	;please (L_ .set (teacher_app .setup (default_settings))) (app_state) }
