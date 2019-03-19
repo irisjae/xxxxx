@@ -229,16 +229,13 @@ var feedback_rules_piece_state = belief (feedback_as_rules_piece) (feedback_stat
 
 // views
 
-var counter_setting_view = so ((_=_=>
-	label => please_feedback => iso_v_img_list => _setting =>
-		[ <label>{ label }</label>
-		, <control>
-			<prev fn={ feedback_prev }><img src={ img .prev } /></prev>
-			<counter><img src={ data_img } /></counter>
-			<next fn={ feedback_next }><img src={ img .next } /></next></control> ],
+var counter_setting_view = label => please_feedback => iso_v_img_list => _setting => so ((_=_=>
+	[ <label>{ label }</label>
+	, <control>
+		<prev fn={ feedback_prev }><img src={ img .prev } /></prev>
+		<counter><img src={ _img } /></counter>
+		<next fn={ feedback_next }><img src={ img .next } /></next></control> ],
 	where
-
-
 	, match_setting = ([ _iso, _ ]) => L .and (_iso) (_setting)
 	, _iso_v_img = T (iso_v_img_list) (L .get (L .find (match_setting)))
 	, _index = T (iso_v_img_list) (L .getAs ((_, i) => i) (L .find (match_setting)))

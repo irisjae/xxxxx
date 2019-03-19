@@ -603,7 +603,7 @@ var connection = S .root (die =>
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
 			if (connection [_room] ()) {
-				[ mean, variance, n, timestamp ] = connection [_room] ()
+				var [ mean, variance, n, timestamp ] = connection [_room] ()
 				return [ timestamp, mean, Math .sqrt (variance) ] } } ])) ) ) )
 
 
