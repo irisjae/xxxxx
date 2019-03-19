@@ -304,8 +304,8 @@ var setup_view = _ => so ((_=_=>
 			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .back } /></button>
 			<preview-questions>
 				<labels><question>題目</question><answer>答案</answer></labels>
-				{ L .collect (L .chain ((_problem, i) => so ((_=_=>
-				<problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem>,
+				{ L .collect (L .chain ((_problem, i) => so ((_=_=> K (
+				<problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem> ),
 				where
 				, question_image = T (_problem) (L .get ([ problem_as_question, question_as_image ]))
 				, answer = T (_problem) (L .get ([ problem_as_question, question_as_solution ])) )=>_)
