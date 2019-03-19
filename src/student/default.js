@@ -318,10 +318,12 @@ var bingoes_view = so ((_=_=>
 		{ left: left, top: top } ),
 		where
 		, _size = R .length (_pattern)
-		, _shape= pattern_shape (_pattern)
-		, left = !! equals (_shape) ('vertical') ? ((first_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+		, _shape = pattern_shape (_pattern)
+		, _x = L .get ([ L .elems, ([ y, x ]) => x ]) (_pattern)
+		, _y = L .get ([ L .elems, ([ y, x ]) => y ]) (_pattern)
+		, left = !! equals (_shape) ('vertical') ? ((_x - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
 			: ((nth - 1) * 1 / 5) * 100 + '%'
-		, top = !! equals (_shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
+		, top = !! equals (_shape) ('horizontal') ? ((_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
 			: equals (_shape) ('diagonal-up') ? ((5 - nth) * 1 / 5) * 100 + '%'
 			: ((nth - 1) * 1 / 5) * 100 + '%' )=>_) 
 	, pattern_shape = _pattern => suppose (
