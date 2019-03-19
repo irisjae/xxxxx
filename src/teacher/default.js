@@ -375,7 +375,7 @@ var get_ready_view = _ => so ((_=_=>
 
 var bingoes_view = so ((_=_=> _bingoes =>
 	<bingo> { T (_bingoes) (R .map (_pattern => 
-		<line x-shape={ shape } style={ line_pos (_pattern) } /> } </bingo>,
+		<line x-shape={ shape } style={ line_pos (_pattern) } /> )) } </bingo>,
 	where
 	, line_pos = _pattern => so ((_=_=> (
 		{ left: left, top: top } ),

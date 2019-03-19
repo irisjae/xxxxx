@@ -323,7 +323,7 @@ var bingoes_view = so ((_=_=>
 			: ((nth - 1) * 1 / 5) * 100 + '%'
 		, top = !! equals (_shape) ('horizontal') ? ((first_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
 			: equals (_shape) ('diagonal-up') ? ((5 - nth) * 1 / 5) * 100 + '%'
-			: ((nth - 1) * 1 / 5) * 100 + '%' )=>_) ))
+			: ((nth - 1) * 1 / 5) * 100 + '%' )=>_) 
 	, pattern_shape = _pattern => suppose (
 		( [ first_y, first_x ] = L .get (L .first) (_pattern)
 		, [ last_y, last_x ] = L .get (L .last) (_pattern)
