@@ -523,7 +523,7 @@ var students_analysis_view = so ((_=_=>
 			, _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }) ]) ) )=>_)
 
 var problems_analysis_view = so ((_=_=>
-	_ordering => 
+	_ordering => so ((_=_=>
 		<problems-analysis-etc>
 			<labels>
 				<question>題目 <img src={ img .toggle_ordering } /></question>
@@ -540,11 +540,12 @@ var problems_analysis_view = so ((_=_=>
 				[ order_sort (_ordering), L .elems ]
 				) ) (
 				analyse_problems (mark (app_students_map_boards_v_pasts_state)) (_problems) ) } </problems-analysis> </problems-analysis-etc>,
+		where
+		, _problems = T (mark (app_students_map_boards_v_pasts_state)
+			) (
+			[ L .collect ([ L .elems, ([ _, [__, _past] ]) => _past, L .collect ([ past_as_points, L .elems, point_as_problem ]) ])
+			, L .maximumBy (L .count (L .elems)) ]) )=>_),
 	where
-	, _problems = T (mark (app_students_map_boards_v_pasts_state)
-		) (
-		[ L .collect ([ L .elems, ([ _, [__, _past] ]) => _past, L .collect ([ past_as_points, L .elems, point_as_problem ]) ])
-		, L .maximumBy (L .count (L .elems)) ])
 	, analyse_problems = _students_map_boards_v_pasts => by (_problems =>
 		L .collect ([ L .elems, (_problem, _index) => so ((_=_=> (
 			{ _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
