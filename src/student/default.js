@@ -269,7 +269,7 @@ var setup_student_view = _ => so ((_=_=>
 		, _bunny_option = _dom .querySelector ('avatar[x-for=bunny]')
 		, _button = _dom .querySelector ('button')
 		, let_icon = _avatar => {
-			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) ) }
+			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) }
 		, let_name_enter = _ => {
 			if (L_ .isDefined (show (feedback_setting_up_student_state))) {
 				var _icon = show (feedback_icon_state)

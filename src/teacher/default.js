@@ -355,7 +355,7 @@ var get_ready_view = _ => so ((_=_=>
 					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
 				>{ _name }</student> )
 				) (
-				[ L .elems, student_as_student ]) (_students) } </students> </students-etc>
+				[ L .elems, student_as_student ])) (_students) } </students> </students-etc>
 		{ L .get ([ L .elems, chain_el (K (
 		<button x-custom x-for="play" fn={ feedback_play }><img src={ img .play } /></button> )) ]
 		) (
