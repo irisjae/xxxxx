@@ -372,20 +372,20 @@ var get_ready_view = _ => so ((_=_=>
 
 var bingoes_view = so ((_=_=> _bingoes =>
 	<bingo> { T (_bingoes) (R .map (_pattern => 
-		<line x-shape={ _shape } style={ line_pos (_pattern) } /> )) } </bingo>,
+		<line x-shape={ pattern_shape (_pattern) } style={ line_pos (_pattern) } /> )) } </bingo>,
 	where
 	, line_pos = _pattern => so ((_=_=> (
 		{ left: left, top: top } ),
 		where
 		, _size = R .length (_pattern)
-		, _shape= pattern_shape (_pattern)
+		, _shape = pattern_shape (_pattern)
 		, _x = L .get ([ L .elems, ([ y, x ]) => x ]) (_pattern)
 		, _y = L .get ([ L .elems, ([ y, x ]) => y ]) (_pattern)
-		, top = !! equals (shape) ('horizontal') ? ((_y - 0.5) / _size) * 100 + '%'
-			: equals (shape) ('vertical') ? '5%'
+		, top = !! equals (_shape) ('horizontal') ? ((_y - 0.5) / _size) * 100 + '%'
+			: equals (_shape) ('vertical') ? '5%'
 			: ''
-		, left = !! equals (shape) ('vertical') ? ((_x - 0.5) / _size) * 100 + '%'
-			: equals (shape) ('horizontal') ? '5%'
+		, left = !! equals (_shape) ('vertical') ? ((_x - 0.5) / _size) * 100 + '%'
+			: equals (_shape) ('horizontal') ? '5%'
 			: '' )=>_) 
 	, pattern_shape = _pattern => suppose (
 		( [ first_y, first_x ] = L .get (L .first) (_pattern)
