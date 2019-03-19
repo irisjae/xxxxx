@@ -531,7 +531,7 @@ var attempt_problem = impure (_position =>
 	) (
 	pinpoint (
 	[ as_complete
-	, impure ({ _problem, _board, _point }) => {
+	, impure (({ _problem, _board, _point }) => {
 		var board_choice = _board => _position =>
 			T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 
@@ -556,7 +556,7 @@ var attempt_problem = impure (_position =>
 						;audio .bingo .play () } }
 				else {
 					;audio .incorrect .play ()
-					;please (L_ .set (lookbehind .attempting (latency, true))) (lookbehind_state) } } } })) )
+					;please (L_ .set (lookbehind .attempting (latency, true))) (lookbehind_state) } } } }) ]) ) )
 
 var reset_game = _ => {
 	;please (L_ .set (student_app .setup (Z .Nothing, Z .Nothing, Z .Nothing))) (app_state) }

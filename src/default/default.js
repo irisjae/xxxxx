@@ -395,7 +395,7 @@ window .stuff = { ...window .stuff,
 	go, never, panic, panic_on,
 	fiat, data, data_lens, data_iso, data_kind,
 	focused_iso_,
-	last_n, n_reducer, l_sum, direct,
+	last_n, n_reducer, l_sum, pinpoint,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle,
 	I, K, not, equals }
