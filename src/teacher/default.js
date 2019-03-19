@@ -541,7 +541,7 @@ var problems_analysis_view = so ((_=_=>
 				) ) (
 				analyse_problems (mark (app_students_map_boards_v_pasts_state)) (_problems) ) } </problems-analysis> </problems-analysis-etc>,
 	where
-	, _problems = T (app_students_map_boards_v_pasts_state
+	, _problems = T (mark (app_students_map_boards_v_pasts_state)
 		) (
 		[ L .collect ([ L .elems, ([ _, [__, _past] ]) => _past, L .collect ([ past_as_points, L .elems, point_as_problem ]) ])
 		, L .maximumBy (L .count (L .elems)) ])
