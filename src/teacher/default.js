@@ -242,8 +242,8 @@ var counter_setting_view = label => please_feedback => iso_v_img_list => _settin
 	, [ _iso, _img ] = _iso_v_img
 	, list_length = R .length (iso_v_img_list)
 	, index_q_list = i => ((i % list_length) + list_length) % list_length
-	, [ prev_iso, ] = T (iso_v_img_list) (L .get (index_q_list (data_index - 1)))
-	, [ next_iso, ] = T (iso_v_img_list) (L .get (index_q_list (data_index + 1)))
+	, [ prev_iso, ] = T (iso_v_img_list) (L .get (index_q_list (_index - 1)))
+	, [ next_iso, ] = T (iso_v_img_list) (L .get (index_q_list (_index + 1)))
 	, feedback_prev = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
@@ -372,17 +372,19 @@ var get_ready_view = _ => so ((_=_=>
 
 var bingoes_view = so ((_=_=> _bingoes =>
 	<bingo> { T (_bingoes) (R .map (_pattern => 
-		<line x-shape={ shape } style={ line_pos (_pattern) } /> )) } </bingo>,
+		<line x-shape={ _shape } style={ line_pos (_pattern) } /> )) } </bingo>,
 	where
 	, line_pos = _pattern => so ((_=_=> (
 		{ left: left, top: top } ),
 		where
 		, _size = R .length (_pattern)
 		, _shape= pattern_shape (_pattern)
-		, top = !! equals (shape) ('horizontal') ? ((first_y - 0.5) / _size) * 100 + '%'
+		, _x = L .get ([ L .elems, ([ y, x ]) => x ]) (_pattern)
+		, _y = L .get ([ L .elems, ([ y, x ]) => y ]) (_pattern)
+		, top = !! equals (shape) ('horizontal') ? ((_y - 0.5) / _size) * 100 + '%'
 			: equals (shape) ('vertical') ? '5%'
 			: ''
-		, left = !! equals (shape) ('vertical') ? ((first_x - 0.5) / _size) * 100 + '%'
+		, left = !! equals (shape) ('vertical') ? ((_x - 0.5) / _size) * 100 + '%'
 			: equals (shape) ('horizontal') ? '5%'
 			: '' )=>_) 
 	, pattern_shape = _pattern => suppose (
@@ -433,7 +435,7 @@ var playing_view = _ => so ((_=_=>
 			<ticker-etc>
 				{ L .get (chain_el (_t =>
 				_time_limit - _t )) (clock ()) }
-				<ticker z-identity={ _progress } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
+				<ticker z-identity={ _problem_number } style={{ animationDuration: _time_limit + 's' }}><spinner/></ticker> </ticker-etc>
 			<question>
 				{ L .get ([ question_as_text, chain_el (_question_text =>
 				_question_text ) ]) (_question) }
@@ -539,6 +541,10 @@ var problems_analysis_view = so ((_=_=>
 				) ) (
 				analyse_problems (mark (app_students_map_boards_v_pasts_state)) (_problems) ) } </problems-analysis> </problems-analysis-etc>,
 	where
+	, _problems = T (app_students_map_boards_v_pasts_state
+		) (
+		[ L .collect ([ L .elems, ([ _, [__, _past] ]) => _past, L .collect ([ past_as_points, L .elems, point_as_problem ]) ])
+		, L .maximumBy (L .count (L .elems)) ])
 	, analyse_problems = _students_map_boards_v_pasts => by (_problems =>
 		L .collect ([ L .elems, (_problem, _index) => so ((_=_=> (
 			{ _question: T (_problem) (L .get ([ problem_as_question, question_as_image ]))
@@ -679,6 +685,7 @@ var broadcast_progress = impure (_progress =>
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
 		where
+		, _room = show (app_room_state)
 		, progress_message = message_encoding (message .teacher_progress (_progress)) )=>_) )
 	.catch (_e => {
 		;console .error (_e) })
@@ -697,6 +704,7 @@ var broadcast_game_over = impure (_ =>
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
 		where
+		, _room = show (app_room_state)
 		, progress_message = message_encoding (message .teacher_progress ([ -1, + (new Date) ])) )=>_) )
 	.catch (_e => {
 		;console .error (_e) })
@@ -746,7 +754,7 @@ var connection = S .root (die =>
 				;connection [_room] = S .data ()
 				;api .listen_ping (_room) (connection [_room]) }
 			if (connection [_room] ()) {
-				[ mean, variance, n, timestamp ] = connection [_room] ()
+				var [ mean, variance, n, timestamp ] = connection [_room] ()
 				return [ timestamp, mean, Math .sqrt (variance) ] } } ])) ) ) )
 
 
