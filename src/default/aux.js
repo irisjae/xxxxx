@@ -719,7 +719,7 @@ var api = so ((_=_=>
 					if (api .continuations [id]) {
 						 ;api .continuations [id] (data) } } } } )=>_)
 
-	, update_pings = by (sample =>
+	, update_pings = sample => by (ping_info =>
 		L .get (
 		[ L .valueOr ([0, 0, 0, 0])
 		, ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
