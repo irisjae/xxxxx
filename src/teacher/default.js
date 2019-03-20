@@ -938,7 +938,7 @@ S .root (die => {
 				.then (_ =>
 					api (_room) )
 				.then (pinpoint (
-					[ L .inverse (data_iso (ensemble .ensemble)),
+					[ L .inverse (data_iso (ensemble .ensemble))
 					, L .when (_ => equals (_room) (show (app_room_state)))
 					, _ensemble => {;please (L_ .set (_ensemble)) (ensemble_state)} ]) ) )
 			.catch (
