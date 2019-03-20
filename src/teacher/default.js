@@ -672,7 +672,7 @@ var start_playing = impure (_ =>
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .complement ]), 'cannot post to ' + _room ] ]) ),
 		where
-		, playing_message = message_encoding (message .teacher_progress ([ 0, schedule_start (S .sample (ensemble_state)) ])) )=>_) )
+		, playing_message = message_encoding (message .teacher_progress ([ 0, schedule_start (show (ensemble_state)) ])) )=>_) )
 	.catch (_e => {
 		;console .error (_e) })
 	.then (_ => {
