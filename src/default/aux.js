@@ -55,11 +55,11 @@ var past = data ({ past: (points =~ list (point)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 var ast = data ({
-		normal: (numerator =~ integer, denominator =~ integer) => ast,
-		add: (left =~ ast, right =~ ast) => ast,
-		minus: (left =~ ast, right =~ ast) => ast,
-		multiply: (left =~ ast, right =~ ast) => ast,
-		divide: (left =~ ast, right =~ ast) => ast })
+	normal: (numerator =~ integer, denominator =~ integer) => ast,
+	add: (left =~ ast, right =~ ast) => ast,
+	minus: (left =~ ast, right =~ ast) => ast,
+	multiply: (left =~ ast, right =~ ast) => ast,
+	divide: (left =~ ast, right =~ ast) => ast })
 
 var win_rule = data ({ first_bingo: () => win_rule, limit_time: (time_limit =~ time_amount) => win_rule, all_problems: () => win_rule })
 var rules = data ({ rules: (time_limit =~ number, size =~ nat, win_rule =~ win_rule) => rules })
@@ -309,8 +309,7 @@ var teacher_app_get_ready_to_playing = by (_app =>
 		, L .inverse (data_iso (teacher_app .playing)) ])
 	, L .set (app_as_progress) ([ 0, fiat ]) ]))
 
-var teacher_app_playing_to_next = by (_app =>
-	so ((_=_=>
+var teacher_app_playing_to_next = by (_app => so ((_=_=>
 	!! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
 	: teacher_app_playing_to_game_over,
 	where
@@ -330,8 +329,7 @@ var student_app_setup_to_get_ready = by (_app =>
 	[ data_iso (student_app .setup)
 	, L .inverse (data_iso (student_app .get_ready)) ])) 
 
-var student_app_get_ready_to_playing = by (_app =>
-	so ((_=_=>
+var student_app_get_ready_to_playing = by (_app => so ((_=_=>
 	$ (
 	[ $ (L .get
 		) (
@@ -357,7 +355,7 @@ var student_app_playing_to_next = by (_app =>
 	, [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
 	, game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
 
-var student_app_playing_to_game_over =	by (_app => 
+var student_app_playing_to_game_over =by (_app => 
 	$ (L .get
 	) (
 	[ data_iso (student_app .playing)
@@ -373,19 +371,18 @@ var student_app_playing_to_game_over =	by (_app =>
 
 
 
-var generate_board = size => problems =>
-	so ((_=_=>
+var generate_board = size => problems => so ((_=_=>
 	T (Z_ .range (1) (size + 1)) (
 		Z_ .map (row => T (Z_ .range (1) (size + 1)) (
 			Z_ .map (column => [row, column, cell (row) (column)] )))),
 	where 
 	, cells = shuffle (problems .slice (0, size * size))
 	, cell = y => x =>
-			T (cells) (L .get ([
-				(x - 1) * size + (y - 1),
-				problem_as_answers,
-				L .reread (shuffle),
-				L .first ])) )=>_)
+		T (cells) (L .get (
+			[ (x - 1) * size + (y - 1)
+			, problem_as_answers
+			, L .reread (shuffle)
+			, L .first ])) )=>_)
 
 var size_patterns = memoize (size =>
 	so ((_=_=>
@@ -396,16 +393,16 @@ var size_patterns = memoize (size =>
 	where
 	, range = Z_ .range (1) (size + 1)
 	, vertical_patterns =
-			T (range) (Z_ .map (x =>
-				T (range) (Z_ .map (y =>
-					[x, y] ))))
-	, horizontal_patterns =
+		T (range) (Z_ .map (x =>
 			T (range) (Z_ .map (y =>
-				T (range) (Z_ .map (x =>
-					[x, y] ))))
+				[x, y] ))))
+	, horizontal_patterns =
+		T (range) (Z_ .map (y =>
+			T (range) (Z_ .map (x =>
+				[x, y] ))))
 	, diagonal_patterns =
-			[ T (range) (Z_ .map (_x => [_x, _x]))
-			, T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
+		[ T (range) (Z_ .map (_x => [_x, _x]))
+		, T (range) (Z_ .map (_x => [_x, (size + 1) - _x])) ] )=>_))
 
 var local_patterns = memoize (patterns =>
 	so ((_=_=>
@@ -455,22 +452,22 @@ var solved_positions = _board => by (_past =>
 var bingoed_positions = _board => _past => 
 	L .collect ([ L .elems, L .elems ]) (bingoes (_board) (_past))
 
-var bingoes = _board => _past => 
-	so ((_=_=>
+var bingoes = _board => _past => so ((_=_=>
 	final_solved_patterns,
 	where
 	, _solved_positions = solved_positions (_board) (_past)
 	, _size = T (_board) (Z_ .size)
 	, _local_patterns = local_patterns (size_patterns (_size))
 	, [ __, final_solved_patterns ] = T (_solved_positions) (T ([ [], [] ]
-			) (Z_ .reduce (memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
-				[ positions, [ ...solved_local_patterns, solved_patterns ] ],
-				where
-				, positions = [ ...solved_positions, _position ]
-				, solved_local_patterns = 
-						T (_local_patterns
-						) (
-						L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) ) )=>_)) ) )) )=>_)
+		) (
+		Z_ .reduce (memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
+			[ positions, [ ...solved_local_patterns, solved_patterns ] ],
+			where
+			, positions = [ ...solved_positions, _position ]
+			, solved_local_patterns = 
+				T (_local_patterns
+				) (
+				L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (positions) (Z_ .flip (Z_ .elem)))) ]) ) )=>_)) ) )) )=>_)
 
 
 
@@ -478,67 +475,65 @@ var bingoes = _board => _past =>
 
 
 var problem_choice_matches = _problem => _choice => so ((_=_=>
-		!! L .isDefined (question_as_text) (_question) 
-		? equals (normal_parse_problem (_text)) (normal_parse_problem (_choice))
-		: L .isDefined (question_as_image) (_question) 
-		? equals (_solution) (_choice)
-		: panic ('bad question'),
-		where
-		, _question = T (_problem) (L .get (problem_as_question))
-		, _text = T (_question) (L .get (question_as_text))
-		, _solution = T (_question) (L .get (question_as_solution)) )=>_)
+	!! L .isDefined (question_as_text) (_question) 
+	? equals (normal_parse_problem (_text)) (normal_parse_problem (_choice))
+	: L .isDefined (question_as_image) (_question) 
+	? equals (_solution) (_choice)
+	: panic ('bad question'),
+	where
+	, _question = T (_problem) (L .get (problem_as_question))
+	, _text = T (_question) (L .get (question_as_text))
+	, _solution = T (_question) (L .get (question_as_solution)) )=>_)
 
 
 
 
 
 																	
-var ast_simplify = n => d => so ((
-		suppose
-		, factor = gcd (n) (d) ) =>
-		ast .normal (n / factor, d / factor) ) 
+var ast_simplify = n => d =>
+	suppose (
+	( factor = gcd (n) (d)
+	) =>
+	ast .normal (n / factor, d / factor) )
 var ast_left_right_normalized_parts = by (ast =>
-		$ (L .get
-		) (
-		[ L .choices (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
-		, ({ left, right }) => so ((
-				suppose
-				, { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (normalize_ast (left))
-				, { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (normalize_ast (right)) ) =>
-				{ left_numerator, left_denominator, right_numerator, right_denominator } ) ]))
+	$ (L .get
+	) (
+	[ L .choices (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
+	, ({ left, right }) => so ((
+			suppose
+			, { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (normalize_ast (left))
+			, { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (normalize_ast (right)) ) =>
+			{ left_numerator, left_denominator, right_numerator, right_denominator } ) ]))
 var normalize_ast = by (ast =>
-		L .get (L .choice 
-			( L .when (ast_as_normal)
-			, [ L .when (ast_as_add)
-				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-						suppose
-						, n = left_numerator * right_denominator + right_numerator * left_denominator
-						, d = left_denominator * right_denominator ) =>
-						ast_simplify (n) (d) ) ]
-			, [ L .when (ast_as_minus)
-				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-						suppose
-						, n = left_numerator * right_denominator - right_numerator * left_denominator
-						, d = left_denominator * right_denominator ) =>
-						ast_simplify (n) (d) ) ]
-			, [ L .when (ast_as_multiply)
-				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-						suppose
-						, n = left_numerator * right_numerator
-						, d = left_denominator * right_denominator ) =>
-						ast_simplify (n) (d) ) ]
-			, [ L .when (ast_as_divide)
-				, ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-						suppose
-						, n = left_numerator * right_denominator
-						, d = left_denominator * right_numerator ) =>
-						ast_simplify (n) (d) ) ] )))
-var analyze_to_ast = symbol => cons => str => so ((
-		suppose
-		, loc = R .indexOf (symbol) (str) 
-		, left = parse_to_ast (str .slice (0, loc))																			 
-		, right = parse_to_ast (str .slice (loc + 1, Infinity)) ) =>
-		cons (left, right) )
+	L .get (L .choice 
+		( L .when (ast_as_normal)
+		, [ L .when (ast_as_add), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+				suppose
+				, n = left_numerator * right_denominator + right_numerator * left_denominator
+				, d = left_denominator * right_denominator ) =>
+				ast_simplify (n) (d) ) ]
+		, [ L .when (ast_as_minus), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+				suppose
+				, n = left_numerator * right_denominator - right_numerator * left_denominator
+				, d = left_denominator * right_denominator ) =>
+				ast_simplify (n) (d) ) ]
+		, [ L .when (ast_as_multiply), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+				suppose
+				, n = left_numerator * right_numerator
+				, d = left_denominator * right_denominator ) =>
+				ast_simplify (n) (d) ) ]
+		, [ L .when (ast_as_divide), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
+				suppose
+				, n = left_numerator * right_denominator
+				, d = left_denominator * right_numerator ) =>
+				ast_simplify (n) (d) ) ] )))
+var analyze_to_ast = symbol => cons => str => 
+	suppose (
+	( loc = R .indexOf (symbol) (str) 
+	, left = parse_to_ast (str .slice (0, loc))																			 
+	, right = parse_to_ast (str .slice (loc + 1, Infinity))
+	) =>
+	cons (left, right) )
 var parse_to_ast = so ((_=_=>
 		$ (L .get
 		) (
@@ -622,7 +617,7 @@ var progress_past = so ((_=_=>
 
 
 
-var timer = _ => {;
+var timer = _ => {
 	var _timer = S .data ()
 	var _flowing = S .data (true)
 	//var _flowing_ok = S .subclock (_=> {
@@ -630,16 +625,16 @@ var timer = _ => {;
 	//	;S (_=> {;val (_flowing ())})
 	//	return val })
 	//var _S = fn => S (x => !! _flowing_ok () ? fn (x) : x)
-	;S .root (immortal => {; 
+	;S .root (immortal => { 
 		var tick_S = fn => S (x => !! _flowing () ? fn (x) : x)
-		;tick_S (_=> {;
+		;tick_S (_=> {
 			;_timer (+ (new Date))
-			;requestAnimationFrame (_ => {;
+			;requestAnimationFrame (_ => {
 				;_flowing (_flowing ()) }) }) })
 	return [ _timer, _flowing, ] } //_S, tick_S ] }
-var timer_since = _timer => S .subclock (_=> {;
+var timer_since = _timer => S .subclock (_=> {
 	var _since = S .data ()
-	;S (_=> {;
+	;S (_=> {
 		;_since (_since .next || - Infinity)
 		;_since .next = _timer () })
 	return _since })
@@ -658,20 +653,20 @@ var time_intervals = _timer => so ((_=_=>
 var _ping_cache = {}
 var _ping_listeners = {}
 
-/*var api = (room, _x) => {;
+/*var api = (room, _x) => {
 	var begin = performance .now ()
-	return fetch ('/room/' + room, _x) .then (_x => {;{
+	return fetch ('/room/' + room, _x) .then (_x => {
 		var end = performance .now ()
 		var sample = end - begin
 		;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-		;(_ping_listeners [room] || []) .forEach (fn => {{;fn (_ping_cache [room])}})
-		return _x .json () }}) }*/
+		;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])})
+		return _x .json () }) }*/
 //add retire code for sockets?
 var api = so ((_=_=>
-	(room, _x) => {;
-		;_x = _x || { method: 'GET' }
-		if (_x .body) {
-			;_x .body = JSON .parse (_x .body) }
+	(room, req) => {
+		;req = req || { method: 'GET' }
+		if (req .body) {
+			;req .body = JSON .parse (req .body) }
 
 		var [ continuation, signal ] = api .new_continuation ()
 		var id = new_id ()
@@ -683,18 +678,20 @@ var api = so ((_=_=>
 			;api .sockets [room] = new_socket (room) }
 		;api .sockets [room] .refresh ()
 
-		var begin, end
-		;go
+		;suppose (
+		( begin, end
+		) =>
+		go
 		.then (K (api .sockets [room] .ready))
 		.then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
 		.then (_=> {;begin = performance .now ()})
 		.then (K (continuation))
 		.then (_=> {;end = performance .now ()})
-		.then (_=> {;
+		.then (_=> {
 			var sample = end - begin
 			;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
 			;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
-		.catch (_ => {})
+		.catch (_ => {}) )
 		
 		return continuation },
 	where
@@ -713,19 +710,19 @@ var api = so ((_=_=>
 			where
 			, rec = _
 			, _socket = _
-			, refresh = _ => {;
+			, refresh = _ => {
 					if (! (_socket instanceof WebSocket)
 					|| _socket .readyState === WebSocket .CLOSED
 					|| _socket .readyState === WebSocket .CLOSING) {
 						;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
 						rec ._socket = _socket
-						rec .ready = new Promise ((resolve, reject) => {;
-							_socket .onopen = _ => {;resolve ()} })
-						_socket .onmessage = _event => {;
+						rec .ready = new Promise ((resolve, reject) => {
+							;_socket .onopen = _ => {;resolve ()} })
+						_socket .onmessage = _event => {
 							var _packet = JSON .parse (_event .data)
 							var id = _packet .id
 							var data = _packet .body
-							if (api .continuations [id]) {;
+							if (api .continuations [id]) {
 								 ;api .continuations [id] (data) } } } } )=>_)
 
 	, update_pings = sample =>
@@ -746,7 +743,7 @@ var api = so ((_=_=>
 		;fn (_ping_cache [room]) } }}
 ;api .sockets = []
 ;api .continuations = {}
-;api .new_continuation = timeout => {;
+;api .new_continuation = timeout => {
 	;timeout = timeout || 5000
 																		 
 	var resolve, reject
@@ -755,7 +752,7 @@ var api = so ((_=_=>
 		if (! done) {
 			;resolve (_x) } }
 	
-	var continuation = (new Promise ((_resolve, _reject) => {;
+	var continuation = (new Promise ((_resolve, _reject) => {
 		;resolve = _resolve
 		;reject = _reject }))
 	;continuation .catch (I) .then (_ => {;done = true})
@@ -770,9 +767,9 @@ var order_sort = _ordering => by (list => so ((_=_=>
 	R .sortWith (comp),
 	where
 	, comp = T (_ordering) (R .map (([ prop, direction ]) =>
-			!! equals (direction) ('ascending') ? R .ascend (prop)
-			: equals (direction) ('descending') ? R .descend (prop)
-			: panic ('unknown direction') )) )=>_))
+		!! equals (direction) ('ascending') ? R .ascend (prop)
+		: equals (direction) ('descending') ? R .descend (prop)
+		: panic ('unknown direction') )) )=>_))
 var direction_opposite = _direction =>
 	!! equals (_direction) ('ascending') ? 'descending'
 	: equals (_direction) ('descending') ? 'ascending'
@@ -784,12 +781,12 @@ var toggle_order = prop => _ordering => so ((_=_=>
 	, opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
 
 
-var post = x => ({
-	method: 'POST',
-	headers: {
-		'Accept': 'application/json',
-		'Content-Type': 'application/json' },
-	body: JSON .stringify (x) })
+var post = x => (
+	{ method: 'POST'
+	, headers:
+		{ 'Accept': 'application/json'
+		, 'Content-Type': 'application/json' }
+	, body: JSON .stringify (x) })
 
 
 
@@ -801,12 +798,11 @@ var post = x => ({
 // rewrite functionally?
 var map_zip = mash => a => b => {
 	var _zip = []
-	;T (b) (R .forEach (([ _key, _val ]) => {;
+	;T (b) (R .forEach (([ _key, _val ]) => {
 		for (var i = 0; i < a .length; i ++) {
 			var [ k, v ] = a [i]
 			if (equals (k) (_key)) {
 				;_zip = _zip .concat ([ [ _key, mash (v) (_val) ] ]) } } }))
-	
 	return _zip }
 
 
@@ -815,10 +811,10 @@ var chain_el = el_fn => [ L .chain ($ ([ el_fn, K ])) ([]), L .valueOr ([]) ]
 
 var uuid = _ =>
 	'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace (/[xy]/g, c =>
-		so ((
-		suppose
-		, r = Math .random () * 16 | 0
-		, v = c == 'x' ? r : (r & 0x3 | 0x8)) =>
+		suppose (
+		( r = Math .random () * 16 | 0
+		, v = c == 'x' ? r : (r & 0x3 | 0x8)
+		) =>
 		v .toString (16) ))
 
 

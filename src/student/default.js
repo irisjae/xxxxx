@@ -597,7 +597,7 @@ var connection = S .root (die =>
 	, S (_ => 
 		T (mark (app_room_state)
 		) (
-		pinpoint (
+		L .get (
 		[ L .when (I)
 		, _room => {
 			if (! connection [_room]) {
@@ -770,11 +770,12 @@ var connection = S .root (die =>
 					[ L .inverse (data_iso (ensemble .ensemble))
 					, L .when (_ => equals (_room) (show (app_room_state)))
 					, _ensemble => {;please (L_ .set (_ensemble)) (ensemble_state)} ]) ) )
-			.catch (_x => {
-				if (L .get ([ 'error', L .is ('timeout') ]) (_x)) {
-					;console .warn ('Room timed out') }
-				else {
-					;throw _x }})
+			.catch (
+				pinpoint (
+				L .cond (
+				[ L .get ([ 'error', L .is ('timeout') ]), _ => {
+					;console .warn ('Room timed out') } ],
+				[ panic ] ) ) )
 			.then (_ => {
 				;setTimeout (_ => {
 					;heartbeat (!! critical ? reping_period : phase - 1) }

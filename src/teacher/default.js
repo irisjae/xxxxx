@@ -749,7 +749,7 @@ var connection = S .root (die =>
 	, S (_ => 
 		T (mark (app_room_state)
 		) (
-		pinpoint (
+		L .get (
 		[ L .when (I)
 		, _room => {
 			if (! connection [_room]) {
