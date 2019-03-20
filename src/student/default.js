@@ -347,10 +347,10 @@ var playing_view = _ => so ((_=_=>
 				_time_limit - _t )) (clock ()) }
 				<ticker z-identity={ _problem_number } style={ ticker_style }><spinner/></ticker> </ticker-etc>
 			<question>
-				{ L .get ([ question_as_text, chain_el (K (_question_text =>
-				_question_text )) ]) (_current_question) }
-				{ L .get ([ question_as_image, chain_el (K (_question_image =>
-				<img src={ _question_image } /> )) ]) (_current_question) } </question> </div>
+				{ L .get ([ question_as_text, chain_el (_question_text =>
+				_question_text ) ]) (_current_question) }
+				{ L .get ([ question_as_image, chain_el (_question_image =>
+				<img src={ _question_image } /> ) ]) (_current_question) } </question> </div>
 		<div class="right-pane">
 			<board x-disabled={ _disabled }> { T (_board) (R .map (_row => 
 				<row> { T (_row) (R .map (_cell => so ((_=_=>
