@@ -653,15 +653,7 @@ var time_intervals = _timer => so ((_=_=>
 var _ping_cache = {}
 var _ping_listeners = {}
 
-/*var api = (room, _x) => {
-	var begin = performance .now ()
-	return fetch ('/room/' + room, _x) .then (_x => {
-		var end = performance .now ()
-		var sample = end - begin
-		;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-		;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])})
-		return _x .json () }) }*/
-//add retire code for sockets?
+// add retire code for sockets?
 var api = so ((_=_=>
 	(room, req) => {
 		;req = req || { method: 'GET' }
@@ -683,7 +675,7 @@ var api = so ((_=_=>
 		) =>
 		go
 		.then (K (api .sockets [room] .ready))
-		.then (_=> {;api .sockets [room] .send (JSON .stringify ({ ..._x, id: id }))})
+		.then (_=> {;api .sockets [room] .send (JSON .stringify ({ ...req, id: id }))})
 		.then (_=> {;begin = performance .now ()})
 		.then (K (continuation))
 		.then (_=> {;end = performance .now ()})
@@ -701,40 +693,42 @@ var api = so ((_=_=>
 			? id
 			: new_id () }
 	//TODO: make this more elegant
-	, new_socket = room => so ((_=_=>(
-			rec =
+	, new_socket = room => so ((_=_=>
+		( rec =
 			{ _socket: _
 			, ready: _
 			, refresh: refresh
-			, send: _x => _socket .send (_x) } , refresh (), rec),
-			where
-			, rec = _
-			, _socket = _
-			, refresh = _ => {
-					if (! (_socket instanceof WebSocket)
-					|| _socket .readyState === WebSocket .CLOSED
-					|| _socket .readyState === WebSocket .CLOSING) {
-						;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
-						rec ._socket = _socket
-						rec .ready = new Promise ((resolve, reject) => {
-							;_socket .onopen = _ => {;resolve ()} })
-						_socket .onmessage = _event => {
-							var _packet = JSON .parse (_event .data)
-							var id = _packet .id
-							var data = _packet .body
-							if (api .continuations [id]) {
-								 ;api .continuations [id] (data) } } } } )=>_)
+			, send: req => _socket .send (req) }
+		, refresh ()
+		, rec ),
+		where
+		, rec = _
+		, _socket = _
+		, refresh = _ => {
+			if (! (_socket instanceof WebSocket)
+			|| _socket .readyState === WebSocket .CLOSED
+			|| _socket .readyState === WebSocket .CLOSING) {
+				;_socket = new WebSocket ('wss://' + window .location .host + '/room/' + room)
+				rec ._socket = _socket
+				rec .ready = new Promise ((resolve, reject) => {
+					;_socket .onopen = _ => {;resolve ()} })
+				_socket .onmessage = _event => {
+					var _packet = JSON .parse (_event .data)
+					var id = _packet .id
+					var data = _packet .body
+					if (api .continuations [id]) {
+						 ;api .continuations [id] (data) } } } } )=>_)
 
-	, update_pings = sample =>
-		$ (
-		[ L .get (L .valueOr ([0, 0, 0, 0]))
+	, update_pings = by (sample =>
+		L .get (
+		[ L .valueOr ([0, 0, 0, 0])
 		, ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
 			[ mean * carry + sample / (n + 1)
 			, sqr_mean * carry + (sample * sample) / (n + 1)
 			, n + 1
 			, (new Date) .getTime () ],
 			where 
-			, carry = n / (n + 1) )=>_) ]))=>_)
+			, carry = n / (n + 1) )=>_) ] ) ) )=>_)
 ;api .listen_ping = room => fn => {{ 
 	if (! _ping_listeners [room]) {
 		;_ping_listeners [room] = [] }
