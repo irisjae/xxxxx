@@ -326,7 +326,8 @@ var bingoes_view = so ((_=_=>
 		, top = !! equals (_shape) ('horizontal') ? ((_y - 1) / _size + (1 / _size - 1 / 5) / 2) * 100 + '%'
 			: equals (_shape) ('diagonal-up') ? ((5 - nth) * 1 / 5) * 100 + '%'
 			: ((nth - 1) * 1 / 5) * 100 + '%' )=>_) 
-	, pattern_shape = _pattern => suppose (
+	, pattern_shape = _pattern =>
+		suppose (
 		( [ first_y, first_x ] = L .get (L .first) (_pattern)
 		, [ last_y, last_x ] = L .get (L .last) (_pattern)
 		) =>
@@ -736,7 +737,8 @@ var connection = S .root (die =>
 		) (
 		pinpoint (
 		[ as_complete
-		, impure (({ _student, _room }) => suppose (
+		, impure (({ _student, _room }) =>
+			suppose (
 			( phase = heartbeat ()
 			, critical = phase === 1
 			) =>

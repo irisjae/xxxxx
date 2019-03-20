@@ -387,7 +387,8 @@ var bingoes_view = so ((_=_=> _bingoes =>
 		, left = !! equals (_shape) ('vertical') ? ((_x - 0.5) / _size) * 100 + '%'
 			: equals (_shape) ('horizontal') ? '5%'
 			: '' )=>_) 
-	, pattern_shape = _pattern => suppose (
+	, pattern_shape = _pattern =>
+		suppose (
 		( [ first_y, first_x ] = L .get (L .first) (_pattern)
 		, [ last_y, last_x ] = L .get (L .last) (_pattern)
 		) =>
@@ -918,9 +919,11 @@ S .root (die => {
 		) (
 		pinpoint (
 		[ L .when (I)
-		, _room => {
-			var phase = heartbeat ()
-			var critical = phase === 1
+		, _room =>
+			suppose (
+			( phase = heartbeat ()
+			, critical = phase === 1
+			) =>
 			( !! critical
 			? go
 				.then (_ => {
@@ -954,4 +957,4 @@ S .root (die => {
 					;heartbeat (phase) }
 				, 300) })
 			.then (_ => {
-				;please (L_ .set (io .inert)) (io_state) }) } ])) ) })
+				;please (L_ .set (io .inert)) (io_state) }) ) ])) ) })
