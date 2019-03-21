@@ -461,8 +461,8 @@ var bingoes = _board => _past => so ((_=_=>
 	, _local_patterns = local_patterns (size_patterns (_size))
 	, [ __, final_solved_patterns ] = T (_solved_positions) (T ([ [], [] ]
 		) (
-		Z_ .reduce (memoize (([ solved_positions, solved_patterns ]) => _position => so ((_=_=>
-			[ positions, [ ...solved_local_patterns, solved_patterns ] ],
+		R .reduce (memoize ([ solved_positions, solved_patterns ], _position) => so ((_=_=>
+			[ positions, [ ...solved_patterns, ...solved_local_patterns ] ],
 			where
 			, positions = [ ...solved_positions, _position ]
 			, solved_local_patterns = 
