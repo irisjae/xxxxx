@@ -422,8 +422,9 @@ var local_patterns = memoize (patterns =>
 var chain_l = lens_fn => [ L .chain ($ ([ lens_fn, K ])) ([]), L .valueOr (L .zero) ]
 
 var current_problem =
-	L .choose (L .get ([ app_as_progress, progress_as_step, chain_l (_progress_step =>
-		[ app_as_problems, _progress_step ] ) ]))
+	L .get (
+	L .choose (L .get ([ L .get ([ app_as_progress, progress_as_step ]), chain_l (_progress_step =>
+		[ app_as_problems, _progress_step ] ) ])) )
 
 
 
