@@ -419,13 +419,13 @@ var local_patterns = memoize (patterns =>
 	where
 	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
 
-// var current_problem = by (_past =>
-//		 L .get ([ past_as_points, L .last, point_as_problem ]))
-var current_problem = by (_app =>
-	so ((_=_=>
-	L .get ([ app_as_problems, progress_step ]),
-	where
-	, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_))
+var chain_l = lens_fn => [ L .chain ($ ([ lens_fn, K ])) ([]), L .valueOr (L .zero) ]
+
+var current_problem =
+	L .choose (L .get ([ app_as_progress, progress_as_step, chain_l (_progress_step =>
+		[ app_as_problems, _progress_step ] ) ]))
+
+
 
 /*var current_problem_solved_ok = _app =>
 	so ((_=_=>
