@@ -437,7 +437,7 @@ var attempted_positions = by (_past =>
 	L .collect ([ past_as_points, L .elems, point_as_position ]))
 
 var as_solved_on = memoize (_board =>
-	L .when (_point =>
+	L .when (by (_point =>
 		L .get (
 		[ point_as_position
 		, L .when (I)
@@ -445,7 +445,7 @@ var as_solved_on = memoize (_board =>
 			problem_choice_matches (_problem) (_choice),
 			where
 			, _problem = T (_point) (L .get (point_as_problem))
-			, _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_) ] ) ) )
+			, _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_) ] ) )) )
 
 var solved_positions = _board => by (_past => 
 	L .collect ([ past_as_points, L .elems, as_solved_on (_board), point_as_position ]))
