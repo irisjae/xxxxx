@@ -280,14 +280,14 @@ var setup_student_view = _ => so ((_=_=>
 var setup_view = _ => <setup-etc> {
 	!! not (L_ .isDefined (mark (app_room_state)))
 	?
-		!! L .isDefined (mark (io_inert_state))
+		!! L_ .isDefined (mark (io_inert_state))
 		? setup_room_view
 		: L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (mark (io_state))
 		? <message>正在連接遊戲室…</message>
 		: panic ('invalid io at get ready view')
 	: not (L_ .isDefined (mark (app_student_state)))
 	?
-		!! L .isDefined (mark (io_inert_state))
+		!! L_ .isDefined (mark (io_inert_state))
 		? setup_student_view
 		: L .isDefined (L .choice (io_as_connecting, io_as_heartbeat)) (mark (io_state))
 		? <message>正在加入遊戲室…</message>

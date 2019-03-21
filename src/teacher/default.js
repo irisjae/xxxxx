@@ -576,8 +576,8 @@ var game_over_view = _ => so ((_=_=>
 			<a-title><img src={ img .logo }/></a-title> </title-etc>
 		<options x-for="tabs">
 			<button x-custom x-for="show-results" fn={ show_results } ><img src={ !! L_ .isDefined (mark (lookbehind_show_results_state)) ? img .show_results_on : img .show_results_off } /></button>
-			<button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L .isDefined (mark (lookbehind_students_analysis_state)) ? img .students_analysis_on : img .students_analysis_off } /></button>
-			<button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L .isDefined (mark (lookbehind_problems_analysis_state)) ? img .problems_analysis_on : img .problems_analysis_off } /></button> </options>
+			<button x-custom x-for="students-analysis" fn={ students_analysis } ><img src={ !! L_ .isDefined (mark (lookbehind_students_analysis_state)) ? img .students_analysis_on : img .students_analysis_off } /></button>
+			<button x-custom x-for="problems-analysis" fn={ problems_analysis } ><img src={ !! L_ .isDefined (mark (lookbehind_problems_analysis_state)) ? img .problems_analysis_on : img .problems_analysis_off } /></button> </options>
 			{ !! L_ .isDefined (mark (lookbehind_show_results_state))
 			? students_view 
 			: L_ .isDefined (mark (lookbehind_students_analysis_state))
