@@ -545,7 +545,7 @@ var problems_analysis_view = so ((_=_=>
 		, _problems = T (mark (app_students_map_boards_v_pasts_state)
 			) (
 			[ L .collect ([ L .elems, ([ _, [__, _past] ]) => _past, L .collect ([ past_as_points, L .elems, point_as_problem ]) ])
-			, L .maximumBy (L .count (L .elems)) ]) )=>_),
+			, L .maximumBy (L .count (L .elems)) (L .elems) ]) )=>_),
 	where
 	, analyse_problems = _students_map_boards_v_pasts => by (_problems =>
 		L .collect ([ L .elems, (_problem, _index) => so ((_=_=> (
