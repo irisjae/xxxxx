@@ -393,7 +393,7 @@ var game_over_view = _ => so ((_=_=>
 				<div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
 				<div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
 				<div><span>平均答對時間：</span> <span>{ mean_solved_point_latency }秒</span></div> </overall-analysis>
-		: L_ .isDefined (lookbehind_problems_analysis_state)
+		: L_ .isDefined (mark (lookbehind_problems_analysis_state))
 		? so ((_=_=>
 			<problems-analysis-etc>
 				<labels>
