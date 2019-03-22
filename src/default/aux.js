@@ -419,7 +419,7 @@ var local_patterns = memoize (patterns =>
 	where
 	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
 
-var chain_l = lens_fn => [ L .chain ($ ([ lens_fn, K ])) ([]), L .valueOr (L .zero) ]
+var chain_l = lens_fn => L .choose ((value, index) => K (value === undefined ? L .zero : lens_fn (value, index)))
 
 var current_problem =
 	L .get (
