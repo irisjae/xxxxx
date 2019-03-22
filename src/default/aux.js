@@ -419,12 +419,15 @@ var local_patterns = memoize (patterns =>
 	where
 	, _positions = Z_ .reduce (R .union) ([]) (patterns) )=>_))
 
-var chain_l = lens_fn => L .choose ((value, index) => K (value === undefined ? L .zero : lens_fn (value, index)))
+var as_metapl = lens_fn => from_lens => [ from_lens, L .choose ((value, index) => K (value === undefined ? L .zero : lens_fn (value, index))) ]
+var as_lens = traversal => L .lens (L .get (traversal)) (L .set (traversal))
 
 var current_problem =
 	L .get (
-	L .choose (L .get ([ L .get ([ app_as_progress, progress_as_step ]), chain_l (_progress_step =>
-		[ app_as_problems, _progress_step ] ) ])) )
+	as_metapl (_progress_step =>
+		[ app_as_problems, _progress_step ] 
+	) (
+	as_lens ([ app_as_progress, progress_as_step ]) ) )
 
 
 
