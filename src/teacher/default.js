@@ -512,7 +512,7 @@ var students_analysis_view = so ((_=_=>
 					<number-of-bingoes>{ _number_of_bingoes }</number-of-bingoes>
 					<average-solved-time>{ show_time (_average_solved_time) }</average-solved-time> </student> )
 				) (
-				order_sort (_ordering), L .elems
+				[ order_sort (_ordering), L .elems ]
 				) ) (
 				analyse_students (mark (app_students_map_boards_v_pasts_state))) } </students-analysis> </students-analysis-etc>,
 	where
