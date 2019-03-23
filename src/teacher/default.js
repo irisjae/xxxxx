@@ -1,6 +1,6 @@
 var { T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
 faith, belief, show, mark, please, 
-Y, impure, suppose,
+Y, impure, jinx, suppose,
 so, by, 
 go, never, panic, panic_on,
 just_now, temporal,
@@ -53,10 +53,21 @@ as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 // resources
 
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
+var play = impure (by ([ play, pause ]) => play)
+var pause = impure (by ([ play, pause ]) => pause)
+var audio_from = (url, loop = false) =>
+	suppose (
+	( el = new Audio (url)
+	, $__preload = jinx (_ => {
+		;el .volume = 0
+		;el .play () })
+	, $__loop = jinx (_ => {
+		;el .loop = loop })
+	) =>
+	[ play, pause ] )
 var audio = {
-	bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
-	background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
-;audio .background .loop = true
+	bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
+	background: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019', true) }
 
 var img =
 	{ logo: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
@@ -792,9 +803,19 @@ S .root (die => {
 
 	;S (_ => {
 		if (mark (ambient_background_music_on_state)) {
-			;audio .background .play () }
+			var poll
+			var play_background = impure (_ =>
+				go
+				.then (_ => {
+					;play (audio .background) })
+				.catch (_ => {
+					;poll = setTimeout (play_background, 50) }) )
+			;play_background ()
+			S .cleanup (_ => {
+				if (L_ .isDefined (poll)) {
+					;clearTimeout (poll) } }) }
 		else {
-			;audio .background .pause () } })
+			;pause (audio .background) } })
 
 
 
@@ -846,7 +867,7 @@ S .root (die => {
 				L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
 			// replace with calculating whether difference exists?
 			if (L .count (L .elems) (bingoes) > L .count (L .elems) (last_bingoes)) {
-				;audio .bingo .play () }
+				;play (audio .bingo) }
 			return _bingoes } })
 
 	;S (last_tick => {

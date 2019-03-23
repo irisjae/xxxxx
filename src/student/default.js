@@ -53,15 +53,24 @@ as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 // resources
 
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
-
-
+var play = impure (by ([ play, pause ]) => play)
+var pause = impure (by ([ play, pause ]) => pause)
+var audio_from = (url, loop = false) =>
+	suppose (
+	( el = new Audio (url)
+	, $__preload = jinx (_ => {
+		;el .volume = 0
+		;el .play () })
+	, $__loop = jinx (_ => {
+		;el .loop = loop })
+	) =>
+	[ play, pause ] )
 var audio = 
-	{ correct: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570')
-	, incorrect: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539')
-	, bingo: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054')
-	, countdown: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320')
-	, background: new Audio ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019') }
-;audio .background .loop = true
+	{ correct: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570')
+	, incorrect: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539')
+	, bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054')
+	, countdown: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320')
+	, background: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019', true) }
 
 var img =
 	{ logo: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
@@ -555,11 +564,11 @@ var attempt_problem = impure (_position =>
 					var _local_patterns = T (local_patterns (size_patterns (_size))
 						) (
 						L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions) (R .flip (R .includes)))) ]))
-					;audio .correct .play ()
+					;play (audio .correct)
 					if (L .isDefined (L .elems) (_local_patterns)) {
-						;audio .bingo .play () } }
+						;play (audio .bingo) } }
 				else {
-					;audio .incorrect .play ()
+					;play (audio .incorrect)
 					;please (L_ .set (lookbehind .attempting (latency, true))) (lookbehind_state) } } } }) ]) ) )
 
 var reset_game = _ => {
@@ -638,9 +647,9 @@ var connection = S .root (die =>
 
 	;S (_ => {
 		if (mark (ambient_background_music_on_state)) {
-			;audio .background .play () }
+			;play (audio .background) }
 		else {
-			;audio .background .pause () } })
+			;pause (audio .background) } })
 
 
 
@@ -696,7 +705,7 @@ var connection = S .root (die =>
 			var tick = clock ()
 			var tick_left = time_limit - tick
 			if (tick_left == 3 && not (equals (tick_left) (last_tick_left))) {
-				;audio .countdown .play () }
+				;play (audio .countdown) }
 			if (tick >= time_limit) {
 				;please (student_app_playing_to_next) (app_state) }
 			return tick_left } })
