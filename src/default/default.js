@@ -8,8 +8,8 @@ var Z_ = Z .unchecked
 var Surplus = require ('surplus')
 //var S = require ('s-js/dist/withsubclocks')
 var { L_, S 
-	, T, Y, $, apply, I, K, not, equals, impure, panic, panic_on, by, suppose
-	, faith, belief, show, mark, please } = require ('camarche')
+, T, Y, $, apply, I, K, not, equals, impure, jinx, panic, panic_on, by, suppose
+, faith, belief, show, mark, please } = require ('camarche')
 ;Surplus .S = S
 ;Surplus .S .effect = S		 
 var memoize = require ('fast-memoize')
@@ -390,7 +390,7 @@ window .Surplus = Surplus
 window .stuff = { ...window .stuff,
 	T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
 	faith, belief, show, mark, please, 
-	Y, impure, suppose,
+	Y, impure, jinx, suppose,
 	so, by, 
 	go, never, panic, panic_on,
 	fiat, data, data_lens, data_iso, data_kind,

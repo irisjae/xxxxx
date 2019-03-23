@@ -1,7 +1,7 @@
 var {
 	T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
 	faith, belief, show, mark, please, 
-	Y, impure, suppose,
+	Y, impure, jinx, suppose,
 	so, by, 
 	go, never, panic, panic_on,
 	just_now, temporal,
