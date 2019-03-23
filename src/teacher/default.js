@@ -53,8 +53,8 @@ as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 // resources
 
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
-var play = impure (by ([ play, pause ]) => play)
-var pause = impure (by ([ play, pause ]) => pause)
+var play = impure (by (([ play, pause ]) => play))
+var pause = impure (by (([ play, pause ]) => pause))
 var audio_from = (url, loop = false) =>
 	suppose (
 	( el = new Audio (url)
