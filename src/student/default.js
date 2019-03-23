@@ -127,7 +127,7 @@ var question_order = _point => so ((_=_=>
 	where
 	, _points = show (app_past_points_state) )=>_)
 var number_of_attempts_order = L .count (point_as_attempts)
-var solved_time_order = by (_ => so ((_=_=>
+var solved_time_order = by (_point => so ((_=_=>
 	L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ]),
 	where
 	, _board = show (app_as_board) )=>_))

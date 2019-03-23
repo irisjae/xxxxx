@@ -519,7 +519,7 @@ var students_analysis_view = so ((_=_=>
 	, analyse_students = by (_students_map_boards_v_pasts =>
 		L .collect ([ L .elems, ([ _student, [_board, _past] ]) => (
 			{ _name: T (_student) (L .get (student_as_name))
-			, _number_of_solved: T (_past) (L .count ([ past_as_points, as_solved_on (_board), L .elems ]))
+			, _number_of_solved: T (_past) (L .count ([ past_as_points, L .elems, as_solved_on (_board) ]))
 			, _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
 			, _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }) ]) ) )=>_)
 
