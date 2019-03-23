@@ -71,7 +71,8 @@ var audio_from = (url, loop = false) =>
 		;el .loop = loop })
 	, _play = _ => {
 		;el .currentTime = 0
-		;el .volume = 1 }
+		;el .volume = 1 
+		;el .play () }
 	, _pause = _ => {
 		;el .volume = 0 }
 	) =>
