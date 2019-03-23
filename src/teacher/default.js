@@ -60,7 +60,13 @@ var audio_from = (url, loop = false) =>
 	( el = new Audio (url)
 	, $__preload = jinx (_ => {
 		;el .volume = 0
-		;el .play () })
+		var _load = impure (_ =>
+			go
+			.then (_ => {
+				;el .play () })
+			.catch (_ => {
+				;setTimeout (_load, 50) }) )
+		;_load () })
 	, $__loop = jinx (_ => {
 		;el .loop = loop })
 	, _play = _ => {
@@ -808,17 +814,7 @@ S .root (die => {
 
 	;S (_ => {
 		if (mark (ambient_background_music_on_state)) {
-			var poll
-			var play_background = impure (_ =>
-				go
-				.then (_ => {
-					;play (audio .background) })
-				.catch (_ => {
-					;poll = setTimeout (play_background, 50) }) )
-			;play_background ()
-			S .cleanup (_ => {
-				if (L_ .isDefined (poll)) {
-					;clearTimeout (poll) } }) }
+			;play (audio .background) }
 		else {
 			;pause (audio .background) } })
 

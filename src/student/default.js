@@ -60,7 +60,13 @@ var audio_from = (url, loop = false) =>
 	( el = new Audio (url)
 	, $__preload = jinx (_ => {
 		;el .volume = 0
-		;el .play () })
+		var _load = impure (_ =>
+			go
+			.then (_ => {
+				;el .play () })
+			.catch (_ => {
+				;setTimeout (_load, 50) }) )
+		;_load () })
 	, $__loop = jinx (_ => {
 		;el .loop = loop })
 	, _play = _ => {
