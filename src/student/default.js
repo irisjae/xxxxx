@@ -84,7 +84,7 @@ var feedback = data ({
 	setup_room: (room =~ room) => feedback,
 	setting_up_student: (icon =~ avatar) => feedback,
 	setup_student: (icon =~ avatar, name =~ string) => feedback,
-	attempt_problem: (position =~ position) => feedback,
+	attempt_problem: (step =~ nat, position =~ position) => feedback,
 	reset_game: () => feedback })
 
 var lookbehind = data ({
@@ -375,8 +375,9 @@ var playing_view = _ => so ((_=_=>
 		, feedback_cell = cell => _dom => {
 			;clicking .forEach (click => {
 				;_dom .addEventListener (click, _ => {
+					var _step = show (app_progress_step_state)
 					var _position = T (cell) (L .get (cell_as_position))
-					;please (L_ .set (feedback .attempt_problem (_position))) (feedback_state) }) }) } )=>_) 
+					;please (L_ .set (feedback .attempt_problem (_step, _position))) (feedback_state) }) }) } )=>_) 
 
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
@@ -700,13 +701,13 @@ var connection = S .root (die =>
 				;please (student_app_playing_to_next) (app_state) }
 			return tick_left } })
 
-	;S (last_progress => {
-		var progress = mark (app_progress_state)
+	;S (last_progress_step => {
+		var progress_step = mark (app_progress_step_state)
 		if (L_ .isDefined (mark (app_playing_state))) {
-			if (complete_ ([ last_progress, progress ]) && not (equals (last_progress) (progress))) {
+			if (complete_ ([ last_progress_step, progress_step ]) && not (equals (last_progress_step) (progress_step))) {
 				;please (L_ .set (0)) (lookbehind_since_state) 
 				;please (L_ .set (false)) (lookbehind_blocked_state) } }
-		return progress })
+		return progress_step })
 
 	;S (last_game_over_state => {
 		if (! L_ .isDefined (last_game_over_state)) {
