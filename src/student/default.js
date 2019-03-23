@@ -105,7 +105,7 @@ var feedback = data ({
 	setup_room: (room =~ room) => feedback,
 	setting_up_student: (icon =~ avatar) => feedback,
 	setup_student: (icon =~ avatar, name =~ string) => feedback,
-	attempt_problem: (step =~ nat, position =~ position) => feedback,
+	attempt_problem: (uniq =~ timestamp, position =~ position) => feedback,
 	reset_game: () => feedback })
 
 var lookbehind = data ({
@@ -398,7 +398,7 @@ var playing_view = _ => so ((_=_=>
 				;_dom .addEventListener (click, _ => {
 					var _step = show (app_progress_step_state)
 					var _position = T (cell) (L .get (cell_as_position))
-					;please (L_ .set (feedback .attempt_problem (_step, _position))) (feedback_state) }) }) } )=>_) 
+					;please (L_ .set (feedback .attempt_problem (+ (new Date), _position))) (feedback_state) }) }) } )=>_) 
 
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
