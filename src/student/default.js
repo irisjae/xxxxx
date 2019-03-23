@@ -63,8 +63,13 @@ var audio_from = (url, loop = false) =>
 		;el .play () })
 	, $__loop = jinx (_ => {
 		;el .loop = loop })
+	, _play = _ => {
+		;el .currentTime = 0
+		;el .volume = 1 }
+	, _pause = _ => {
+		;el .volume = 0 }
 	) =>
-	[ play, pause ] )
+	[ _play, _pause ] )
 var audio = 
 	{ correct: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570')
 	, incorrect: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539')

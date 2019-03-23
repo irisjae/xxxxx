@@ -63,8 +63,13 @@ var audio_from = (url, loop = false) =>
 		;el .play () })
 	, $__loop = jinx (_ => {
 		;el .loop = loop })
+	, _play = _ => {
+		;el .currentTime = 0
+		;el .volume = 1 }
+	, _pause = _ => {
+		;el .volume = 0 }
 	) =>
-	[ play, pause ] )
+	[ _play, _pause ] )
 var audio = {
 	bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
 	background: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019', true) }
