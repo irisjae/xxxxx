@@ -21,7 +21,7 @@ teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
 map_v_as_key, map_v_as_value, as_value_of,
-as_maybe, as_defined, as_complete, complete_,
+as_complete, complete_,
 app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
 settings_as_problems, settings_as_rules,
 settings_as_size, settings_as_time_limit, settings_as_win_rule,
@@ -158,7 +158,7 @@ var solved_time_order = by (_point => so ((_=_=>
 // states and beliefs
 
 var state = faith (
-	{ app: student_app .setup (Z_ .Nothing, Z_ .Nothing, Z_ .Nothing)
+	{ app: student_app .setup (undefined, undefined, undefined)
 	, lookbehind: lookbehind .nothing
 	, ambient: ambient .ambient (false)
 	, io: io .inert
@@ -327,7 +327,7 @@ var bingoes_view = so ((_=_=>
 		<bingo> { T (_bingoes) ([ L .collect ([ L .elems, _pattern => T (letters) (R .map (nth => 
 			<letter x-as={ nth_letter (nth) } style={ nth_letter_pos (_pattern) (nth) } />)) ]) ]) } </bingo>,
 	where
-	, letters = Z_ .range (1) (5 + 1)
+	, letters = R .range (1) (5 + 1)
 	, nth_letter = nth =>
 		!! equals (nth) (1) ? 'b'
 		: equals (nth) (2) ? 'i'
@@ -561,7 +561,7 @@ var attempt_problem = impure (_position =>
 			T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 
 		var join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
-		var join = Z_ .reduce (join_2) ([])
+		var join = R .reduce (join_2) ([])
 			
 		var _completed = T (_point) (L .get ([ join ([ point_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ]))
 		if (not (_completed)) {
@@ -584,7 +584,7 @@ var attempt_problem = impure (_position =>
 					;please (L_ .set (lookbehind .attempting (latency, true))) (lookbehind_state) } } } }) ]) ) )
 
 var reset_game = _ => {
-	;please (L_ .set (student_app .setup (Z .Nothing, Z .Nothing, Z .Nothing))) (app_state) }
+	;please (L_ .set (student_app .setup (undefined, undefined, undefined))) (app_state) }
 
 
 

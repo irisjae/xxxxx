@@ -96,7 +96,7 @@ var data_lens = cons_memoize (cons =>
 					T (cons) ([ apply, T (markers) ]),
 					where
 					, cons_length = __data_length .get (cons)
-					, markers = Z_ .range (1) (cons_length + 1) )=>_)
+					, markers = R .range (1) (cons_length + 1) )=>_)
 			, factors = T (marked_template) ([ R .values, sole, R .keys ]) )=>
 			T (factors) (R .forEach (_x => {
 				;faux_lens [_x] = [ faux_lens, _x ]})) ))=>_))
@@ -112,7 +112,7 @@ var data_iso = cons_memoize (cons =>
 			cons_fn (markers),
 			where
 			, cons_length = __data_length .get (cons)
-			, markers = Z_ .range (1) (cons_length + 1) )=>_)
+			, markers = R .range (1) (cons_length + 1) )=>_)
 	, marked_factors = T (marked_template) ([ R .values, sole, R .invert ])
 	, ordered_factors = T (marked_factors) (L .collect ([ L .keyed, R .sortBy (L .get (L .first)), L .elems, L .last ]))
 	, record_to_factors = record => T (ordered_factors) (L .modify (L .elemsTotal) (_factor => record [_factor]))
