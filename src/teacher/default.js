@@ -58,6 +58,8 @@ var pause = impure (by (([ play, pause ]) => pause))
 var audio_from = (url, loop = false) =>
 	suppose (
 	( el = new Audio (url)
+	, ready_yet
+	, ready = new Promise (ok => {;ready_yet = ok})
 	, $__preload = jinx (_ => {
 		;el .volume = 0
 		var _load = impure (_ =>
@@ -66,13 +68,16 @@ var audio_from = (url, loop = false) =>
 				;el .play () })
 			.catch (_ => {
 				;setTimeout (_load, 50) }) )
-		;_load () })
+		;go
+		.then (_load)
+		.then (ready_yet) })
 	, $__loop = jinx (_ => {
 		;el .loop = loop })
 	, _play = _ => {
 		;el .currentTime = 0
 		;el .volume = 1
-		;el .play () }
+		;ready .then (_ => {
+			;el .play () }) }
 	, _pause = _ => {
 		;el .volume = 0 }
 	) =>
