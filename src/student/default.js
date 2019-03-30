@@ -312,7 +312,8 @@ var setup_student_view = _ => so ((_=_=>
 				;let_icon (avatar .bunny) })
 			if (_button) {
 				;_button .addEventListener (click, _e => {
-					;let_student_enter () }) } })),
+					//;let_student_enter ()
+					}) } })),
 		where
 		, _name_input = _dom .querySelector ('input')
 		, _lion_option = _dom .querySelector ('avatar[x-for=lion]')
