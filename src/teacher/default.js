@@ -860,7 +860,8 @@ S .root (die => {
 		if (not (equals (last_app_settings_rules_size) (mark (app_settings_rules_size_state)))) {
 			;please (shuffle) (app_settings_problems_state) } 
 
-		return [ mark (app_settings_rules_size_state), mark (app_setup_state) ] })
+		return [ mark (app_settings_rules_size_state), mark (app_setup_state) ] }
+	, [ undefined, undefined])
 
 	;S (_ => {
 		if (L_ .isDefined (mark (app_get_ready_state))
