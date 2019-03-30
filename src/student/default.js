@@ -292,17 +292,13 @@ var setup_student_view = _ => so ((_=_=>
 	where
 	, _icon = mark (feedback_icon_state)
 	, feedback_setup_student = _dom => so ((_=_=>
-		(_name_input .addEventListener ('keypress', _e => {
-			if (_e .keyCode === 13) {
-				;let_name_enter (_name_input .value) } }),
+		(_name_input .addEventListener ('input', _e => {
+			;let_name_enter (_name_input .value) }),
 		clicking .forEach (click => {
 			;_lion_option .addEventListener (click, _e => {
 				;let_icon (avatar .lion) })
 			;_bunny_option .addEventListener (click, _e => {
-				;let_icon (avatar .bunny) })
-			if (_button) { 
-				;_button .addEventListener (click, _e => {
-					;let_name_enter () }) } })),
+				;let_icon (avatar .bunny) }) })),
 		where
 		, _name_input = _dom .querySelector ('input')
 		, _lion_option = _dom .querySelector ('avatar[x-for=lion]')
