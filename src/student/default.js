@@ -428,6 +428,10 @@ var playing_view = _ => so ((_=_=>
 					var _position = T (cell) (L .get (cell_as_position))
 					;please (L_ .set (feedback .attempt_problem (+ (new Date), _position))) (feedback_state) }) }) } )=>_) 
 
+
+var show_unit = _x => !! equals (_x) (NaN) ? '-' :  _x .toFixed (2) * 1
+var show_time = _x => !! equals (_x) (NaN) ?  '-' : _x .toFixed (2) * 1 + '秒'
+
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
 		<a-title><img src={ img .logo }/></a-title>
@@ -442,7 +446,7 @@ var game_over_view = _ => so ((_=_=>
 			<overall-analysis>
 				<div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
 				<div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
-				<div><span>平均答對時間：</span> <span>{ mean_solved_point_latency }秒</span></div> </overall-analysis>
+				<div><span>平均答對時間：</span> <span>{ show_time (mean_solved_point_latency) }</span></div> </overall-analysis>
 		: L_ .isDefined (mark (lookbehind_problems_analysis_state))
 		? so ((_=_=>
 			<problems-analysis-etc>
@@ -460,11 +464,11 @@ var game_over_view = _ => so ((_=_=>
 									L .chain (K (_image => <img src={ _image } />)) (question_as_image),
 									L .chain (K (I)) (question_as_text)))) }</question>
 							<number-of-attempts>{ _number_of_attempts }</number-of-attempts>
-							<solved-time>{ _solved_time }</solved-time> </problem>,
+							<solved-time>{ show_time (_solved_time) }</solved-time> </problem>,
 						where
 						, _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
 						, _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
-						, _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency, _x => _x .toFixed (2) * 1 + '秒' ])) || '-' )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
+						, _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
 			where
 			, _ordering = mark (lookbehind_ordering_state) )=>_)
 		: [] }
@@ -477,7 +481,7 @@ var game_over_view = _ => so ((_=_=>
 	, _points = mark (app_past_points_state)
 	, attempted_points_amount = T (_points) (L .count ([ L .elems, point_as_attempts, L .last ]))
 	, solved_points_amount = T (_points) (L .count ([ L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
-	, mean_solved_point_latency = T (_points) (L .mean ([ L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) .toFixed (2) * 1 || '0'
+	, mean_solved_point_latency = T (_points) (L .mean ([ L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ]))
 	, overall_analysis = _dom => {
 			;clicking .forEach (click => {
 				;_dom .addEventListener (click, _ => {
