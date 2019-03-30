@@ -309,11 +309,11 @@ var setup_student_view = _ => so ((_=_=>
 		, let_name_enter = _ => {
 			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) }
 
-			if (L_ .isDefined (show (feedback_setting_up_student_state))) {
+			/*if (L_ .isDefined (show (feedback_setting_up_student_state))) {
 				var _icon = show (feedback_icon_state)
 				var _name = _name_input .value
 				;_name_input .value = ''
-				;please (L_ .set (feedback .setup_student (_icon, _name))) (feedback_state) } } )=>_))=>_)
+				;please (L_ .set (feedback .setup_student (_icon, _name))) (feedback_state) }*/ )=>_))=>_)
 
 var setup_view = _ => <setup-etc> {
 	!! not (L_ .isDefined (mark (app_room_state)))
