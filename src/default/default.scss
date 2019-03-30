@@ -246,13 +246,15 @@ teacher-app > get-ready-etc {
 			& student {
 				width: 100px;
 				height: 1.5em;
-				/*overflow: scroll;*/
 				margin: 0 0 5px;
 				display: block;
 				background-size: cover;
 				padding: 10px;
 				text-indent: 40px;
 				font-size: 0.8em;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
 				&[x-icon=lion] {
 					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587);
 					padding-top: 12px; }
@@ -365,7 +367,13 @@ teacher-app > playing-etc {
 				&[x-icon=bunny]:before {
 					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
 				&[x-icon=lion]:before {
-					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); }
+				& name {
+					width: 80px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					display: block; } }
 			& board {
 				& bingo {
 					& line {

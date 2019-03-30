@@ -437,7 +437,7 @@ var bingoes_view = so ((_=_=> _bingoes =>
 var students_view = _ =>
 	<students> { L .collect (L .chain (([ _student, [_board, _past] ]) => so ((_=_=> K (
 		<student-etc>
-			<label x-icon={ _icon_attr }>{ _name }</label>
+			<label x-icon={ _icon_attr }><name>{ _name }</name></label>
 			<board> { T (_board) (R .map (_row => 
 				<row> { T (_row) (R .map (_cell => so ((_=_=>
 					!! _cell_solved ? <cell x-solved />
