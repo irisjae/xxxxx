@@ -298,7 +298,7 @@ var setup_student_view = _ => so ((_=_=>
 	where
 	, _icon = mark (feedback_icon_state)
 	//HACK
-	, feedback_enter_student = impure (_dom =>
+	, feedback_enter_student = impure (_button =>
 		clicking .forEach (click => {
 			;_button .addEventListener (click, _e => {
 				;please (L .get ([ feedback_as_setting_up_student, L .inverse (feedback_as_setup_student) ])) (feedback_state) }) }) )
