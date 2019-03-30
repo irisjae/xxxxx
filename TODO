@@ -1,0 +1,5 @@
+remove old 'points' data ~ encode info directly into attempts
+move resources into aux
+use new data
+fix ordering
+fix time syncing issues

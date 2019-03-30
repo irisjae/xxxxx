@@ -415,14 +415,33 @@ var as_metapl = lens_fn => from_lens => [ from_lens, L .choose ((value, index) =
 var as_lens = traversal => L .lens (L .get (traversal)) (L .set (traversal))
 var by_lens = $ ([ L .get, L .choose ])
 
-var current_problem =
+var current_problem = by (_app =>
 	L .get (
 	by_lens (
 	as_metapl (_progress_step =>
 		[ app_as_problems, _progress_step ] 
 	) (
-	as_lens ([ app_as_progress, progress_as_step ]) ) ) )
+	as_lens ([ app_as_progress, progress_as_step ]) ) ) ) )
 
+
+var current_problem_completed = _app => so ((_=_=>
+	T (
+	{ _problem: L .get (current_problem) (_app)
+	, _board: L .get (app_as_board) (_app)
+	, _point: L .get (app_as_last_point) (_app) }
+	) (
+	L .get (
+	[ as_complete
+	, ({ _problem, _board, _point }) => 
+		T (_point) (L .get ([ join ([ point_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ])) ] ) ),
+
+	where
+	, board_choice = _board => _position =>
+		T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
+
+	, join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
+	, join = R .reduce ((a, b) => join_2 (a) (b)) ([])
+		
 
 
 /*var current_problem_solved_ok = _app =>
@@ -853,6 +872,6 @@ window .stuff = { ...window .stuff,
 	message_encoding, messages_encoding, schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 	student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-	current_problem, problem_choice_matches,
+	current_problem, current_problem_completed, problem_choice_matches,
 	local_patterns, size_patterns,
 	as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes }

@@ -44,7 +44,7 @@ cell_as_position, as_position, cell_as_choice,
 message_encoding, messages_encoding, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-current_problem, problem_choice_matches,
+current_problem, current_problem_completed, problem_choice_matches,
 local_patterns, size_patterns,
 as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
@@ -229,6 +229,7 @@ var app_boards_state = belief (app_as_boards) (app_state)
 var app_pasts_state = belief (app_as_pasts) (app_state)
 
 var app_current_problem_state = belief (current_problem) (app_state)
+var app_current_problem_completed_state = belief (current_problem_completed) (app_state)
 var app_students_map_boards_v_pasts_state = belief ([ L .pick ({ boards: app_as_boards, pasts: app_as_pasts }), L .when (I), ({ boards, pasts }) => map_zip (a => b => [a, b]) (boards) (pasts) ]) (app_state)
 
 var lookbehind_nothing_state = belief (lookbehind_as_nothing) (lookbehind_state)
@@ -289,6 +290,17 @@ var counter_setting_view = label => please_feedback => iso_v_img_list => _settin
 			;_dom .addEventListener (click, _ => {
 				;please_feedback (T (_setting) (L .get ([ _iso, L .inverse (next_iso) ]))) }) }) } )=>_)
 
+var as_point = a => b =>
+	[ L .is (a), L .inverse (L .is (b)) ]
+var as_points_on = f => ([ ...pairs ]) =>
+	L .alternatives (... R .map (([a, b]) => as_point (a) (b)) (pairs), f)
+var as_points = ([ ...pairs ]) =>
+	L .alternatives (... R .map (([a, b]) => as_point (a) (b)) (pairs))
+var points_ = ([ ...pairs ]) => L  .get (as_points ([ ...pairs ]))
+
+var on_off = points_ ([ [ true, 'on' ], [ false, 'off' ] ])
+var backkground_music_img = points_ ([ [ true, img .music_on ], [ false, img .music_off ] ])
+
 var setup_view = _ => so ((_=_=>
 	!! L_ .isDefined (mark (lookbehind_nothing_state))
 	? <setup-etc>
@@ -328,10 +340,10 @@ var setup_view = _ => so ((_=_=>
 				mark (io_connecting_state) ) } </button></div>
 		<div class="right-pane">
 			<settings x-for="board-size">
-				<setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ !! equals (_size) (3) ? img .three_by_three_on : img .three_by_three_off } /></setting>
-				<setting x-of="board-size" x-be="4x4"><img fn={ feedback_size (4) } src={ !! equals (_size) (4) ? img .four_by_four_on : img .four_by_four_off } /></setting>
-				<setting x-of="board-size" x-be="5x5"><img fn={ feedback_size (5) } src={ !! equals (_size) (5) ? img .five_by_five_on : img .five_by_five_off } /></setting> </settings> </div>
-		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </setup-etc>
+				<setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ three_by_three_img (equals (_size) (3)) } /></setting>
+				<setting x-of="board-size" x-be="4x4"><img fn={ feedback_size (4) } src={ four_by_four_img (equals (_size) (4)) } /></setting>
+				<setting x-of="board-size" x-be="5x5"><img fn={ feedback_size (5) } src={ five_by_five_img (equals (_size) (5)) } /></setting> </settings> </div>
+		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } ><img src={ background_music_img (_background_music_on) } /></setting> </setup-etc>
 	: L_ .isDefined (mark (lookbehind_preview_questions_state))
 	? <setup-etc>
 		<title-etc>
@@ -349,13 +361,16 @@ var setup_view = _ => so ((_=_=>
 				L .limit (_size * _size) (L .elems)
 				) ) (
 				mark (app_settings_problems_state)) } </preview-questions> </preview-questions-etc> 
-		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
-			<img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </setup-etc>
+		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } >
+			<img src={ background_music_img (_background_music_on) } /></setting> </setup-etc>
 	// MAJOR HACK
 	: (please (L_ .set (lookbehind .nothing)) (lookbehind_state), []),
 	where
 	, _size = mark (app_settings_rules_size_state)
 	, _background_music_on = mark (ambient_background_music_on_state)
+	, three_by_three_img = points_ ([ [ true, img .three_by_three_on ], [ false, img .three_by_three_off ] ])
+	, four_by_four_img = points_ ([ [ true, img .four_by_four_on ], [ false, img .four_by_four_off ] ])
+	, five_by_five_img = points_ ([ [ true, img .five_by_five_on ], [ false, img .five_by_five_off ] ])
 	, feedback_start = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
@@ -393,7 +408,7 @@ var get_ready_view = _ => so ((_=_=>
 		<button x-custom x-for="play" fn={ feedback_play }><img src={ img .play } /></button> )) ]
 		) (
 		_students ) }
-		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </get-ready-etc>,
+		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } ><img src={ background_music_img (_background_music_on) } /></setting> </get-ready-etc>,
 	where
 	, _students = mark (app_students_state) || []
 	, _background_music_on = mark (ambient_background_music_on_state)
@@ -434,10 +449,12 @@ var bingoes_view = so ((_=_=> _bingoes =>
 		: (first_x > last_x) ? 'diagonal-up'
 		: panic ('bad pattern') ) )=>_)
 
+var attrs_ = L .get (L .modify (L .values) (L .get (L .cond ([ I, K ('') ]))))
+
 var students_view = _ =>
 	<students> { L .collect (L .chain (([ _student, [_board, _past] ]) => so ((_=_=> K (
 		<student-etc>
-			<label x-icon={ _icon_attr }><name>{ _name }</name></label>
+			<label x-icon={ _icon_attr }><name {... _x_solved}>{ _name }</name></label>
 			<board> { T (_board) (R .map (_row => 
 				<row> { T (_row) (R .map (_cell => so ((_=_=>
 					!! _cell_solved ? <cell x-solved />
@@ -455,6 +472,7 @@ var students_view = _ =>
 			: L .isDefined (avatar_as_bunny) (_icon)
 			? 'bunny'
 			: panic ('...')
+		, _x_solved = attrs_ ({ 'x-solved': mark (app_current_problem_completed_state) })
 		, _solved_positions = solved_positions (_board) (_past)
 		, _bingoes = bingoes (_board) (_past) )=>_)
 		) (
@@ -481,18 +499,18 @@ var playing_view = _ => so ((_=_=>
 		<options>
 			<button x-custom x-for="view-students" fn={ view_students }><img src={ img .view_students } /></button>
 			<button x-custom x-for="end-game" fn={ consider_end }><img src={ img .end_game } /></button> </options>
-		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } ><img src={ !! _background_music_on ? img .music_on : img .music_off } /></setting> </playing-etc>
+		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } ><img src={ background_music_img (_background_music_on) } /></setting> </playing-etc>
 	: L_ .isDefined (mark (lookbehind_view_students_state))
 	? <playing-etc>
 		<title-etc>
 			<a-title><img src={ img .logo }/></a-title>
 			<problem-number>第{ _problem_number }題</problem-number> </title-etc>
-		{ students_view  }
+		{ students_view }
 		<options>
 			<button x-custom x-for="show-problem" fn={ show_problem }><img src={ img .show_problem } /></button>
 			<button x-custom x-for="end-game" fn={ consider_end }><img src={ img .end_game } /></button> </options>
-		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
-			<img src={ !! _background_music_on ? img .music_on : img .music_off } /> </setting> </playing-etc>
+		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } >
+			<img src={ background_music_img (_background_music_on) } /> </setting> </playing-etc>
 	: L_ .isDefined (mark (lookbehind_consider_end_state))
 	? <playing-etc>
 		<abort-etc>
@@ -624,8 +642,8 @@ var game_over_view = _ => so ((_=_=>
 			: (please (L_ .set (lookbehind .show_results)) (lookbehind_state), []) }
 		<options x-for="options">
 			<button x-custom x-for="play-again" fn={ play_again } ><img src={ img .play_again } /></button> </options>
-		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
-			<img src={ !! _background_music_on ? img .music_on : img .music_off } /> </setting> </game-over-etc>,
+		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } >
+			<img src={ background_music_img (_background_music_on) } /> </setting> </game-over-etc>,
 	where
 	, _background_music_on = mark (ambient_background_music_on_state)
 	, show_results = _dom => {

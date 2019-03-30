@@ -373,7 +373,11 @@ teacher-app > playing-etc {
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
-					display: block; } }
+					display: block;
+					&[x-solved]:after {
+						content: '*';
+						margin-left: 0.2em;
+						color: red; } } }
 			& board {
 				& bingo {
 					& line {
@@ -792,7 +796,7 @@ student-app > game-over-etc {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
-			width: 140px;
+			width: 130px;
 			display: block; }
 		&:after {
 			content: ' ';

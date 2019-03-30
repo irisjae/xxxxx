@@ -44,7 +44,7 @@ cell_as_position, as_position, cell_as_choice,
 message_encoding, messages_encoding, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-current_problem, problem_choice_matches,
+current_problem, current_problem_completed, problem_choice_matches,
 local_patterns, size_patterns,
 as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
@@ -213,6 +213,7 @@ var app_progress_step_state = belief (progress_as_step) (app_progress_state)
 
 var app_last_point_state = belief (app_as_last_point) (app_state)
 var app_current_problem_state = belief (current_problem) (app_state)
+var app_current_problem_completed_state = belief (current_problem_completed) (app_state)
 
 var ensemble_progress_state = belief (ensemble_as_progress) (ensemble_state)
 
@@ -272,10 +273,15 @@ var setup_room_view = _ => so ((_=_=>
 				;_input .value = ''
 				;please (L_ .set (feedback .setup_room (value))) (feedback_state) } } )=>_))=>_)
 
-var normalize_as = lens =>
-	L .normalize (L .get (lens))
-var I_plus = (... conds) =>
-	L .cond (... conds, [ L .identity ])
+var as_point = a => b =>
+	[ L .is (a), L .inverse (L .is (b)) ]
+var as_points_on = f => ([ ...pairs ]) =>
+	L .alternatives (... R .map (([a, b]) => as_point (a) (b)) (pairs), f)
+var as_points = ([ ...pairs ]) =>
+	L .alternatives (... R .map (([a, b]) => as_point (a) (b)) (pairs))
+var points_ = ([ ...pairs ]) => L  .get (as_points ([ ...pairs ]))
+var pointed_ = a => b => f =>
+	by (_x => !! equals (a) (_x) ? K (b) : f)
 
 
 var setup_student_view = _ => so ((_=_=>
@@ -292,7 +298,8 @@ var setup_student_view = _ => so ((_=_=>
 			<avatar x-for="bunny" x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
 				<selected-input />
 				<img src={ img .bunny_avatar } /> </avatar> </icon> 
-		{ !! (L_ .isDefined (mark (feedback_setting_up_student_icon_state)) && L .isDefined (normalize_as (I_plus ([ equals (''), L .zero ]))) (mark (feedback_setting_up_student_name_state)))
+		{ !! (L_ .isDefined (mark (feedback_setting_up_student_icon_state))
+		&& L_ .isDefined (pointed_ ('') () (I) (mark (feedback_setting_up_student_name_state))))
 		? <button fn={ feedback_enter_student } x-custom x-for="connect"><img src={ img .connect } /></button>
 		: [] } </setup-student-etc>,
 	where
@@ -432,15 +439,18 @@ var playing_view = _ => so ((_=_=>
 var show_unit = _x => !! (not (equals (0) (_x)) && ! _x) ? '-' :  _x .toFixed (2) * 1
 var show_time = _x => !! (not (equals (0) (_x)) && ! _x) ?  '-' : _x .toFixed (2) * 1 + '秒'
 
+var overall_analysis_img = points_ ([ [ true, img .overall_analysis_on ], [ false, img .overall_analysis_off ] ])
+var problems_analysis_img = points_ ([ [ true, img .problems_analysis_on ], [ false, img .problems_analysis_off ] ])
+
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
 		<a-title><img src={ img .logo }/></a-title>
 		<student><label>{ _name }</label></student> 
 		<options x-for="tabs">
 			<button x-custom x-for="overall-analysis" fn={ overall_analysis }>
-				<img src={ !! L_ .isDefined (mark (lookbehind_overall_analysis_state)) ? img .overall_analysis_on : img .overall_analysis_off } /> </button>
+				<img src={ overall_analysis_img (L_ .isDefined (mark (lookbehind_overall_analysis_state)))  } /> </button>
 			<button x-custom x-for="problems-analysis" fn={ problems_analysis }>
-				<img src={ !! L_ .isDefined (mark (lookbehind_problems_analysis_state)) ? img .problems_analysis_on : img .problems_analysis_off } /> </button> </options>
+				<img src={ problems_analysis_img (L_ .isDefined (mark (lookbehind_problems_analysis_state))) } /> </button> </options>
 		{ !! L_ .isDefined (mark (lookbehind_overall_analysis_state))
 		? 
 			<overall-analysis>
@@ -583,20 +593,12 @@ var connect_room = impure (_ =>
 var attempt_problem = impure (_position =>
 	T (
 	{ _problem: show (app_current_problem_state)
-	, _board: show (app_board_state)
-	, _point: show (app_last_point_state) }
+	, _board: show (app_board_state) }
 	) (
 	pinpoint (
 	[ as_complete
-	, impure (({ _problem, _board, _point }) => {
-		var board_choice = _board => _position =>
-			T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
-
-		var join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
-		var join = R .reduce ((a, b) => join_2 (a) (b)) ([])
-			
-		var _completed = T (_point) (L .get ([ join ([ point_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ]))
-		if (not (_completed)) {
+	, impure (({ _problem, _board }) => {
+		if (not (show (app_current_problem_completed_state))) {
 			var _choice = board_choice (_board) (_position)
 			if (! show (lookbehind_blocked_state)) {
 				var latency = S .sample (fine_clock)
