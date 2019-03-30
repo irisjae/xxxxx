@@ -440,7 +440,7 @@ var current_problem_completed = _app => so ((_=_=>
 		T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 
 	, join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
-	, join = R .reduce ((a, b) => join_2 (a) (b)) ([])
+	, join = R .reduce ((a, b) => join_2 (a) (b)) ([]) )=>_)
 		
 
 
