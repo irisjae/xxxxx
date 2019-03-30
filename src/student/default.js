@@ -275,7 +275,7 @@ var setup_room_view = _ => so ((_=_=>
 var normalize_as = lens =>
 	L .normalize (L .get (lens))
 var I_plus = (... conds) =>
-	L .cond ([ ... conds, L .identity ])
+	L .cond (... conds, [ L .identity ])
 
 
 var setup_student_view = _ => so ((_=_=>
