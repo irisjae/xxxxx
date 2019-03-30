@@ -272,6 +272,12 @@ var setup_room_view = _ => so ((_=_=>
 				;_input .value = ''
 				;please (L_ .set (feedback .setup_room (value))) (feedback_state) } } )=>_))=>_)
 
+var normalize_as = lens =>
+	L .normalize (L .get (lens))
+var I_plus = (... conds) =>
+	L .cond ([ ... conds, L .identity ])
+
+
 var setup_student_view = _ => so ((_=_=>
 	<setup-student-etc fn={ feedback_setup_student }>
 		<a-title><img src={ img .logo }/></a-title>
@@ -286,7 +292,7 @@ var setup_student_view = _ => so ((_=_=>
 			<avatar x-for="bunny" x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
 				<selected-input />
 				<img src={ img .bunny_avatar } /> </avatar> </icon> 
-		{ !! (L_ .isDefined (mark (feedback_setting_up_student_icon_state)) && L_ .isDefined (mark (feedback_setting_up_student_name_state)))
+		{ !! (L_ .isDefined (mark (feedback_setting_up_student_icon_state)) && L .isDefined (normalize_as (I_plus ([ equals (''), L .zero ]))) (mark (feedback_setting_up_student_name_state)))
 		? <button x-custom x-for="connect"><img src={ img .connect } /></button>
 		: [] } </setup-student-etc>,
 	where
