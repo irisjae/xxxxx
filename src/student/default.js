@@ -293,10 +293,15 @@ var setup_student_view = _ => so ((_=_=>
 				<selected-input />
 				<img src={ img .bunny_avatar } /> </avatar> </icon> 
 		{ !! (L_ .isDefined (mark (feedback_setting_up_student_icon_state)) && L .isDefined (normalize_as (I_plus ([ equals (''), L .zero ]))) (mark (feedback_setting_up_student_name_state)))
-		? <button x-custom x-for="connect"><img src={ img .connect } /></button>
+		? <button fn={ feedback_enter_student } x-custom x-for="connect"><img src={ img .connect } /></button>
 		: [] } </setup-student-etc>,
 	where
 	, _icon = mark (feedback_icon_state)
+	//HACK
+	, feedback_enter_student = impure (_dom =>
+		clicking .forEach (click => {
+			;_button .addEventListener (click, _e => {
+				;please (L .get ([ feedback_as_setting_up_student, L .inverse (feedback_as_setup_student) ])) (feedback_state) }) }) )
 	, feedback_setup_student = _dom => so ((_=_=>
 		(_name_input .addEventListener ('input', _e => {
 			;let_name (_name_input .value) }),
