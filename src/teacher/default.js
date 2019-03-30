@@ -299,7 +299,7 @@ var as_points = ([ ...pairs ]) =>
 var points_ = ([ ...pairs ]) => L  .get (as_points ([ ...pairs ]))
 
 var on_off = points_ ([ [ true, 'on' ], [ false, 'off' ] ])
-var backkground_music_img = points_ ([ [ true, img .music_on ], [ false, img .music_off ] ])
+var background_music_img = points_ ([ [ true, img .music_on ], [ false, img .music_off ] ])
 
 var setup_view = _ => so ((_=_=>
 	!! L_ .isDefined (mark (lookbehind_nothing_state))
