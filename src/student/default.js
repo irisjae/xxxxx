@@ -116,7 +116,7 @@ var img =
 
 var feedback = data ({
 	setup_room: (room =~ room) => feedback,
-	setting_up_student: (name =~ string, icon =~ avatar) => feedback,
+	setting_up_student: (icon =~ avatar, name =~ string) => feedback,
 	setup_student: (icon =~ avatar, name =~ string) => feedback,
 	attempt_problem: (uniq =~ timestamp, position =~ position) => feedback,
 	reset_game: () => feedback })
@@ -299,12 +299,15 @@ var setup_student_view = _ => so ((_=_=>
 	, _icon = mark (feedback_icon_state)
 	, feedback_setup_student = _dom => so ((_=_=>
 		(_name_input .addEventListener ('input', _e => {
-			;let_name_enter (_name_input .value) }),
+			;let_name (_name_input .value) }),
 		clicking .forEach (click => {
 			;_lion_option .addEventListener (click, _e => {
 				;let_icon (avatar .lion) })
 			;_bunny_option .addEventListener (click, _e => {
-				;let_icon (avatar .bunny) }) })),
+				;let_icon (avatar .bunny) })
+			if (_button) {
+				;button .addEventListener (click, _e => {
+					;let_student_enter () }) } })),
 		where
 		, _name_input = _dom .querySelector ('input')
 		, _lion_option = _dom .querySelector ('avatar[x-for=lion]')
@@ -312,8 +315,10 @@ var setup_student_view = _ => so ((_=_=>
 		, _button = _dom .querySelector ('button')
 		, let_icon = _avatar => {
 			;please (L_ .set (_avatar)) (feedback_setting_up_student_icon_state) }
-		, let_name_enter = _name => {
-			;please (L_ .set (_name)) (feedback_setting_up_student_name_state) } )=>_))=>_)
+		, let_name = _name => {
+			;please (L_ .set (_name)) (feedback_setting_up_student_name_state) }
+		, let_student_enter = _ => {
+			;please (L .get ([ feedback_as_setting_up_student, L .inverse (feedback_as_setup_student) ])) (feedback_state) } )=>_))=>_)
 
 var setup_view = _ => <setup-etc> {
 	!! not (L_ .isDefined (mark (app_room_state)))
