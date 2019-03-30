@@ -508,7 +508,13 @@ teacher-app > game-over-etc {
 				&[x-icon=bunny]:before {
 					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
 				&[x-icon=lion]:before {
-					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); }
+				& name {
+					width: 80px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					display: block; } }
 			& board {
 				& bingo {
 					& line {
@@ -783,7 +789,11 @@ student-app > game-over-etc {
 		& label {
 			font-size: 2em;
 			transform: translate(100px, 22px);
-			display: flex; }
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 140px;
+			display: block; }
 		&:after {
 			content: ' ';
 			background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-title-bar.png?1547404084265);
