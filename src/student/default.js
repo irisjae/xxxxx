@@ -306,7 +306,7 @@ var setup_student_view = _ => so ((_=_=>
 			;_bunny_option .addEventListener (click, _e => {
 				;let_icon (avatar .bunny) })
 			if (_button) {
-				;button .addEventListener (click, _e => {
+				;_button .addEventListener (click, _e => {
 					;let_student_enter () }) } })),
 		where
 		, _name_input = _dom .querySelector ('input')
