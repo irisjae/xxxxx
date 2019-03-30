@@ -44,7 +44,7 @@ cell_as_position, as_position, cell_as_choice,
 message_encoding, messages_encoding, schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
-current_problem, current_problem_completed, problem_choice_matches,
+board_choice, current_problem, current_problem_completed, problem_choice_matches,
 local_patterns, size_patterns,
 as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 } = window .stuff
