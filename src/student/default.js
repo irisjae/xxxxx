@@ -429,8 +429,8 @@ var playing_view = _ => so ((_=_=>
 					;please (L_ .set (feedback .attempt_problem (+ (new Date), _position))) (feedback_state) }) }) } )=>_) 
 
 
-var show_unit = _x => !! equals (_x) (NaN) ? '-' :  _x .toFixed (2) * 1
-var show_time = _x => !! equals (_x) (NaN) ?  '-' : _x .toFixed (2) * 1 + '秒'
+var show_unit = _x => !! (not (equals (0) (_x)) && ! _x) ? '-' :  _x .toFixed (2) * 1
+var show_time = _x => !! (not (equals (0) (_x)) && ! _x) ?  '-' : _x .toFixed (2) * 1 + '秒'
 
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
