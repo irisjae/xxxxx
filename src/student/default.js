@@ -305,9 +305,9 @@ var setup_student_view = _ => so ((_=_=>
 		, _bunny_option = _dom .querySelector ('avatar[x-for=bunny]')
 		, _button = _dom .querySelector ('button')
 		, let_icon = _avatar => {
-			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_setting_up_student_icon_state) }
+			;please (L_ .set (_avatar)) (feedback_setting_up_student_icon_state) }
 		, let_name_enter = _name => {
-			;please (L_ .set (feedback .setting_up_student (_name))) (feedback_setting_up_student_name_state) } )=>_))=>_)
+			;please (L_ .set (_name)) (feedback_setting_up_student_name_state) } )=>_))=>_)
 
 var setup_view = _ => <setup-etc> {
 	!! not (L_ .isDefined (mark (app_room_state)))
