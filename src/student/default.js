@@ -217,6 +217,10 @@ var app_current_problem_state = belief (current_problem) (app_state)
 var ensemble_progress_state = belief (ensemble_as_progress) (ensemble_state)
 
 var feedback_setting_up_student_state = belief (feedback_as_setting_up_student) (feedback_state)
+
+var feedback_setting_up_student_name_state = belief ('name') (feedback_setting_up_student_state)
+var feedback_setting_up_student_icon_state = belief ('icon') (feedback_setting_up_student_state)
+
 var feedback_icon_state = belief (feedback_as_icon) (feedback_state)
 
 var io_inert_state = belief (io_as_inert) (io_state)
@@ -263,8 +267,8 @@ var setup_room_view = _ => so ((_=_=>
 		, _input = _dom .querySelector ('input')
 		, _button = _dom .querySelector ('button')
 		, let_room_enter = _ => {
+			var value = _input .value
 			if (value) {
-				var value = _input .value
 				;_input .value = ''
 				;please (L_ .set (feedback .setup_room (value))) (feedback_state) } } )=>_))=>_)
 
@@ -282,7 +286,7 @@ var setup_student_view = _ => so ((_=_=>
 			<avatar x-for="bunny" x-selected={ T (_icon) (L .isDefined (avatar_as_bunny)) }>
 				<selected-input />
 				<img src={ img .bunny_avatar } /> </avatar> </icon> 
-		{ !! L_ .isDefined (mark (feedback_setting_up_student_state))
+		{ !! (L_ .isDefined (mark (feedback_setting_up_student_icon_state)) && L_ .isDefined (mark (feedback_setting_up_student_name_state)))
 		? <button x-custom x-for="connect"><img src={ img .connect } /></button>
 		: [] } </setup-student-etc>,
 	where
@@ -290,7 +294,7 @@ var setup_student_view = _ => so ((_=_=>
 	, feedback_setup_student = _dom => so ((_=_=>
 		(_name_input .addEventListener ('keypress', _e => {
 			if (_e .keyCode === 13) {
-				;let_name_enter () } }),
+				;let_name_enter (_name_input .value) } }),
 		clicking .forEach (click => {
 			;_lion_option .addEventListener (click, _e => {
 				;let_icon (avatar .lion) })
@@ -305,15 +309,9 @@ var setup_student_view = _ => so ((_=_=>
 		, _bunny_option = _dom .querySelector ('avatar[x-for=bunny]')
 		, _button = _dom .querySelector ('button')
 		, let_icon = _avatar => {
-			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) }
-		, let_name_enter = _ => {
-			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) }
-
-			/*if (L_ .isDefined (show (feedback_setting_up_student_state))) {
-				var _icon = show (feedback_icon_state)
-				var _name = _name_input .value
-				;_name_input .value = ''
-				;please (L_ .set (feedback .setup_student (_icon, _name))) (feedback_state) }*/ )=>_))=>_)
+			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_setting_up_student_icon_state) }
+		, let_name_enter = _name => {
+			;please (L_ .set (feedback .setting_up_student (_name))) (feedback_setting_up_student_name_state) } )=>_))=>_)
 
 var setup_view = _ => <setup-etc> {
 	!! not (L_ .isDefined (mark (app_room_state)))
