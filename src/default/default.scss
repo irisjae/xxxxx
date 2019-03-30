@@ -1,11 +1,11 @@
 body {
 	margin: 0;
-  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541817247354);
-  background-size: cover;
-  color: white;
-  font-family: Microsoft JhengHei, Arial;
-  height: 100vh;
-  width: 100vw; }
+	background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541817247354);
+	background-size: cover;
+	color: white;
+	font-family: Microsoft JhengHei, Arial;
+	height: 100vh;
+	width: 100vw; }
 
 %page-etc {
 	width: 80%;
@@ -16,865 +16,865 @@ body {
 	transform: translateX(-50%) translateY(-50%); }
 
 teacher-app > setup-etc {
-  setting {
-    &[x-of=game-mode], &[x-of=time-limit] {
-      & prev, & next {
-        @extend %clickable; } }
-    &[x-of=board-size], &[x-for=background-music] {
-      & img {
-        @extend %clickable; } } }
-  button {
-    &[x-for=preview], &[x-for=start] {
-      &:focus {
-        outline: none; }
-      & img {
-        @extend %clickable; } } }
+	setting {
+		&[x-of=game-mode], &[x-of=time-limit] {
+			& prev, & next {
+				@extend %clickable; } }
+		&[x-of=board-size], &[x-for=background-music] {
+			& img {
+				@extend %clickable; } } }
+	button {
+		&[x-for=preview], &[x-for=back], &[x-for=start] {
+			&:focus {
+				outline: none; }
+			& img {
+				@extend %clickable; } } }
 
-  @extend %page-etc;
-  & .left-pane {
-    height: 100%;
-    width: 66%;
-    left: 0;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    & a-title {
-      width: 100%;
-      display: block;
-      text-align: center;
-      font-size: 100px;
-      & img {
-        max-width: 100%;
-        max-height: 100%; } }
-    & sub-title {
-      width: 100%;
-      display: block;
-      text-align: center;
-      font-size: 40px; }
-    & settings {
-      width: 100%;
-      height: 150px;
-      display: flex;
-      & setting {
-        width: 50%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        & label {
-          text-align: center;
-          height: 1em;
-          display: block;
-          width: 100%;
-          flex-grow: 0;
-          margin-bottom: 20px; }
-        & control {
-          display: flex;
-          width: 100%;
-          flex-grow: 1;
-          justify-content: space-evenly;
-          & > * {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            counter#{&} {
-              flex-grow: 2;
-              flex-basis: 40%; }
-            prev#{&}, next#{&} {
-              flex-grow: 1;
-              flex-basis: 20%; }
-            & counter {
-              flex-grow: 2;
-              flex-basis: 40%; }
-            & img {
-              max-width: 100%;
-              max-height: 100%;
-              object-fit: contain; } } } } } }
+	@extend %page-etc;
+	& .left-pane {
+		height: 100%;
+		width: 66%;
+		left: 0;
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		& a-title {
+			width: 100%;
+			display: block;
+			text-align: center;
+			font-size: 100px;
+			& img {
+				max-width: 100%;
+				max-height: 100%; } }
+		& sub-title {
+			width: 100%;
+			display: block;
+			text-align: center;
+			font-size: 40px; }
+		& settings {
+			width: 100%;
+			height: 150px;
+			display: flex;
+			& setting {
+				width: 50%;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				& label {
+					text-align: center;
+					height: 1em;
+					display: block;
+					width: 100%;
+					flex-grow: 0;
+					margin-bottom: 20px; }
+				& control {
+					display: flex;
+					width: 100%;
+					flex-grow: 1;
+					justify-content: space-evenly;
+					& > * {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						counter#{&} {
+							flex-grow: 2;
+							flex-basis: 40%; }
+						prev#{&}, next#{&} {
+							flex-grow: 1;
+							flex-basis: 20%; }
+						& counter {
+							flex-grow: 2;
+							flex-basis: 40%; }
+						& img {
+							max-width: 100%;
+							max-height: 100%;
+							object-fit: contain; } } } } } }
 
-  & .right-pane {
-    height: 100%;
-    width: 33%;
-    right: 0;
-    position: absolute;
-    & settings {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      flex-direction: column;
-      justify-content: space-evenly;
-      & setting {
-        display: block;
-        & img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain; } } } }
-  
-  & > title-etc {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 25%;
-    height: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: translateY(-50%);
-    & a-title {
-      flex-grow: 0.5;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      font-size: 40px;
-      & img {
-        max-width: 100%;
-        max-height: 100%; } } }
+	& .right-pane {
+		height: 100%;
+		width: 33%;
+		right: 0;
+		position: absolute;
+		& settings {
+			display: flex;
+			width: 100%;
+			height: 100%;
+			flex-direction: column;
+			justify-content: space-evenly;
+			& setting {
+				display: block;
+				& img {
+					max-width: 100%;
+					max-height: 100%;
+					object-fit: contain; } } } }
+	
+	& > title-etc {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 25%;
+		height: 20%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		transform: translateY(-50%);
+		& a-title {
+			flex-grow: 0.5;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			font-size: 40px;
+			& img {
+				max-width: 100%;
+				max-height: 100%; } } }
 
-  & preview-questions-etc {
-    position: absolute;
-    height: 90%;
-    width: 100%;
-    top: 5%;
-    bottom: 5%;
-    & button[x-for=back] {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%); }
-    & preview-questions {
-      position: absolute;
-      left: 100px;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      background: #FFF;
-      color: #ff7b44;
-      border-radius: 80px;
-      align-items: center;
-      box-shadow: 0px 0px 50px rgba(0,0,0,0.1);
-      overflow: auto;
-      font-size: 1.5em;
-      & question {
-        width: 60%;
-        display: flex;
-        align-items: center;
-        border-right: dashed 1px #ff7b44;
-        padding: 10px;
-        justify-content: flex-start; }
-      & answer {
-        width: 40%;
-        display: flex;
-        justify-content: center;
-        align-items: center; }
-      & labels {
-        height: 80px;
-        width: 100%;
-        flex-shrink: 0;
-        display: flex;
-        border-bottom: dashed 1px #ff7b44;
-        & question {
-          justify-content: center; } }
-      & problem {
-        max-height: 300px;
-        width: 100%;
-        display: flex;
-        flex-shrink: 0;
-        & number {
-          width: 2.2em;
-          height: 2.2em;
-          text-align: center;
-          line-height: 2.1em;
-          display: block;
-          margin: 0 5%;
-          background: #f581ac;
-          color: white;
-          border-radius: 2.2em;
-          align-self: flex-start; }
-        & img {
-          max-width: 60%;
-          max-height: 90%;
-          width: auto;
-          height: auto;
-          object-fit: contain; }
-        &:not(:last-child) {
-          border-bottom: dashed 1px #ff7b44; } } } }
-  & setting[x-for=background-music] {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    transform: translate(-50%, 50%); } }
+	& preview-questions-etc {
+		position: absolute;
+		height: 90%;
+		width: 100%;
+		top: 5%;
+		bottom: 5%;
+		& button[x-for=back] {
+			position: absolute;
+			left: 0;
+			top: 50%;
+			transform: translateY(-50%); }
+		& preview-questions {
+			position: absolute;
+			left: 100px;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: nowrap;
+			background: #FFF;
+			color: #ff7b44;
+			border-radius: 80px;
+			align-items: center;
+			box-shadow: 0px 0px 50px rgba(0,0,0,0.1);
+			overflow: auto;
+			font-size: 1.5em;
+			& question {
+				width: 60%;
+				display: flex;
+				align-items: center;
+				border-right: dashed 1px #ff7b44;
+				padding: 10px;
+				justify-content: flex-start; }
+			& answer {
+				width: 40%;
+				display: flex;
+				justify-content: center;
+				align-items: center; }
+			& labels {
+				height: 80px;
+				width: 100%;
+				flex-shrink: 0;
+				display: flex;
+				border-bottom: dashed 1px #ff7b44;
+				& question {
+					justify-content: center; } }
+			& problem {
+				max-height: 300px;
+				width: 100%;
+				display: flex;
+				flex-shrink: 0;
+				& number {
+					width: 2.2em;
+					height: 2.2em;
+					text-align: center;
+					line-height: 2.1em;
+					display: block;
+					margin: 0 5%;
+					background: #f581ac;
+					color: white;
+					border-radius: 2.2em;
+					align-self: flex-start; }
+				& img {
+					max-width: 60%;
+					max-height: 90%;
+					width: auto;
+					height: auto;
+					object-fit: contain; }
+				&:not(:last-child) {
+					border-bottom: dashed 1px #ff7b44; } } } }
+	& setting[x-for=background-music] {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		transform: translate(-50%, 50%); } }
 teacher-app > get-ready-etc {
-  setting {
-    &[x-for=background-music] {
-      & img {
-        @extend %clickable; } } }
-  button {
-    &[x-for=play] {
-      &:focus {
-        outline: none; }
-      & img {
-        @extend %clickable; } } }
-  
-  @extend %page-etc;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  & > * {
-    margin: 10px; }
-  & room {
-    background: #f5b54c;
-    padding: 0.5em 1.5em;
-    border-radius: 1.5em;
-    font-size: 1.5em; }
-  & students-etc {
-    width: 100%;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    & label {
-      text-align: left;
-      display: block; }
-    & students {
-      flex-grow: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      overflow: auto;
-      & student {
-        width: 100px;
-        height: 1.5em;
-        /*overflow: scroll;*/
-        margin: 0 0 5px;
-        display: block;
-        background-size: cover;
-        padding: 10px;
-        text-indent: 40px;
-        font-size: 0.8em;
-        &[x-icon=lion] {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587);
-          padding-top: 12px; }
-        &[x-icon=bunny] {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
-          padding-top: 21px; } } } }  
-  & setting[x-for=background-music] {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    transform: translate(-50%, 50%); } }
+	setting {
+		&[x-for=background-music] {
+			& img {
+				@extend %clickable; } } }
+	button {
+		&[x-for=play] {
+			&:focus {
+				outline: none; }
+			& img {
+				@extend %clickable; } } }
+	
+	@extend %page-etc;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	& > * {
+		margin: 10px; }
+	& room {
+		background: #f5b54c;
+		padding: 0.5em 1.5em;
+		border-radius: 1.5em;
+		font-size: 1.5em; }
+	& students-etc {
+		width: 100%;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		& label {
+			text-align: left;
+			display: block; }
+		& students {
+			flex-grow: 1;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			overflow: auto;
+			& student {
+				width: 100px;
+				height: 1.5em;
+				/*overflow: scroll;*/
+				margin: 0 0 5px;
+				display: block;
+				background-size: cover;
+				padding: 10px;
+				text-indent: 40px;
+				font-size: 0.8em;
+				&[x-icon=lion] {
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587);
+					padding-top: 12px; }
+				&[x-icon=bunny] {
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
+					padding-top: 21px; } } } }	
+	& setting[x-for=background-music] {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		transform: translate(-50%, 50%); } }
 teacher-app > playing-etc {
-  setting {
-    &[x-for=background-music] {
-      & img {
-        @extend %clickable; } } }
-  button {
-    &[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
-      &:focus {
-        outline: none; }
-      & img {
-        @extend %clickable; } } }
-  
-  position: absolute;
-  display: block;
-  top: 10px;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  & title-etc {
-    left: 0;
-    top: 0;
-    width: 25%;
-    height: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    & a-title {
-      flex-grow: 0.5;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      font-size: 40px;
-      & img {
-        max-width: 100%;
-        max-height: 100%; } }
-    & problem-number {
-      flex-grow: 1;
-      display: flex;
-      background: #ef8150;
-      max-height: 35px;
-      padding: 5px 30px;
-      border-radius: 20px;
-      font-size: 23px;
-      justify-content: center;
-      align-items: center;} }
-  & problem-etc {
-    position: absolute;
-    top: 20%;
-    bottom: 20%;
-    left: 25%;
-    right: 25%;
-    & ticker-etc {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%); }
-    & question {
-      background: #fae383;
-      display: flex;
-      width: 100%;
-      height: 100%;
-      border-radius: 30px;
-      justify-content: center;
-      align-items: center;
-      color: #f08751;
-      font-size: 40px;
-      box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
-      & img {
-        max-width: 80%;
-        max-height: 80%; } } }
-  & students {
-    position: absolute;
-    top: 20%;
-    bottom: 20%;
-    left: 10%;
-    right: 10%;
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    overflow: auto;
-    & student-etc {
-      width: 100px;
-      height: 100px;
-      margin: 30px;
-      & label {
-        margin: 5px;
-        position: absolute;
-        transform: translate(25px,-27px);
-        &:before {
-          content: ' ';
-          position: absolute;
-          padding: 12px;
-          padding-top: 30px;
-          bottom: 0;
-          left: -30px;
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: bottom; }
-        &[x-icon=bunny]:before {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
-        &[x-icon=lion]:before {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
-      & board {
-        & bingo {
-          & line {
-            width: 90%;
-            height: 3px;
-            background: #f99f73;
-            border-radius: 3px;
-            position: absolute;
-            transform-origin: left;
-            &[x-shape=horizontal] {}
-            &[x-shape=vertical] {
-              transform: rotate(90deg); }
-            &[x-shape=diagonal-down] {
-              transform: rotate(45deg) scale(1.3);
-              top: calc(5% + 3px); 
-              left: calc(5% + 3px); }
-            &[x-shape=diagonal-up] {
-              transform: rotate(-45deg) scale(1.3);
-              bottom: calc(5% + 3px); 
-              left: calc(5% + 3px); } } } } } }
-  & options {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 50%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    align-items: center; }
-  & abort-etc {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #ecc35f;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    & .box {
-      min-width: 50%;
-      min-height: 40%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
-      label {
-        font-size: 70px;
-        font-weight: bold; } } }  
-  & setting[x-for=background-music] {
-    position: absolute;
-    left: 0;
-    bottom: 0; } }
+	setting {
+		&[x-for=background-music] {
+			& img {
+				@extend %clickable; } } }
+	button {
+		&[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
+			&:focus {
+				outline: none; }
+			& img {
+				@extend %clickable; } } }
+	
+	position: absolute;
+	display: block;
+	top: 10px;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+	& title-etc {
+		left: 0;
+		top: 0;
+		width: 25%;
+		height: 20%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		& a-title {
+			flex-grow: 0.5;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			font-size: 40px;
+			& img {
+				max-width: 100%;
+				max-height: 100%; } }
+		& problem-number {
+			flex-grow: 1;
+			display: flex;
+			background: #ef8150;
+			max-height: 35px;
+			padding: 5px 30px;
+			border-radius: 20px;
+			font-size: 23px;
+			justify-content: center;
+			align-items: center;} }
+	& problem-etc {
+		position: absolute;
+		top: 20%;
+		bottom: 20%;
+		left: 25%;
+		right: 25%;
+		& ticker-etc {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%); }
+		& question {
+			background: #fae383;
+			display: flex;
+			width: 100%;
+			height: 100%;
+			border-radius: 30px;
+			justify-content: center;
+			align-items: center;
+			color: #f08751;
+			font-size: 40px;
+			box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+			& img {
+				max-width: 80%;
+				max-height: 80%; } } }
+	& students {
+		position: absolute;
+		top: 20%;
+		bottom: 20%;
+		left: 10%;
+		right: 10%;
+		padding: 20px;
+		display: flex;
+		flex-wrap: wrap;
+		align-content: flex-start;
+		overflow: auto;
+		& student-etc {
+			width: 100px;
+			height: 100px;
+			margin: 30px;
+			& label {
+				margin: 5px;
+				position: absolute;
+				transform: translate(25px,-27px);
+				&:before {
+					content: ' ';
+					position: absolute;
+					padding: 12px;
+					padding-top: 30px;
+					bottom: 0;
+					left: -30px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: bottom; }
+				&[x-icon=bunny]:before {
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
+				&[x-icon=lion]:before {
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
+			& board {
+				& bingo {
+					& line {
+						width: 90%;
+						height: 3px;
+						background: #f99f73;
+						border-radius: 3px;
+						position: absolute;
+						transform-origin: left;
+						&[x-shape=horizontal] {}
+						&[x-shape=vertical] {
+							transform: rotate(90deg); }
+						&[x-shape=diagonal-down] {
+							transform: rotate(45deg) scale(1.3);
+							top: calc(5% + 3px); 
+							left: calc(5% + 3px); }
+						&[x-shape=diagonal-up] {
+							transform: rotate(-45deg) scale(1.3);
+							bottom: calc(5% + 3px); 
+							left: calc(5% + 3px); } } } } } }
+	& options {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 50%;
+		height: 20%;
+		display: flex;
+		flex-direction: row;
+		align-items: center; }
+	& abort-etc {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: #ecc35f;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		align-items: center;
+		& .box {
+			min-width: 50%;
+			min-height: 40%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			align-items: center;
+			label {
+				font-size: 70px;
+				font-weight: bold; } } }	
+	& setting[x-for=background-music] {
+		position: absolute;
+		left: 0;
+		bottom: 0; } }
 teacher-app > game-over-etc {
-  setting {
-    &[x-for=background-music] {
-      & img {
-        @extend %clickable; } } }
-  button {
-    &[x-for=show-results], &[x-for=students-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
-      &:focus {
-        outline: none; }
-      & img {
-        @extend %clickable; } } }
-  
-  position: absolute;
-  display: block;
-  top: 10px;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  & title-etc {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 25%;
-    height: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    & a-title {
-      flex-grow: 0.5;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      font-size: 40px; 
-      & img {
-        max-width: 100%;
-        max-height: 100%; } } }
-  & options[x-for=tabs] {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 50%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    & > * {
-      margin: 0 10px; } }
-  & students {
-    position: absolute;
-    top: 20%;
-    bottom: 20%;
-    left: 10%;
-    right: 10%;
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    overflow: auto;
-    & student-etc {
-      width: 100px;
-      height: 100px;
-      margin: 30px;
-      & label {
-        margin: 5px;
-        position: absolute;
-        transform: translate(25px,-30px);
-        &:before {
-          content: ' ';
-          position: absolute;
-          padding: 12px;
-          padding-top: 30px;
-          bottom: -1px;
-          left: -30px;
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: bottom; }
-        &[x-icon=bunny]:before {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
-        &[x-icon=lion]:before {
-          background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
-      & board {
-        & bingo {
-          & line {
-            width: 90%;
-            height: 3px;
-            background: #f99f73;
-            border-radius: 3px;
-            position: absolute;
-            transform-origin: left;
-            &[x-shape=horizontal] {}
-            &[x-shape=vertical] {
-              transform: rotate(90deg); }
-            &[x-shape=diagonal-down] {
-              transform: rotate(45deg) scale(1.3);
-              top: calc(5% + 3px); 
-              left: calc(5% + 3px); }
-            &[x-shape=diagonal-up] {
-              transform: rotate(-45deg) scale(1.3);
-              bottom: calc(5% + 3px); 
-              left: calc(5% + 3px); } } } } } }
-  & students-analysis-etc, & problems-analysis-etc {
-      overflow: visible; 
-      position: absolute;
-      left: 10%;  
-      right: 10%;   
-      top: 25%;   
-      bottom: 25%;  
-    & labels, & student, & problem {
-      width: 80%;
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 10%; }
-    & labels {
-      font-size: 1.1em;
-      position: absolute;
-      transform: translateY(-100%); }
-    & name, & number-of-solved, & number-of-bingoes, & average-solved-time, & question, & number-of-solvers, & average-number-of-attempts, & average-solved-time {
-      display: flex;
-      width: 25%;
-      justify-content: center;
-      align-items: center; }
-    & students-analysis, & problems-analysis {
-      height:100%;
-      width:100%;
-      background: #FFF;
-      color: #ff7b44;
-      border-radius: 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      overflow: auto;
-      box-shadow: 0px 0px 50px rgba(0,0,0,0.1);
-      & student, problem {
-        min-height: 2em;
-        flex-shrink: 0;
-        font-size: 1.5em;
-        &:not(:last-child) {
-          border-bottom: dashed 1px #ff7b44; }
-        & question {
-          & img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain; } } } } }
-  & options[x-for=options] {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 50%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center; }  
-  & setting[x-for=background-music] {
-    position: absolute;
-    left: 0;
-    bottom: 0; } }
+	setting {
+		&[x-for=background-music] {
+			& img {
+				@extend %clickable; } } }
+	button {
+		&[x-for=show-results], &[x-for=students-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
+			&:focus {
+				outline: none; }
+			& img {
+				@extend %clickable; } } }
+	
+	position: absolute;
+	display: block;
+	top: 10px;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+	& title-etc {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 25%;
+		height: 20%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		& a-title {
+			flex-grow: 0.5;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			font-size: 40px; 
+			& img {
+				max-width: 100%;
+				max-height: 100%; } } }
+	& options[x-for=tabs] {
+		position: absolute;
+		left: 50%;
+		top: 0;
+		width: 50%;
+		height: 20%;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center;
+		& > * {
+			margin: 0 10px; } }
+	& students {
+		position: absolute;
+		top: 20%;
+		bottom: 20%;
+		left: 10%;
+		right: 10%;
+		padding: 20px;
+		display: flex;
+		flex-wrap: wrap;
+		align-content: flex-start;
+		overflow: auto;
+		& student-etc {
+			width: 100px;
+			height: 100px;
+			margin: 30px;
+			& label {
+				margin: 5px;
+				position: absolute;
+				transform: translate(25px,-30px);
+				&:before {
+					content: ' ';
+					position: absolute;
+					padding: 12px;
+					padding-top: 30px;
+					bottom: -1px;
+					left: -30px;
+					background-size: contain;
+					background-repeat: no-repeat;
+					background-position: bottom; }
+				&[x-icon=bunny]:before {
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623); }
+				&[x-icon=lion]:before {
+					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540); } }
+			& board {
+				& bingo {
+					& line {
+						width: 90%;
+						height: 3px;
+						background: #f99f73;
+						border-radius: 3px;
+						position: absolute;
+						transform-origin: left;
+						&[x-shape=horizontal] {}
+						&[x-shape=vertical] {
+							transform: rotate(90deg); }
+						&[x-shape=diagonal-down] {
+							transform: rotate(45deg) scale(1.3);
+							top: calc(5% + 3px); 
+							left: calc(5% + 3px); }
+						&[x-shape=diagonal-up] {
+							transform: rotate(-45deg) scale(1.3);
+							bottom: calc(5% + 3px); 
+							left: calc(5% + 3px); } } } } } }
+	& students-analysis-etc, & problems-analysis-etc {
+			overflow: visible; 
+			position: absolute;
+			left: 10%;	
+			right: 10%;		
+			top: 25%;		
+			bottom: 25%;	
+		& labels, & student, & problem {
+			width: 80%;
+			display: flex;
+			justify-content: space-between;
+			padding: 10px 10%; }
+		& labels {
+			font-size: 1.1em;
+			position: absolute;
+			transform: translateY(-100%); }
+		& name, & number-of-solved, & number-of-bingoes, & average-solved-time, & question, & number-of-solvers, & average-number-of-attempts, & average-solved-time {
+			display: flex;
+			width: 25%;
+			justify-content: center;
+			align-items: center; }
+		& students-analysis, & problems-analysis {
+			height:100%;
+			width:100%;
+			background: #FFF;
+			color: #ff7b44;
+			border-radius: 80px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+			overflow: auto;
+			box-shadow: 0px 0px 50px rgba(0,0,0,0.1);
+			& student, problem {
+				min-height: 2em;
+				flex-shrink: 0;
+				font-size: 1.5em;
+				&:not(:last-child) {
+					border-bottom: dashed 1px #ff7b44; }
+				& question {
+					& img {
+						max-height: 100%;
+						max-width: 100%;
+						object-fit: contain; } } } } }
+	& options[x-for=options] {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 50%;
+		height: 20%;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center; }	
+	& setting[x-for=background-music] {
+		position: absolute;
+		left: 0;
+		bottom: 0; } }
 
 
 student-app > setup-etc {
-  button {
-    &[x-for=join], &[x-for=connect] {
-      &:focus {
-        outline: none; }
-      & img {
-        @extend %clickable; } } }
-  message[x-error] {
-    color: red;
-    font-weight: bold;
-    font-size: 1.25em; }
-  & > message {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5em; }
-  
-  @extend %page-etc;
-  & setup-room-etc, setup-student-etc {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    justify-content: flex-start;
-    align-items: center; 
-    & a-title {
-      width: 100%;
-      display: block;
-      text-align: center;
-      font-size: 100px;
-      & img {
-        max-width: 100%;
-        max-height: 100%; } }
-    & sub-title {
-      width: 100%;
-      display: block;
-      text-align: center;
-      font-size: 40px; }
-    & room, & name {
-      & label {
-        font-size: 20px; }
-      & input {
-        border: none;
-        height: 70px;
-        width: 300px;
-        font-size: 40px;
-        border-radius: 13px; } }
-    & icon {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      & avatar {
-        display: flex;
-        align-items: center;
-        margin: 0 10px;
-        & selected-input {
-          width: 20px;
-          height: 20px;
-          background: #fff;
-          border-radius: 10px;
-          box-shadow: inset 0px 0.5px 3px #999;
-          margin: 0 8px;
-          position: relative; }
-        &[x-selected] selected-input:after {
-          content: ' ';
-          position: absolute;
-          top: 3px;
-          bottom: 3px;
-          left: 3px;
-          right: 3px;
-          border-radius: 20px;
-          background: #222; } } } } }
+	button {
+		&[x-for=join], &[x-for=connect] {
+			&:focus {
+				outline: none; }
+			& img {
+				@extend %clickable; } } }
+	message[x-error] {
+		color: red;
+		font-weight: bold;
+		font-size: 1.25em; }
+	& > message {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 1.5em; }
+	
+	@extend %page-etc;
+	& setup-room-etc, setup-student-etc {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: 100%;
+		justify-content: flex-start;
+		align-items: center; 
+		& a-title {
+			width: 100%;
+			display: block;
+			text-align: center;
+			font-size: 100px;
+			& img {
+				max-width: 100%;
+				max-height: 100%; } }
+		& sub-title {
+			width: 100%;
+			display: block;
+			text-align: center;
+			font-size: 40px; }
+		& room, & name {
+			& label {
+				font-size: 20px; }
+			& input {
+				border: none;
+				height: 70px;
+				width: 300px;
+				font-size: 40px;
+				border-radius: 13px; } }
+		& icon {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			& avatar {
+				display: flex;
+				align-items: center;
+				margin: 0 10px;
+				& selected-input {
+					width: 20px;
+					height: 20px;
+					background: #fff;
+					border-radius: 10px;
+					box-shadow: inset 0px 0.5px 3px #999;
+					margin: 0 8px;
+					position: relative; }
+				&[x-selected] selected-input:after {
+					content: ' ';
+					position: absolute;
+					top: 3px;
+					bottom: 3px;
+					left: 3px;
+					right: 3px;
+					border-radius: 20px;
+					background: #222; } } } } }
 
 student-app > get-ready-etc {
-  @extend %page-etc;
-  
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em; }
+	@extend %page-etc;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.5em; }
 
 student-app > playing-etc {
-  display: flex;
-  justify-content: space-between;
-  width: 80%;
-  height: 80%;
-  left: 10%;
-  top: 10%;
-  position: absolute;
-  & .left-pane {
-    height: 100%;
-    width: 33%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    & > * {
-      margin: 10px; }
-    & ticker-etc {
-      flex-grow: 0; }
-    & question {
-      flex-grow: 1;
-      padding: 10%;
-      background: #fae383;
-      border-radius: 20px;
-      text-align: center;
-      color: #EE804F;
-      font-weight: bold;
-      font-size: 2em;
-      min-height: 40%;
-      max-height: 76%;
-      line-height: 200px;
-      min-width: 60%;
-      box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
-      & img {
-        max-width: 100%; 
-        max-height: 100%; } } }
-  & .right-pane {
-    width: 66%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    & board {
-     & bingo {
-       & letter {
-         position: absolute;
-         width: 20%;
-         height: 20%;
-         background-size: contain;
-         background-position: center;
-         background-repeat: no-repeat;
-         transform: scale(2);
-         pointer-events: none;
-         &[x-as=b] {
-           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-b.png?1547109352146); }
-         &[x-as=i] {
-           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-i.png?1547145040476); }
-         &[x-as=n] {
-           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-n.png?1547109352409); }
-         &[x-as=g] {
-           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-g.png?1547109352295); }
-         &[x-as=o] {
-           background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-o.png?1547109352202); }
-       
-         @at-root {
-           @keyframes bingo-letter {
-             0% {
-               transform: scale(0); }
-             90% {
-               transform: scale(3); }
-             100% {
-               transform: scale(2); } } }
-          animation-name: bingo-letter;
-          animation-duration: 0.5s;
-          animation-timing-function: ease-in;} } } } }
+	display: flex;
+	justify-content: space-between;
+	width: 80%;
+	height: 80%;
+	left: 10%;
+	top: 10%;
+	position: absolute;
+	& .left-pane {
+		height: 100%;
+		width: 33%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		& > * {
+			margin: 10px; }
+		& ticker-etc {
+			flex-grow: 0; }
+		& question {
+			flex-grow: 1;
+			padding: 10%;
+			background: #fae383;
+			border-radius: 20px;
+			text-align: center;
+			color: #EE804F;
+			font-weight: bold;
+			font-size: 2em;
+			min-height: 40%;
+			max-height: 76%;
+			line-height: 200px;
+			min-width: 60%;
+			box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+			& img {
+				max-width: 100%; 
+				max-height: 100%; } } }
+	& .right-pane {
+		width: 66%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		& board {
+		 & bingo {
+			 & letter {
+				 position: absolute;
+				 width: 20%;
+				 height: 20%;
+				 background-size: contain;
+				 background-position: center;
+				 background-repeat: no-repeat;
+				 transform: scale(2);
+				 pointer-events: none;
+				 &[x-as=b] {
+					 background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-b.png?1547109352146); }
+				 &[x-as=i] {
+					 background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-i.png?1547145040476); }
+				 &[x-as=n] {
+					 background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-n.png?1547109352409); }
+				 &[x-as=g] {
+					 background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-g.png?1547109352295); }
+				 &[x-as=o] {
+					 background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-o.png?1547109352202); }
+			 
+				 @at-root {
+					 @keyframes bingo-letter {
+						 0% {
+							 transform: scale(0); }
+						 90% {
+							 transform: scale(3); }
+						 100% {
+							 transform: scale(2); } } }
+					animation-name: bingo-letter;
+					animation-duration: 0.5s;
+					animation-timing-function: ease-in;} } } } }
 
 student-app > game-over-etc {
-  button {
-    &[x-for=overall-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
-      &:focus {
-        outline: none; }
-      & img {
-        @extend %clickable; } } }
-  
-  position: absolute;
-  display: block;
-  top: 10px;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  & a-title {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 25%;
-    height: 10%;
-    align-items: center;
-    font-size: 40px; 
-    & img {
-      max-width: 100%;
-      max-height: 100%; } }
-  & student {
-    position: absolute;
-    left: 5%;
-    top: 10%;
-    width: 250px;
-    height: 100px;
-    & label {
-      font-size: 2em;
-      transform: translate(100px, 22px);
-      display: flex; }
-    &:after {
-      content: ' ';
-      background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-title-bar.png?1547404084265);
-      background-size: contain;
-      background-repeat: no-repeat;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      z-index: -1; } }
-  & options[x-for=tabs] {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 50%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;    
-    align-items: center;
-    & > * {
-      margin: 0 10px; } }
-  & overall-analysis, & problems-analysis-etc {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    min-width: 500px;
-    max-width: 600px;
-    height: 40%; }
-  & overall-analysis, & problems-analysis {
-    background: #FFF;
-    color: #ff7b44;
-    border-radius: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0px 0px 50px rgba(0,0,0,0.1); }
-  & overall-analysis {
-    flex-wrap: wrap;
-    justify-content: center;
-    & div {
-      width: 80%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 2em; } }
-  & problems-analysis-etc {
-    overflow: visible;
-    & labels, & problem {
-      width: 80%;
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 10%;
-      & question, & number-of-attempts, & solved-time {
-        display: flex;
-        justify-content: center;
-        align-items: center; }
-      & question {
-        width: 50%;
-      & number-of-attempts {
-        width: 25%; }
-      & solved-time {
-        width: 25%; } } }
-    & labels {
-      font-size: 1.2em;
-      position: absolute;
-      transform: translateY(-100%); }
-    & problems-analysis {
-      height: 100%;
-      width: 100%;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      overflow: auto;
-      & problem {
-        min-height: 2em;
-        flex-shrink: 0;
-        font-size: 1.75em;
+	button {
+		&[x-for=overall-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
+			&:focus {
+				outline: none; }
+			& img {
+				@extend %clickable; } } }
+	
+	position: absolute;
+	display: block;
+	top: 10px;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+	& a-title {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 25%;
+		height: 10%;
+		align-items: center;
+		font-size: 40px; 
+		& img {
+			max-width: 100%;
+			max-height: 100%; } }
+	& student {
+		position: absolute;
+		left: 5%;
+		top: 10%;
+		width: 250px;
+		height: 100px;
+		& label {
+			font-size: 2em;
+			transform: translate(100px, 22px);
+			display: flex; }
+		&:after {
+			content: ' ';
+			background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-title-bar.png?1547404084265);
+			background-size: contain;
+			background-repeat: no-repeat;
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			z-index: -1; } }
+	& options[x-for=tabs] {
+		position: absolute;
+		left: 50%;
+		top: 0;
+		width: 50%;
+		height: 20%;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;		
+		align-items: center;
+		& > * {
+			margin: 0 10px; } }
+	& overall-analysis, & problems-analysis-etc {
+		position: absolute;
+		top: 30%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 60%;
+		min-width: 500px;
+		max-width: 600px;
+		height: 40%; }
+	& overall-analysis, & problems-analysis {
+		background: #FFF;
+		color: #ff7b44;
+		border-radius: 80px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		box-shadow: 0px 0px 50px rgba(0,0,0,0.1); }
+	& overall-analysis {
+		flex-wrap: wrap;
+		justify-content: center;
+		& div {
+			width: 80%;
+			display: flex;
+			justify-content: space-between;
+			font-size: 2em; } }
+	& problems-analysis-etc {
+		overflow: visible;
+		& labels, & problem {
+			width: 80%;
+			display: flex;
+			justify-content: space-between;
+			padding: 10px 10%;
+			& question, & number-of-attempts, & solved-time {
+				display: flex;
+				justify-content: center;
+				align-items: center; }
+			& question {
+				width: 50%;
+			& number-of-attempts {
+				width: 25%; }
+			& solved-time {
+				width: 25%; } } }
+		& labels {
+			font-size: 1.2em;
+			position: absolute;
+			transform: translateY(-100%); }
+		& problems-analysis {
+			height: 100%;
+			width: 100%;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+			overflow: auto;
+			& problem {
+				min-height: 2em;
+				flex-shrink: 0;
+				font-size: 1.75em;
 
-        &:not(:last-child) {
-          border-bottom: dashed 1px #ff7b44; }
-        & question {
-          & img {
-            max-width: 80%;
-            max-height: 5em; } } } } }
-  & options[x-for=options] {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 50%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center; } }
+				&:not(:last-child) {
+					border-bottom: dashed 1px #ff7b44; }
+				& question {
+					& img {
+						max-width: 80%;
+						max-height: 5em; } } } } }
+	& options[x-for=options] {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 50%;
+		height: 20%;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center; } }
 
 %clickable {
-  cursor: pointer; }
+	cursor: pointer; }
 
 board {
 	width: 100%;
@@ -883,135 +883,135 @@ board {
 	align-items: stretch;
 	justify-content: stretch;
 	flex-direction: column;
-  background-color: #F3F3F3BE;
-  border: solid white 5px;
-  border-radius: 20px;
-  position: relative;  
-  &[x-disabled=true] {
-    filter: brightness(20%); }
-  & row {
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: 0;
-    &:first-of-type {
-      & cell {
-        border-top: none; } }
-    &:last-of-type {
-      & cell {
-        border-bottom: none; } }
-    & cell:first-of-type {
-      border-left: none; }
-    & cell:last-of-type {
-      border-right: none; }
-    & cell {
-      border: 2px solid white;
-      color: #EE804F;
-      text-align: center;
-      line-height: 15vh;
-      font-size: 2em;
-      font-weight: bold;
-      flex-grow: 1;
-      flex-shrink: 1;
-      flex-basis: 0;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      &:after {
-        content: ' ';
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0; }
-      &[x-solved] {
-        color: transparent; }
-      &[x-solved]:after {
-        @at-root {
-          @keyframes solved-cell {
-            0% {
-              transform: scale(0); }
-            90% {
-              transform: scale(1.3); }
-            100% {
-              transform: scale(1); } } }
-        animation-name: solved-cell;
-        animation-duration: 0.5s;
-        animation-timing-function: ease-in;
-        background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center; } } } }
+	background-color: #F3F3F3BE;
+	border: solid white 5px;
+	border-radius: 20px;
+	position: relative;  
+	&[x-disabled=true] {
+		filter: brightness(20%); }
+	& row {
+		display: flex;
+		align-items: stretch;
+		justify-content: stretch;
+		flex-grow: 1;
+		flex-shrink: 1;
+		flex-basis: 0;
+		&:first-of-type {
+			& cell {
+				border-top: none; } }
+		&:last-of-type {
+			& cell {
+				border-bottom: none; } }
+		& cell:first-of-type {
+			border-left: none; }
+		& cell:last-of-type {
+			border-right: none; }
+		& cell {
+			border: 2px solid white;
+			color: #EE804F;
+			text-align: center;
+			line-height: 15vh;
+			font-size: 2em;
+			font-weight: bold;
+			flex-grow: 1;
+			flex-shrink: 1;
+			flex-basis: 0;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			&:after {
+				content: ' ';
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0; }
+			&[x-solved] {
+				color: transparent; }
+			&[x-solved]:after {
+				@at-root {
+					@keyframes solved-cell {
+						0% {
+							transform: scale(0); }
+						90% {
+							transform: scale(1.3); }
+						100% {
+							transform: scale(1); } } }
+				animation-name: solved-cell;
+				animation-duration: 0.5s;
+				animation-timing-function: ease-in;
+				background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center; } } } }
 
 ticker-etc {
-  position: relative;
-  overflow: hidden;
-  display: block;
-  color: white;
-  background-color: #a3a3a3;
-  min-width: 80px;
-  min-height: 80px;
-  width: 80px;
-  height: 80px;
-  font-size: 25px;
-  text-align: center;
-  line-height: 80px;
-  border-radius: 50px;
-  z-index: 0;
-  
-  & ticker {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+	position: relative;
+	overflow: hidden;
+	display: block;
+	color: white;
+	background-color: #a3a3a3;
+	min-width: 80px;
+	min-height: 80px;
+	width: 80px;
+	height: 80px;
+	font-size: 25px;
+	text-align: center;
+	line-height: 80px;
+	border-radius: 50px;
+	z-index: 0;
+	
+	& ticker {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
 
-    &:before, & spinner, &:after {
-      top: 0;
-      display: block;
-      position: absolute;
-      width: 50%;
-      height: 100%;
-      animation-duration: inherit;
-      animation-fill-mode: forwards; }
+		&:before, & spinner, &:after {
+			top: 0;
+			display: block;
+			position: absolute;
+			width: 50%;
+			height: 100%;
+			animation-duration: inherit;
+			animation-fill-mode: forwards; }
 
-    & spinner {
-      left: 0;
-      z-index: -2;
-      background: #4b71d4;
-      animation-name: tick-spin;
-      animation-timing-function: linear;
-      transform-origin: center right; }
+		& spinner {
+			left: 0;
+			z-index: -2;
+			background: #4b71d4;
+			animation-name: tick-spin;
+			animation-timing-function: linear;
+			transform-origin: center right; }
 
-    &:before, &:after {
-      content: ' ';
-      animation-name: tick-mask;
-      animation-timing-function: steps(1, end); }
-    &:before {
-      left: 0;
-      background: #a3a3a3;
-      z-index: -1;
-      opacity: 1; }
-    &:after {
-      right: 0;
-      background: #4b71d4;
-      z-index: -3;
-      opacity: 0;
-      animation-direction: reverse; }
+		&:before, &:after {
+			content: ' ';
+			animation-name: tick-mask;
+			animation-timing-function: steps(1, end); }
+		&:before {
+			left: 0;
+			background: #a3a3a3;
+			z-index: -1;
+			opacity: 1; }
+		&:after {
+			right: 0;
+			background: #4b71d4;
+			z-index: -3;
+			opacity: 0;
+			animation-direction: reverse; }
 
-    @keyframes tick-spin {
-      0% {
-        transform: rotate(0deg); }
-      100% {
-        transform: rotate(360deg); } }
-    @keyframes tick-mask {
-      0% {
-        opacity: 1; }
-      50%, 100% {
-        opacity: 0; } } } }
+		@keyframes tick-spin {
+			0% {
+				transform: rotate(0deg); }
+			100% {
+				transform: rotate(360deg); } }
+		@keyframes tick-mask {
+			0% {
+				opacity: 1; }
+			50%, 100% {
+				opacity: 0; } } } }
 input {
 	display: block;
 	margin-bottom: 10px;
@@ -1022,23 +1022,23 @@ input {
 	font-size: 16px; }
 
 button {
-  &:not([x-custom]) {
-    font-size: 16px;
-    border-radius: 3px;
-    background-color: #00A746;
-    color: white;
-    border: 1px solid grey;
-    box-shadow: 2px 2px #224D34;
-    cursor: pointer;
-    min-width: 20%;
-    margin: 4px;
+	&:not([x-custom]) {
+		font-size: 16px;
+		border-radius: 3px;
+		background-color: #00A746;
+		color: white;
+		border: 1px solid grey;
+		box-shadow: 2px 2px #224D34;
+		cursor: pointer;
+		min-width: 20%;
+		margin: 4px;
 
-    &:hover {
-      background-color: #26F07B; }
-    &:active {
-      box-shadow: none; } }
-  &[x-custom] {
-    background: unset;
-    border: unset;
-    color: unset;
-    padding: unset; } }
+		&:hover {
+			background-color: #26F07B; }
+		&:active {
+			box-shadow: none; } }
+	&[x-custom] {
+		background: unset;
+		border: unset;
+		color: unset;
+		padding: unset; } }

@@ -55,6 +55,13 @@ as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
 var play = impure (by (([ play, pause ]) => play))
 var pause = impure (by (([ play, pause ]) => pause))
+var delay = time =>
+	suppose (
+	( _ready
+	, promise = new Promise (ok => {;_ready = ok})
+	, $__delay = jinx (_ => {;setTimeout (_ready, time)})
+	) =>
+	promise )
 var audio_from = (url, loop = false) =>
 	suppose (
 	( el = new Audio (url)
@@ -66,8 +73,9 @@ var audio_from = (url, loop = false) =>
 			go
 			.then (_ => {
 				;el .play () })
-			.catch (_ => {
-				;setTimeout (_load, 50) }) )
+			.catch (_ => 
+				delay (50)
+				.then (_load) ) )
 		;go
 		.then (_load)
 		.then (ready_yet) })
@@ -108,7 +116,7 @@ var img =
 
 var feedback = data ({
 	setup_room: (room =~ room) => feedback,
-	setting_up_student: (icon =~ avatar) => feedback,
+	setting_up_student: (name =~ string, icon =~ avatar) => feedback,
 	setup_student: (icon =~ avatar, name =~ string) => feedback,
 	attempt_problem: (uniq =~ timestamp, position =~ position) => feedback,
 	reset_game: () => feedback })
@@ -130,6 +138,7 @@ var feedback_as_setup_student = data_iso (feedback .setup_student)
 var feedback_as_attempt_problem = data_iso (feedback .attempt_problem)
 var feedback_as_reset_game = data_iso (feedback .reset_game)
 
+var feedback_as_name = data_iso (feedback .setting_up_student) .name
 var feedback_as_icon = data_iso (feedback .setting_up_student) .icon
 
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
@@ -254,9 +263,10 @@ var setup_room_view = _ => so ((_=_=>
 		, _input = _dom .querySelector ('input')
 		, _button = _dom .querySelector ('button')
 		, let_room_enter = _ => {
-			var value = _input .value
-			;_input .value = ''
-			;please (L_ .set (feedback .setup_room (value))) (feedback_state) } )=>_))=>_)
+			if (value) {
+				var value = _input .value
+				;_input .value = ''
+				;please (L_ .set (feedback .setup_room (value))) (feedback_state) } } )=>_))=>_)
 
 var setup_student_view = _ => so ((_=_=>
 	<setup-student-etc fn={ feedback_setup_student }>
@@ -297,6 +307,8 @@ var setup_student_view = _ => so ((_=_=>
 		, let_icon = _avatar => {
 			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) }
 		, let_name_enter = _ => {
+			;please (L_ .set (feedback .setting_up_student (_avatar))) (feedback_state) }
+
 			if (L_ .isDefined (show (feedback_setting_up_student_state))) {
 				var _icon = show (feedback_icon_state)
 				var _name = _name_input .value

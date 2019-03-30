@@ -55,6 +55,13 @@ as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
 var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
 var play = impure (by (([ play, pause ]) => play))
 var pause = impure (by (([ play, pause ]) => pause))
+var delay = time =>
+	suppose (
+	( _ready
+	, promise = new Promise (ok => {;_ready = ok})
+	, $__delay = jinx (_ => {;setTimeout (_ready, time)})
+	) =>
+	promise )
 var audio_from = (url, loop = false) =>
 	suppose (
 	( el = new Audio (url)
@@ -66,8 +73,9 @@ var audio_from = (url, loop = false) =>
 			go
 			.then (_ => {
 				;el .play () })
-			.catch (_ => {
-				;setTimeout (_load, 50) }) )
+			.catch (_ => 
+				delay (50)
+				.then (_load) ) )
 		;go
 		.then (_load)
 		.then (ready_yet) })
@@ -83,7 +91,7 @@ var audio_from = (url, loop = false) =>
 	) =>
 	[ _play, _pause ] )
 var audio = {
-	bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054'),
+	bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fteacher-bingo.mp3?1553677919629'),
 	background: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019', true) }
 
 var img =
@@ -338,7 +346,7 @@ var setup_view = _ => so ((_=_=>
 				, question_image = T (_problem) (L .get ([ problem_as_question, question_as_image ]))
 				, answer = T (_problem) (L .get ([ problem_as_question, question_as_solution ])) )=>_)
 				) (
-				L .elems
+				L .limit (_size * _size) (L .elems)
 				) ) (
 				mark (app_settings_problems_state)) } </preview-questions> </preview-questions-etc> 
 		<setting x-for="background-music" x-be={ !! _background_music_on ? 'off' : 'on' } fn={ toggle_background_music } >
@@ -844,6 +852,16 @@ S .root (die => {
 			;please (L_ .set (lookbehind .nothing)) (lookbehind_state)
 			;please (L_ .remove) (ensemble_state) } })
 
+	;S (([ last_app_settings_rules_size, last_app_setup ]) => {
+		if (! L_ .isDefined (last_app_setup)) {
+			if (L_ .isDefined (mark (app_setup_state))) {
+				;please (shuffle) (app_settings_problems_state) } }
+
+		if (not (equals (last_app_settings_rules_size) (mark (app_settings_rules_size_state)))) {
+			;please (shuffle) (app_settings_problems_state) } 
+
+		return [ mark (app_settings_rules_size_state), mark (app_setup_state) ] })
+
 	;S (_ => {
 		if (L_ .isDefined (mark (app_get_ready_state))
 		|| L_ .isDefined (mark (app_playing_state))
@@ -872,8 +890,7 @@ S .root (die => {
 				T (mark (app_students_map_boards_v_pasts_state)
 				) (
 				L .collect ([ L .elems, map_v_as_value, ([_board, _past]) => bingoes (_board) (_past), L .elems ]))
-			// replace with calculating whether difference exists?
-			if (L .count (L .elems) (bingoes) > L .count (L .elems) (last_bingoes)) {
+			if (L .isDefined ([ L .elems, L .unless (L .get ([ L .valueOr ([]), $ (R .flip (R .includes)) ]) (last_bingoes)) ]) (bingoes)) {
 				;play (audio .bingo) }
 			return _bingoes } })
 
@@ -894,16 +911,12 @@ S .root (die => {
 			if (equals (win_rule .first_bingo) (_win_rule)) {
 				if (L_ .isDefined (mark (app_playing_state))) {
 					if (! last_app_has_bingoes_ok && app_has_bingoes_ok) {
-						;setTimeout (_=>{
-							if (L_ .isDefined (show (app_playing_state))) {
-								;end_game ()}}, 8000) } } }
-	/* 
+						;end_game () } } }
 			else if (equals (win_rule .limit_time) (_win_rule)) {
 				if (L_ .isDefined (mark (app_playing_state))) {
-	Math .floor ((S .sample (time) - T (show (app_progress_state)) (L .get (progress_as_timestamp))) / 1000)				 
+//	Math .floor ((S .sample (time) - T (show (app_progress_state)) (L .get (progress_as_timestamp))) / 1000)				 
 					if (! last_app_has_bingoes_ok && app_has_bingoes_ok) {
 						;setTimeout (_=>{;end_game ()}, 8000) } } }
-	*/
 			else if (equals (win_rule .all_problems) (_win_rule)) { }
 
 			return app_has_bingoes_ok } })

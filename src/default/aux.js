@@ -466,7 +466,7 @@ var bingoes = _board => _past => so ((_=_=>
 			, solved_local_patterns = 
 				T (_local_patterns
 				) (
-				L .collect ([ as_value_of (_position), L .elems, L .when (L .isEmpty ([ L .elems, L .when ($ ([ T, T (R .includes), T (positions), not ]))])) ]) ) )=>_))) ) ) )=>_)
+				L .collect ([ as_value_of (_position), L .elems, L .when (L .isEmpty ([ L .elems, L .unless (R .flip (R .includes) (positions)) ])) ]) ) )=>_))) ) ) )=>_)
 
 
 
@@ -737,7 +737,7 @@ var api = so ((_=_=>
 ;api .sockets = []
 ;api .continuations = {}
 ;api .new_continuation = timeout => {
-	;timeout = timeout || 5000
+	;timeout = timeout || 3000
 																		 
 	var resolve, reject
 	var done = false
