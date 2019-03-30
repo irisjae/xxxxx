@@ -589,7 +589,7 @@ var attempt_problem = impure (_position =>
 			T (_board) (L .get ([ as_position (_position), cell_as_choice ]))
 
 		var join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
-		var join = R .reduce (join_2) ([])
+		var join = R .reduce ((a, b) => join_2 (a) (b)) ([])
 			
 		var _completed = T (_point) (L .get ([ join ([ point_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ]))
 		if (not (_completed)) {
