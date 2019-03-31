@@ -471,7 +471,7 @@ var students_view = _ =>
 			: L .isDefined (avatar_as_bunny) (_icon)
 			? 'bunny'
 			: panic ('...')
-		, _x_solved = attrs_ ({ 'x-solved': current_problem_completed (mark (current_problem)) (_board) (L .get ([ past_as_points, L .last ]) (_past)) })
+		, _x_solved = attrs_ ({ 'x-solved': current_problem_completed (mark (app_current_problem_state)) (_board) (L .get ([ past_as_points, L .last ]) (_past)) })
 		, _solved_positions = solved_positions (_board) (_past)
 		, _bingoes = bingoes (_board) (_past) )=>_)
 		) (
