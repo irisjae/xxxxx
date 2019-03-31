@@ -213,7 +213,7 @@ var app_progress_step_state = belief (progress_as_step) (app_progress_state)
 
 var app_last_point_state = belief (app_as_last_point) (app_state)
 var app_current_problem_state = belief (current_problem) (app_state)
-var app_current_problem_completed_state = belief (current_problem_completed) (app_state)
+var app_current_problem_completed_state = belief (_app => current_problem_completed (current_problem (_app)) (L .get (app_as_board) (_app)) (L .get (app_as_last_point) (_app))) (app_state)
 
 var ensemble_progress_state = belief (ensemble_as_progress) (ensemble_state)
 

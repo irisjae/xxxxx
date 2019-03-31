@@ -229,7 +229,6 @@ var app_boards_state = belief (app_as_boards) (app_state)
 var app_pasts_state = belief (app_as_pasts) (app_state)
 
 var app_current_problem_state = belief (current_problem) (app_state)
-var app_current_problem_completed_state = belief (current_problem_completed) (app_state)
 var app_students_map_boards_v_pasts_state = belief ([ L .pick ({ boards: app_as_boards, pasts: app_as_pasts }), L .when (I), ({ boards, pasts }) => map_zip (a => b => [a, b]) (boards) (pasts) ]) (app_state)
 
 var lookbehind_nothing_state = belief (lookbehind_as_nothing) (lookbehind_state)
@@ -472,7 +471,7 @@ var students_view = _ =>
 			: L .isDefined (avatar_as_bunny) (_icon)
 			? 'bunny'
 			: panic ('...')
-		, _x_solved = attrs_ ({ 'x-solved': mark (app_current_problem_completed_state) })
+		, _x_solved = attrs_ ({ 'x-solved': current_problem_completed (mark (current_problem)) (_board) (L .get ([ past_as_points, L .last ]) (_past)) })
 		, _solved_positions = solved_positions (_board) (_past)
 		, _bingoes = bingoes (_board) (_past) )=>_)
 		) (

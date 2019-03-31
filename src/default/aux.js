@@ -429,17 +429,16 @@ var current_problem = by (_app =>
 	as_lens ([ app_as_progress, progress_as_step ]) ) ) ) )
 
 
-var current_problem_completed = _app => so ((_=_=>
+var current_problem_completed = _problem => _board => _point => so ((_=_=>
 	T (
-	{ _problem: L .get (current_problem) (_app)
-	, _board: L .get (app_as_board) (_app)
-	, _point: L .get (app_as_last_point) (_app) }
+	{ _problem
+	, _board
+	, _point }
 	) (
 	L .get (
 	[ as_complete
 	, ({ _problem, _board, _point }) => 
 		T (_point) (L .get ([ join ([ point_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ])) ] ) ),
-
 	where
 	, join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
 	, join = R .reduce ((a, b) => join_2 (a) (b)) ([]) )=>_)
