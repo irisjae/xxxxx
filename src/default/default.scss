@@ -373,11 +373,11 @@ teacher-app > playing-etc {
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
-					display: block;
-					&[x-solved]:after {
-						content: '*';
-						margin-left: 0.2em;
-						color: red; } } }
+					display: block; }
+				&[x-solved]:after {
+					content: '*';
+					margin-left: 0.2em;
+					color: red; } }
 			& board {
 				& bingo {
 					& line {

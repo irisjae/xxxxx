@@ -453,7 +453,7 @@ var attrs_ = L .get (L .modify (L .values) (L .get (L .cond ([ I, K ('') ]))))
 var students_view = _ =>
 	<students> { L .collect (L .chain (([ _student, [_board, _past] ]) => so ((_=_=> K (
 		<student-etc>
-			<label x-icon={ _icon_attr }><name {... _x_solved}>{ _name }</name></label>
+			<label x-icon={ _icon_attr } {... _x_solved}><name>{ _name }</name></label>
 			<board> { T (_board) (R .map (_row => 
 				<row> { T (_row) (R .map (_cell => so ((_=_=>
 					!! _cell_solved ? <cell x-solved />
