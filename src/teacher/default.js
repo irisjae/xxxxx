@@ -454,7 +454,7 @@ var students_view = _ =>
 	<students> { L .collect (L .chain (([ _student, [_board, _past] ]) => so ((_=_=> K (
 		<student-etc>
 			<label x-icon={ _icon_attr } {... _x_solved}><name>{ _name }</name></label>
-			<board> { T (_board) (R .map (_row => 
+			<board {... _x_bingoed}> { T (_board) (R .map (_row => 
 				<row> { T (_row) (R .map (_cell => so ((_=_=>
 					!! _cell_solved ? <cell x-solved />
 					: <cell />,
@@ -471,9 +471,11 @@ var students_view = _ =>
 			: L .isDefined (avatar_as_bunny) (_icon)
 			? 'bunny'
 			: panic ('...')
-		, _x_solved = attrs_ ({ 'x-solved': current_problem_completed (mark (app_current_problem_state)) (_board) (L .get ([ past_as_points, L .last ]) (_past)) })
 		, _solved_positions = solved_positions (_board) (_past)
-		, _bingoes = bingoes (_board) (_past) )=>_)
+		, _current_position = T (_past) (L .get ([ past_as_points, L .last, point_as_attempts, L .last, attempt_as_position ]))
+		, _x_solved = attrs_ ({ 'x-solved': R .includes (_current_position) (_solved_positions) })
+		, _bingoes = bingoes (_board) (_past)
+		, _x_bingoed = attrs_ ({ 'x-bingoed': L .isDefined (L .elems) (_bingoes) }) )=>_)
 		) (
 		L .elems
 		) ) (

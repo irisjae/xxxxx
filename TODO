@@ -3,3 +3,5 @@ move resources into aux
 use new data
 fix ordering
 fix time syncing issues
+improve debugging (now, need to manually recreate state...)
+profile...
