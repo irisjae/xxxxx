@@ -229,7 +229,7 @@ var app_boards_state = belief (app_as_boards) (app_state)
 var app_pasts_state = belief (app_as_pasts) (app_state)
 
 var app_current_problem_state = belief (current_problem) (app_state)
-var app_students_map_boards_v_pasts_state = belief (_app => map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app)) ]) (app_state)
+var app_students_map_boards_v_pasts_state = belief (_app => map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app))) (app_state)
 
 var lookbehind_nothing_state = belief (lookbehind_as_nothing) (lookbehind_state)
 var lookbehind_preview_questions_state = belief (lookbehind_as_preview_questions) (lookbehind_state)
