@@ -299,6 +299,15 @@ var teacher_app_get_ready_to_playing = by (_app =>
 	[ L .get (
 		[ data_iso (teacher_app .get_ready)
 		, L .inverse (data_iso (teacher_app .playing)) ])
+	// implementation detail... how come i am leaking it!???
+	// (as in, maps are not supposed to have order, but this is being implemented to solve order issues
+	, by (_app => so ((_=_=>
+		// pictoral programming is PARAMOUNT
+		$ (
+		[ L .set (app_as_boards) (R .map (_student => [ _student, undefined ]) (_students))
+		, L .set (app_as_pasts) (R .map (_student => [ _student, undefined ]) (_students)) ]),
+		where
+		, _students = L .get (app_as_students) (_aop) )=>_) )
 	, L .set (app_as_progress) ([ 0, fiat ]) ]))
 
 var teacher_app_playing_to_next = by (_app => so ((_=_=>
@@ -307,7 +316,8 @@ var teacher_app_playing_to_next = by (_app => so ((_=_=>
 	where
 	, time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
 	, [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
-	, game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_))
+	, _size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
+	, game_over_ok = progress_step + 1 >= _size * _size )=>_))
 
 var teacher_app_playing_to_game_over = by (_app => 
 	$ (L .get
@@ -345,7 +355,8 @@ var student_app_playing_to_next = by (_app =>
 	where
 	, time_limit = T (_app) (L .get ([ app_as_settings, settings_as_time_limit ]))
 	, [ progress_step, progress_timestamp ] = T (_app) (L .get (app_as_progress))
-	, game_over_ok = not (L .isDefined ([ app_as_problems, progress_step + 1 ]) (_app)) )=>_)) 
+	, _size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
+	, game_over_ok = progress_step + 1 >= _size * _size )=>_))
 
 var student_app_playing_to_game_over =by (_app => 
 	$ (L .get

@@ -229,7 +229,7 @@ var app_boards_state = belief (app_as_boards) (app_state)
 var app_pasts_state = belief (app_as_pasts) (app_state)
 
 var app_current_problem_state = belief (current_problem) (app_state)
-var app_students_map_boards_v_pasts_state = belief ([ L .pick ({ boards: app_as_boards, pasts: app_as_pasts }), L .when (I), ({ boards, pasts }) => map_zip (a => b => [a, b]) (boards) (pasts) ]) (app_state)
+var app_students_map_boards_v_pasts_state = belief (_app => map_zip (a => b => [a, b]) (L .get (app_as_boards) (_app)) (L .get (app_as_pasts) (_app)) ]) (app_state)
 
 var lookbehind_nothing_state = belief (lookbehind_as_nothing) (lookbehind_state)
 var lookbehind_preview_questions_state = belief (lookbehind_as_preview_questions) (lookbehind_state)
@@ -940,12 +940,6 @@ S .root (die => {
 			else if (equals (win_rule .all_problems) (_win_rule)) { }
 
 			return app_has_bingoes_ok } })
-	
-	;S (_ => {
-		if (L_ .isDefined (mark (app_playing_state))) {
-			var _size = show (app_settings_rules_size_state)
-			if (mark (app_progress_state) >= (_size * _size)) {
-				;end_game () } } })
 
 	;S (last_app_game_over_state => {
 		if (L_ .isDefined (mark (app_game_over_state))) {
