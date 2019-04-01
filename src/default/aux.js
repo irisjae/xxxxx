@@ -307,7 +307,7 @@ var teacher_app_get_ready_to_playing = by (_app =>
 		[ L .set (app_as_boards) (R .map (_student => [ _student, undefined ]) (_students))
 		, L .set (app_as_pasts) (R .map (_student => [ _student, undefined ]) (_students)) ]),
 		where
-		, _students = L .get (app_as_students) (_aop) )=>_) )
+		, _students = L .get (app_as_students) (_app) )=>_) )
 	, L .set (app_as_progress) ([ 0, fiat ]) ]))
 
 var teacher_app_playing_to_next = by (_app => so ((_=_=>
