@@ -115,7 +115,7 @@ var img =
 // interactive datas
 
 var feedback = data ({
-	setup_room: (room =~ room) => feedback,
+	setup_room: (uniq =~ timestamp, room =~ room) => feedback,
 	setting_up_student: (icon =~ avatar, name =~ string) => feedback,
 	setup_student: (icon =~ avatar, name =~ string) => feedback,
 	attempt_problem: (uniq =~ timestamp, position =~ position) => feedback,
@@ -271,7 +271,7 @@ var setup_room_view = _ => so ((_=_=>
 			var value = _input .value
 			if (value) {
 				;_input .value = ''
-				;please (L_ .set (feedback .setup_room (value))) (feedback_state) } } )=>_))=>_)
+				;please (L_ .set (feedback .setup_room (+ (new Date), value))) (feedback_state) } } )=>_))=>_)
 
 var as_point = a => b =>
 	[ L .is (a), L .inverse (L .is (b)) ]
@@ -393,7 +393,30 @@ var bingoes_view = so ((_=_=>
 		: (first_x > last_x) ? 'diagonal-up'
 		: panic ('bad pattern') ) )=>_)
 
-	
+
+var board_view = _ => so ((_=_=>
+	<board x-disabled={ _disabled }> { T (_board) (R .map (_row => 
+		<row> { T (_row) (R .map (_cell => so ((_=_=>
+			!! _cell_solved
+			? <cell x-solved>{ _cell_choice }</cell>
+			: <cell fn={ feedback_cell (_cell) }>{ _cell_choice }</cell>,
+			where
+			, _cell_position = T (_cell) (L .get (cell_as_position))
+			, _cell_choice = T (_cell) (L .get (cell_as_choice))
+			, _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
+		{ bingoes_view (_bingoes) } </board>,
+	where
+	, _board = mark (app_board_state)
+	, _past = mark (app_past_state)
+	, _solved_positions = solved_positions (_board) (_past)
+	, _bingoes = bingoes (_board) (_past)
+	, _disabled = mark (lookbehind_blocked_state)
+	, feedback_cell = cell => _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				var _step = show (app_progress_step_state)
+				var _position = T (cell) (L .get (cell_as_position))
+				;please (L_ .set (feedback .attempt_problem (+ (new Date), _position))) (feedback_state) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
 	<playing-etc>
@@ -408,32 +431,12 @@ var playing_view = _ => so ((_=_=>
 				{ L .get ([ question_as_image, chain_el (_question_image =>
 				<img src={ _question_image } /> ) ]) (_current_question) } </question> </div>
 		<div class="right-pane">
-			<board x-disabled={ _disabled }> { T (_board) (R .map (_row => 
-				<row> { T (_row) (R .map (_cell => so ((_=_=>
-					!! _cell_solved
-					? <cell x-solved>{ _cell_choice }</cell>
-					: <cell fn={ feedback_cell (_cell) }>{ _cell_choice }</cell>,
-					where
-					, _cell_position = T (_cell) (L .get (cell_as_position))
-					, _cell_choice = T (_cell) (L .get (cell_as_choice))
-					, _cell_solved = R .includes (_cell_position) (_solved_positions) )=>_))) } </row> )) }
-				{ bingoes_view (_bingoes) } </board> </div> </playing-etc>,
+			 </div> </playing-etc>,
 		where
-		, _board = mark (app_board_state)
-		, _past = mark (app_past_state)
 		, _problem_number = mark (app_progress_step_state) + 1
 		, _time_limit = mark (app_settings_time_limit_state)
 		, _current_question = T (mark (app_current_problem_state)) (L .get (problem_as_question))
-		, _solved_positions = solved_positions (_board) (_past)
-		, _bingoes = bingoes (_board) (_past)
-		, _disabled = mark (lookbehind_blocked_state)
-		, ticker_style = { animationDuration: _time_limit + 's' }
-		, feedback_cell = cell => _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					var _step = show (app_progress_step_state)
-					var _position = T (cell) (L .get (cell_as_position))
-					;please (L_ .set (feedback .attempt_problem (+ (new Date), _position))) (feedback_state) }) }) } )=>_) 
+		, ticker_style = { animationDuration: _time_limit + 's' } )=>_) 
 
 
 var show_unit = _x => !! (not (equals (0) (_x)) && ! _x) ? '-' :  _x .toFixed (2) * 1

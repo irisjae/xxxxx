@@ -5,15 +5,17 @@ body {
 	color: white;
 	font-family: Microsoft JhengHei, Arial;
 	height: 100vh;
-	width: 100vw; }
+	width: 100vw;
+	overflow: hidden; }
 
 %page-etc {
-	width: 80%;
-	height: 80%;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%); }
+	@media (min-aspect-ratio: 4/3) {
+		height: 100vh;
+		width: 133.333vh;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%); } }
 
 teacher-app > setup-etc {
 	setting {
@@ -278,12 +280,7 @@ teacher-app > playing-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	position: absolute;
-	display: block;
-	top: 10px;
-	bottom: 10px;
-	left: 10px;
-	right: 10px;
+	@extend %page-etc;
 	& title-etc {
 		left: 0;
 		top: 0;
@@ -448,12 +445,7 @@ teacher-app > game-over-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	position: absolute;
-	display: block;
-	top: 10px;
-	bottom: 10px;
-	left: 10px;
-	right: 10px;
+	@extend %page-etc;
 	& title-etc {
 		position: absolute;
 		left: 0;
@@ -697,6 +689,8 @@ student-app > get-ready-etc {
 	font-size: 1.5em; }
 
 student-app > playing-etc {
+	@extend %page-etc;
+
 	display: flex;
 	justify-content: space-between;
 	width: 80%;
@@ -779,12 +773,7 @@ student-app > game-over-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	position: absolute;
-	display: block;
-	top: 10px;
-	bottom: 10px;
-	left: 10px;
-	right: 10px;
+	@extend %page-etc;
 	& a-title {
 		position: absolute;
 		left: 0;
