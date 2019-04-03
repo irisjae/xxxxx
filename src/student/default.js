@@ -431,7 +431,7 @@ var playing_view = _ => so ((_=_=>
 				{ L .get ([ question_as_image, chain_el (_question_image =>
 				<img src={ _question_image } /> ) ]) (_current_question) } </question> </div>
 		<div class="right-pane">
-			 </div> </playing-etc>,
+			{ board_view } </div> </playing-etc>,
 		where
 		, _problem_number = mark (app_progress_step_state) + 1
 		, _time_limit = mark (app_settings_time_limit_state)
