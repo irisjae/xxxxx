@@ -8,7 +8,7 @@ body {
 	width: 100vw;
 	overflow: hidden; }
 
-%page-etc {
+teacher-app, student-app {
 	@media (min-aspect-ratio: 4/3) {
 		height: 100vh;
 		width: 133.333vh;
@@ -32,7 +32,6 @@ teacher-app > setup-etc {
 			& img {
 				@extend %clickable; } } }
 
-	@extend %page-etc;
 	& .left-pane {
 		height: 100%;
 		width: 66%;
@@ -219,7 +218,6 @@ teacher-app > get-ready-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	@extend %page-etc;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -280,7 +278,6 @@ teacher-app > playing-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	@extend %page-etc;
 	& title-etc {
 		left: 0;
 		top: 0;
@@ -445,7 +442,6 @@ teacher-app > game-over-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	@extend %page-etc;
 	& title-etc {
 		position: absolute;
 		left: 0;
@@ -623,7 +619,6 @@ student-app > setup-etc {
 		align-items: center;
 		font-size: 1.5em; }
 	
-	@extend %page-etc;
 	& setup-room-etc, setup-student-etc {
 		display: flex;
 		flex-direction: column;
@@ -680,8 +675,6 @@ student-app > setup-etc {
 					background: #222; } } } } }
 
 student-app > get-ready-etc {
-	@extend %page-etc;
-	
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -689,8 +682,6 @@ student-app > get-ready-etc {
 	font-size: 1.5em; }
 
 student-app > playing-etc {
-	@extend %page-etc;
-
 	display: flex;
 	justify-content: space-between;
 	width: 80%;
@@ -773,7 +764,6 @@ student-app > game-over-etc {
 			& img {
 				@extend %clickable; } } }
 	
-	@extend %page-etc;
 	& a-title {
 		position: absolute;
 		left: 0;
