@@ -546,7 +546,7 @@ var setup_room = _room => {
 		;please (L_ .set (io .connecting)) (io_state) })
 	.then (_ =>
 		api (_room)
-		.then (panic_on ([ [equals ({}), 'empty room; expired code?'] ])) )
+		.then (panic_on ([ [ L .isEmpty (L .leafs), 'empty room; expired code?' ] ])) )
 	.then (pinpoint (
 		[ ensemble_as_settings
 		, _settings => {
