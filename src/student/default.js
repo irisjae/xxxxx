@@ -127,6 +127,7 @@ var lookbehind = data ({
 	nothing: () => lookbehind,
 	bad_room: (room =~ room) => lookbehind,
 	attempting: (since =~ latency, blocked =~ bool) => lookbehind,
+	show_results: () => lookbehind,
 	overall_analysis: () => lookbehind,
 	problems_analysis: (ordering =~ order ([ 'questions', 'number_of_attempts', 'solved_time' ])) => lookbehind })
 
@@ -146,6 +147,7 @@ var feedback_as_icon = data_iso (feedback .setting_up_student) .icon
 var lookbehind_as_nothing = data_iso (lookbehind .nothing)
 var lookbehind_as_bad_room = data_iso (lookbehind .bad_room)
 var lookbehind_as_attempting = data_iso (lookbehind .attempting)
+var lookbehind_as_show_results = data_iso (lookbehind .show_results)
 var lookbehind_as_overall_analysis = data_iso (lookbehind .overall_analysis)
 var lookbehind_as_problems_analysis = data_iso (lookbehind .problems_analysis)
 
@@ -232,6 +234,7 @@ var io_connecting_state = belief (io_as_connecting) (app_state)
 var io_heartbeat_state = belief (io_as_heartbeat) (app_state)
 
 var lookbehind_bad_room_state = belief (lookbehind_as_bad_room) (lookbehind_state)
+var lookbehind_show_results_state = belief (lookbehind_as_show_results) (lookbehind_state)
 var lookbehind_overall_analysis_state = belief (lookbehind_as_overall_analysis) (lookbehind_state)
 var lookbehind_problems_analysis_state = belief (lookbehind_as_problems_analysis) (lookbehind_state)
 var lookbehind_room_state = belief (lookbehind_as_room) (lookbehind_state)
