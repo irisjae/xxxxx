@@ -145,7 +145,7 @@ var img =
 // interactive datas
 
 var feedback = data ({
-	start: () => feedback,
+	start: (uniq =~ timestamp) => feedback,
 	setup_rules: ( rules_piece =~ piece (settings) ) => feedback,
 	play: () => feedback,
 	end: () => feedback,
@@ -373,7 +373,7 @@ var setup_view = _ => so ((_=_=>
 	, feedback_start = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
-				;please (L_ .set (feedback .start)) (feedback_state) }) }) }
+				;please (L_ .set (feedback .start (+ (new Date)))) (feedback_state) }) }) }
 	, feedback_size = _size => _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
