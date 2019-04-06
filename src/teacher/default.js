@@ -697,7 +697,7 @@ var get_room = impure (_room =>
 		;please (L_ .set (io .connecting)) (io_state) })
 	.then (_ =>
 		api (_room)
-		.then (panic_on ([ [ L .get ([ L .is ({}), L .complement ]), _room + ' taken'] ])) )
+		.then (panic_on ([ [ L .isDefined (L .leafs), _room + ' taken'] ])) )
 	// RACE CONDITION
 	.then (_ => so ((_=_=>
 		api (_room, _create_message)
