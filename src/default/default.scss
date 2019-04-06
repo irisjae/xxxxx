@@ -779,7 +779,7 @@ student-app > playing-etc {
 
 student-app > game-over-etc {
 	button {
-		&[x-for=overall-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
+		&[x-for=show-results], &[x-for=overall-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
 			&:focus {
 				outline: none; }
 			& img {

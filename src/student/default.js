@@ -103,6 +103,8 @@ var img =
 	, lion_avatar: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
 	, bunny_avatar: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
 	, connect: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
+	, show_results_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'
+	, show_results_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'
 	, overall_analysis_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-analysis-on.png?1547306859997'															
 	, overall_analysis_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-anlysis-off.png?1547306860589'														 
 	, problems_analysis_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'															
@@ -443,83 +445,97 @@ var playing_view = _ => so ((_=_=>
 var show_unit = _x => !! (not (equals (0) (_x)) && ! _x) ? '-' :  _x .toFixed (2) * 1
 var show_time = _x => !! (not (equals (0) (_x)) && ! _x) ?  '-' : _x .toFixed (2) * 1 + '秒'
 
+var show_results_img = points_ ([ [ true, img .show_results_on ], [ false, img .show_results_off ] ])
 var overall_analysis_img = points_ ([ [ true, img .overall_analysis_on ], [ false, img .overall_analysis_off ] ])
 var problems_analysis_img = points_ ([ [ true, img .problems_analysis_on ], [ false, img .problems_analysis_off ] ])
+
+var show_results_view = _ =>
+	<show-results> { board_view } </show-results>
+
+var overall_analysis_view = _ => so ((_=_=>
+	<overall-analysis>
+		<div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
+		<div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
+		<div><span>平均答對時間：</span> <span>{ show_time (mean_solved_point_latency) }</span></div> </overall-analysis>,
+	where
+	, _points = mark (app_past_points_state)
+	, attempted_points_amount = T (_points) (L .count ([ L .elems, point_as_attempts, L .last ]))
+	, solved_points_amount = T (_points) (L .count ([ L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
+	, mean_solved_point_latency = T (_points) (L .mean ([ L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) )=>_)
+
+var problems_analysis_view = _ => so ((_=_=>
+	<problems-analysis-etc>
+		<labels>
+			<question fn={ toggle_question_order }>題目 <img src={ img .toggle_ordering } /></question>
+			<number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ img .toggle_ordering } /></number-of-attempts>
+			<solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ img .toggle_ordering } /></solved-time> </labels>
+		<problems-analysis> { L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=> /*reimplement order in terms of free object*/
+			<problem>
+				<question>{ T (_question) (L .get (L .choice (
+						L .chain (K (_image => <img src={ _image } />)) (question_as_image),
+						L .chain (K (I)) (question_as_text)))) }</question>
+				<number-of-attempts>{ _number_of_attempts }</number-of-attempts>
+				<solved-time>{ show_time (_solved_time) }</solved-time> </problem>,
+			where
+			, _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
+			, _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
+			, _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) )=>_) ]
+			) (
+			mark (app_past_points_state) ) } </problems-analysis> </problems-analysis-etc>,
+	where
+	, _ordering = mark (lookbehind_ordering_state)
+	, _board = mark (app_board_state)
+	, toggle_question_order = _dom => {
+			;clicking .forEach (click => {
+				;_dom .addEventListener (click, _ => {
+					;please (toggle_order (question_order)) (lookbehind_ordering_state) }) }) }
+	, toggle_number_of_attempts_order = _dom => {
+			;clicking .forEach (click => {
+				;_dom .addEventListener (click, _ => {
+					;please (toggle_order (number_of_attempts_order)) (lookbehind_ordering_state) }) }) }
+	, toggle_solved_time_order = _dom => {
+			;clicking .forEach (click => {
+				;_dom .addEventListener (click, _ => {
+					;please (toggle_order (solved_time_order)) (lookbehind_ordering_state) }) }) } )=>_)
 
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
 		<a-title><img src={ img .logo }/></a-title>
 		<student><label>{ _name }</label></student> 
 		<options x-for="tabs">
+			<button x-custom x-for="show-results" fn={ show_results }>
+				<img src={ show_results_img (L_ .isDefined (mark (lookbehind_show_results_state)))  } /> </button>
 			<button x-custom x-for="overall-analysis" fn={ overall_analysis }>
 				<img src={ overall_analysis_img (L_ .isDefined (mark (lookbehind_overall_analysis_state)))  } /> </button>
 			<button x-custom x-for="problems-analysis" fn={ problems_analysis }>
 				<img src={ problems_analysis_img (L_ .isDefined (mark (lookbehind_problems_analysis_state))) } /> </button> </options>
-		{ !! L_ .isDefined (mark (lookbehind_overall_analysis_state))
-		? 
-			<overall-analysis>
-				<div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
-				<div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
-				<div><span>平均答對時間：</span> <span>{ show_time (mean_solved_point_latency) }</span></div> </overall-analysis>
+		{ !! L_ .isDefined (mark (lookbehind_show_results_state))
+		? show_results_view 
+		: L_ .isDefined (mark (lookbehind_overall_analysis_state))
+		? overall_analysis_view 
 		: L_ .isDefined (mark (lookbehind_problems_analysis_state))
-		? so ((_=_=>
-			<problems-analysis-etc>
-				<labels>
-					<question fn={ toggle_question_order }>題目 <img src={ img .toggle_ordering } /></question>
-					<number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ img .toggle_ordering } /></number-of-attempts>
-					<solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ img .toggle_ordering } /></solved-time> </labels>
-				<problems-analysis>
-					{ /*reimplement order in terms of free object*/ }
-					{ T (_points
-					) (
-					L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=>
-						<problem>
-							<question>{ T (_question) (L .get (L .choice (
-									L .chain (K (_image => <img src={ _image } />)) (question_as_image),
-									L .chain (K (I)) (question_as_text)))) }</question>
-							<number-of-attempts>{ _number_of_attempts }</number-of-attempts>
-							<solved-time>{ show_time (_solved_time) }</solved-time> </problem>,
-						where
-						, _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
-						, _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
-						, _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) )=>_) ])) } </problems-analysis> </problems-analysis-etc>,
-			where
-			, _ordering = mark (lookbehind_ordering_state) )=>_)
+		? problems_analysis_view
 		: [] }
 		<options x-for="options">
 			<button x-custom x-for="play-again" fn={ feedback_play_again } ><img src={ img .play_again } /></button> </options> </game-over-etc>,
 	where
-	, _student = mark (app_student_state)
-	, _name = T (_student) (L .get (student_as_name))
-	, _board = mark (app_board_state)
-	, _points = mark (app_past_points_state)
-	, attempted_points_amount = T (_points) (L .count ([ L .elems, point_as_attempts, L .last ]))
-	, solved_points_amount = T (_points) (L .count ([ L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
-	, mean_solved_point_latency = T (_points) (L .mean ([ L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ]))
+	, _name = T (mark (app_student_state)) (L .get (student_as_name))
+	, show_results = _dom => {
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .show_results)) (lookbehind_state) })})}															
 	, overall_analysis = _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					;please (L_ .set (lookbehind .overall_analysis)) (lookbehind_state) })})}															
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .overall_analysis)) (lookbehind_state) })})}															
 	, problems_analysis = _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					;please (L_ .set (lookbehind .problems_analysis ([]))) (lookbehind_state) })})}
-	, toggle_question_order = _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					;please (toggle_order (question_order)) (lookbehind_ordering_state) })})}
-	, toggle_number_of_attempts_order = _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					;please (toggle_order (number_of_attempts_order)) (lookbehind_ordering_state) })})}
-	, toggle_solved_time_order = _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					;please (toggle_order (solved_time_order)) (lookbehind_ordering_state) })})}
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (lookbehind .problems_analysis ([]))) (lookbehind_state) })})}
 	, feedback_play_again = _dom => {
-			;clicking .forEach (click => {
-				;_dom .addEventListener (click, _ => {
-					;please (L_ .set (feedback .reset_game)) (feedback_state) })})} )=>_) 
+		;clicking .forEach (click => {
+			;_dom .addEventListener (click, _ => {
+				;please (L_ .set (feedback .reset_game)) (feedback_state) })})} )=>_) 
 
 
 S .root (die => {
@@ -637,7 +653,8 @@ var [ clock, fine_clock ] = S .root (die =>
 		, _fine_clock = S .value ()
 		, $__ticking = S (_ => {
 			if (ticking () && L_ .isDefined (mark (app_progress_timestamp_state))) {
-				var _timestamp = mark (app_progress_timestamp_state) - timestamp_differential ()
+				var [ _timestamp_differential, _ ] = timestamp_differential ()
+				var _timestamp = mark (app_progress_timestamp_state) - _timestamp_differential
 				var _fine_tick = (time () - _timestamp) / 1000
 				var _tick = Math .floor (_fine_tick)
 				if (_tick >= 0) {
