@@ -1,3 +1,4 @@
+uniqueness types for feedbacks
 add compression
 untangle server-side api from ensemble
 remove old 'points' data ~ encode info directly into attempts
