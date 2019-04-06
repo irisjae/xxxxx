@@ -41,7 +41,7 @@ student_as_student, student_as_id, student_as_name, student_as_icon,
 rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position, cell_as_choice, 
-message_encoding, messages_encoding, schedule_start,
+schedule_start,
 teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 board_choice, current_problem, current_problem_completed, problem_choice_matches,
@@ -671,12 +671,11 @@ var timestamp_differential = S .root (die =>
 		, differential_sample = (_timestamp - base_timestamp) + (1 / 2) * (_offset - base_offset)
 		) =>
 		L .get (
-		L .cond (
-		[ K (differential_sample), 
-			[ L .valueOr ([ 0, 0 ])
+		L .choices ( ...
+		[ L .when (K (differential_sample)), L .valueOr ([ 0, 0 ])
 			, ([ last_timestamp_differential, n ]) =>
-				[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ] ],
-		[ K (0) ]) ) ) ) ) ) )
+				[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ],
+		[ K (0) ] ) ) ) ) ) ) )
 
 
 // rules

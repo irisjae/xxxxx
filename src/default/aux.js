@@ -601,7 +601,7 @@ var message_encoding = by (message =>
 		, [ message_as_teacher_progress .progress, L .when (I), L .getInverse (ensemble_as_progress) ]
 		, [ message_as_student_ping .ping, L .when (I), L .getInverse ([ ensemble_as_pings, wrapped_with_student ]) ]
 		, [ message_as_student_join .board, L .when (I), L .getInverse ([ ensemble_as_boards, wrapped_with_student ]) ]
-		, [ message_as_student_update .past, L .when (I), L .getInverse ([ ensemble_as_pasts, wrapped_with_student ]) ] ]
+		, [ message_as_student_update .past, L .when (I), L .getInverse ([ ensemble_as_pasts, wrapped_with_student ]) ] ] )
 	, ensemble_as_ensemble
 	, strip ] ),
 	where
@@ -694,38 +694,38 @@ var _api = so ((_=_=>
 		if (req .body) {
 			;req .body = JSON .parse (req .body) }
 
-		var [ continuation, signal ] = api .new_continuation ()
+		var [ continuation, signal ] = _api .new_continuation ()
 		var id = new_id ()
 
-		;api .continuations [id] = signal
-		;continuation .catch (I) .then (_=> {;delete api .continuations [id]})
+		;_api .continuations [id] = signal
+		;continuation .catch (I) .then (_=> {;delete _api .continuations [id]})
 
-		if (! api .sockets [room]) {
-			;api .sockets [room] = new_socket (room) }
-		;api .sockets [room] .refresh ()
+		if (! _api .sockets [room]) {
+			;_api .sockets [room] = new_socket (room) }
+		;_api .sockets [room] .refresh ()
 
 		;suppose (
 		( begin, end
 		) =>
 		go
-		.then (K (api .sockets [room] .ready))
-		.then (_=> {;api .sockets [room] .send (JSON .stringify ({ ...req, id: id }))})
+		.then (K (_api .sockets [room] .ready))
+		.then (_=> {;_api .sockets [room] .send (JSON .stringify ({ ...req, id: id }))})
 		.then (_=> {;begin = performance .now ()})
 		.then (K (continuation))
 		.then (_=> {;end = performance .now ()})
 		.then (impure (_ => 
-			T (api .ping (room)
+			T (_api .ping (room)
 			) (
 			[ S .sample
 			, update_ping (end - begin)
-			, api .ping (room) ] ) ) )
+			, _api .ping (room) ] ) ) )
 		.catch (K ()) )
 		
 		return continuation },
 	where
 	, new_id = _ => {
 		var id = '' + Math .floor (1000000 * Math .random ())
-		return !! not (api .continuations [id])
+		return !! not (_api .continuations [id])
 		? id
 		: new_id () }
 	//TODO: make this more elegant
@@ -752,8 +752,8 @@ var _api = so ((_=_=>
 					var _packet = JSON .parse (_event .data)
 					var id = _packet .id
 					var data = _packet .body
-					if (api .continuations [id]) {
-						 ;api .continuations [id] (data) } } } } )=>_)
+					if (_api .continuations [id]) {
+						 ;_api .continuations [id] (data) } } } } )=>_)
 
 	, update_ping = sample => by (ping_info =>
 		L .get (
@@ -765,13 +765,13 @@ var _api = so ((_=_=>
 			, (new Date) .getTime () ],
 			where 
 			, carry = n / (n + 1) )=>_) ] ) ) )=>_)
-;api .ping = room => {{ 
+;_api .ping = room => {
 	if (! _pings [room]) {
 		;_pings [room] = S .data () }
 	return _pings [room] } 
-;api .sockets = []
-;api .continuations = {}
-;api .new_continuation = timeout => {
+;_api .sockets = []
+;_api .continuations = {}
+;_api .new_continuation = timeout => {
 	;timeout = timeout || 3000
 																		 
 	var resolve, reject
@@ -833,6 +833,7 @@ var api = so ((_=_=> impure ((room, req) =>
 		L .choices (
 			[ L .when (L .get ('error')) ],
 			[ decode_to_ensemble ] )=>_)
+;api .ping = _api .ping
 
 
 
@@ -901,7 +902,7 @@ window .stuff = { ...window .stuff,
 	rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position, cell_as_choice, 
-	message_encoding, messages_encoding, schedule_start,
+	schedule_start,
 	teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playing_to_game_over,
 	student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 	board_choice, current_problem, current_problem_completed, problem_choice_matches,
