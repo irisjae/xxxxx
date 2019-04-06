@@ -131,8 +131,14 @@ var data_iso = cons_memoize (cons =>
 var data_kind = by (data =>
 	L .get ([ L .keys, L .first ]))
 
+
+
+
+
 /*var focused_iso_ = lens => point => 
 	L .iso (L .get (lens), _x => L .set (lens) (_x) (point))*/
+var l_point_sum = (... traversals) => x =>
+	L .and ([ L .elems, _trav => L .isEmpty (_trav) (x) ]) (traversals)
 
 
 
@@ -324,7 +330,7 @@ window .stuff = { ... window .stuff,
 	so, by, 
 	go, never, panic, panic_on,
 	fiat, data, data_lens, data_iso, data_kind,
-	last_n, n_reducer, l_sum, pinpoint,
+	last_n, n_reducer, l_sum, l_point_sum, pinpoint,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle,
 	I, K, not, equals }

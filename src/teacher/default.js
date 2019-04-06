@@ -6,7 +6,7 @@ go, never, panic, panic_on,
 just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
-last_n, n_reducer, l_sum, pinpoint,
+last_n, n_reducer, l_sum, l_point_sum, pinpoint,
 map_defined_, map_defined, from_just, 
 as_sole, sole, shuffle,
 I, K, not, equals,
@@ -993,7 +993,7 @@ S .root (die => {
 						;please (L_ .set (_ensemble)) (ensemble_state) } }) )
 			.catch (
 				pinpoint (
-				L .choices (
+				l_point_sum (
 				[ 'error', L .is ('timeout'), L .when (I), _ => {;console .warn ('Room timed out')} ],
 				[ panic ] ) ) )
 			.then (_ => {
