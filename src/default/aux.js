@@ -615,9 +615,9 @@ var messages_encoding = list =>
 
 var decode_to_ensemble = L .get (
 	[ L .inverse (ensemble_as_ensemble)
-	, L .modify (ensemble_as_pings) (L .get (L .values))
-	, L .modify (ensemble_as_boards) (L .get (L .values))
-	, L .modify (ensemble_as_pasts) (L .get (L .values)) ] )
+	, L .modify (ensemble_as_pings) (L .collect (L .values))
+	, L .modify (ensemble_as_boards) (L .collect (L .values))
+	, L .modify (ensemble_as_pasts) (L .collect (L .values)) ] )
 
 
 
