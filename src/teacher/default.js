@@ -882,7 +882,7 @@ S .root (die => {
 		if (L_ .isDefined (mark (app_get_ready_state))
 		|| L_ .isDefined (mark (app_playing_state))
 		|| L_ .isDefined (mark (app_game_over_state))) {
-			var _ensemble_students = T (mark (ensemble_pings_state)) (L .collect ([ L .values, map_v_as_key ]))
+			var _ensemble_students = T (mark (ensemble_pings_state)) (L .collect ([ L .elems, map_v_as_key ]))
 			;please (L_ .set (_ensemble_students)) (app_students_state) } })
 
 	;S (last_progress => {
@@ -895,8 +895,8 @@ S .root (die => {
 	;S (_ => {
 		if (L_ .isDefined (mark (app_playing_state))
 		|| L_ .isDefined (mark (app_game_over_state))) {
-			var _ensemble_boards = T (mark (ensemble_boards_state)) (L .collect (L .values))
-			var _ensemble_pasts = T (mark (ensemble_pasts_state)) (L .collect (L .values))
+			var _ensemble_boards = T (mark (ensemble_boards_state)) (L .collect (L .elems))
+			var _ensemble_pasts = T (mark (ensemble_pasts_state)) (L .collect (L .elems))
 			;please (L_ .set (_ensemble_boards)) (app_boards_state)
 			;please (L_ .set (_ensemble_pasts)) (app_pasts_state) } })
 
