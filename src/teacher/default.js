@@ -990,7 +990,7 @@ S .root (die => {
 					api (_room) )
 				.then (_ensemble => {
 					if (equals (_room) (show (app_room_state))) {
-						;please (L_ .set (_ensemble)) (ensemble_state) } }) ) )
+						;please (L_ .set (_ensemble)) (ensemble_state) } }) )
 			.catch (
 				pinpoint (
 				L .choices (
@@ -1006,4 +1006,4 @@ S .root (die => {
 					;heartbeat (phase) }
 				, 300) })
 			.then (_ => {
-				;please (L_ .set (io .inert)) (io_state) }) ]) ) ) })
+				;please (L_ .set (io .inert)) (io_state) }) ) ]) ) ) })
