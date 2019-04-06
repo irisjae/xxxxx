@@ -1,94 +1,86 @@
-var WritableStream = require("stream").Writable;
-var statusCodes = require("http-status-codes");
-var ws = require("ws");
+var WritableStream = require('stream').Writable;
+var statusCodes = require('http-status-codes');
+var ws = require('ws');
 
-class Response extends WritableStream{
-	constructor(socket,head){
-		super();
-		this.upgraded = false;
-		this.socket = socket;
-		this.head = head;
-		this.finished = false;
-		this.headersSent = false;
-		this.headers = {};
-		this.statusCode = 200;
-		this.statusMessage = undefined;
-		this.sendDate = true;
+var K = x => y => x
 
-		this.on("finish",function(){
-			this._write(null,null,function(){});
-			this.finished = true;
-		});
-	}
-	_write(chunk,encoding,callback){
-		if(!this.headersSent) this.writeHead(this.statusCode,this.statusMessage,this.headers);
-		if(this.upgraded){
-			if(this.websocket && !chunk && this.websocket.readyState == ws.OPEN){
-				//this.websocket.close(this.statusCode == 500 ?1011:1000);
-			}
-			callback();
-		}else{
-			if(!chunk){
-				this.socket.end(callback);
-			}else{
-				this.socket.write(chunk,encoding,callback);
-			}
-		}
-	}
+class Response extends WritableStream {
+	constructor (socket, head){
+		;super ()
 
-	addTrailers(){
+		var self = this
 
-	}
+		;self .upgraded = false
+		;self .socket = socket
+		;self .head = head
+		;self .finished = false
+		;self .headersSent = false
+		;self .headers = {}
+		;self .statusCode = 200
+		;self .statusMessage = undefined
+		;self .sendDate = true
 
-	getHeader(name){
-		return this.headers[name];
-	}
+		;self .on ('finish', _ => {
+			;self ._write (null, null, K ())
+			;self .finished = true }) }
 
-	removeHeader(name){
-		if(this.headersSent) throw new Error("Headers have already been sent");
-		delete this.headers[name];
-	}
+	_write (chunk, encoding, callback) {
+		if (! this .headersSent) {
+			;this .writeHead (this .statusCode, this .statusMessage, this .headers) }
+		if (this .upgraded){
+			/* if (this .websocket && ! chunk && this .websocket .readyState == ws .OPEN) {
+				;this .websocket .close (this .statusCode == 500 ? 1011 : 1000) } */
+			;callback () }
+		else {
+			if (! chunk) {
+				;this .socket .end (callback) }
+			else {
+				;this .socket .write (chunk, encoding, callback) } } }
 
-	setHeader(name,value){
-		if(this.headersSent) throw new Error("Headers have already been sent");
-		this.headers[name] = value;
-	}
+	addTrailers () {}
 
-	setTimeout(ms,cb){
+	getHeader (name) {
+		return this .headers [name] }
 
-	}
+	removeHeader (name){
+		if (this .headersSent) {
+			;throw new Error ('Headers have already been sent') }
+		;delete this .headers [name] }
 
-	writeContinue(){
+	setHeader (name, value){
+		if (this .headersSent) {
+			;throw new Error ('Headers have already been sent') }
+		;this .headers [name] = value }
 
-	}
+	setTimeout (ms, cb) {}
 
-	writeHead(code,message,headers){
-		if(this.headersSent) throw new Error("Headers have already been sent");
-		if(!this.upgraded){
-			this.socket.write("HTTP/1.1 "+code+" "+(message||statusCodes.getStatusText(code))+"\r\n");
-			for(var header in headers){
-				this.socket.write(header+": "+headers[header]+"\r\n");
-			}
-			this.socket.write("\r\n");
-		}
-		this.headersSent = true;
-	}
+	writeContinue () {}
 
-	upgrade(req){
-		if(this.headersSent) throw new Error("Headers have already been sent");
-		this.upgraded = true;
-		return new Promise(function(s,f){
-			var errorCallback = function(){
-				f(new Error("Upgrade failed"));
-			}.bind(this);
-			this.socket.on("finish",errorCallback);
-			new ws.Server({noServer:true}).handleUpgrade(req,this.socket,this.head,function(conn){
-				this.socket.removeListener("finish",errorCallback);
-				this.websocket = conn;
-				s(conn);
-			}.bind(this));
-		}.bind(this));
-	}
-}
+	writeHead (code, message, headers) {
+		if (this .headersSent) {
+			;throw new Error('Headers have already been sent') }
+		if (!this .upgraded){
+			;this .socket .write ('HTTP/1.1 ' + code + ' ' + (message || statusCodes .getStatusText (code)) + '\r\n')
+			for (var header in headers) {
+				;this .socket .write (header + ': ' + headers [header] + '\r\n') }
+			;this .socket .write ('\r\n') }
+		;this.headersSent = true }
 
-module.exports = Response;
+	upgrade (req) {
+		var self = this
+
+		if (self .headersSent) {
+			;throw new Error ('Headers have already been sent') }
+
+		;self .upgraded = true
+		return new Promise ((resolve, reject) => {
+			var failure = _ => {;reject (new Error ('Upgrade failed'))}
+
+			;self .socket .on ('finish', failure)
+			( new ws .Server ({ noServer: true })
+			) .handleUpgrade (req, self .socket, self .head, conn => {
+				;self .socket .removeListener ('finish', failure)
+				;self .websocket = conn
+				;resolve (conn) }) }) } }
+
+module .exports = Response;

@@ -1,21 +1,16 @@
-var ws = require("ws");
-var Response = require("./response");
+var ws = require ('ws')
+var Response = require ('./response')
 
-module.exports = function(app){
-	var listen = app.listen;
-	var createContext = app.createContext;
+var impure = fn => fn
+
+module .exports = app => {
+	var listen = app .listen
+	var createContext = app .createContext
 	//var server = new ws.Server({noServer:true});
-	app.listen = function(){
-		var server = listen.apply(app,arguments);
-		server.on("upgrade",function(req,sock,head){
-			server.emit("request",req, new Response(sock,head));
-		});
-	}
-	app.createContext = function(req,res){
-		var context = createContext.call(app,req,res);
-		context.upgrade = function(){
-			return res.upgrade(req);
-		}
-		return context;
-	}
-}
+	;app .listen = (... args) => {
+		var server = listen .apply (app, args)
+		;server .on ('upgrade', (req, sock, head) => {;server .emit ('request', req, new Response (sock, head))}) }
+	;app .createContext = (req, res) => {
+		var context = createContext .call (app, req, res)
+		;context .upgrade = impure (_ => res .upgrade (req))
+		return context } }

@@ -13,7 +13,7 @@ I, K, not, equals,
 bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece, order,
 order_sort, direction_opposite, toggle_order, 
-shuffle, uuid, map_zip, chain_el, api, post,
+shuffle, uuid, map_zip, chain_el, api, 
 timer, timer_since, time_intervals, 
 avatar, student, problem, choice, latency, ping, position,
 attempt, point, past, board, win_rule, rules, settings,
@@ -547,8 +547,7 @@ var setup_room = _room => {
 		api (_room)
 		.then (panic_on ([ [equals ({}), 'empty room; expired code?'] ])) )
 	.then (pinpoint (
-		[ L .inverse (data_iso (ensemble .ensemble))
-		, ensemble_as_settings
+		[ ensemble_as_settings
 		, _settings => {
 			;please (L_ .set (_room)) (app_room_state)
 			;please (L_ .set (_settings)) (app_settings_state) } ]))
@@ -578,12 +577,11 @@ var connect_room = impure (_ =>
 			api (_room)
 			.then (panic_on ([ [equals ({}), 'empty room; expired code?'] ])) )
 		.then (pinpoint (
-			[ L .inverse (data_iso (ensemble .ensemble))
-			, ensemble_as_settings
+			[ ensemble_as_settings
 			, impure (_settings => {;latest_settings = _settings}) ]))
 		.then (_ =>
-			api (_room, post (message_encoding (
-				message .student_ping (_student, [0, 0, 0]) )))
+			api (_room, 
+				message .student_ping (_student, [0, 0, 0]) )
 			.then (panic_on ([ [ L .get ([ 'ok', not ]), 'not ok'] ])) )
 		.then (_ => { 
 			;please (L_ .set (latest_settings)) (app_settings_state) })
@@ -638,7 +636,7 @@ var [ clock, fine_clock ] = S .root (die =>
 		, _fine_clock = S .value ()
 		, $__ticking = S (_ => {
 			if (ticking () && L_ .isDefined (mark (app_progress_timestamp_state))) {
-				var _timestamp = mark (app_progress_timestamp_state)
+				var _timestamp = mark (app_progress_timestamp_state) - timestamp_differential ()
 				var _fine_tick = (time () - _timestamp) / 1000
 				var _tick = Math .floor (_fine_tick)
 				if (_tick >= 0) {
@@ -658,14 +656,27 @@ var connection = S .root (die =>
 		) (
 		L .get (
 		[ L .when (I)
-		, _room => {
-			if (! connection [_room]) {
-				;connection [_room] = S .data ()
-				;api .listen_ping (_room) (connection [_room]) }
-			if (connection [_room] ()) {
-				var [ mean, variance, n, timestamp ] = connection [_room] ()
-				return [ timestamp, mean, Math .sqrt (variance) ] } } ])) ) ) )
+		, _room => api .ping (_room) ()
+		, L .when (I)
+		, ([ mean, variance, n, timestamp ]) => 
+			[ timestamp, mean, Math .sqrt (variance) ] ] ) ) ) ) )
 
+var timestamp_differential = S .root (die =>
+	( (window .die = { ... (window .die || {}), differential: die })
+	, S (by (_ =>
+		suppose (
+		( teacher_ping = mark (ensemble_ping_state)
+		, [ base_timestamp, base_offset, _ ] = teacher_ping || []
+		, [ _timestamp , _offset , ] = connection () || []
+		, differential_sample = (_timestamp - base_timestamp) + (1 / 2) * (_offset - base_offset)
+		) =>
+		L .get (
+		L .cond (
+		[ K (differential_sample), 
+			[ L .valueOr ([ 0, 0 ])
+			, ([ last_timestamp_differential, n ]) =>
+				[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ] ],
+		[ K (0) ]) ) ) ) ) ) )
 
 
 // rules
@@ -807,12 +818,12 @@ var connection = S .root (die =>
 				.then (_ => {
 					;please (L_ .set (io .messaging)) (io_state) })
 				.then (_ =>
-					api (_room, post (messages_encoding (
+					api (_room, 
 						!! not_playing
 						? [ message .student_ping (_student, S .sample (connection)) ]
 						: [ message .student_ping (_student, S .sample (connection))
 							, message .student_join (_student, _board)
-							, message .student_update (_student, _past) ]))) ),
+							, message .student_update (_student, _past) ]) ),
 				where
 				, { _board, _past, not_playing } =
 					T (
@@ -825,15 +836,13 @@ var connection = S .root (die =>
 					;please (L_ .set (io .heartbeat)) (io_state) })
 				.then (_ =>
 					api (_room) )
-				.then (pinpoint (
-					[ L .inverse (data_iso (ensemble .ensemble))
-					, L .when (_ => equals (_room) (show (app_room_state)))
-					, _ensemble => {;please (L_ .set (_ensemble)) (ensemble_state)} ]) ) )
+				.then (_ensemble => {
+					if (equals (_room) (show (app_room_state))) {
+						;please (L_ .set (_ensemble)) (ensemble_state) } }) ) )
 			.catch (
 				pinpoint (
-				L .cond (
-				[ L .get ([ 'error', L .is ('timeout') ]), _ => {
-					;console .warn ('Room timed out') } ],
+				L .choices (
+				[ 'error', L .is ('timeout'), L .when (I), _ => {;console .warn ('Room timed out')} ],
 				[ panic ] ) ) )
 			.then (_ => {
 				;setTimeout (_ => {

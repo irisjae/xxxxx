@@ -700,13 +700,13 @@ var get_room = impure (_room =>
 		.then (panic_on ([ [ L .get ([ L .is ({}), L .complement ]), _room + ' taken'] ])) )
 	// RACE CONDITION
 	.then (_ => so ((_=_=>
-		api (_room, post (_create_message))
+		api (_room, _create_message)
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .complement ]), 'cannot post to ' + _room ] ])),
 		where
 		, _problems = T (_settings) (L .get (settings_as_problems))
 		, _rules = T (_settings) (L .get (settings_as_rules ))
-		, _create_message = message_encoding (message .teacher_settings (settings .settings (_problems, _rules))) )=>_) )
+		, _create_message = message .teacher_settings (settings .settings (_problems, _rules)) )=>_) )
 	.then (_ => {
 		;please (L_ .set (teacher_app .get_ready (_room, _settings, []))) (app_state) })
 	.catch (_e => {
@@ -722,12 +722,11 @@ var start_playing = impure (_ =>
 	.then (_ => {
 		;please (L_ .set (io .messaging)) (io_state) })
 	.then (_ => so ((_=_=>
-		api (_room,
-			post (playing_message))
+		api (_room, playing_message)
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .complement ]), 'cannot post to ' + _room ] ]) ),
 		where
-		, playing_message = message_encoding (message .teacher_progress ([ 0, schedule_start (show (ensemble_state)) ])) )=>_) )
+		, playing_message = message .teacher_progress ([ 0, schedule_start (show (ensemble_state)) ]) )=>_) )
 	.catch (_e => {
 		;console .error (_e) })
 	.then (_ => {
@@ -738,12 +737,12 @@ var broadcast_progress = impure (_progress =>
 	.then (_ => {
 		;please (L_ .set (io .messaging)) (io_state) })
 	.then (_ => so ((_=_=>
-		api (_room, post (progress_message))
+		api (_room, progress_message)
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
 		where
 		, _room = show (app_room_state)
-		, progress_message = message_encoding (message .teacher_progress (_progress)) )=>_) )
+		, progress_message = message .teacher_progress (_progress) )=>_) )
 	.catch (_e => {
 		;console .error (_e) })
 	.then (_ => {
@@ -757,12 +756,12 @@ var broadcast_game_over = impure (_ =>
 	.then (_ => {
 		;please (L_ .set (io .messaging)) (io_state) })
 	.then (_ => so ((_=_=>
-		api (_room, post (progress_message))
+		api (_room, progress_message))
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
 		where
 		, _room = show (app_room_state)
-		, progress_message = message_encoding (message .teacher_progress ([ -1, + (new Date) ])) )=>_) )
+		, progress_message = message .teacher_progress ([ -1, + (new Date) ]) )=>_) )
 	.catch (_e => {
 		;console .error (_e) })
 	.then (_ => {
@@ -806,13 +805,10 @@ var connection = S .root (die =>
 		) (
 		L .get (
 		[ L .when (I)
-		, _room => {
-			if (! connection [_room]) {
-				;connection [_room] = S .data ()
-				;api .listen_ping (_room) (connection [_room]) }
-			if (connection [_room] ()) {
-				var [ mean, variance, n, timestamp ] = connection [_room] ()
-				return [ timestamp, mean, Math .sqrt (variance) ] } } ])) ) ) )
+		, _room => api .ping (_room) ()
+		, L .when (I)
+		, ([ mean, variance, n, timestamp ]) => 
+			[ timestamp, mean, Math .sqrt (variance) ] ] ) ) ) ) )
 
 
 
@@ -984,23 +980,21 @@ S .root (die => {
 				.then (_ => {
 					;please (L_ .set (io .messaging)) (io_state) })
 				.then (_ => so ((_=_=>
-					api (_room, post (ping_message)),
+					api (_room, ping_message),
 					where
-					, ping_message = message_encoding (message .teacher_ping (S .sample (connection))) )=>_))
+					, ping_message = message .teacher_ping (S .sample (connection)) )=>_))
 			: go
 				.then (_ => {
 					;please (L_ .set (io .heartbeat)) (io_state) })
 				.then (_ =>
 					api (_room) )
-				.then (pinpoint (
-					[ L .inverse (data_iso (ensemble .ensemble))
-					, L .when (_ => equals (_room) (show (app_room_state)))
-					, _ensemble => {;please (L_ .set (_ensemble)) (ensemble_state)} ]) ) )
+				.then (_ensemble => {
+					if (equals (_room) (show (app_room_state))) {
+						;please (L_ .set (_ensemble)) (ensemble_state) } }) ) )
 			.catch (
 				pinpoint (
-				L .cond (
-				[ L .get ([ 'error', L .is ('timeout') ]), _ => {
-					;console .warn ('Room timed out') } ],
+				L .choices (
+				[ 'error', L .is ('timeout'), L .when (I), _ => {;console .warn ('Room timed out')} ],
 				[ panic ] ) ) )
 			.then (_ => {
 				;setTimeout (_ => {

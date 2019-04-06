@@ -216,13 +216,15 @@ var message_as_student = [ L .choices (message_as_student_ping, message_as_stude
 var message_as_ping = [ L .choices (message_as_teacher_ping, message_as_student_ping), 'ping' ]
 var message_as_board = message_as_student_join .board
 var message_as_past = message_as_student_update .past
+
+var ensemble_as_ensemble = data_iso (ensemble .ensemble)
 	
-var ensemble_as_settings = data_iso (ensemble .ensemble) .settings 
-var ensemble_as_ping = data_iso (ensemble .ensemble) .ping 
-var ensemble_as_progress = data_iso (ensemble .ensemble) .progress 
-var ensemble_as_pings = data_iso (ensemble .ensemble) .pings 
-var ensemble_as_boards = data_iso (ensemble .ensemble) .boards 
-var ensemble_as_pasts = data_iso (ensemble .ensemble) .pasts 
+var ensemble_as_settings = ensemble_as_ensemble .settings 
+var ensemble_as_ping = ensemble_as_ensemble .ping 
+var ensemble_as_progress = ensemble_as_ensemble .progress 
+var ensemble_as_pings = ensemble_as_ensemble .pings 
+var ensemble_as_boards = ensemble_as_ensemble .boards 
+var ensemble_as_pasts = ensemble_as_ensemble .pasts 
 
 var avatar_as_lion = data_iso (avatar .lion)
 var avatar_as_bunny = data_iso (avatar .bunny)
@@ -592,27 +594,30 @@ var gcd = a => b =>
 //optimizing this
 var message_encoding = by (message => 
 	so ((_=_=>
-	$ (
-	[ L .get ([ L .choices (...cases), data_iso (ensemble .ensemble) ])
-	, strip ]),
+	L .get (
+	[ L .choice ( ... 
+		[ [ message_as_teacher_ping .ping, L .when (I), L .getInverse (ensemble_as_ping) ]
+		, [ message_as_teacher_settings .settings, L .when (I), L .getInverse (ensemble_as_settings) ]
+		, [ message_as_teacher_progress .progress, L .when (I), L .getInverse (ensemble_as_progress) ]
+		, [ message_as_student_ping .ping, L .when (I), L .getInverse ([ ensemble_as_pings, wrapped_with_student ]) ]
+		, [ message_as_student_join .board, L .when (I), L .getInverse ([ ensemble_as_boards, wrapped_with_student ]) ]
+		, [ message_as_student_update .past, L .when (I), L .getInverse ([ ensemble_as_pasts, wrapped_with_student ]) ] ]
+	, ensemble_as_ensemble
+	, strip ] ),
 	where
-	, strip = $ ([ JSON .stringify, JSON .parse ]) 
+	, strip = L .modify (L .satisfying (equals ())) (L_ .remove)
 	, _student = T (message) (L .get (message_as_student))
-	, _student_id = T (_student) (L .get (student_as_id))
-	, cases = 
-			[ L .chain (K (L .getInverse (ensemble_as_ping))) (message_as_teacher_ping .ping)
-			, L .chain (K (L .getInverse (ensemble_as_settings))) (message_as_teacher_settings .settings)
-			, L .chain (K (L .getInverse (ensemble_as_progress))) (message_as_teacher_progress .progress)
-			, L .chain (K (L .getInverse ([ ensemble_as_pings, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-				) (message_as_student_ping .ping)
-			, L .chain (K (L .getInverse ([ ensemble_as_boards, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-				) (message_as_student_join .board)
-			, L .chain (K (L .getInverse ([ ensemble_as_pasts, '' + _student_id, focused_iso_ ([ L .last ]) ([ _student, fiat ]) ]))
-				) (message_as_student_update .past) ] )=>_))
+	, _student_id = '' + T (_student) (L .get (student_as_id))
+	, wrapped_with_student = [ _student_id, L .mapping (val => [ [ _student, val ], val ] ) ] )=>_))
 
 var messages_encoding = list =>
 	R .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
+var decode_to_ensemble = L .get (
+	[ L .inverse (ensemble_as_ensemble)
+	, L .modify (ensemble_as_pings) (L .get (L .values))
+	, L .modify (ensemble_as_boards) (L .get (L .values))
+	, L .modify (ensemble_as_pasts) (L .get (L .values)) ] )
 
 
 
@@ -680,11 +685,10 @@ var time_intervals = _timer => so ((_=_=>
 
 
 
-var _ping_cache = {}
-var _ping_listeners = {}
+var _pings = {}
 
 // add retire code for sockets?
-var api = so ((_=_=>
+var _api = so ((_=_=>
 	(room, req) => {
 		;req = req || { method: 'GET' }
 		if (req .body) {
@@ -709,19 +713,21 @@ var api = so ((_=_=>
 		.then (_=> {;begin = performance .now ()})
 		.then (K (continuation))
 		.then (_=> {;end = performance .now ()})
-		.then (_=> {
-			var sample = end - begin
-			;_ping_cache [room] = T (_ping_cache [room]) (update_pings (sample))
-			;(_ping_listeners [room] || []) .forEach (fn => {;fn (_ping_cache [room])}) })
-		.catch (_ => {}) )
+		.then (impure (_ => 
+			T (api .ping (room)
+			) (
+			[ S .sample
+			, update_ping (end - begin)
+			, api .ping (room) ] ) ) )
+		.catch (K ()) )
 		
 		return continuation },
 	where
 	, new_id = _ => {
-			var id = '' + Math .floor (1000000 * Math .random ())
-			return !! not (api .continuations [id])
-			? id
-			: new_id () }
+		var id = '' + Math .floor (1000000 * Math .random ())
+		return !! not (api .continuations [id])
+		? id
+		: new_id () }
 	//TODO: make this more elegant
 	, new_socket = room => so ((_=_=>
 		( rec =
@@ -749,7 +755,7 @@ var api = so ((_=_=>
 					if (api .continuations [id]) {
 						 ;api .continuations [id] (data) } } } } )=>_)
 
-	, update_pings = sample => by (ping_info =>
+	, update_ping = sample => by (ping_info =>
 		L .get (
 		[ L .valueOr ([0, 0, 0, 0])
 		, ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
@@ -759,12 +765,10 @@ var api = so ((_=_=>
 			, (new Date) .getTime () ],
 			where 
 			, carry = n / (n + 1) )=>_) ] ) ) )=>_)
-;api .listen_ping = room => fn => {{ 
-	if (! _ping_listeners [room]) {
-		;_ping_listeners [room] = [] }
-	;_ping_listeners [room] .push (fn)
-	if (_ping_cache [room]) {
-		;fn (_ping_cache [room]) } }}
+;api .ping = room => {{ 
+	if (! _pings [room]) {
+		;_pings [room] = S .data () }
+	return _pings [room] } 
 ;api .sockets = []
 ;api .continuations = {}
 ;api .new_continuation = timeout => {
@@ -805,14 +809,30 @@ var toggle_order = prop => _ordering => so ((_=_=>
 	, opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
 
 
-var post = x => (
-	{ method: 'POST'
-	, headers:
-		{ 'Accept': 'application/json'
-		, 'Content-Type': 'application/json' }
-	, body: JSON .stringify (x) })
-
-
+var api = so ((_=_=> impure ((room, req) =>
+	(!! req ? _api (room, encode (req))
+	: _api (room))
+	.then (decode) ),
+	where
+	, post = x => (
+		{ method: 'POST'
+		, headers:
+			{ 'Accept': 'application/json'
+			, 'Content-Type': 'application/json' }
+		, body: JSON .stringify (x) })
+	, encode = 
+		suppose (
+		( as_list = 'length' // HACK
+		) =>
+		by (_message =>
+			[ !! L .isDefined (as_list) (_message)
+				? messages_encoding
+				: message_encoding
+			, post ] ) )
+	, decode = L .get (
+		L .choices (
+			[ L .when (L .get ('error')) ],
+			[ decode_to_ensemble ] )=>_)
 
 
 
