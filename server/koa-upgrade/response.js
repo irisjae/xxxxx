@@ -5,7 +5,7 @@ var ws = require('ws');
 var K = x => y => x
 
 class Response extends WritableStream {
-	constructor (socket, head){
+	constructor (socket, head) {
 		;super ()
 
 		var self = this
