@@ -317,7 +317,7 @@ document .addEventListener ('DOMContentLoaded', _ => {
 
 
 window .Surplus = Surplus
-window .stuff = { ...window .stuff,
+window .stuff = { ... window .stuff,
 	T, $, apply, L, L_, R, S, Z, Z_, Z$, sanc, memoize, 
 	faith, belief, show, mark, please, 
 	Y, impure, jinx, suppose,
