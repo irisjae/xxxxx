@@ -756,7 +756,7 @@ var broadcast_game_over = impure (_ =>
 	.then (_ => {
 		;please (L_ .set (io .messaging)) (io_state) })
 	.then (_ => so ((_=_=>
-		api (_room, progress_message))
+		api (_room, progress_message)
 		.then (panic_on ([
 			[ L .get ([ 'ok', L .is (false) ]), 'cannot post to ' + _room ] ]) ),
 		where
