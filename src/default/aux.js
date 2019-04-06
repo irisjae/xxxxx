@@ -832,6 +832,7 @@ var api = so ((_=_=> impure ((room, req) =>
 	, decode = L .get (
 		L .choices (
 			[ L .when (L .get ('error')) ],
+			[ L .when (L .get ('ok')) ],
 			[ decode_to_ensemble ] ) ) )=>_)
 ;api .ping = _api .ping
 
