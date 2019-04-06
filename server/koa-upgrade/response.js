@@ -77,7 +77,7 @@ class Response extends WritableStream {
 			var failure = _ => {;reject (new Error ('Upgrade failed'))}
 
 			;self .socket .on ('finish', failure)
-			( new ws .Server ({ noServer: true })
+			;( new ws .Server ({ noServer: true })
 			) .handleUpgrade (req, self .socket, self .head, conn => {
 				;self .socket .removeListener ('finish', failure)
 				;self .websocket = conn
