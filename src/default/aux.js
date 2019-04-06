@@ -184,22 +184,22 @@ var as_complete = L .when (L .none (equals (undefined)) (L .values))
 var complete_ = L .get (as_complete)
 
 var app_as_setup = data_iso (teacher_app .setup)
-var app_as_get_ready = L .choices (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
-var app_as_playing = L .choices (data_iso (teacher_app .playing), data_iso (student_app .playing))
-var app_as_game_over = L .choices (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
+var app_as_get_ready = L .choice (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
+var app_as_playing = L .choice (data_iso (teacher_app .playing), data_iso (student_app .playing))
+var app_as_game_over = L .choice (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
-var app_as_settings = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'settings' ]
-var app_as_student = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'student' ]
-var app_as_room = [ L .choices ('setup', 'get_ready', 'playing', 'game_over'), 'room' ]
-var app_as_students = [ L .choices ('get_ready', 'playing', 'game_over'), 'students' ]
+var app_as_settings = [ L .choice ('setup', 'get_ready', 'playing', 'game_over'), 'settings' ]
+var app_as_student = [ L .choice ('setup', 'get_ready', 'playing', 'game_over'), 'student' ]
+var app_as_room = [ L .choice ('setup', 'get_ready', 'playing', 'game_over'), 'room' ]
+var app_as_students = [ L .choice ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_progress = L .choose (_app =>
 	!! L .isDefined (app_as_board) (_app) // check is student_app
 	? [ L .rewrite (progress_past), data_lens (student_app .playing) .progress ]
 	: data_lens (teacher_app .playing) .progress)
-var app_as_board = [ L .choices ('playing', 'game_over'), 'board' ]
-var app_as_past = [ L .choices ('playing', 'game_over'), 'past' ]
-var app_as_boards = [ L .choices ('playing', 'game_over'), 'boards' ]
-var app_as_pasts = [ L .choices ('playing', 'game_over'), 'pasts' ]
+var app_as_board = [ L .choice ('playing', 'game_over'), 'board' ]
+var app_as_past = [ L .choice ('playing', 'game_over'), 'past' ]
+var app_as_boards = [ L .choice ('playing', 'game_over'), 'boards' ]
+var app_as_pasts = [ L .choice ('playing', 'game_over'), 'pasts' ]
 
 var io_as_inert = data_iso (io .inert)
 var io_as_connecting = data_iso (io .connecting)
@@ -212,8 +212,8 @@ var message_as_student_ping = data_iso (message .student_ping)
 var message_as_student_join = data_iso (message .student_join) 
 var message_as_student_update = data_iso (message .student_update) 
 
-var message_as_student = [ L .choices (message_as_student_ping, message_as_student_join, message_as_student_update), 'student' ]
-var message_as_ping = [ L .choices (message_as_teacher_ping, message_as_student_ping), 'ping' ]
+var message_as_student = [ L .choice (message_as_student_ping, message_as_student_join, message_as_student_update), 'student' ]
+var message_as_ping = [ L .choice (message_as_teacher_ping, message_as_student_ping), 'ping' ]
 var message_as_board = message_as_student_join .board
 var message_as_past = message_as_student_update .past
 
@@ -530,7 +530,7 @@ var ast_simplify = n => d =>
 var ast_left_right_normalized_parts = by (ast =>
 	$ (L .get
 	) (
-	[ L .choices (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
+	[ L .choice (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
 	, ({ left, right }) => so ((
 		suppose
 		, { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (normalize_ast (left))
