@@ -836,6 +836,12 @@ student-app > game-over-etc {
 		align-items: center;
 		& > * {
 			margin: 0 10px; } }
+	& show-results {
+		position: absolute;
+		left: 31.25%;
+		width: 37.5%;
+		top: 27.5%;
+		height: 50%; }
 	& overall-analysis, & problems-analysis-etc {
 		position: absolute;
 		top: 30%;
@@ -923,6 +929,8 @@ board {
 	background-color: #F3F3F3BE;
 	border: solid white 5px;
 	border-radius: 20px;
+	margin-left: -5px;
+	margin-top: -5px;
 	position: relative;  
 	&[x-disabled=true] {
 		filter: brightness(20%); }
@@ -947,7 +955,6 @@ board {
 			border: 2px solid white;
 			color: #EE804F;
 			text-align: center;
-			line-height: 15vh;
 			font-size: 2em;
 			font-weight: bold;
 			flex-grow: 1;
