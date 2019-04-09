@@ -657,7 +657,7 @@ var [ clock, fine_clock ] = S .root (die =>
 		, _fine_clock = S .value ()
 		, $__ticking = S (_ => {
 			if (ticking () && L_ .isDefined (mark (app_progress_timestamp_state))) {
-				var [ _timestamp_differential, _ ] = timestamp_differential ()
+				var [ _timestamp_differential, _ ] = timestamp_differential () || [ 0, ]
 				var _timestamp = mark (app_progress_timestamp_state) //- _timestamp_differential
 				var _fine_tick = (time () - _timestamp) / 1000
 				var _tick = Math .floor (_fine_tick)
@@ -693,11 +693,10 @@ var timestamp_differential = S .root (die =>
 		, differential_sample = (_timestamp - base_timestamp) + (1 / 2) * (_offset - base_offset)
 		) =>
 		L .get (
-		L .choices ( ...
-		[ [ L .when (K (differential_sample)), L .valueOr ([ 0, 0 ])
-			, ([ last_timestamp_differential, n ]) =>
-				[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ]
-		, [ K (0) ] ] ) ) ) ) ) ) )
+		[ L .when (K (differential_sample))
+		, L .valueOr ([ 0, 0 ])
+		, ([ last_timestamp_differential, n ]) =>
+			[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ] ) ) ) ) ) )
 
 
 // rules
