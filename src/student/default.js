@@ -693,8 +693,8 @@ var timestamp_differential = S .root (die =>
 		, differential_sample = (_timestamp - base_timestamp) + (1 / 2) * (_offset - base_offset)
 		) =>
 		L .get (
-		L .chain (([ last_timestamp_differential, n ]) =>
-			[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ]
+		L .chain (([ last_timestamp_differential, n ]) => K (
+			[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] )
 		) (
 		[ L .valueOr ([ 0, 0 ]), L .when (K (differential_sample)) ] ) ) ) ) ) ) )
 
