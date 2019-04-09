@@ -10,7 +10,7 @@ last_n, n_reducer, l_sum, l_point_sum, pinpoint,
 map_defined_, map_defined, from_just, 
 as_sole, sole, shuffle,
 I, K, not, equals,
-bool, number, timestamp, string,
+uniq, bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece, order,
 order_sort, direction_opposite, toggle_order, 
 shuffle, uuid, map_zip, chain_el, api, 
@@ -117,11 +117,11 @@ var img =
 // interactive datas
 
 var feedback = data ({
-	setup_room: (uniq =~ timestamp, room =~ room) => feedback,
-	setting_up_student: (icon =~ avatar, name =~ string) => feedback,
-	setup_student: (icon =~ avatar, name =~ string) => feedback,
-	attempt_problem: (uniq =~ timestamp, position =~ position) => feedback,
-	reset_game: () => feedback })
+	setup_room: (room =~ room, uniq =~ uniq) => feedback,
+	setting_up_student: (icon =~ avatar, name =~ string, uniq =~ uniq) => feedback,
+	setup_student: (icon =~ avatar, name =~ string, uniq =~ uniq) => feedback,
+	attempt_problem: (position =~ position, uniq =~ uniq) => feedback,
+	reset_game: (uniq =~ uniq) => feedback })
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
@@ -277,7 +277,7 @@ var setup_room_view = _ => so ((_=_=>
 			var value = _input .value
 			if (value) {
 				;_input .value = ''
-				;please (L_ .set (feedback .setup_room (+ (new Date), value))) (feedback_state) } } )=>_))=>_)
+				;please (L_ .set (feedback .setup_room (value, uniq ()))) (feedback_state) } } )=>_))=>_)
 
 var as_point = a => b =>
 	[ L .is (a), L .inverse (L .is (b)) ]
@@ -422,7 +422,7 @@ var board_view = _ => so ((_=_=>
 			;_dom .addEventListener (click, _ => {
 				var _step = show (app_progress_step_state)
 				var _position = T (cell) (L .get (cell_as_position))
-				;please (L_ .set (feedback .attempt_problem (+ (new Date), _position))) (feedback_state) }) }) } )=>_)
+				;please (L_ .set (feedback .attempt_problem (_position, uniq ()))) (feedback_state) }) }) } )=>_)
 
 var playing_view = _ => so ((_=_=>
 	<playing-etc>
@@ -539,7 +539,7 @@ var game_over_view = _ => so ((_=_=>
 	, feedback_play_again = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
-				;please (L_ .set (feedback .reset_game)) (feedback_state) })})} )=>_) 
+				;please (L_ .set (feedback .reset_game (uniq ()))) (feedback_state) })})} )=>_) 
 
 
 S .root (die => {

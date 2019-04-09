@@ -10,7 +10,7 @@ last_n, n_reducer, l_sum, l_point_sum, pinpoint,
 map_defined_, map_defined, from_just, 
 as_sole, sole, shuffle,
 I, K, not, equals,
-bool, number, timestamp, string,
+uniq, bool, number, timestamp, string,
 list, map, maybe, nat, id, v, piece, order,
 order_sort, direction_opposite, toggle_order, 
 shuffle, uuid, map_zip, chain_el, api,
@@ -145,11 +145,11 @@ var img =
 // interactive datas
 
 var feedback = data ({
-	start: (uniq =~ timestamp) => feedback,
-	setup_rules: ( rules_piece =~ piece (settings) ) => feedback,
-	play: () => feedback,
-	end: () => feedback,
-	reset: () => feedback })
+	start: (uniq =~ uniq) => feedback,
+	setup_rules: (rules_piece =~ piece (settings), uniq =~ uniq) => feedback,
+	play: (uniq =~ uniq) => feedback,
+	end: (uniq =~ uniq) => feedback,
+	reset: (uniq =~ uniq) => feedback })
 
 var lookbehind = data ({
 	nothing: () => lookbehind,
@@ -312,7 +312,7 @@ var setup_view = _ => so ((_=_=>
 				) ('遊戲模式：'
 				) (_win_rule => {
 					var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
-					;please (L_ .set (feedback .setup_rules (rules_delta))) (feedback_state) }
+					;please (L_ .set (feedback .setup_rules (rules_delta, uniq ()))) (feedback_state) }
 				) (
 				[ [ win_rule_as_first_bingo, img .play_to_win ]
 				, [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)) , win_rule_as_limit_time ]
@@ -324,7 +324,7 @@ var setup_view = _ => so ((_=_=>
 				) ('各題作答時限：'
 				) (_time_limit => {
 					var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
-					;please (L_ .set (feedback .setup_rules (rules_delta))) (feedback_state) }
+					;please (L_ .set (feedback .setup_rules (rules_delta, uniq ()))) (feedback_state) }
 				) (
 				[ [ L .is (10), img .ten_secs ]
 				, [ L .is (20), img .twenty_secs ]
@@ -373,12 +373,12 @@ var setup_view = _ => so ((_=_=>
 	, feedback_start = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
-				;please (L_ .set (feedback .start (+ (new Date)))) (feedback_state) }) }) }
+				;please (L_ .set (feedback .start (uniq ()))) (feedback_state) }) }) }
 	, feedback_size = _size => _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
 				var rules_delta = T (_size) (L .get (L.inverse (data_iso (rules .rules) .size)))
-				;please (L_ .set (feedback .setup_rules (rules_delta))) (feedback_state) }) }) }
+				;please (L_ .set (feedback .setup_rules (rules_delta, uniq ()))) (feedback_state) }) }) }
 	, setup_preview = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
@@ -414,7 +414,7 @@ var get_ready_view = _ => so ((_=_=>
 	, feedback_play = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
-				;please (L_ .set (feedback .play)) (feedback_state) }) }) } 
+				;please (L_ .set (feedback .play (uniq ()))) (feedback_state) }) }) } 
 	, toggle_background_music = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
@@ -542,7 +542,7 @@ var playing_view = _ => so ((_=_=>
 	, confirm_end = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
-				;please (L_ .set (feedback .end)) (feedback_state) })})}  
+				;please (L_ .set (feedback .end (uniq ()))) (feedback_state) })})}  
 	, toggle_background_music = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
@@ -662,7 +662,7 @@ var game_over_view = _ => so ((_=_=>
 	, play_again = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {
-				;please (L_ .set (feedback .reset)) (feedback_state) })})}  
+				;please (L_ .set (feedback .reset (uniq ()))) (feedback_state) })})}  
 	, toggle_background_music = _dom => {
 		;clicking .forEach (click => {
 			;_dom .addEventListener (click, _ => {

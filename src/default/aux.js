@@ -17,6 +17,8 @@ var {
 
 //--------------------TYPES--------------------
 
+var uniq = _ => (uniq ._count = (uniq ._count || 0) + 1)
+	
 var bool = fiat
 var number = fiat
 var timestamp = number
@@ -872,7 +874,7 @@ var uuid = _ =>
 
 
 window .stuff = { ...window .stuff,
-	bool, number, timestamp, string,
+	uniq, bool, number, timestamp, string,
 	list, map, maybe, nat, id, v, piece, order,
 	order_sort, direction_opposite, toggle_order, 
 	shuffle, uuid, map_zip, chain_el, api,
