@@ -696,7 +696,7 @@ var timestamp_differential = S .root (die =>
 		L .choices ( ...
 		[ [ L .when (K (differential_sample)), L .valueOr ([ 0, 0 ])
 			, ([ last_timestamp_differential, n ]) =>
-				[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ],
+				[ (last_timestamp_differential * n + differential_sample ) / (n + 1), n + 1 ] ]
 		, [ K (0) ] ] ) ) ) ) ) ) )
 
 
