@@ -29,14 +29,17 @@ teacher-app, student-app {
 		position: absolute;
 		top: 0;
 		left: 50%;
-		transform: rotate(90deg) translateX(-50%); }
+		transform: rotate(90deg) translateX(-37.5vh);
+		transform-origin: left;
+	}
 	@media (max-aspect-ratio: 3/4) {
 		height: 100vw;
 		width: 133.333vw;
 		position: absolute;
 		top: 50%;
 		left: 0;
-		transform: rotate(90deg) translateY(-50%); } }
+		transform: rotate(90deg) translateY(-50vw);
+		transform-origin: left; } }
 
 teacher-app > setup-etc {
 	setting {
