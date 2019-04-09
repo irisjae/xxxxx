@@ -36,9 +36,9 @@ teacher-app, student-app {
 		height: 100vw;
 		width: 133.333vw;
 		position: absolute;
-		top: 50%;
-		left: 0;
-		transform: rotate(90deg) translateY(-50vw);
+		top: 0;
+		left: 50%;
+		transform: rotate(90deg) translateX(-50vw);
 		transform-origin: left; } }
 
 teacher-app > setup-etc {
