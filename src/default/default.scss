@@ -36,10 +36,10 @@ teacher-app, student-app {
 		height: 100vw;
 		width: 133.333vw;
 		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: rotate(90deg) translateX(-50vw);
-		transform-origin: left; } }
+		top: 50%;
+		left: 0;
+		transform: rotate(90deg) translateX(-66.67vw) translateY(-100vw);
+		transform-origin: top left; } }
 
 teacher-app > setup-etc {
 	setting {
