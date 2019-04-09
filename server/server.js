@@ -105,7 +105,7 @@ module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa
 		.catch ($ (
 			[ err => {;console .error (err)}
 			, K ({ error: 'An unexpected error occured' }) ] ) )
-		.then (x => {;ctx .body = x}) ) )
+		.then (x => {;ctx .body = x}) ))
 	.get ('/room/:room', impure ((ctx, next) => 
 		go
 		.then (K (
@@ -117,7 +117,7 @@ module .exports = (app => (require ('./koa-upgrade') (app), app)) (require ('koa
 		.catch ($ (
 			[ err => {;console .error (err)}
 			, K ({ error: 'An unexpected error occured' }) ] ) )
-		.then (x => {;ctx .body = x}) )
+		.then (x => {;ctx .body = x}) ))
 	.get ('/peephole', impure ((ctx, next) => 
 		go
 		.then (K (rooms))
