@@ -461,6 +461,7 @@ var overall_analysis_view = _ => so ((_=_=>
 		<div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
 		<div><span>平均答對時間：</span> <span>{ show_time (mean_solved_point_latency) }</span></div> </overall-analysis>,
 	where
+	, _board = mark (app_board_state)
 	, _points = mark (app_past_points_state)
 	, attempted_points_amount = T (_points) (L .count ([ L .elems, point_as_attempts, L .last ]))
 	, solved_points_amount = T (_points) (L .count ([ L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
