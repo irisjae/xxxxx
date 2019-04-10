@@ -46,72 +46,9 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 board_choice, current_problem, current_problem_completed, problem_choice_matches,
 local_patterns, size_patterns,
-as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes
+as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
+clicking, play, pause, audio, img
 } = window .stuff
-
-
-// resources
-
-var clicking = ['click', 'touchstart'] .filter (_e => 'on' + _e in window) .slice (0, 1)
-var play = impure (by (([ play, pause ]) => play))
-var pause = impure (by (([ play, pause ]) => pause))
-var delay = time =>
-	suppose (
-	( _ready
-	, promise = new Promise (ok => {;_ready = ok})
-	, $__delay = jinx (_ => {;setTimeout (_ready, time)})
-	) =>
-	promise )
-var audio_from = (url, loop = false) =>
-	suppose (
-	( el = new Audio (url)
-	, ready_yet
-	, ready = new Promise (ok => {;ready_yet = ok})
-	, $__preload = jinx (_ => {
-		;el .volume = 0
-		var _load = impure (_ =>
-			go
-			.then (_ => {
-				;el .play () })
-			.catch (_ => 
-				delay (50)
-				.then (_load) ) )
-		;go
-		.then (_load)
-		.then (ready_yet) })
-	, $__loop = jinx (_ => {
-		;el .loop = loop })
-	, _play = _ => {
-		;el .currentTime = 0
-		;el .volume = 1
-		;ready .then (_ => {
-			;el .play () }) }
-	, _pause = _ => {
-		;el .volume = 0 }
-	) =>
-	[ _play, _pause ] )
-var audio = 
-	{ correct: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-correct.mp3?1546277231570')
-	, incorrect: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-incorrect.mp3?1546277231539')
-	, bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fstudent-bingo.mp3?1546277231054')
-	, countdown: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fquestion-countdown.mp3?1546277335320')
-	, background: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019', true) }
-
-var img =
-	{ logo: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png?1546759647786' 
-	, join: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png?1543381404734'
-	, lion_avatar: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-avatar.png?1546341028460'
-	, bunny_avatar: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-avatar.png?1546341028205'
-	, connect: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fconnect.png?1543381404627' 
-	, show_results_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-on.png?1546759645160'
-	, show_results_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fshow-results-off.png?1546759644963'
-	, overall_analysis_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-analysis-on.png?1547306859997'															
-	, overall_analysis_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Foverall-anlysis-off.png?1547306860589'														 
-	, problems_analysis_on: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-on.png?1546759645249'															
-	, problems_analysis_off: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fproblems-analysis-off.png?1546759645326'															
-	, toggle_ordering: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png?1551692617218'
-	, play_again: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png?1546759645987' }
-
 
 
 // interactive datas
@@ -634,7 +571,7 @@ var attempt_problem = impure (_position =>
 						L .collect ([ as_value_of (_position), L .elems, L .when (R .all (T (_solved_positions) (R .flip (R .includes)))) ]))
 					;play (audio .correct)
 					if (L .isDefined (L .elems) (_local_patterns)) {
-						;play (audio .bingo) } }
+						;play (audio .student_bingo) } }
 				else {
 					;play (audio .incorrect)
 					;please (L_ .set (lookbehind .attempting (latency, true))) (lookbehind_state) } } } }) ]) ) )

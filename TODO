@@ -1,6 +1,5 @@
 add compression
 remove old 'points' data ~ encode info directly into attempts
-move resources into aux
 use new data
 fix ordering
 improve debugging (now, need to manually recreate state...)
@@ -12,3 +11,4 @@ done:
 fix time syncing issues
 untangle server-side api from ensemble
 uniqueness types for feedbacks
+move resources into aux
