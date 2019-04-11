@@ -57,8 +57,8 @@ teacher-app > setup-etc {
 				@extend %clickable; } } }
 
 	& .left-pane {
-		top: 5%;
-		bottom: 5%;
+		top: 0;
+		bottom: 0;
 		left: 5%;
 		right: 33%;
 		position: absolute;
@@ -66,13 +66,13 @@ teacher-app > setup-etc {
 		flex-direction: column;
 		justify-content: space-between;
 		& a-title {
+			max-height: 25%;
 			width: 100%;
 			display: block;
 			text-align: center;
 			font-size: 100px;
-			& img {
-				max-width: 100%;
-				max-height: 100%; } }
+
+			@extend %img-content; }
 		& sub-title {
 			width: 100%;
 			display: block;
@@ -82,6 +82,7 @@ teacher-app > setup-etc {
 			width: 100%;
 			height: 150px;
 			display: flex;
+			margin-top: 4%;
 			& setting {
 				width: 50%;
 				height: 100%;
@@ -93,7 +94,7 @@ teacher-app > setup-etc {
 					display: block;
 					width: 100%;
 					flex-grow: 0;
-					margin-bottom: 20px; }
+					margin-bottom: 5%; }
 				& control {
 					display: flex;
 					width: 100%;
@@ -102,7 +103,7 @@ teacher-app > setup-etc {
 					& > * {
 						display: flex;
 						flex-direction: row;
-						align-items: center;
+						@extend img-content;
 						counter#{&} {
 							flex-grow: 2;
 							flex-basis: 40%; }
@@ -111,11 +112,7 @@ teacher-app > setup-etc {
 							flex-basis: 20%; }
 						& counter {
 							flex-grow: 2;
-							flex-basis: 40%; }
-						& img {
-							max-width: 100%;
-							max-height: 100%;
-							object-fit: contain; } } } } } }
+							flex-basis: 40%; } } } } } }
 
 	& .right-pane {
 		top: 0;
@@ -229,8 +226,7 @@ teacher-app > setup-etc {
 	& setting[x-for=background-music] {
 		position: absolute;
 		left: 0;
-		bottom: 0;
-		transform: translate(-50%, 50%); } }
+		bottom: 0; } }
 teacher-app > get-ready-etc {
 	setting {
 		&[x-for=background-music] {
@@ -289,8 +285,7 @@ teacher-app > get-ready-etc {
 	& setting[x-for=background-music] {
 		position: absolute;
 		left: 0;
-		bottom: 0;
-		transform: translate(-50%, 50%); } }
+		bottom: 0; } }
 teacher-app > playing-etc {
 	setting {
 		&[x-for=background-music] {
