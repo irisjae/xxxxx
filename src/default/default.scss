@@ -103,7 +103,7 @@ teacher-app > setup-etc {
 					& > * {
 						display: flex;
 						flex-direction: row;
-						@extend img-content;
+						@extend %img-content;
 						counter#{&} {
 							flex-grow: 2;
 							flex-basis: 40%; }
