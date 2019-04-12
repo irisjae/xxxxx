@@ -105,13 +105,12 @@ teacher-app > setup-etc {
 						flex-direction: row;
 						@extend %img-content;
 
-						@at-root {
-							counter#{&} {
-								flex-grow: 2;
-								flex-basis: 40%; }
-							prev#{&}, next#{&} {
-								flex-grow: 1;
-								flex-basis: 20%; } } } } } } }
+						&counter {
+							flex-grow: 2;
+							flex-basis: 40%; }
+						&prev, &next {
+							flex-grow: 1;
+							flex-basis: 20%; } } } } } }
 
 	& .right-pane {
 		top: 0;
