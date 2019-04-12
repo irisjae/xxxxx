@@ -64,7 +64,7 @@ teacher-app > setup-etc {
 		position: absolute;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		justify-content: flex-start;
 		& a-title {
 			height: 25%;
 			width: 100%;
@@ -110,8 +110,10 @@ teacher-app > setup-etc {
 					& > prev, & > next {
 						flex-grow: 1;
 						flex-basis: 20%; } } } }
-		& button {
-			@extend %img-content; } } 
+		& > button {
+			@extend %img-content;
+			height: 15%;
+			width: 100%; } } 
 	& .right-pane {
 		top: 0;
 		bottom: 0;
@@ -922,7 +924,8 @@ student-app > game-over-etc {
 		object-fit: contain;
 		left: 50%;
 		top: 50%;
-		transform: translateX(-50%) translateY(-50%); } }
+		transform: translateX(-50%) translateY(-50%);
+		width: 1000vw; } }
 
 board {
 	width: 100%;
