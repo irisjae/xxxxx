@@ -46,7 +46,7 @@ teacher-app > setup-etc {
 		&[x-of=game-mode], &[x-of=time-limit] {
 			& prev, & next {
 				@extend %clickable; } }
-		&[x-of=board-size], &[x-for=background-music] {
+		&[x-of=board-size] {
 			& img {
 				@extend %clickable; } } }
 	button {
@@ -222,16 +222,8 @@ teacher-app > setup-etc {
 					height: auto;
 					object-fit: contain; }
 				&:not(:last-child) {
-					border-bottom: dashed 1px #ff7b44; } } } }
-	& setting[x-for=background-music] {
-		position: absolute;
-		left: 0;
-		bottom: 0; } }
+					border-bottom: dashed 1px #ff7b44; } } } } }
 teacher-app > get-ready-etc {
-	setting {
-		&[x-for=background-music] {
-			& img {
-				@extend %clickable; } } }
 	button {
 		&[x-for=play] {
 			&:focus {
@@ -281,16 +273,8 @@ teacher-app > get-ready-etc {
 					padding-top: 12px; }
 				&[x-icon=bunny] {
 					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
-					padding-top: 21px; } } } }	
-	& setting[x-for=background-music] {
-		position: absolute;
-		left: 0;
-		bottom: 0; } }
+					padding-top: 21px; } } } } }
 teacher-app > playing-etc {
-	setting {
-		&[x-for=background-music] {
-			& img {
-				@extend %clickable; } } }
 	button {
 		&[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
 			&:focus {
@@ -445,16 +429,8 @@ teacher-app > playing-etc {
 			align-items: center;
 			label {
 				font-size: 70px;
-				font-weight: bold; } } }	
-	& setting[x-for=background-music] {
-		position: absolute;
-		left: 0;
-		bottom: 0; } }
+				font-weight: bold; } } } }
 teacher-app > game-over-etc {
-	setting {
-		&[x-for=background-music] {
-			& img {
-				@extend %clickable; } } }
 	button {
 		&[x-for=show-results], &[x-for=students-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
 			&:focus {
@@ -613,11 +589,7 @@ teacher-app > game-over-etc {
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
-		align-items: center; }	
-	& setting[x-for=background-music] {
-		position: absolute;
-		left: 0;
-		bottom: 0; } }
+		align-items: center; } }
 
 
 student-app > setup-etc {
@@ -925,7 +897,15 @@ student-app > game-over-etc {
 		left: 50%;
 		top: 50%;
 		transform: translateX(-50%) translateY(-50%);
-		width: 1000vw; } }
+
+setting[x-for=background-music] {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	margin: 0;
+	padding: 0;
+	& img {
+		@extend %clickable; } }
 
 board {
 	width: 100%;
