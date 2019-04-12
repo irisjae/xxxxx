@@ -254,8 +254,7 @@ var setup_view = _ => so ((_=_=>
 		<setting x-for="background-music" x-be={ on_off (_background_music_on) } fn={ toggle_background_music } ><img src={ background_music_img (_background_music_on) } /></setting> </setup-etc>
 	: L_ .isDefined (mark (lookbehind_preview_questions_state))
 	? <setup-etc>
-		<title-etc>
-			<a-title><img src={ img .logo }/></a-title> </title-etc>
+		<title-etc><img src={ img .logo }/></title-etc>
 		<preview-questions-etc>
 			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .back } /></button>
 			<preview-questions>
