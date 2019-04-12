@@ -215,7 +215,7 @@ var setup_view = _ => so ((_=_=>
 		<div class="left-pane">
 			<a-title><img src={ img .logo }/></a-title>
 			<sub-title>除法（一）</sub-title>
-			<settings x-for="game-mode time-limit" style={{ marginTop: '20px' }}>
+			<settings x-for="game-mode time-limit">
 			<setting x-of="game-mode">
 				{ $ (counter_setting_view
 				) ('遊戲模式：'
@@ -239,7 +239,7 @@ var setup_view = _ => so ((_=_=>
 				, [ L .is (20), img .twenty_secs ]
 				, [ L .is (30), img .thirty_secs ] ]
 				) (mark (app_settings_rules_time_limit_state)) } </setting></settings>
-			<button x-custom="true" x-for="preview" style={{ marginTop: '25px' }} fn={ setup_preview }><img src={ img .preview } /></button>
+			<button x-custom="true" x-for="preview" fn={ setup_preview }><img src={ img .preview } /></button>
 			<button x-custom="true" x-for="start" fn={ feedback_start }>
 				<img src={ img .start } />
 				{ L .get (chain_el (K (
