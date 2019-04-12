@@ -233,7 +233,8 @@ teacher-app > get-ready-etc {
 		border-radius: 1.5em;
 		font-size: 1.5em; }
 	& students-etc {
-		width: 100%;
+		width: 90%;
+		height: 65%;
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
@@ -264,7 +265,11 @@ teacher-app > get-ready-etc {
 					padding-top: 12px; }
 				&[x-icon=bunny] {
 					background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
-					padding-top: 21px; } } } } }
+					padding-top: 21px; } } } }
+				
+	& button[x-for=play] {
+		max-height: 75px; }
+				}
 teacher-app > playing-etc {
 	button {
 		&[x-for=view-students], &[x-for=show-problem], &[x-for=end-game], &[x-for=confirm], &[x-for=cancel] {
