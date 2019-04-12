@@ -240,12 +240,11 @@ var setup_view = _ => so ((_=_=>
 				, [ L .is (30), img .thirty_secs ] ]
 				) (mark (app_settings_rules_time_limit_state)) } </setting></settings>
 			<button x-custom="true" x-for="preview" fn={ setup_preview }><img src={ img .preview } /></button>
-			<button x-custom="true" x-for="start" fn={ feedback_start }>
-				<img src={ img .start } />
-				{ L .get (chain_el (K (
-				<div style={{ height: 0 }}>遊戲正在開始…</div> ) )
-				) (
-				mark (io_connecting_state) ) } </button></div>
+			<button x-custom="true" x-for="start" fn={ feedback_start }><img src={ img .start } /></button>
+			{ L .get (chain_el (K (
+			<div style={{ 'text-align': 'center' }}>遊戲正在開始…</div> ) )
+			) (
+			mark (io_connecting_state) ) } </div>
 		<div class="right-pane">
 			<settings x-for="board-size">
 				<setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ three_by_three_img (equals (_size) (3)) } /></setting>
