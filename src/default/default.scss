@@ -343,11 +343,11 @@ teacher-app > playing-etc {
 		& student-etc {
 			width: 100px;
 			height: 100px;
-			margin: 30px;
+			margin: 40px;
 			& label {
 				margin: 5px;
 				position: absolute;
-				transform: translate(25px,-27px);
+				transform: translate(25px,-32px);
 				&:before {
 					content: ' ';
 					position: absolute;
@@ -478,11 +478,11 @@ teacher-app > game-over-etc {
 		& student-etc {
 			width: 100px;
 			height: 100px;
-			margin: 30px;
+			margin: 40px;
 			& label {
 				margin: 5px;
 				position: absolute;
-				transform: translate(25px,-30px);
+				transform: translate(25px,-32px);
 				&:before {
 					content: ' ';
 					position: absolute;
