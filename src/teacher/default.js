@@ -224,7 +224,7 @@ var setup_view = _ => so ((_=_=>
 					;please (L_ .set (feedback .setup_rules (rules_delta, uniq ()))) (feedback_state) }
 				) (
 				[ [ win_rule_as_first_bingo, img .play_to_win ]
-				, [ [ L .normalize (L .modify ([ win_rule_as_time_limit, L .valueOr (15) ]) (I)) , win_rule_as_limit_time ]
+				, [ [ win_rule_as_limit_time, L .normalize (L .modify ([ 'time_limit', L .valueOr (15) ]) (I)) ]
 					, img .time_limit_play ]
 				, [ win_rule_as_all_problems, img .free_play ] ]
 				) (mark (app_settings_rules_win_rule_state)) } </setting>
