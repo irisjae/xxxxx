@@ -194,7 +194,7 @@ var setup_room_view = _ => so ((_=_=>
 		<a-title><img src={ img .logo }/></a-title>
 		<sub-title>除法（一）</sub-title>
 		<room style={{ margin: '30px 0' }}>
-			<label>遊戲室編號：</label>
+			<label>{ text_asset_view (img .text_room_number_is) }</label>
 			{ L .get (chain_el (K (
 			<message x-error="true">不能連接遊戲室{ bad_room }</message> ))
 			) (
@@ -235,7 +235,7 @@ var setup_student_view = _ => so ((_=_=>
 		<a-title><img src={ img .logo }/></a-title>
 		<sub-title>除法（一）</sub-title>
 		<name style={{ marginTop: '30px' }}>
-			<label>名稱</label>
+			<label>{ text_asset_view (img .text_name) }</label>
 			<input /> </name>
 		<icon style={{ marginBottom: '30px' }}>
 			<avatar x-for="lion" x-selected={ T (_icon) (L .isDefined (avatar_as_lion)) }>
