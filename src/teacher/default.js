@@ -241,8 +241,8 @@ var setup_view = _ => so ((_=_=>
 				, [ L .is (20), img .twenty_secs ]
 				, [ L .is (30), img .thirty_secs ] ]
 				) (mark (app_settings_rules_time_limit_state)) } </setting></settings>
-			<button x-custom="true" x-for="preview" fn={ setup_preview }><img src={ img .preview } /></button>
-			<button x-custom="true" x-for="start" fn={ feedback_start }><img src={ img .start } /></button>
+			<button x-custom="true" x-for="preview" fn={ setup_preview }><img src={ img .go_preview } /></button>
+			<button x-custom="true" x-for="start" fn={ feedback_start }><img src={ img .go_start } /></button>
 			{ L .get (chain_el (K (
 			<div style={{ 'text-align': 'center' }}>遊戲正在開始…</div> ) )
 			) (
@@ -257,7 +257,7 @@ var setup_view = _ => so ((_=_=>
 	? <setup-etc>
 		<title-etc><img src={ img .logo }/></title-etc>
 		<preview-questions-etc>
-			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .back } /></button>
+			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .go_back } /></button>
 			<preview-questions>
 				<labels><question>題目</question><answer>答案</answer></labels>
 				{ L .collect (L .chain ((_problem, i) => so ((_=_=> K (
@@ -303,9 +303,9 @@ var setup_view = _ => so ((_=_=>
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<room>遊戲室編號：{ mark (app_room_state) }</room>
+		<room>{ asset_view (img .text_room_number) }{ mark (app_room_state) }</room>
 		<students-etc>
-			<label>人數：{ R .length (_students) }</label>
+			<label>{ asset_view (img .text_number_of_students) }{ R .length (_students) }</label>
 			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
 				<student x-icon={
 					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
@@ -395,7 +395,7 @@ var playing_view = _ => so ((_=_=>
 	? <playing-etc>
 		<title-etc>
 			<a-title><img src={ img .logo }/></a-title>
-			<problem-number>第{ _problem_number }題</problem-number> </title-etc>
+			<problem-number>{ asset_view (img .text_nth) }{ _problem_number }{ asset_view (img .text_problem) }</problem-number> </title-etc>
 		<problem-etc>
 			<ticker-etc>
 				{ L .get (chain_el (_t =>
@@ -465,10 +465,10 @@ var students_analysis_view = so ((_=_=>
 	_ordering =>
 		<students-analysis-etc>
 			<labels>
-				<name>名稱 <img src={ img .toggle_ordering } /></name>
-				<number-of-solved>答對題數 <img src={ img .toggle_ordering } /></number-of-solved>
-				<number-of-bingoes>BINGO <img src={ img .toggle_ordering } /></number-of-bingoes>
-				<average-solved-time>平均答對時間 <img src={ img .toggle_ordering } /></average-solved-time> </labels>
+				<name>{ asset_view (img .text_name) }<img src={ img .toggle_ordering } /></name>
+				<number-of-solved>{ asset_view (img .text_number_of_solved) }<img src={ img .toggle_ordering } /></number-of-solved>
+				<number-of-bingoes>{ asset_view (img .text_bingo) }<img src={ img .toggle_ordering } /></number-of-bingoes>
+				<average-solved-time>{ asset_view (img .text_bingo) }<img src={ img .toggle_ordering } /></average-solved-time> </labels>
 			<students-analysis> { L .collect (L .chain (({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => K (
 				<student>
 					<name>{ _name }</name>
@@ -491,10 +491,10 @@ var problems_analysis_view = so ((_=_=>
 	_ordering => so ((_=_=>
 		<problems-analysis-etc>
 			<labels>
-				<question>題目 <img src={ img .toggle_ordering } /></question>
-				<number-of-solvers>答對人數 <img src={ img .toggle_ordering } /></number-of-solvers>
-				<average-number-of-attempts>平均作答次數 <img src={ img .toggle_ordering } /></average-number-of-attempts>
-				<average-solved-time>平均答對時間 <img src={ img .toggle_ordering } /></average-solved-time> </labels>
+				<question>{ asset_view (img .text_question_label) }<img src={ img .toggle_ordering } /></question>
+				<number-of-solvers>{ asset_view (img .text_number_of_solvers) }<img src={ img .toggle_ordering } /></number-of-solvers>
+				<average-number-of-attempts>{ asset_view (img .text_average_number_of_attempts) }<img src={ img .toggle_ordering } /></average-number-of-attempts>
+				<average-solved-time>{ asset_view (img .text_average_solved_time) }<img src={ img .toggle_ordering } /></average-solved-time> </labels>
 			<problems-analysis> { L .collect (L .chain (({ _question, _number_of_solvers, _average_number_of_attempts, _average_solved_time }) => K (
 				<problem>
 					<question><img src={ _question }/></question>
