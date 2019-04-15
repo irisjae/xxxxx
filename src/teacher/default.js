@@ -174,6 +174,8 @@ var feedback_rules_piece_state = belief (feedback_as_rules_piece) (feedback_stat
 
 // views
 
+var asset_view = _asset => <asset><img src={ _asset } /></asset>
+
 var counter_setting_view = label => please_feedback => iso_v_img_list => _setting => so ((_=_=>
 	[ <label>{ label }</label>
 	, <control>
@@ -218,7 +220,7 @@ var setup_view = _ => so ((_=_=>
 			<settings x-for="game-mode time-limit">
 			<setting x-of="game-mode">
 				{ $ (counter_setting_view
-				) ('遊戲模式：'
+				) (asset_view (img .text_game_mode)
 				) (_win_rule => {
 					var rules_delta = T (_win_rule) (L .get (L.inverse (data_iso (rules .rules) .win_rule)))
 					;please (L_ .set (feedback .setup_rules (rules_delta, uniq ()))) (feedback_state) }
@@ -230,7 +232,7 @@ var setup_view = _ => so ((_=_=>
 				) (mark (app_settings_rules_win_rule_state)) } </setting>
 			<setting x-of="time-limit">
 				{ $ (counter_setting_view
-				) ('各題作答時限：'
+				) (asset_view (img .text_time_limit)
 				) (_time_limit => {
 					var rules_delta = T (_time_limit) (L .get (L.inverse (data_iso (rules .rules) .time_limit)))
 					;please (L_ .set (feedback .setup_rules (rules_delta, uniq ()))) (feedback_state) }
