@@ -546,6 +546,8 @@ teacher-app > game-over-etc {
 		right: 10%;		
 		top: 25%;		
 		bottom: 25%;	
+		& labels {
+			height: 1.5em; }
 		& labels, & student, & problem {
 			width: 80%;
 			display: flex;
@@ -635,9 +637,19 @@ student-app > setup-etc {
 			display: block;
 			text-align: center;
 			font-size: 40px; }
+		& room {
+			& label {
+				font-size: 20px;
+				height: 1.6em;
+				display: flex; } }
+		& name {
+			& label {
+				font-size: 30px; } }
 		& room, & name {
 			& label {
-				font-size: 20px; }
+				font-size: 20px;
+				height: 1.6em;
+				display: flex; }
 			& input {
 				border: none;
 				height: 70px;
@@ -843,8 +855,9 @@ student-app > game-over-etc {
 			font-size: 2em; } }
 	& problems-analysis-etc {
 		overflow: visible;
+		& labels {
+			height: 1.5em; }
 		& labels, & problem {
-			height: 1.5em;
 			width: 80%;
 			display: flex;
 			justify-content: space-between;
