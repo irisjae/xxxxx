@@ -916,7 +916,7 @@ var audio =
 	, teacher_bingo: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fteacher-bingo.mp3?1553677919629')
 	, background: audio_from ('https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.mp3?1546277343019', true) } 
 
-var img =
+var img = T (
 	{ logo: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flogo.png' 
 
 	, join: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fjoin.png'
@@ -970,10 +970,8 @@ var img =
 
 	, toggle_ordering: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png'														
 	, play_again: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png' }
-
-;Object .keys (img) .forEach (key => {
-	;img [key] += ('?' + (+ (new Date))) })
-
+	) (
+	L .modify (L .values) (url => url + ('?' + (+ (new Date))) ) )
 
 
 
