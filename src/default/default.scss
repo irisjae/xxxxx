@@ -72,7 +72,7 @@ teacher-app > setup-etc {
 			text-align: center;
 			font-size: 100px;
 
-			@extend asset; }
+			@extend %asset; }
 		& sub-title {
 			width: 100%;
 			display: block;
@@ -91,6 +91,7 @@ teacher-app > setup-etc {
 				flex-direction: column;
 				& label {
 					text-align: center;
+					font-size: 2em;
 					height: 1em;
 					display: block;
 					width: 100%;
@@ -104,7 +105,7 @@ teacher-app > setup-etc {
 					& > * {
 						display: flex;
 						flex-direction: row;
-						@extend asset; }
+						@extend %asset; }
 					& > counter {
 						flex-grow: 2;
 						flex-basis: 40%; }
@@ -112,7 +113,7 @@ teacher-app > setup-etc {
 						flex-grow: 1;
 						flex-basis: 20%; } } } }
 		& > button {
-			@extend asset;
+			@extend %asset;
 			height: 15%;
 			width: 100%; } } 
 	& .right-pane {
@@ -131,7 +132,7 @@ teacher-app > setup-etc {
 				flex-grow: 1;
 				flex-shrink: 1;
 				
-				@extend asset; } } }
+				@extend %asset; } } }
 	
 	& > title-etc {
 		position: absolute;
@@ -142,7 +143,7 @@ teacher-app > setup-etc {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		@extend asset; }
+		@extend %asset; }
 
 	& preview-questions-etc {
 		position: absolute;
@@ -432,7 +433,7 @@ teacher-app > playing-etc {
 				& button {
 					width: 50%;
 					height: 100%;
-					@extend asset; } } } } }
+					@extend %asset; } } } } }
 teacher-app > game-over-etc {
 	button {
 		&[x-for=show-results], &[x-for=students-analysis], &[x-for=problems-analysis], &[x-for=play-again] {
@@ -890,7 +891,7 @@ student-app > game-over-etc {
 %clickable {
 	cursor: pointer; }
 
-asset {
+%asset {
 	position: relative;
 	& img {
 		position: absolute;
@@ -901,6 +902,12 @@ asset {
 		top: 50%;
 		transform: translateX(-50%) translateY(-50%);
 		width: 1000vw; } }
+
+asset {
+	@extend %asset;
+	height: 100%;
+	width: 100%;
+	display: block; }
 
 setting[x-for=background-music] {
 	position: absolute;
