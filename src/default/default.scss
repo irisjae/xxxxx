@@ -911,7 +911,9 @@ asset {
 
 [text-asset] {
 	height: 1em;
-	vertical-align: text-top; }
+	vertical-align: text-top;
+	margin: 0 0.5em;
+	transform: translateY(0.02em); }
 
 setting[x-for=background-music] {
 	position: absolute;

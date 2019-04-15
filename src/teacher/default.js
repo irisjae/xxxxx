@@ -260,7 +260,7 @@ var setup_view = _ => so ((_=_=>
 		<preview-questions-etc>
 			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .go_back } /></button>
 			<preview-questions>
-				<labels><question>題目</question><answer>答案</answer></labels>
+				<labels><question>{ asset_view (img .label_questions) }</question><answer>{ asset_view (img .label_answers) }</answer></labels>
 				{ L .collect (L .chain ((_problem, i) => so ((_=_=> K (
 				<problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem> ),
 				where
@@ -304,9 +304,9 @@ var setup_view = _ => so ((_=_=>
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<room>{ text_asset_view (img .text_room_number) }{ mark (app_room_state) }</room>
+		<room>{ text_asset_view (img .text_room_number_is) }{ mark (app_room_state) }</room>
 		<students-etc>
-			<label>{ text_asset_view (img .text_number_of_students) }{ R .length (_students) }</label>
+			<label>{ text_asset_view (img .text_number_of_students_is) }{ R .length (_students) }</label>
 			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
 				<student x-icon={
 					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
@@ -492,7 +492,7 @@ var problems_analysis_view = so ((_=_=>
 	_ordering => so ((_=_=>
 		<problems-analysis-etc>
 			<labels>
-				<question>{ asset_view (img .text_question_label) }<img src={ img .toggle_ordering } /></question>
+				<question>{ asset_view (img .text_question) }<img src={ img .toggle_ordering } /></question>
 				<number-of-solvers>{ asset_view (img .text_number_of_solvers) }<img src={ img .toggle_ordering } /></number-of-solvers>
 				<average-number-of-attempts>{ asset_view (img .text_average_number_of_attempts) }<img src={ img .toggle_ordering } /></average-number-of-attempts>
 				<average-solved-time>{ asset_view (img .text_average_solved_time) }<img src={ img .toggle_ordering } /></average-solved-time> </labels>
