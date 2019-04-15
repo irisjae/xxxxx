@@ -971,6 +971,9 @@ var img =
 	, toggle_ordering: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Forder-icon.png'														
 	, play_again: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fplay-again.png' }
 
+;Object .keys (img) .forEach (key => {
+	;img [key] += ('?' + (+ (new Date))) })
+
 
 
 
