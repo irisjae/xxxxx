@@ -303,9 +303,9 @@ var setup_view = _ => so ((_=_=>
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<room>{ asset_view (img .text_room_number) }{ mark (app_room_state) }</room>
+		<room><img src={ img .text_room_number } />{ mark (app_room_state) }</room>
 		<students-etc>
-			<label>{ asset_view (img .text_number_of_students) }{ R .length (_students) }</label>
+			<label><img src={ img .text_number_of_students } />{ R .length (_students) }</label>
 			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
 				<student x-icon={
 					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
@@ -395,7 +395,7 @@ var playing_view = _ => so ((_=_=>
 	? <playing-etc>
 		<title-etc>
 			<a-title><img src={ img .logo }/></a-title>
-			<problem-number>{ asset_view (img .text_nth) }{ _problem_number }{ asset_view (img .text_problem) }</problem-number> </title-etc>
+			<problem-number><img src={ img .text_nth } />{ _problem_number }<img src={ img .text_problem } /></problem-number> </title-etc>
 		<problem-etc>
 			<ticker-etc>
 				{ L .get (chain_el (_t =>
