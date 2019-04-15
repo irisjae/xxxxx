@@ -540,12 +540,12 @@ teacher-app > game-over-etc {
 							bottom: calc(5% + 3px); 
 							left: calc(5% + 3px); } } } } } }
 	& students-analysis-etc, & problems-analysis-etc {
-			overflow: visible; 
-			position: absolute;
-			left: 10%;	
-			right: 10%;		
-			top: 25%;		
-			bottom: 25%;	
+		overflow: visible; 
+		position: absolute;
+		left: 10%;	
+		right: 10%;		
+		top: 25%;		
+		bottom: 25%;	
 		& labels, & student, & problem {
 			width: 80%;
 			display: flex;
@@ -561,8 +561,8 @@ teacher-app > game-over-etc {
 			justify-content: center;
 			align-items: center; }
 		& students-analysis, & problems-analysis {
-			height:100%;
-			width:100%;
+			height: 100%;
+			width: 100%;
 			background: #FFF;
 			color: #ff7b44;
 			border-radius: 80px;
@@ -844,6 +844,7 @@ student-app > game-over-etc {
 	& problems-analysis-etc {
 		overflow: visible;
 		& labels, & problem {
+			height: 1.5em;
 			width: 80%;
 			display: flex;
 			justify-content: space-between;

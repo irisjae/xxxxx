@@ -415,7 +415,7 @@ var playing_view = _ => so ((_=_=>
 	? <playing-etc>
 		<title-etc>
 			<a-title><img src={ img .logo }/></a-title>
-			<problem-number>第{ _problem_number }題</problem-number> </title-etc>
+			<problem-number>{ text_asset_view (img .text_nth) }{ _problem_number }{ text_asset_view (img .text_problem) }</problem-number> </title-etc>
 		{ students_view }
 		<options>
 			<button x-custom x-for="show-problem" fn={ show_problem }><img src={ img .show_problem } /></button>
@@ -469,7 +469,7 @@ var students_analysis_view = so ((_=_=>
 				<name>{ asset_view (img .text_name) }<img src={ img .toggle_ordering } /></name>
 				<number-of-solved>{ asset_view (img .text_number_of_solved) }<img src={ img .toggle_ordering } /></number-of-solved>
 				<number-of-bingoes>{ asset_view (img .text_bingo) }<img src={ img .toggle_ordering } /></number-of-bingoes>
-				<average-solved-time>{ asset_view (img .text_bingo) }<img src={ img .toggle_ordering } /></average-solved-time> </labels>
+				<average-solved-time>{ asset_view (img .text_average_solved_time) }<img src={ img .toggle_ordering } /></average-solved-time> </labels>
 			<students-analysis> { L .collect (L .chain (({ _name, _number_of_solved, _number_of_bingoes, _average_solved_time }) => K (
 				<student>
 					<name>{ _name }</name>
