@@ -260,7 +260,7 @@ var setup_view = _ => so ((_=_=>
 		<preview-questions-etc>
 			<button x-custom="true" x-for="back" fn={ preview_back }><img src={ img .go_back } /></button>
 			<preview-questions>
-				<labels><question>{ asset_view (img .label_questions) }</question><answer>{ asset_view (img .label_answers) }</answer></labels>
+				<labels><question>{ text_asset_view (img .label_questions) }</question><answer>{ text_asset_view (img .label_answers) }</answer></labels>
 				{ L .collect (L .chain ((_problem, i) => so ((_=_=> K (
 				<problem><question><number>{ i + 1 }</number><img src={ question_image }/></question><answer>{ answer }</answer></problem> ),
 				where
