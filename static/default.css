@@ -1,0 +1,1200 @@
+body {
+  margin: 0;
+  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbackground.png?1541817247354);
+  background-size: cover;
+  color: white;
+  font-family: Microsoft JhengHei, Arial;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+@media (min-aspect-ratio: 1/1) {
+  teacher-app, student-app {
+    height: 75vw;
+    width: 100vw;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+}
+@media (min-aspect-ratio: 4/3) {
+  teacher-app, student-app {
+    height: 100vh;
+    width: 133.333vh;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+@media (max-aspect-ratio: 1/1) {
+  teacher-app, student-app {
+    height: 75vh;
+    width: 100vh;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: rotate(90deg) translateX(-37.5vh);
+    transform-origin: left;
+  }
+}
+@media (max-aspect-ratio: 3/4) {
+  teacher-app, student-app {
+    height: 100vw;
+    width: 133.333vw;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: rotate(90deg) translateX(-66.67vw) translateY(-100vw);
+    transform-origin: top left;
+  }
+}
+
+teacher-app > setup-etc button[x-for=preview]:focus, teacher-app > setup-etc button[x-for=back]:focus, teacher-app > setup-etc button[x-for=start]:focus {
+  outline: none;
+}
+teacher-app > setup-etc .left-pane {
+  top: 0;
+  bottom: 0;
+  left: 5%;
+  right: 33%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+teacher-app > setup-etc .left-pane a-title {
+  height: 25%;
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 100px;
+}
+teacher-app > setup-etc .left-pane sub-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 40px;
+}
+teacher-app > setup-etc .left-pane settings {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+teacher-app > setup-etc .left-pane settings setting {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+teacher-app > setup-etc .left-pane settings setting label {
+  text-align: center;
+  height: 1em;
+  display: block;
+  width: 100%;
+  flex-grow: 0;
+  margin-bottom: 5%;
+}
+teacher-app > setup-etc .left-pane settings setting control {
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+  justify-content: space-evenly;
+}
+teacher-app > setup-etc .left-pane settings setting control > * {
+  display: flex;
+  flex-direction: row;
+}
+teacher-app > setup-etc .left-pane settings setting control > counter {
+  flex-grow: 2;
+  flex-basis: 40%;
+}
+teacher-app > setup-etc .left-pane settings setting control > prev, teacher-app > setup-etc .left-pane settings setting control > next {
+  flex-grow: 1;
+  flex-basis: 20%;
+}
+teacher-app > setup-etc .left-pane > button {
+  height: 15%;
+  width: 100%;
+}
+teacher-app > setup-etc .right-pane {
+  top: 0;
+  bottom: 0;
+  left: 67%;
+  right: 0;
+  position: absolute;
+}
+teacher-app > setup-etc .right-pane settings {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-around;
+}
+teacher-app > setup-etc .right-pane settings setting {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+teacher-app > setup-etc > title-etc {
+  position: absolute;
+  left: 2%;
+  top: 0;
+  width: 25%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > setup-etc preview-questions-etc {
+  position: absolute;
+  height: 80%;
+  width: 100%;
+  top: 16%;
+  bottom: 4%;
+}
+teacher-app > setup-etc preview-questions-etc button[x-for=back] {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+teacher-app > setup-etc preview-questions-etc preview-questions {
+  position: absolute;
+  left: 100px;
+  right: 5%;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background: #FFF;
+  color: #ff7b44;
+  border-radius: 80px;
+  align-items: center;
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  font-size: 1.5em;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions question {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  border-right: dashed 1px #ff7b44;
+  padding: 10px;
+  justify-content: flex-start;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions answer {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions labels {
+  height: 80px;
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  border-bottom: dashed 1px #ff7b44;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions labels question {
+  justify-content: center;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions problem {
+  max-height: 300px;
+  width: 100%;
+  display: flex;
+  flex-shrink: 0;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions problem number {
+  width: 2.2em;
+  height: 2.2em;
+  text-align: center;
+  line-height: 2.1em;
+  display: block;
+  margin: 0 5%;
+  background: #f581ac;
+  color: white;
+  border-radius: 2.2em;
+  align-self: flex-start;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions problem img {
+  max-width: 60%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+teacher-app > setup-etc preview-questions-etc preview-questions problem:not(:last-child) {
+  border-bottom: dashed 1px #ff7b44;
+}
+
+teacher-app > get-ready-etc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > get-ready-etc button[x-for=play]:focus {
+  outline: none;
+}
+teacher-app > get-ready-etc > * {
+  margin: 10px;
+}
+teacher-app > get-ready-etc room {
+  background: #f5b54c;
+  padding: 0.5em 1.5em;
+  border-radius: 1.5em;
+  font-size: 1.5em;
+}
+teacher-app > get-ready-etc students-etc {
+  width: 90%;
+  height: 65%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+teacher-app > get-ready-etc students-etc label {
+  text-align: left;
+  display: block;
+}
+teacher-app > get-ready-etc students-etc students {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+teacher-app > get-ready-etc students-etc students student {
+  width: 100px;
+  height: 1.5em;
+  margin: 0 0 5px;
+  display: block;
+  background-size: cover;
+  padding: 10px;
+  text-indent: 40px;
+  font-size: 0.8em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+teacher-app > get-ready-etc students-etc students student[x-icon=lion] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon-bar.png?1546360012587);
+  padding-top: 12px;
+}
+teacher-app > get-ready-etc students-etc students student[x-icon=bunny] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon-bar.png?1546360012503);
+  padding-top: 21px;
+}
+teacher-app > get-ready-etc button[x-for=play] {
+  max-height: 75px;
+}
+
+teacher-app > playing-etc button[x-for=view-students]:focus, teacher-app > playing-etc button[x-for=show-problem]:focus, teacher-app > playing-etc button[x-for=end-game]:focus, teacher-app > playing-etc button[x-for=confirm]:focus, teacher-app > playing-etc button[x-for=cancel]:focus {
+  outline: none;
+}
+teacher-app > playing-etc title-etc {
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > playing-etc title-etc a-title {
+  flex-grow: 0.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-size: 40px;
+}
+teacher-app > playing-etc title-etc a-title img {
+  max-width: 100%;
+  max-height: 100%;
+}
+teacher-app > playing-etc title-etc problem-number {
+  flex-grow: 1;
+  display: flex;
+  background: #ef8150;
+  max-height: 35px;
+  padding: 5px 30px;
+  border-radius: 20px;
+  font-size: 23px;
+  justify-content: center;
+  align-items: center;
+}
+teacher-app > playing-etc problem-etc {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 25%;
+  right: 25%;
+}
+teacher-app > playing-etc problem-etc ticker-etc {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+teacher-app > playing-etc problem-etc question {
+  background: #fae383;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  justify-content: center;
+  align-items: center;
+  color: #f08751;
+  font-size: 40px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+}
+teacher-app > playing-etc problem-etc question img {
+  max-width: 80%;
+  max-height: 80%;
+}
+teacher-app > playing-etc students {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow: auto;
+}
+teacher-app > playing-etc students student-etc {
+  width: 100px;
+  height: 100px;
+  margin: 40px;
+}
+teacher-app > playing-etc students student-etc label {
+  margin: 5px;
+  position: absolute;
+  transform: translate(25px, -32px);
+}
+teacher-app > playing-etc students student-etc label:before {
+  content: " ";
+  position: absolute;
+  padding: 12px;
+  padding-top: 30px;
+  bottom: 0;
+  left: -30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+teacher-app > playing-etc students student-etc label[x-icon=bunny]:before {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623);
+}
+teacher-app > playing-etc students student-etc label[x-icon=lion]:before {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540);
+}
+teacher-app > playing-etc students student-etc label name {
+  max-width: 80px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+teacher-app > playing-etc students student-etc label[x-solved]:after {
+  content: "*";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  color: red;
+}
+teacher-app > playing-etc students student-etc board[x-bingoed] {
+  background-color: #ffe970;
+}
+teacher-app > playing-etc students student-etc board bingo line {
+  width: 90%;
+  height: 3px;
+  background: #f99f73;
+  border-radius: 3px;
+  position: absolute;
+  transform-origin: left;
+}
+teacher-app > playing-etc students student-etc board bingo line[x-shape=vertical] {
+  transform: rotate(90deg);
+}
+teacher-app > playing-etc students student-etc board bingo line[x-shape=diagonal-down] {
+  transform: rotate(45deg) scale(1.3);
+  top: calc(5% + 3px);
+  left: calc(5% + 3px);
+}
+teacher-app > playing-etc students student-etc board bingo line[x-shape=diagonal-up] {
+  transform: rotate(-45deg) scale(1.3);
+  bottom: calc(5% + 3px);
+  left: calc(5% + 3px);
+}
+teacher-app > playing-etc options {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+teacher-app > playing-etc abort-etc {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ecc35f;
+  outline: 100vw solid #ecc35f;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+teacher-app > playing-etc abort-etc .box {
+  min-width: 50%;
+  min-height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+teacher-app > playing-etc abort-etc .box label {
+  font-size: 70px;
+  font-weight: bold;
+}
+teacher-app > playing-etc abort-etc .box options button {
+  width: 50%;
+  height: 100%;
+}
+
+teacher-app > game-over-etc button[x-for=show-results]:focus, teacher-app > game-over-etc button[x-for=students-analysis]:focus, teacher-app > game-over-etc button[x-for=problems-analysis]:focus, teacher-app > game-over-etc button[x-for=play-again]:focus {
+  outline: none;
+}
+teacher-app > game-over-etc title-etc {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+teacher-app > game-over-etc title-etc a-title {
+  flex-grow: 0.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-size: 40px;
+}
+teacher-app > game-over-etc title-etc a-title img {
+  max-width: 100%;
+  max-height: 100%;
+}
+teacher-app > game-over-etc options[x-for=tabs] {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 50%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+teacher-app > game-over-etc options[x-for=tabs] > * {
+  margin: 0 10px;
+}
+teacher-app > game-over-etc students {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow: auto;
+}
+teacher-app > game-over-etc students student-etc {
+  width: 100px;
+  height: 100px;
+  margin: 40px;
+}
+teacher-app > game-over-etc students student-etc label {
+  margin: 5px;
+  position: absolute;
+  transform: translate(25px, -32px);
+}
+teacher-app > game-over-etc students student-etc label:before {
+  content: " ";
+  position: absolute;
+  padding: 12px;
+  padding-top: 30px;
+  bottom: -1px;
+  left: -30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+teacher-app > game-over-etc students student-etc label[x-icon=bunny]:before {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbunny-icon.png?1546759644623);
+}
+teacher-app > game-over-etc students student-etc label[x-icon=lion]:before {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-icon.png?1546759644540);
+}
+teacher-app > game-over-etc students student-etc label name {
+  width: 80px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+teacher-app > game-over-etc students student-etc label[x-solved]:after {
+  content: "*";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  color: red;
+}
+teacher-app > game-over-etc students student-etc board[x-bingoed] {
+  background-color: #ffe970;
+}
+teacher-app > game-over-etc students student-etc board bingo line {
+  width: 90%;
+  height: 3px;
+  background: #f99f73;
+  border-radius: 3px;
+  position: absolute;
+  transform-origin: left;
+}
+teacher-app > game-over-etc students student-etc board bingo line[x-shape=vertical] {
+  transform: rotate(90deg);
+}
+teacher-app > game-over-etc students student-etc board bingo line[x-shape=diagonal-down] {
+  transform: rotate(45deg) scale(1.3);
+  top: calc(5% + 3px);
+  left: calc(5% + 3px);
+}
+teacher-app > game-over-etc students student-etc board bingo line[x-shape=diagonal-up] {
+  transform: rotate(-45deg) scale(1.3);
+  bottom: calc(5% + 3px);
+  left: calc(5% + 3px);
+}
+teacher-app > game-over-etc students-analysis-etc, teacher-app > game-over-etc problems-analysis-etc {
+  overflow: visible;
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 25%;
+  bottom: 25%;
+}
+teacher-app > game-over-etc students-analysis-etc labels, teacher-app > game-over-etc students-analysis-etc student, teacher-app > game-over-etc students-analysis-etc problem, teacher-app > game-over-etc problems-analysis-etc labels, teacher-app > game-over-etc problems-analysis-etc student, teacher-app > game-over-etc problems-analysis-etc problem {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10%;
+}
+teacher-app > game-over-etc students-analysis-etc labels, teacher-app > game-over-etc problems-analysis-etc labels {
+  font-size: 1.1em;
+  position: absolute;
+  transform: translateY(-100%);
+}
+teacher-app > game-over-etc students-analysis-etc name, teacher-app > game-over-etc students-analysis-etc number-of-solved, teacher-app > game-over-etc students-analysis-etc number-of-bingoes, teacher-app > game-over-etc students-analysis-etc average-solved-time, teacher-app > game-over-etc students-analysis-etc question, teacher-app > game-over-etc students-analysis-etc number-of-solvers, teacher-app > game-over-etc students-analysis-etc average-number-of-attempts, teacher-app > game-over-etc students-analysis-etc average-solved-time, teacher-app > game-over-etc problems-analysis-etc name, teacher-app > game-over-etc problems-analysis-etc number-of-solved, teacher-app > game-over-etc problems-analysis-etc number-of-bingoes, teacher-app > game-over-etc problems-analysis-etc average-solved-time, teacher-app > game-over-etc problems-analysis-etc question, teacher-app > game-over-etc problems-analysis-etc number-of-solvers, teacher-app > game-over-etc problems-analysis-etc average-number-of-attempts, teacher-app > game-over-etc problems-analysis-etc average-solved-time {
+  display: flex;
+  width: 25%;
+  justify-content: center;
+  align-items: center;
+}
+teacher-app > game-over-etc students-analysis-etc students-analysis, teacher-app > game-over-etc students-analysis-etc problems-analysis, teacher-app > game-over-etc problems-analysis-etc students-analysis, teacher-app > game-over-etc problems-analysis-etc problems-analysis {
+  height: 100%;
+  width: 100%;
+  background: #FFF;
+  color: #ff7b44;
+  border-radius: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow: auto;
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
+}
+teacher-app > game-over-etc students-analysis-etc students-analysis student, teacher-app > game-over-etc students-analysis-etc students-analysis problem, teacher-app > game-over-etc students-analysis-etc problems-analysis student, teacher-app > game-over-etc students-analysis-etc problems-analysis problem, teacher-app > game-over-etc problems-analysis-etc students-analysis student, teacher-app > game-over-etc problems-analysis-etc students-analysis problem, teacher-app > game-over-etc problems-analysis-etc problems-analysis student, teacher-app > game-over-etc problems-analysis-etc problems-analysis problem {
+  min-height: 2em;
+  flex-shrink: 0;
+  font-size: 1.5em;
+}
+teacher-app > game-over-etc students-analysis-etc students-analysis student:not(:last-child), teacher-app > game-over-etc students-analysis-etc students-analysis problem:not(:last-child), teacher-app > game-over-etc students-analysis-etc problems-analysis student:not(:last-child), teacher-app > game-over-etc students-analysis-etc problems-analysis problem:not(:last-child), teacher-app > game-over-etc problems-analysis-etc students-analysis student:not(:last-child), teacher-app > game-over-etc problems-analysis-etc students-analysis problem:not(:last-child), teacher-app > game-over-etc problems-analysis-etc problems-analysis student:not(:last-child), teacher-app > game-over-etc problems-analysis-etc problems-analysis problem:not(:last-child) {
+  border-bottom: dashed 1px #ff7b44;
+}
+teacher-app > game-over-etc students-analysis-etc students-analysis student question img, teacher-app > game-over-etc students-analysis-etc students-analysis problem question img, teacher-app > game-over-etc students-analysis-etc problems-analysis student question img, teacher-app > game-over-etc students-analysis-etc problems-analysis problem question img, teacher-app > game-over-etc problems-analysis-etc students-analysis student question img, teacher-app > game-over-etc problems-analysis-etc students-analysis problem question img, teacher-app > game-over-etc problems-analysis-etc problems-analysis student question img, teacher-app > game-over-etc problems-analysis-etc problems-analysis problem question img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+teacher-app > game-over-etc options[x-for=options] {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+student-app > setup-etc button[x-for=join]:focus, student-app > setup-etc button[x-for=connect]:focus {
+  outline: none;
+}
+student-app > setup-etc message[x-error] {
+  color: red;
+  font-weight: bold;
+  font-size: 1.25em;
+}
+student-app > setup-etc > message {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+}
+student-app > setup-etc setup-room-etc, student-app > setup-etc setup-student-etc {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+student-app > setup-etc setup-room-etc a-title, student-app > setup-etc setup-student-etc a-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 100px;
+}
+student-app > setup-etc setup-room-etc a-title img, student-app > setup-etc setup-student-etc a-title img {
+  max-width: 100%;
+  max-height: 100%;
+}
+student-app > setup-etc setup-room-etc sub-title, student-app > setup-etc setup-student-etc sub-title {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 40px;
+}
+student-app > setup-etc setup-room-etc room label, student-app > setup-etc setup-room-etc name label, student-app > setup-etc setup-student-etc room label, student-app > setup-etc setup-student-etc name label {
+  font-size: 20px;
+}
+student-app > setup-etc setup-room-etc room input, student-app > setup-etc setup-room-etc name input, student-app > setup-etc setup-student-etc room input, student-app > setup-etc setup-student-etc name input {
+  border: none;
+  height: 70px;
+  width: 300px;
+  font-size: 40px;
+  border-radius: 13px;
+}
+student-app > setup-etc setup-room-etc icon, student-app > setup-etc setup-student-etc icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+student-app > setup-etc setup-room-etc icon avatar, student-app > setup-etc setup-student-etc icon avatar {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+student-app > setup-etc setup-room-etc icon avatar selected-input, student-app > setup-etc setup-student-etc icon avatar selected-input {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: inset 0px 0.5px 3px #999;
+  margin: 0 8px;
+  position: relative;
+}
+student-app > setup-etc setup-room-etc icon avatar[x-selected] selected-input:after, student-app > setup-etc setup-student-etc icon avatar[x-selected] selected-input:after {
+  content: " ";
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  right: 3px;
+  border-radius: 20px;
+  background: #222;
+}
+
+student-app > get-ready-etc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+}
+
+student-app > playing-etc {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  height: 80%;
+  left: 10%;
+  top: 10%;
+  position: absolute;
+}
+student-app > playing-etc .left-pane {
+  height: 100%;
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+student-app > playing-etc .left-pane > * {
+  margin: 10px;
+}
+student-app > playing-etc .left-pane ticker-etc {
+  flex-grow: 0;
+}
+student-app > playing-etc .left-pane question {
+  flex-grow: 1;
+  padding: 10%;
+  background: #fae383;
+  border-radius: 20px;
+  text-align: center;
+  color: #EE804F;
+  font-weight: bold;
+  font-size: 2em;
+  min-height: 40%;
+  max-height: 76%;
+  line-height: 200px;
+  min-width: 60%;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+}
+student-app > playing-etc .left-pane question img {
+  max-width: 100%;
+  max-height: 100%;
+}
+student-app > playing-etc .right-pane {
+  width: 66%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+student-app > playing-etc .right-pane board bingo letter {
+  position: absolute;
+  width: 20%;
+  height: 20%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(2);
+  pointer-events: none;
+  animation-name: bingo-letter;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in;
+}
+student-app > playing-etc .right-pane board bingo letter[x-as=b] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-b.png?1547109352146);
+}
+student-app > playing-etc .right-pane board bingo letter[x-as=i] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-i.png?1547145040476);
+}
+student-app > playing-etc .right-pane board bingo letter[x-as=n] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-n.png?1547109352409);
+}
+student-app > playing-etc .right-pane board bingo letter[x-as=g] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-g.png?1547109352295);
+}
+student-app > playing-etc .right-pane board bingo letter[x-as=o] {
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fbingo-o.png?1547109352202);
+}
+@keyframes bingo-letter {
+  0% {
+    transform: scale(0);
+  }
+  90% {
+    transform: scale(3);
+  }
+  100% {
+    transform: scale(2);
+  }
+}
+
+student-app > game-over-etc button[x-for=show-results]:focus, student-app > game-over-etc button[x-for=overall-analysis]:focus, student-app > game-over-etc button[x-for=problems-analysis]:focus, student-app > game-over-etc button[x-for=play-again]:focus {
+  outline: none;
+}
+student-app > game-over-etc a-title {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25%;
+  height: 10%;
+  align-items: center;
+  font-size: 40px;
+}
+student-app > game-over-etc a-title img {
+  max-width: 100%;
+  max-height: 100%;
+}
+student-app > game-over-etc student {
+  position: absolute;
+  left: 5%;
+  top: 10%;
+  width: 250px;
+  height: 100px;
+}
+student-app > game-over-etc student label {
+  font-size: 2em;
+  transform: translate(100px, 22px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 130px;
+  display: block;
+}
+student-app > game-over-etc student:after {
+  content: " ";
+  background-image: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Flion-title-bar.png?1547404084265);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+}
+student-app > game-over-etc options[x-for=tabs] {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 50%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+student-app > game-over-etc options[x-for=tabs] > * {
+  margin: 0 10px;
+}
+student-app > game-over-etc show-results {
+  position: absolute;
+  left: 31.25%;
+  width: 37.5%;
+  top: 27.5%;
+  height: 50%;
+}
+student-app > game-over-etc overall-analysis, student-app > game-over-etc problems-analysis-etc {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  min-width: 500px;
+  max-width: 600px;
+  height: 40%;
+}
+student-app > game-over-etc overall-analysis, student-app > game-over-etc problems-analysis {
+  background: #FFF;
+  color: #ff7b44;
+  border-radius: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
+}
+student-app > game-over-etc overall-analysis {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+student-app > game-over-etc overall-analysis div {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 2em;
+}
+student-app > game-over-etc problems-analysis-etc {
+  overflow: visible;
+}
+student-app > game-over-etc problems-analysis-etc labels, student-app > game-over-etc problems-analysis-etc problem {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10%;
+}
+student-app > game-over-etc problems-analysis-etc labels question, student-app > game-over-etc problems-analysis-etc labels number-of-attempts, student-app > game-over-etc problems-analysis-etc labels solved-time, student-app > game-over-etc problems-analysis-etc problem question, student-app > game-over-etc problems-analysis-etc problem number-of-attempts, student-app > game-over-etc problems-analysis-etc problem solved-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+student-app > game-over-etc problems-analysis-etc labels question, student-app > game-over-etc problems-analysis-etc problem question {
+  width: 50%;
+}
+student-app > game-over-etc problems-analysis-etc labels question number-of-attempts, student-app > game-over-etc problems-analysis-etc problem question number-of-attempts {
+  width: 25%;
+}
+student-app > game-over-etc problems-analysis-etc labels question solved-time, student-app > game-over-etc problems-analysis-etc problem question solved-time {
+  width: 25%;
+}
+student-app > game-over-etc problems-analysis-etc labels {
+  font-size: 1.2em;
+  position: absolute;
+  transform: translateY(-100%);
+}
+student-app > game-over-etc problems-analysis-etc problems-analysis {
+  height: 100%;
+  width: 100%;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow: auto;
+}
+student-app > game-over-etc problems-analysis-etc problems-analysis problem {
+  min-height: 2em;
+  flex-shrink: 0;
+  font-size: 1.75em;
+}
+student-app > game-over-etc problems-analysis-etc problems-analysis problem:not(:last-child) {
+  border-bottom: dashed 1px #ff7b44;
+}
+student-app > game-over-etc problems-analysis-etc problems-analysis problem question img {
+  max-width: 80%;
+  max-height: 5em;
+}
+student-app > game-over-etc options[x-for=options] {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+setting[x-for=background-music] img, teacher-app > setup-etc setting[x-of=game-mode] prev, teacher-app > setup-etc setting[x-of=game-mode] next, teacher-app > setup-etc setting[x-of=time-limit] prev, teacher-app > setup-etc setting[x-of=time-limit] next, teacher-app > setup-etc setting[x-of=board-size] img, teacher-app > setup-etc button[x-for=preview] img, teacher-app > setup-etc button[x-for=back] img, teacher-app > setup-etc button[x-for=start] img, teacher-app > get-ready-etc button[x-for=play] img, teacher-app > playing-etc button[x-for=view-students] img, teacher-app > playing-etc button[x-for=show-problem] img, teacher-app > playing-etc button[x-for=end-game] img, teacher-app > playing-etc button[x-for=confirm] img, teacher-app > playing-etc button[x-for=cancel] img, teacher-app > game-over-etc button[x-for=show-results] img, teacher-app > game-over-etc button[x-for=students-analysis] img, teacher-app > game-over-etc button[x-for=problems-analysis] img, teacher-app > game-over-etc button[x-for=play-again] img, student-app > setup-etc button[x-for=join] img, student-app > setup-etc button[x-for=connect] img, student-app > game-over-etc button[x-for=show-results] img, student-app > game-over-etc button[x-for=overall-analysis] img, student-app > game-over-etc button[x-for=problems-analysis] img, student-app > game-over-etc button[x-for=play-again] img {
+  cursor: pointer;
+}
+
+teacher-app > setup-etc .left-pane a-title, teacher-app > setup-etc .left-pane settings setting control > *, teacher-app > setup-etc .left-pane > button, teacher-app > setup-etc .right-pane settings setting, teacher-app > setup-etc > title-etc, teacher-app > playing-etc abort-etc .box options button {
+  position: relative;
+}
+teacher-app > setup-etc .left-pane a-title img, teacher-app > setup-etc .left-pane settings setting control > * img, teacher-app > setup-etc .left-pane > button img, teacher-app > setup-etc .right-pane settings setting img, teacher-app > setup-etc > title-etc img, teacher-app > playing-etc abort-etc .box options button img {
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 1000vw;
+}
+
+setting[x-for=background-music] {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+}
+board {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-direction: column;
+  background-color: #F3F3F3BE;
+  border: solid white 5px;
+  border-radius: 20px;
+  margin-left: -5px;
+  margin-top: -5px;
+  position: relative;
+}
+board[x-disabled=true] {
+  filter: brightness(20%);
+}
+board row {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+}
+board row:first-of-type cell {
+  border-top: none;
+}
+board row:last-of-type cell {
+  border-bottom: none;
+}
+board row cell:first-of-type {
+  border-left: none;
+}
+board row cell:last-of-type {
+  border-right: none;
+}
+board row cell {
+  border: 2px solid white;
+  color: #EE804F;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+board row cell:after {
+  content: " ";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+board row cell[x-solved] {
+  color: transparent;
+}
+board row cell[x-solved]:after {
+  animation-name: solved-cell;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in;
+  background: url(https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Fsolved.png?1541818699728);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+@keyframes solved-cell {
+  0% {
+    transform: scale(0);
+  }
+  90% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+ticker-etc {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  color: white;
+  background-color: #a3a3a3;
+  min-width: 80px;
+  min-height: 80px;
+  width: 80px;
+  height: 80px;
+  font-size: 25px;
+  text-align: center;
+  line-height: 80px;
+  border-radius: 50px;
+  z-index: 0;
+}
+ticker-etc ticker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+ticker-etc ticker:before, ticker-etc ticker spinner, ticker-etc ticker:after {
+  top: 0;
+  display: block;
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  animation-duration: inherit;
+  animation-fill-mode: forwards;
+}
+ticker-etc ticker spinner {
+  left: 0;
+  z-index: -2;
+  background: #4b71d4;
+  animation-name: tick-spin;
+  animation-timing-function: linear;
+  transform-origin: center right;
+}
+ticker-etc ticker:before, ticker-etc ticker:after {
+  content: " ";
+  animation-name: tick-mask;
+  animation-timing-function: steps(1, end);
+}
+ticker-etc ticker:before {
+  left: 0;
+  background: #a3a3a3;
+  z-index: -1;
+  opacity: 1;
+}
+ticker-etc ticker:after {
+  right: 0;
+  background: #4b71d4;
+  z-index: -3;
+  opacity: 0;
+  animation-direction: reverse;
+}
+@keyframes tick-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes tick-mask {
+  0% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+button:not([x-custom]) {
+  font-size: 16px;
+  border-radius: 3px;
+  background-color: #00A746;
+  color: white;
+  border: 1px solid grey;
+  box-shadow: 2px 2px #224D34;
+  cursor: pointer;
+  min-width: 20%;
+  margin: 4px;
+}
+button:not([x-custom]):hover {
+  background-color: #26F07B;
+}
+button:not([x-custom]):active {
+  box-shadow: none;
+}
+button[x-custom] {
+  background: unset;
+  border: unset;
+  color: unset;
+  padding: unset;
+}
+
+/*# sourceMappingURL=default.css.map */
