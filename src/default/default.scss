@@ -909,6 +909,10 @@ asset {
 	width: 100%;
 	display: block; }
 
+[text-asset] {
+	height: 1em;
+	vertical-align: text-top; }
+
 setting[x-for=background-music] {
 	position: absolute;
 	left: 0;

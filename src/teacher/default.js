@@ -175,6 +175,7 @@ var feedback_rules_piece_state = belief (feedback_as_rules_piece) (feedback_stat
 // views
 
 var asset_view = _asset => <asset><img src={ _asset } /></asset>
+var text_asset_view = _asset => <img src={ _asset } text-asset />
 
 var counter_setting_view = label => please_feedback => iso_v_img_list => _setting => so ((_=_=>
 	[ <label>{ label }</label>
@@ -303,9 +304,9 @@ var setup_view = _ => so ((_=_=>
 
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
-		<room><img src={ img .text_room_number } />{ mark (app_room_state) }</room>
+		<room>{ text_asset_view (img .text_room_number) }{ mark (app_room_state) }</room>
 		<students-etc>
-			<label><img src={ img .text_number_of_students } />{ R .length (_students) }</label>
+			<label>{ text_asset_view (img .text_number_of_students) { R .length (_students) }</label>
 			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
 				<student x-icon={
 					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
@@ -395,7 +396,7 @@ var playing_view = _ => so ((_=_=>
 	? <playing-etc>
 		<title-etc>
 			<a-title><img src={ img .logo }/></a-title>
-			<problem-number><img src={ img .text_nth } />{ _problem_number }<img src={ img .text_problem } /></problem-number> </title-etc>
+			<problem-number>{ text_asset_view (img .text_nth) }{ _problem_number }{ text_asset_view (img .text_problem) }</problem-number> </title-etc>
 		<problem-etc>
 			<ticker-etc>
 				{ L .get (chain_el (_t =>
