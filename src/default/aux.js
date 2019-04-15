@@ -1018,7 +1018,7 @@ var img = T (
 	, text_average_solved_time: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-average-solved-time'
 	, text_bingo: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-bingo'
 	, text_game_mode: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-game-mode'
-	, text_name: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-name' }
+	, text_name: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-name'
 	, text_nth: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-nth'
 	, text_number_of_attempts: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-number-of-attempts'
 	, text_number_of_solved: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-number-of-solved'
@@ -1032,7 +1032,7 @@ var img = T (
 	, text_time_limit: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-time-limit'
 	, text_waiting_message: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftext-waiting-message'
 	, time_10_secs: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftime-10-secs'
-	, timer: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftimer'
+	, timer: 'https://cdn.glitch.com/cf9cdaee-7478-4bba-afce-36fbc451e9d6%2Ftimer' }
 	) (
 	L .modify (L .values) (url => url + ('?' + (+ (new Date))) ) )
 
