@@ -186,6 +186,9 @@ var ambient_background_music_on_state = belief (ambient_as_background_music_on) 
 
 // views
 
+var asset_view = _asset => <asset><img src={ _asset } /></asset>
+var text_asset_view = _asset => <img src={ _asset } text-asset />
+
 var setup_room_view = _ => so ((_=_=>
 	<setup-room-etc fn={ feedback_setup_room }>
 		<a-title><img src={ img .logo }/></a-title>
@@ -296,7 +299,7 @@ var setup_view = _ => <setup-etc> {
 var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
 		<div><room>已加入遊戲室{room}</room></div>
-		<div>等候遊戲開始…</div> </get-ready-etc>,
+		{ text_asset_view (img .text_waiting_message) } </get-ready-etc>,
 	where
 	, room = mark (app_room_state) )=>_)
 

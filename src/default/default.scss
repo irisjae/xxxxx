@@ -675,7 +675,9 @@ student-app > get-ready-etc {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	font-size: 1.5em; }
+	font-size: 1.5em;
+	height: 100%;
+	width: 100%; }
 
 student-app > playing-etc {
 	display: flex;
