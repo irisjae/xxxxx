@@ -306,7 +306,7 @@ var get_ready_view = _ => so ((_=_=>
 	<get-ready-etc>
 		<room>{ text_asset_view (img .text_room_number) }{ mark (app_room_state) }</room>
 		<students-etc>
-			<label>{ text_asset_view (img .text_number_of_students) { R .length (_students) }</label>
+			<label>{ text_asset_view (img .text_number_of_students) }{ R .length (_students) }</label>
 			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
 				<student x-icon={
 					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
