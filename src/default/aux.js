@@ -51,9 +51,8 @@ var ping = v (timestamp, latency, latency)
 
 var progress = v (nat, timestamp)
 
-var attempt = v (position, time_amount)
-var point = data ({ point: (problem =~ problem, attempts =~ list (attempt)) => point })
-var past = data ({ past: (points =~ list (point)) => past })
+var attempt = v (problem, position, time_amount)
+var past = data ({ past: (attempts =~ list (attempt)) => past })
 
 var board = data ({ board: (choice =~ map (position) (choice)) => board })
 var ast = data ({
@@ -196,7 +195,7 @@ var app_as_room = [ L .choice ('setup', 'get_ready', 'playing', 'game_over'), 'r
 var app_as_students = [ L .choice ('get_ready', 'playing', 'game_over'), 'students' ]
 var app_as_progress = L .choose (_app =>
 	!! L .isDefined (app_as_board) (_app) // check is student_app
-	? [ L .rewrite (progress_past), data_lens (student_app .playing) .progress ]
+	? data_lens (student_app .playing) .progress
 	: data_lens (teacher_app .playing) .progress)
 var app_as_board = [ L .choice ('playing', 'game_over'), 'board' ]
 var app_as_past = [ L .choice ('playing', 'game_over'), 'past' ]
@@ -256,17 +255,15 @@ var question_as_text = data_lens (question .text) .text
 var question_as_image = data_lens (question .image) .image
 var question_as_solution = data_lens (question .image) .solution
 
-var attempt_as_position = [ 0 ]
-var attempt_as_latency = [ 1 ]
-var point_as_problem = data_lens (point .point) .problem
-var point_as_attempts = data_lens (point .point) .attempts
-var point_as_position = [ point_as_attempts, L .last, attempt_as_position ] 
-var past_as_points = data_lens (past .past) .points
+var attempt_as_problem = [ 0 ]
+var attempt_as_position = [ 1 ]
+var attempt_as_latency = [ 2 ]
+var past_as_attempts = data_lens (past .past) .attempts
 		
 var settings_as_problems = data_lens (settings .settings) .problems
 var settings_as_rules = data_lens (settings .settings) .rules
 var app_as_problems = [ app_as_settings, settings_as_problems ]
-var app_as_last_point = [ app_as_past, past_as_points, L .last ]
+var app_as_last_attempt = [ app_as_past, past_as_attempt, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
 var rules_as_time_limit = data_lens (rules .rules) .time_limit
@@ -350,7 +347,7 @@ var student_app_get_ready_to_playing = by (_app => so ((_=_=>
 	, _problems = L .get (settings_as_problems) (_settings)
 	, random_board = generate_board (_size) (_problems)
 	, first_problem = L .get (L .first) (_problems)
-	, fresh_past = past .past ([point .point (first_problem, [])]) )=>_))
+	, fresh_past = past .past ([]) )=>_))
 
 var student_app_playing_to_next = by (_app => 
 	so ((_=_=>
@@ -444,16 +441,16 @@ var current_problem = by (_app =>
 	as_lens ([ app_as_progress, progress_as_step ]) ) ) ) )
 
 
-var current_problem_completed = _problem => _board => _point => so ((_=_=>
+var current_problem_completed = _problem => _board => _attempt => so ((_=_=>
 	T (
 	{ _problem
 	, _board
-	, _point }
+	, _attempt }
 	) (
 	L .get (
 	[ as_complete
-	, ({ _problem, _board, _point }) => 
-		T (_point) (L .get ([ join ([ point_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ])) ] ) ),
+	, ({ _problem, _board, _attempt }) => 
+		T (_attempt) (L .get ([ join ([ attempt_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ])) ] ) ),
 	where
 	, join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
 	, join = R .reduce ((a, b) => join_2 (a) (b)) ([]) )=>_)
@@ -466,22 +463,19 @@ var current_problem_completed = _problem => _board => _point => so ((_=_=>
 	where
 	, progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ])) )=>_)*/
 
-var attempted_positions = by (_past =>
-	L .collect ([ past_as_points, L .elems, point_as_position ]))
-
 var as_solved_on = memoize (_board =>
-	L .when (by (_point =>
+	L .when (by (_attempt =>
 		L .get (
-		[ point_as_position
+		[ attempt_as_position
 		, L .when (I)
 		, _position => so ((_=_=>
 			problem_choice_matches (_problem) (_choice),
 			where
-			, _problem = T (_point) (L .get (point_as_problem))
+			, _problem = T (_attempt) (L .get (attempt_as_problem))
 			, _choice = T (_board) (L .get ([ as_position (_position), cell_as_choice ])) )=>_) ] ) )) )
 
 var solved_positions = _board => by (_past => 
-	L .collect ([ past_as_points, L .elems, as_solved_on (_board), point_as_position ]))
+	L .collect ([ past_as_attempts, L .elems, as_solved_on (_board), attempt_as_position ]))
 
 var bingoed_positions = _board => _past => 
 	L .collect ([ L .elems, L .elems ]) (bingoes (_board) (_past))
@@ -633,21 +627,6 @@ var schedule_start = _ensemble =>
 	, student_pings = T (_ensemble) (L .collect ([ ensemble_as_pings, L .values, map_v_as_value ]))
 	, pings = T ([ teacher_ping, ...student_pings ]) (L .collect ([ L .elems, ping_as_mean ]))
 	, confidence_interval = R .min (1000) (R .reduce (R .max) (0) (pings)) )=>_)
-
-var progress_past = so ((_=_=>
-	by (_app =>
-		so ((_=_=>
-		$ (L .modify
-		) (
-		[ app_as_past, past_as_points, natural_slice (_points_count) (_progress_step + 1), L .elems ]
-		) (
-		(_, i) => point .point (L .get (_points_count + i) (_problems), []) ),
-		where
-		, _progress_step = T (_app) (L .get ([ app_as_progress, progress_as_step ]))
-		, _problems = T (_app) (L .get (app_as_problems))
-		, _points_count = T (_app) (L .count ([ app_as_past, past_as_points, L .elems ])) )=>_)),
-	where
-	, natural_slice = a => b => [ L .slice (a, b), L .reread (xs => b < a ? xs : xs .concat (Array (b - a - xs .length))) ] )=>_)
 
 //var schedule_tick = 
 
@@ -1047,7 +1026,7 @@ window .stuff = { ...window .stuff,
 	shuffle, uuid, map_zip, chain_el, api,
 	timer, timer_since, time_intervals, 
 	avatar, student, problem, choice, latency, ping, position,
-	attempt, point, past, board, win_rule, rules, settings,
+	attempt, past, board, win_rule, rules, settings,
 	teacher_app, student_app,
 	io, message, ensemble, 
 	default_problems, default_rules, default_settings,
@@ -1061,11 +1040,10 @@ window .stuff = { ...window .stuff,
 	ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 	progress_as_step, progress_as_timestamp, 
 	question_as_text, question_as_image, question_as_solution, 
-	attempt_as_position, attempt_as_latency, point_as_problem, point_as_attempts, point_as_position, past_as_points,
+	attempt_as_position, attempt_as_latency, 
 	app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 	app_as_board, app_as_past, app_as_progress,
 	app_as_boards, app_as_pasts, 
-	app_as_last_point, point_as_attempts,
 	avatar_as_lion, avatar_as_bunny, 
 	win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
 	student_as_student, student_as_id, student_as_name, student_as_icon, 
@@ -1077,5 +1055,5 @@ window .stuff = { ...window .stuff,
 	student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 	board_choice, current_problem, current_problem_completed, problem_choice_matches,
 	local_patterns, size_patterns,
-	as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
+	as_solved_on, solved_positions, bingoed_positions, bingoes,
 	clicking, play, pause, audio, img }

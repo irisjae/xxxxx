@@ -16,7 +16,7 @@ order_sort, direction_opposite, toggle_order,
 shuffle, uuid, map_zip, chain_el, api,
 timer, timer_since, time_intervals, 
 avatar, student, problem, choice, latency, ping, position,
-attempt, point, past, board, win_rule, rules, settings,
+attempt, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
@@ -30,11 +30,10 @@ ensemble_as_ping, ensemble_as_settings, ensemble_as_progress,
 ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
 question_as_text, question_as_image, question_as_solution, 
-attempt_as_position, attempt_as_latency, point_as_problem, point_as_attempts, point_as_position, past_as_points,
+attempt_as_position, attempt_as_latency,
 app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 app_as_board, app_as_past, app_as_progress,
 app_as_boards, app_as_pasts, 
-app_as_last_point, point_as_attempts,
 avatar_as_lion, avatar_as_bunny, 
 win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
 student_as_student, student_as_id, student_as_name, student_as_icon, 
@@ -46,7 +45,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 board_choice, current_problem, current_problem_completed, problem_choice_matches,
 local_patterns, size_patterns,
-as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
+as_solved_on, solved_positions, bingoed_positions, bingoes,
 clicking, play, pause, audio, img
 } = window .stuff
 
@@ -382,7 +381,7 @@ var students_view = _ =>
 			? 'bunny'
 			: panic ('...')
 		, _solved_positions = solved_positions (_board) (_past)
-		, _current_position = T (_past) (L .get ([ past_as_points, L .last, point_as_attempts, L .last, attempt_as_position ]))
+		, _current_position = T (_past) (L .get ([ past_as_attempts, L .last, L .when (L .get ([ attempt_as_problem, L .is (mark (app_current_problem_state)) ])), attempt_as_position ]))
 		, _x_solved = attrs_ ({ 'x-solved': R .includes (_current_position) (_solved_positions) })
 		, _bingoes = bingoes (_board) (_past)
 		, _x_bingoed = attrs_ ({ 'x-bingoed': L .isDefined (L .elems) (_bingoes) }) )=>_)
@@ -484,9 +483,9 @@ var students_analysis_view = so ((_=_=>
 	, analyse_students = by (_students_map_boards_v_pasts =>
 		L .collect ([ L .elems, ([ _student, [_board, _past] ]) => (
 			{ _name: T (_student) (L .get (student_as_name))
-			, _number_of_solved: T (_past) (L .count ([ past_as_points, L .elems, as_solved_on (_board) ]))
+			, _number_of_solved: T (_past) (L .count ([ past_as_attempts, L .elems, as_solved_on (_board) ]))
 			, _number_of_bingoes: T (bingoes (_board) (_past)) (L .count ([ L .elems ]))
-			, _average_solved_time: T (_past) (L .mean ([ past_as_points, L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) }) ]) ) )=>_)
+			, _average_solved_time: T (_past) (L .mean ([ past_as_attempts, L .elems, as_solved_on (_board), attempt_as_latency ])) }) ]) ) )=>_)
 
 var problems_analysis_view = so ((_=_=>
 	_ordering => so ((_=_=>
@@ -507,10 +506,7 @@ var problems_analysis_view = so ((_=_=>
 				) ) (
 				analyse_problems (mark (app_students_map_boards_v_pasts_state)) (_problems) ) } </problems-analysis> </problems-analysis-etc>,
 		where
-		, _problems = T (mark (app_students_map_boards_v_pasts_state)
-			) (
-			[ L .collect ([ L .elems, ([ _, [__, _past] ]) => _past, L .collect ([ past_as_points, L .elems, point_as_problem ]) ])
-			, L .maximumBy (L .count (L .elems)) (L .elems) ]) )=>_),
+		, _problems = T (mark (app_settings_problems_state) )=>_),
 	where
 	, analyse_problems = _students_map_boards_v_pasts => by (_problems =>
 		L .collect ([ L .elems, (_problem, _index) => so ((_=_=> (
@@ -519,21 +515,19 @@ var problems_analysis_view = so ((_=_=>
 				T (_students_map_boards_v_pasts
 				) (
 				L .count (
-				[ L .elems, L .choose (([ _, [_board, _past] ]) => [ as_corresponding_point (_past), as_solved_on (_board) ] ) ]))
+				[ L .elems, L .choose (([ _, [_board, _past] ]) => [ as_problem_attempts (_past), L .elems, as_solved_on (_board) ]) ]))
 			, _average_number_of_attempts:
 				T (_students_map_boards_v_pasts
 				) (
 				L .mean (
-				[ L .elems, L .choose (([ _, [__, _past] ]) => as_corresponding_point (_past) )
-				, point_as_attempts, L .count (L .elems) ]))
+				[ L .elems, L .choose (([ _, [__, _past] ]) => as_problem_attempts (_past)), L .count (L .elems) ]))
 			, _average_solved_time:
 				T (_students_map_boards_v_pasts
 				) (
 				L .mean (
-				[ L .elems, L .choose (([ _, [_board, _past] ]) => [ as_corresponding_point (_past), as_solved_on (_board) ])
-				, point_as_attempts, L .last, attempt_as_latency ])) } ),
+				[ L .elems, L .choose (([ _, [_board, _past] ]) => [ as_problem_attempts (_past), L .elems, as_solved_on (_board) ]), attempt_as_latency ])) } ),
 			where
-			, as_corresponding_point = _past => [ K (_past), past_as_points, _index ] )=>_) ])) )=>_)
+			, as_problem_attempts = _past => [ K (_past), past_as_attempts, L .filter (L .get ([ attempt_as_problem, L .is (_problem) ])) ] )=>_) ])) )=>_)
 													 
 var game_over_view = _ => so ((_=_=>
 	<game-over-etc>
@@ -786,7 +780,7 @@ S .root (die => {
 			;please (shuffle) (app_settings_problems_state) } 
 
 		return [ mark (app_settings_rules_size_state), mark (app_setup_state) ] }
-	, [ undefined, undefined])
+	, [ undefined, undefined ])
 
 	;S (_ => {
 		if (L_ .isDefined (mark (app_get_ready_state))
