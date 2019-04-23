@@ -16,7 +16,7 @@ order_sort, direction_opposite, toggle_order,
 shuffle, uuid, map_zip, chain_el, api, 
 timer, timer_since, time_intervals, 
 avatar, student, problem, choice, latency, ping, position,
-attempt, point, past, board, win_rule, rules, settings,
+attempt, past, board, win_rule, rules, settings,
 teacher_app, student_app,
 io, message, ensemble, 
 default_problems, default_rules, default_settings,
@@ -30,11 +30,10 @@ ensemble_as_ping, ensemble_as_settings, ensemble_as_progress,
 ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
 question_as_text, question_as_image, question_as_solution, 
-attempt_as_position, attempt_as_latency, point_as_problem, point_as_attempts, point_as_position, past_as_points,
+attempt_as_position, attempt_as_latency, 
 app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 app_as_board, app_as_past, app_as_progress,
 app_as_boards, app_as_pasts, 
-app_as_last_point, point_as_attempts,
 avatar_as_lion, avatar_as_bunny, 
 win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
 student_as_student, student_as_id, student_as_name, student_as_icon, 
@@ -46,7 +45,7 @@ teacher_app_get_ready_to_playing, teacher_app_playing_to_next, teacher_app_playi
 student_app_setup_to_get_ready, student_app_get_ready_to_playing, student_app_playing_to_next, student_app_playing_to_game_over,
 board_choice, current_problem, current_problem_completed, problem_choice_matches,
 local_patterns, size_patterns,
-as_solved_on, attempted_positions, solved_positions, bingoed_positions, bingoes,
+as_solved_on, solved_positions, bingoed_positions, bingoes,
 clicking, play, pause, audio, img
 } = window .stuff
 
@@ -98,15 +97,19 @@ var ambient_as_background_music_on = data_lens (ambient .ambient) .background_mu
 
 
 
-var question_order = _point => so ((_=_=>
-	R .indexOf (_point) (_points),
+var as_problem_attempts = _problem => [ L .elems, L .when (L .get ([ attempt_as_problem, L .is (_problem) ])) ]
+
+
+var question_order = K (fiat)
+var number_of_attempts_order = _problem => so ((_=_=>
+	L .count ([ as_problem_attempts (_problem), L .elems ]) (_attempts),
 	where
-	, _points = show (app_past_points_state) )=>_)
-var number_of_attempts_order = L .count (point_as_attempts)
-var solved_time_order = by (_point => so ((_=_=>
-	L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ]),
+	, _attempts = show (app_past_attempts_state) )=>_)
+var solved_time_order = _problem => so ((_=_=>
+	L .get ([ as_problem_attempts (_problem), L .elems, as_solved_on (_board), attempt_as_latency ]) (_attempts),
 	where
-	, _board = show (app_as_board) )=>_))
+	, _board = show (app_as_board)
+	, _attempts = show (app_past_attempts_state) )=>_)
 		
 
 
@@ -136,6 +139,7 @@ var app_game_over_state = belief (app_as_game_over) (app_state)
 
 var app_settings_state = belief (app_as_settings) (app_state)
 
+var app_settings_problems_state = belief (settings_as_problems) (app_settings_state)
 var app_settings_time_limit_state = belief (settings_as_time_limit) (app_settings_state)
 var app_settings_size_state = belief (settings_as_size) (app_settings_state)
 
@@ -145,16 +149,15 @@ var app_problems_state = belief (app_as_problems) (app_state)
 var app_board_state = belief (app_as_board) (app_state)
 var app_past_state = belief (app_as_past) (app_state)
 
-var app_past_points_state = belief (past_as_points) (app_past_state)
+var app_past_attempts_state = belief (past_as_attempts) (app_past_state)
 
 var app_progress_state = belief (app_as_progress) (app_state)
 
 var app_progress_timestamp_state = belief (progress_as_timestamp) (app_progress_state)
 var app_progress_step_state = belief (progress_as_step) (app_progress_state)
 
-var app_last_point_state = belief (app_as_last_point) (app_state)
 var app_current_problem_state = belief (current_problem) (app_state)
-var app_current_problem_completed_state = belief (_app => current_problem_completed (current_problem (_app)) (L .get (app_as_board) (_app)) (L .get (app_as_last_point) (_app))) (app_state)
+var app_current_problem_completed_state = belief (_app => current_problem_completed (current_problem (_app)) (L .get (app_as_board) (_app)) (L .get ([ app_as_past, past_as_attempts, L .last ]) (_app))) (app_state)
 
 var ensemble_ping_state = belief (ensemble_as_ping) (ensemble_state)
 var ensemble_progress_state = belief (ensemble_as_progress) (ensemble_state)
@@ -397,15 +400,15 @@ var show_results_view = _ =>
 
 var overall_analysis_view = _ => so ((_=_=>
 	<overall-analysis>
-		<div><span>已答題數：</span> <span>{ attempted_points_amount }</span></div>
-		<div><span>答對題數：</span> <span>{ solved_points_amount }</span></div>
-		<div><span>平均答對時間：</span> <span>{ show_time (mean_solved_point_latency) }</span></div> </overall-analysis>,
+		<div><span>已答題數：</span> <span>{ attempted_problems_amount }</span></div>
+		<div><span>答對題數：</span> <span>{ solved_problems_amount }</span></div>
+		<div><span>平均答對時間：</span> <span>{ show_time (mean_solved_problem_latency) }</span></div> </overall-analysis>,
 	where
 	, _board = mark (app_board_state)
-	, _points = mark (app_past_points_state)
-	, attempted_points_amount = T (_points) (L .count ([ L .elems, point_as_attempts, L .last ]))
-	, solved_points_amount = T (_points) (L .count ([ L .elems, as_solved_on (_board), point_as_attempts, L .last ]))
-	, mean_solved_point_latency = T (_points) (L .mean ([ L .elems, as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) )=>_)
+	, _attempts = mark (app_past_attempts_state)
+	, attempted_problems_amount = T (_attempts) (L .counts ([ L .elems, attempt_as_problem ]))
+	, solved_problems_amount = T (_attempts) (L .count ([ L .elems, as_solved_on (_board) ]))
+	, mean_solved_problem_latency = T (_attempts) (L .mean ([ L .elems, as_solved_on (_board), attempt_as_latency ])) )=>_)
 
 var problems_analysis_view = _ => so ((_=_=>
 	<problems-analysis-etc>
@@ -413,7 +416,7 @@ var problems_analysis_view = _ => so ((_=_=>
 			<question fn={ toggle_question_order }>題目 <img src={ img .toggle_ordering } /></question>
 			<number-of-attempts fn={ toggle_number_of_attempts_order }>作答次數 <img src={ img .toggle_ordering } /></number-of-attempts>
 			<solved-time fn={ toggle_solved_time_order }>答對時間 <img src={ img .toggle_ordering } /></solved-time> </labels>
-		<problems-analysis> { L .collect ([ order_sort (_ordering), L .elems, _point => so ((_=_=> /*reimplement order in terms of free object*/
+		<problems-analysis> { L .collect ([ order_sort (_ordering), L .elems, _problem => so ((_=_=> /*reimplement order in terms of free object*/
 			<problem>
 				<question>{ T (_question) (L .get (L .choice (
 						L .chain (K (_image => <img src={ _image } />)) (question_as_image),
@@ -421,11 +424,12 @@ var problems_analysis_view = _ => so ((_=_=>
 				<number-of-attempts>{ _number_of_attempts }</number-of-attempts>
 				<solved-time>{ show_time (_solved_time) }</solved-time> </problem>,
 			where
-			, _question = T (_point) (L .get ([ point_as_problem, problem_as_question ]))
-			, _number_of_attempts = T (_point) (L .count ([ point_as_attempts, L .elems ]))
-			, _solved_time = T (_point) (L .get ([ as_solved_on (_board), point_as_attempts, L .last, attempt_as_latency ])) )=>_) ]
+			, _question = T (_problem) (L .get (problem_as_question))
+			, as_current_problem_attempts = as_problem_attempts (_problem)
+			, _number_of_attempts = T (mark (app_past_attempts_state)) (L .count (as_current_problem_attempts))
+			, _solved_time = T (mark (app_past_attempts_state)) (L .get ([ as_current_problem_attempts, as_solved_on (_board), attempt_as_latency ])) )=>_) ]
 			) (
-			mark (app_past_points_state) ) } </problems-analysis> </problems-analysis-etc>,
+			mark (app_settings_problems_state) ) } </problems-analysis> </problems-analysis-etc>,
 	where
 	, _ordering = mark (lookbehind_ordering_state)
 	, _board = mark (app_board_state)
@@ -564,7 +568,7 @@ var attempt_problem = impure (_position =>
 			var _choice = board_choice (_board) (_position)
 			if (! show (lookbehind_blocked_state)) {
 				var latency = S .sample (fine_clock)
-				;please (L .set ([ point_as_attempts, L .appendTo ]) ([_position, latency])) (app_last_point_state)
+				;please (L .set (L .appendTo) ([_problem, _position, latency])) (app_past_attempts_state)
 
 				if (problem_choice_matches (_problem) (_choice)) {
 					var _solved_positions = [ ...solved_positions (_board) (show (app_past_state)), _position ]
