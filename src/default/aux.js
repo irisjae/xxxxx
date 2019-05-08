@@ -573,7 +573,7 @@ var parse_to_ast = by (str => so ((_=_=>
 		, '/': 'divide' }
 	, operation_order = [ '+', '-', '*', '/' ]
 	, matched_symbol = R .find (symbol => R .includes (symbol) (str)) (operation_order)
-	, matched_cons = ast [operation [matched_symbol]] )=>_)
+	, matched_cons = ast [operation [matched_symbol]] )=>_) )
 var normal_parse_problem = $ ([ parse_to_ast, normalize_ast ])
 var gcd = a => b =>
 	!! equals (b) (0)
