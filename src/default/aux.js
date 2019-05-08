@@ -832,7 +832,7 @@ var map_zip = mash => a => b => {
 	return _zip }
 
 
-var chain_el = el_fn => [ L .chain ($ ([ el_fn, K ])), L .valueOr ([]) ]
+var chain_el = el_fn => [ L .choose (x => !! equals (x) (undefined) ? L .zero : el_fn), L .valueOr ([]) ]
 
 
 var uuid = _ =>
