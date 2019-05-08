@@ -6,7 +6,7 @@ go, never, panic, panic_on,
 just_now, temporal,
 fiat, data, data_lens, data_iso, data_kind,
 focused_iso_,
-last_n, n_reducer, l_sum, l_point_sum, pinpoint,
+last_n, n_reducer, l_sum, l_point_sum, pin, pinpoint,
 map_defined_, map_defined, from_just, 
 as_sole, sole, shuffle,
 I, K, not, equals,
@@ -22,21 +22,23 @@ io, message, ensemble,
 default_problems, default_rules, default_settings,
 map_v_as_key, map_v_as_value, as_value_of,
 as_complete, complete_,
-app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
+app_as_of_setup, app_as_of_get_ready, app_as_of_playing, app_as_of_game_over,
+app_as_progress,
 settings_as_problems, settings_as_rules,
 settings_as_size, settings_as_time_limit, settings_as_win_rule,
-io_as_inert, io_as_connecting, io_as_heartbeat,
+io_as_of_inert, io_as_of_connecting, io_as_of_heartbeat,
 ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
 ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 progress_as_step, progress_as_timestamp, 
 question_as_text, question_as_image, question_as_solution, 
-attempt_as_position, attempt_as_latency,
+attempt_as_problem, attempt_as_position, attempt_as_latency, 
+past_as_attempts,
 app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 app_as_board, app_as_past, app_as_progress,
 app_as_boards, app_as_pasts, 
-avatar_as_lion, avatar_as_bunny, 
+avatar_as_of_lion, avatar_as_of_bunny, 
 win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
-student_as_student, student_as_id, student_as_name, student_as_icon, 
+student_as_of_student, student_as_id, student_as_name, student_as_icon, 
 rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 problem_as_question, problem_as_answers,
 cell_as_position, as_position, cell_as_choice, 
@@ -113,10 +115,11 @@ var ensemble_state = belief ('ensemble') (state)
 var feedback_state = belief ('feedback') (state)
 
 
-var app_setup_state = belief (app_as_setup) (app_state)
-var app_get_ready_state = belief (app_as_get_ready) (app_state)
-var app_playing_state = belief (app_as_playing) (app_state)
-var app_game_over_state = belief (app_as_game_over) (app_state)
+var app_of_setup_state = belief (app_as_of_setup) (app_state)
+var app_of_get_ready_state = belief (app_as_of_get_ready) (app_state)
+var app_of_playing_state = belief (app_as_of_playing) (app_state)
+var app_of_game_over_state = belief (app_as_of_game_over) (app_state)
+
 var app_progress_state = belief (app_as_progress) (app_state)
 
 var app_progress_timestamp_state = belief (progress_as_timestamp) (app_progress_state)
@@ -151,9 +154,9 @@ var lookbehind_ordering_state = belief (lookbehind_as_ordering) (lookbehind_stat
 
 var ambient_background_music_on_state = belief (ambient_as_background_music_on) (ambient_state)
 
-var io_inert_state = belief (io_as_inert) (io_state)
-var io_connecting_state = belief (io_as_connecting) (io_state)
-var io_heartbeat_state = belief (io_as_heartbeat) (io_state)
+var io_of_inert_state = belief (io_as_of_inert) (io_state)
+var io_of_connecting_state = belief (io_as_of_connecting) (io_state)
+var io_of_heartbeat_state = belief (io_as_of_heartbeat) (io_state)
 
 var ensemble_progress_state = belief (ensemble_as_progress) (ensemble_state)
 var ensemble_pings_state = belief (ensemble_as_pings) (ensemble_state)
@@ -246,7 +249,7 @@ var setup_view = _ => so ((_=_=>
 			{ L .get (chain_el (K (
 			<div style={{ 'text-align': 'center' }}>遊戲正在開始…</div> ) )
 			) (
-			mark (io_connecting_state) ) } </div>
+			mark (io_of_connecting_state) ) } </div>
 		<div class="right-pane">
 			<settings x-for="board-size">
 				<setting x-of="board-size" x-be="3x3"><img fn={ feedback_size (3) } src={ three_by_three_img (equals (_size) (3)) } /></setting>
@@ -308,10 +311,10 @@ var get_ready_view = _ => so ((_=_=>
 			<label>{ text_asset_view (img .text_number_of_students_is) }{ R .length (_students) }</label>
 			<students> { L .collect (L .chain (({ icon: _icon, name: _name }) => K (
 				<student x-icon={
-					!! L .isDefined (avatar_as_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_bunny) (_icon) ? 'bunny' : panic ('...') }
+					!! L .isDefined (avatar_as_of_lion) (_icon) ? 'lion' : L .isDefined (avatar_as_of_bunny) (_icon) ? 'bunny' : panic ('...') }
 				>{ _name }</student> )
 				) (
-				[ L .elems, student_as_student ])) (_students) } </students> </students-etc>
+				[ L .elems, student_as_of_student ])) (_students) } </students> </students-etc>
 		{ L .get ([ L .elems, chain_el (K (
 		<button x-custom x-for="play" fn={ feedback_play }><img src={ img .play } /></button> )) ]
 		) (
@@ -375,9 +378,9 @@ var students_view = _ =>
 		, _name = T (_student) (L .get (student_as_name))
 		, _icon = T (_student) (L .get (student_as_icon))
 		, _icon_attr = 
-			!! L .isDefined (avatar_as_lion) (_icon)
+			!! L .isDefined (avatar_as_of_lion) (_icon)
 			? 'lion'
-			: L .isDefined (avatar_as_bunny) (_icon)
+			: L .isDefined (avatar_as_of_bunny) (_icon)
 			? 'bunny'
 			: panic ('...')
 		, _solved_positions = solved_positions (_board) (_past)
@@ -506,7 +509,7 @@ var problems_analysis_view = so ((_=_=>
 				) ) (
 				analyse_problems (mark (app_students_map_boards_v_pasts_state)) (_problems) ) } </problems-analysis> </problems-analysis-etc>,
 		where
-		, _problems = T (mark (app_settings_problems_state) )=>_),
+		, _problems = T (mark (app_settings_problems_state)) )=>_),
 	where
 	, analyse_problems = _students_map_boards_v_pasts => by (_problems =>
 		L .collect ([ L .elems, (_problem, _index) => so ((_=_=> (
@@ -576,13 +579,13 @@ var game_over_view = _ => so ((_=_=>
 S .root (die => {
 	;window .die = { ... (window .die || {}), view: die }
 	;window .view = <teacher-app>
-		{ !! L_ .isDefined (mark (app_setup_state))
+		{ !! L_ .isDefined (mark (app_of_setup_state))
 		? setup_view
-		: L_ .isDefined (mark (app_get_ready_state))
+		: L_ .isDefined (mark (app_of_get_ready_state))
 		? get_ready_view
-		: L_ .isDefined (mark (app_playing_state))
+		: L_ .isDefined (mark (app_of_playing_state))
 		? playing_view
-		: L_ .isDefined (mark (app_game_over_state))
+		: L_ .isDefined (mark (app_of_game_over_state))
 		? game_over_view
 		: panic ('undefined app state in view')  } </teacher-app> })
 												 
@@ -726,7 +729,7 @@ S .root (die => {
 	;S (_ => 
 		T (mark (feedback_state)
 		) (
-		pinpoint (
+		pin (
 		l_sum (
 		[ [ feedback_as_rules_piece, L .when (I)
 			, _piece => {
@@ -761,44 +764,44 @@ S .root (die => {
 		var _app_progress = show (app_progress_state)
 		var _progress = mark (ensemble_progress_state)
 		// is there a more elegant way? this is not markovian 
-		if (L_ .isDefined (mark (app_get_ready_state))) {
+		if (L_ .isDefined (mark (app_of_get_ready_state))) {
 			if (not (equals (_app_progress) (_progress))) {
 				;please (teacher_app_get_ready_to_playing) (app_state)
 				;please (L_ .set (_progress)) (app_progress_state) } } })
 
 	;S (_ => {
-		if (L_ .isDefined (app_setup_state)) {
+		if (L_ .isDefined (app_of_setup_state)) {
 			;please (L_ .set (lookbehind .nothing)) (lookbehind_state)
 			;please (L_ .remove) (ensemble_state) } })
 
 	;S (([ last_app_settings_rules_size, last_app_setup ]) => {
 		if (! L_ .isDefined (last_app_setup)) {
-			if (L_ .isDefined (mark (app_setup_state))) {
+			if (L_ .isDefined (mark (app_of_setup_state))) {
 				;please (shuffle) (app_settings_problems_state) } }
 
 		if (not (equals (last_app_settings_rules_size) (mark (app_settings_rules_size_state)))) {
 			;please (shuffle) (app_settings_problems_state) } 
 
-		return [ mark (app_settings_rules_size_state), mark (app_setup_state) ] }
+		return [ mark (app_settings_rules_size_state), mark (app_of_setup_state) ] }
 	, [ undefined, undefined ])
 
 	;S (_ => {
-		if (L_ .isDefined (mark (app_get_ready_state))
-		|| L_ .isDefined (mark (app_playing_state))
-		|| L_ .isDefined (mark (app_game_over_state))) {
+		if (L_ .isDefined (mark (app_of_get_ready_state))
+		|| L_ .isDefined (mark (app_of_playing_state))
+		|| L_ .isDefined (mark (app_of_game_over_state))) {
 			var _ensemble_students = T (mark (ensemble_pings_state)) (L .collect ([ L .elems, map_v_as_key ]))
 			;please (L_ .set (_ensemble_students)) (app_students_state) } })
 
 	;S (last_progress => {
 		var _progress = mark (app_progress_state)
-		if (L_ .isDefined (mark (app_playing_state))) {
+		if (L_ .isDefined (mark (app_of_playing_state))) {
 			if (! equals (_progress) (last_progress)) {
 				;broadcast_progress (_progress) } }
 		return _progress })
 
 	;S (_ => {
-		if (L_ .isDefined (mark (app_playing_state))
-		|| L_ .isDefined (mark (app_game_over_state))) {
+		if (L_ .isDefined (mark (app_of_playing_state))
+		|| L_ .isDefined (mark (app_of_game_over_state))) {
 			var _ensemble_boards = T (mark (ensemble_boards_state)) (L .collect (L .elems))
 			var _ensemble_pasts = T (mark (ensemble_pasts_state)) (L .collect (L .elems))
 			;please (L_ .set (_ensemble_boards)) (app_boards_state)
@@ -816,7 +819,7 @@ S .root (die => {
 
 	;S (last_tick => {
 		var time_limit = mark (app_settings_rules_time_limit_state)
-		if (L_ .isDefined (mark (app_playing_state)) && clock () >= time_limit) {
+		if (L_ .isDefined (mark (app_of_playing_state)) && clock () >= time_limit) {
 			;please (teacher_app_playing_to_next) (app_state) } })
 
 	;S (last_app_has_bingoes_ok => {
@@ -829,11 +832,11 @@ S .root (die => {
 			var game_tick = clock ()
 			var _win_rule = mark (app_settings_rules_win_rule_state)
 			if (equals (win_rule .first_bingo) (_win_rule)) {
-				if (L_ .isDefined (mark (app_playing_state))) {
+				if (L_ .isDefined (mark (app_of_playing_state))) {
 					if (! last_app_has_bingoes_ok && app_has_bingoes_ok) {
 						;end_game () } } }
 			else if (equals (win_rule .limit_time) (_win_rule)) {
-				if (L_ .isDefined (mark (app_playing_state))) {
+				if (L_ .isDefined (mark (app_of_playing_state))) {
 //	Math .floor ((S .sample (time) - T (show (app_progress_state)) (L .get (progress_as_timestamp))) / 1000)				 
 					if (! last_app_has_bingoes_ok && app_has_bingoes_ok) {
 						;setTimeout (_=>{;end_game ()}, 8000) } } }
@@ -842,16 +845,16 @@ S .root (die => {
 			return app_has_bingoes_ok } })
 
 	;S (last_app_game_over_state => {
-		if (L_ .isDefined (mark (app_game_over_state))) {
+		if (L_ .isDefined (mark (app_of_game_over_state))) {
 			if (! L_ .isDefined (last_app_game_over_state)) {
 				;broadcast_game_over () } }
-		return mark (app_game_over_state) })
+		return mark (app_of_game_over_state) })
 
 	;S (last_app_game_over_state => {
 		if (! L_ .isDefined (last_app_game_over_state)) {
-			if (L_ .isDefined (mark (app_game_over_state))) {
+			if (L_ .isDefined (mark (app_of_game_over_state))) {
 				;please (L_ .set (lookbehind .show_results)) (lookbehind_state) } }
-		return mark (app_game_over_state) })
+		return mark (app_of_game_over_state) })
 
 
 
@@ -861,18 +864,18 @@ S .root (die => {
 	
 	// time
 	;S (_ => {
-		if (L_ .isDefined (mark (app_get_ready_state))) {
+		if (L_ .isDefined (mark (app_of_get_ready_state))) {
 			;ticking (false) }
-		else if (L_ .isDefined (mark (app_playing_state))) {
+		else if (L_ .isDefined (mark (app_of_playing_state))) {
 			;ticking (true) }
-		else if (L_ .isDefined (mark (app_game_over_state))) {
+		else if (L_ .isDefined (mark (app_of_game_over_state))) {
 			;ticking (false) } })
 
 	// communication
 	;S (_ => 
 		T (mark (app_room_state)
 		) (
-		pinpoint (
+		pin (
 		[ L .when (I)
 		, _room =>
 			suppose (
@@ -896,7 +899,7 @@ S .root (die => {
 					if (equals (_room) (show (app_room_state))) {
 						;please (L_ .set (_ensemble)) (ensemble_state) } }) )
 			.catch (
-				pinpoint (
+				pin (
 				l_point_sum (
 				[ 'error', L .is ('timeout'), L .when (I), _ => {;console .warn ('Room timed out')} ],
 				[ panic ] ) ) )

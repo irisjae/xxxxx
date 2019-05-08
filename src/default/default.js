@@ -159,7 +159,8 @@ var n_reducer = binary => n =>
 var l_sum = traversals =>
 	[ L .pick (T (traversals) (L .get ([ L .indexed, L .inverse (L .keyed) ]))), L .values ]
 
-var pinpoint = L .forEach (I)
+var pin = L .forEach (I)
+var pinpoint = L .get
 	
 	
 	
@@ -222,8 +223,13 @@ document .addEventListener ('DOMContentLoaded', _ => {
 		;view .addEventListener (event, e => {
 			var path = R .reverse (
 				R .unfold (node => node != view && [ [... node .parentNode .children] .indexOf (node), node .parentNode ]
-				, e .target))
-			var target = R .reduce ((node, index) => node && node .children [index] || R .reduced (undefined), window .view, path) 
+				) (
+				e .target))
+			var target = R .reduce ((node, index) => node && node .children [index] || R .reduced (undefined)
+				) (
+				window .view
+				) (
+				path )
 			if (target && event === 'input') {
 				;target .value = e .target .value }
 			;target && target .dispatchEvent (new e .constructor (e .type, e)) }) })
@@ -265,7 +271,7 @@ window .stuff = { ... window .stuff,
 	so, by, 
 	go, never, panic, panic_on,
 	fiat, data, data_lens, data_iso, data_kind,
-	last_n, n_reducer, l_sum, l_point_sum, pinpoint,
+	last_n, n_reducer, l_sum, l_point_sum, pin, pinpoint,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle,
 	I, K, not, equals }

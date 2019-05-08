@@ -7,7 +7,7 @@ var {
 	just_now, temporal,
 	fiat, data, data_lens, data_iso, data_kind,
 	focused_iso_,
-	last_n, n_reducer, l_sum, l_point_sum, pinpoint,
+	last_n, n_reducer, l_sum, l_point_sum, pin, pinpoint,
 	map_defined_, map_defined, from_just, 
 	as_sole, sole, shuffle,
 	I, K, not, equals
@@ -184,10 +184,10 @@ var as_value_of = key =>
 var as_complete = L .when (L .none (equals (undefined)) (L .values))
 var complete_ = L .get (as_complete)
 
-var app_as_setup = data_iso (teacher_app .setup)
-var app_as_get_ready = L .choice (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
-var app_as_playing = L .choice (data_iso (teacher_app .playing), data_iso (student_app .playing))
-var app_as_game_over = L .choice (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
+var app_as_of_setup = data_iso (teacher_app .setup)
+var app_as_of_get_ready = L .choice (data_iso (teacher_app .get_ready), data_iso (student_app .get_ready))
+var app_as_of_playing = L .choice (data_iso (teacher_app .playing), data_iso (student_app .playing))
+var app_as_of_game_over = L .choice (data_iso (teacher_app .game_over), data_iso (student_app .game_over))
 
 var app_as_settings = [ L .choice ('setup', 'get_ready', 'playing', 'game_over'), 'settings' ]
 var app_as_student = [ L .choice ('setup', 'get_ready', 'playing', 'game_over'), 'student' ]
@@ -202,33 +202,33 @@ var app_as_past = [ L .choice ('playing', 'game_over'), 'past' ]
 var app_as_boards = [ L .choice ('playing', 'game_over'), 'boards' ]
 var app_as_pasts = [ L .choice ('playing', 'game_over'), 'pasts' ]
 
-var io_as_inert = data_iso (io .inert)
-var io_as_connecting = data_iso (io .connecting)
-var io_as_heartbeat = data_iso (io .heartbeat)
+var io_as_of_inert = data_iso (io .inert)
+var io_as_of_connecting = data_iso (io .connecting)
+var io_as_of_heartbeat = data_iso (io .heartbeat)
 
-var message_as_teacher_settings = data_iso (message .teacher_settings)
-var message_as_teacher_ping = data_iso (message .teacher_ping) 
-var message_as_teacher_progress = data_iso (message .teacher_progress) 
-var message_as_student_ping = data_iso (message .student_ping) 
-var message_as_student_join = data_iso (message .student_join) 
-var message_as_student_update = data_iso (message .student_update) 
+var message_as_of_teacher_settings = data_iso (message .teacher_settings)
+var message_as_of_teacher_ping = data_iso (message .teacher_ping) 
+var message_as_of_teacher_progress = data_iso (message .teacher_progress) 
+var message_as_of_student_ping = data_iso (message .student_ping) 
+var message_as_of_student_join = data_iso (message .student_join) 
+var message_as_of_student_update = data_iso (message .student_update) 
 
-var message_as_student = [ L .choice (message_as_student_ping, message_as_student_join, message_as_student_update), 'student' ]
-var message_as_ping = [ L .choice (message_as_teacher_ping, message_as_student_ping), 'ping' ]
-var message_as_board = message_as_student_join .board
-var message_as_past = message_as_student_update .past
+var message_as_student = [ L .choice (message_as_of_student_ping, message_as_of_student_join, message_as_of_student_update), 'student' ]
+var message_as_ping = [ L .choice (message_as_of_teacher_ping, message_as_of_student_ping), 'ping' ]
+var message_as_board = message_as_of_student_join .board
+var message_as_past = message_as_of_student_update .past
 
-var ensemble_as_ensemble = data_iso (ensemble .ensemble)
+var ensemble_as_of_ensemble = data_iso (ensemble .ensemble)
 	
-var ensemble_as_settings = ensemble_as_ensemble .settings 
-var ensemble_as_ping = ensemble_as_ensemble .ping 
-var ensemble_as_progress = ensemble_as_ensemble .progress 
-var ensemble_as_pings = ensemble_as_ensemble .pings 
-var ensemble_as_boards = ensemble_as_ensemble .boards 
-var ensemble_as_pasts = ensemble_as_ensemble .pasts 
+var ensemble_as_settings = ensemble_as_of_ensemble .settings 
+var ensemble_as_ping = ensemble_as_of_ensemble .ping 
+var ensemble_as_progress = ensemble_as_of_ensemble .progress 
+var ensemble_as_pings = ensemble_as_of_ensemble .pings 
+var ensemble_as_boards = ensemble_as_of_ensemble .boards 
+var ensemble_as_pasts = ensemble_as_of_ensemble .pasts 
 
-var avatar_as_lion = data_iso (avatar .lion)
-var avatar_as_bunny = data_iso (avatar .bunny)
+var avatar_as_of_lion = data_iso (avatar .lion)
+var avatar_as_of_bunny = data_iso (avatar .bunny)
 
 var win_rule_as_first_bingo = data_iso (win_rule .first_bingo)
 var win_rule_as_limit_time = data_iso (win_rule .limit_time)
@@ -236,7 +236,7 @@ var win_rule_as_all_problems = data_iso (win_rule .all_problems)
 
 var win_rule_as_time_limit = data_lens (win_rule .limit_time) .time_limit
 
-var student_as_student = data_iso (student .student)
+var student_as_of_student = data_iso (student .student)
 
 var student_as_id = data_lens (student .student) .id
 var student_as_name = data_lens (student .student) .name
@@ -245,11 +245,11 @@ var student_as_icon = data_lens (student .student) .icon
 var progress_as_step = [ 0 ]
 var progress_as_timestamp = [ 1 ]
 
-var ast_as_normal = data_iso (ast .normal)
-var ast_as_add = data_iso (ast .add)
-var ast_as_minus = data_iso (ast .minus)
-var ast_as_multiply = data_iso (ast .multiply)
-var ast_as_divide = data_iso (ast .divide)
+var ast_as_of_normal = data_iso (ast .normal)
+var ast_as_of_add = data_iso (ast .add)
+var ast_as_of_minus = data_iso (ast .minus)
+var ast_as_of_multiply = data_iso (ast .multiply)
+var ast_as_of_divide = data_iso (ast .divide)
 
 var question_as_text = data_lens (question .text) .text
 var question_as_image = data_lens (question .image) .image
@@ -263,7 +263,7 @@ var past_as_attempts = data_lens (past .past) .attempts
 var settings_as_problems = data_lens (settings .settings) .problems
 var settings_as_rules = data_lens (settings .settings) .rules
 var app_as_problems = [ app_as_settings, settings_as_problems ]
-var app_as_last_attempt = [ app_as_past, past_as_attempt, L .last ]
+var app_as_last_attempt = [ app_as_past, past_as_attempts, L .last ]
 
 var rules_as_size = data_lens (rules .rules) .size
 var rules_as_time_limit = data_lens (rules .rules) .time_limit
@@ -296,10 +296,9 @@ var ping_as_mean = [ 1 ]
 
 
 var teacher_app_get_ready_to_playing = by (_app =>
-	$ (
-	[ L .get (
-		[ data_iso (teacher_app .get_ready)
-		, L .inverse (data_iso (teacher_app .playing)) ])
+	pinpoint (
+	[	[ data_iso (teacher_app .get_ready)
+		, L .inverse (data_iso (teacher_app .playing)) ]
 	// implementation detail... how come i am leaking it!???
 	// (as in, maps are not supposed to have order, but this is being implemented to solve order issues
 	, by (_app => so ((_=_=>
@@ -309,7 +308,7 @@ var teacher_app_get_ready_to_playing = by (_app =>
 		, L .set (app_as_pasts) (R .map (_student => [ _student, undefined ]) (_students)) ]),
 		where
 		, _students = L .get (app_as_students) (_app) )=>_) )
-	, L .set (app_as_progress) ([ 0, fiat ]) ]))
+	, L .set (app_as_progress) ([ 0, fiat ]) ] ) )
 
 var teacher_app_playing_to_next = by (_app => so ((_=_=>
 	!! not (game_over_ok) ? L .set (app_as_progress) ([ progress_step + 1, progress_timestamp + time_limit * 1000 ])
@@ -321,23 +320,19 @@ var teacher_app_playing_to_next = by (_app => so ((_=_=>
 	, game_over_ok = progress_step + 1 >= _size * _size )=>_))
 
 var teacher_app_playing_to_game_over = by (_app => 
-	$ (L .get
-	) (
+	pinpoint (
 	[ data_iso (teacher_app .playing)
-	, L .inverse (data_iso (teacher_app .game_over)) ])) 
+	, L .inverse (data_iso (teacher_app .game_over)) ] ) ) 
 
 var student_app_setup_to_get_ready = by (_app => 
-	$ (L .get
-	) (
+	pinpoint (
 	[ data_iso (student_app .setup)
-	, L .inverse (data_iso (student_app .get_ready)) ])) 
+	, L .inverse (data_iso (student_app .get_ready)) ] ) ) 
 
 var student_app_get_ready_to_playing = by (_app => so ((_=_=>
-	$ (
-	[ $ (L .get
-		) (
-		[ data_iso (student_app .get_ready)
-		, L .inverse (data_iso (student_app .playing)) ])
+	pinpoint (
+	[ 	[ data_iso (student_app .get_ready)
+		, L .inverse (data_iso (student_app .playing)) ]
 	, L .set (app_as_board) (random_board)
 	, L .set (app_as_past) (fresh_past)
 	, L .set (app_as_progress) ([ 0, fiat ]) ]),
@@ -359,11 +354,10 @@ var student_app_playing_to_next = by (_app =>
 	, _size = T (_app) (L .get ([ app_as_settings, settings_as_size ]))
 	, game_over_ok = progress_step + 1 >= _size * _size )=>_))
 
-var student_app_playing_to_game_over =by (_app => 
-	$ (L .get
-	) (
+var student_app_playing_to_game_over = by (_app => 
+	pinpoint (
 	[ data_iso (student_app .playing)
-	, L .inverse (data_iso (student_app .game_over)) ]))
+	, L .inverse (data_iso (student_app .game_over)) ] ) )
 
 
 
@@ -447,10 +441,10 @@ var current_problem_completed = _problem => _board => _attempt => so ((_=_=>
 	, _board
 	, _attempt }
 	) (
-	L .get (
+	pinpoint (
 	[ as_complete
 	, ({ _problem, _board, _attempt }) => 
-		T (_attempt) (L .get ([ join ([ attempt_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ])) ] ) ),
+		T (_attempt) (pinpoint ([ join ([ attempt_as_position, board_choice (_board), problem_choice_matches (_problem) ]), L .valueOr (false) ])) ] ) ),
 	where
 	, join_2 = map_a => map_b => L .chain (K (map_b)) (map_a)
 	, join = R .reduce ((a, b) => join_2 (a) (b)) ([]) )=>_)
@@ -465,7 +459,7 @@ var current_problem_completed = _problem => _board => _attempt => so ((_=_=>
 
 var as_solved_on = memoize (_board =>
 	L .when (by (_attempt =>
-		L .get (
+		pinpoint (
 		[ attempt_as_position
 		, L .when (I)
 		, _position => so ((_=_=>
@@ -524,37 +518,42 @@ var ast_simplify = n => d =>
 	) =>
 	ast .normal (n / factor, d / factor) )
 var ast_left_right_normalized_parts = by (ast =>
-	$ (L .get
-	) (
-	[ L .choice (ast_as_add, ast_as_minus, ast_as_multiply, ast_as_divide)
-	, ({ left, right }) => so ((
-		suppose
-		, { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_normal) (normalize_ast (left))
-		, { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_normal) (normalize_ast (right)) ) =>
-		{ left_numerator, left_denominator, right_numerator, right_denominator } ) ]))
+	pinpoint (
+	[ L .choice (ast_as_of_add, ast_as_of_minus, ast_as_of_multiply, ast_as_of_divide)
+	, ({ left, right }) => 
+		suppose (
+		( { numerator: left_numerator, denominator: left_denominator } = L .get (ast_as_of_normal) (normalize_ast (left))
+		, { numerator: right_numerator, denominator: right_denominator } = L .get (ast_as_of_normal) (normalize_ast (right))
+		) =>
+		{ left_numerator, left_denominator, right_numerator, right_denominator } ) ] ) )
 var normalize_ast = by (ast =>
-	L .get (L .choice 
-		( L .when (ast_as_normal)
-		, [ L .when (ast_as_add), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-			suppose
-			, n = left_numerator * right_denominator + right_numerator * left_denominator
-			, d = left_denominator * right_denominator ) =>
-			ast_simplify (n) (d) ) ]
-		, [ L .when (ast_as_minus), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-			suppose
-			, n = left_numerator * right_denominator - right_numerator * left_denominator
-			, d = left_denominator * right_denominator ) =>
-			ast_simplify (n) (d) ) ]
-		, [ L .when (ast_as_multiply), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-			suppose
-			, n = left_numerator * right_numerator
-			, d = left_denominator * right_denominator ) =>
-			ast_simplify (n) (d) ) ]
-		, [ L .when (ast_as_divide), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => so ((
-			suppose
-			, n = left_numerator * right_denominator
-			, d = left_denominator * right_numerator ) =>
-			ast_simplify (n) (d) ) ] )))
+	pinpoint (
+	L .choice 
+	( L .when (ast_as_of_normal)
+	, [ L .when (ast_as_of_add), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) => 
+		suppose (
+		( n = left_numerator * right_denominator + right_numerator * left_denominator
+		, d = left_denominator * right_denominator
+		) =>
+		ast_simplify (n) (d) ) ]
+	, [ L .when (ast_as_of_minus), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) =>
+		suppose (
+		( n = left_numerator * right_denominator - right_numerator * left_denominator
+		, d = left_denominator * right_denominator
+		) =>
+		ast_simplify (n) (d) ) ]
+	, [ L .when (ast_as_of_multiply), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) =>
+		suppose (
+		( n = left_numerator * right_numerator
+		, d = left_denominator * right_denominator
+		) =>
+		ast_simplify (n) (d) ) ]
+	, [ L .when (ast_as_of_divide), ast_left_right_normalized_parts, ({ left_numerator, left_denominator, right_numerator, right_denominator }) =>
+		suppose (
+		( n = left_numerator * right_denominator
+		, d = left_denominator * right_numerator
+		) =>
+		ast_simplify (n) (d) ) ] ) ) )
 var analyze_to_ast = symbol => cons => str => 
 	suppose (
 	( loc = R .indexOf (symbol) (str) 
@@ -562,20 +561,19 @@ var analyze_to_ast = symbol => cons => str =>
 	, right = parse_to_ast (str .slice (loc + 1, Infinity))
 	) =>
 	cons (left, right) )
-var parse_to_ast = so ((_=_=>
-	$ (L .get
-	) (
-	L .cond (
-		...T (order) (R .map (symbol => 
-			[ R .includes (symbol), analyze_to_ast (symbol) (ast [operation [symbol]]) ] ))
-		, [ str => ast .normal ( str * 1, 1 ) ] )),
+var parse_to_ast = by (str => so ((_=_=>
+	!! matched_symbol
+	? analyze_to_ast (matched_symbol) (matched_cons)
+	: str => ast .normal (str * 1, 1), // assuming str is integer
 	where
-	, order = [ '+', '-', '*', '/' ]
 	, operation = 
-			{ '+': 'add'
-			, '-': 'minus'
-			, '*': 'multiply'
-			, '/': 'divide' } )=>_) //assuming str is integer
+		{ '+': 'add'
+		, '-': 'minus'
+		, '*': 'multiply'
+		, '/': 'divide' }
+	, operation_order = [ '+', '-', '*', '/' ]
+	, matched_symbol = R .find (symbol => R .includes (symbol) (str)) (operation_order)
+	, matched_cons = ast [operation [matched_symbol]] )=>_)
 var normal_parse_problem = $ ([ parse_to_ast, normalize_ast ])
 var gcd = a => b =>
 	!! equals (b) (0)
@@ -590,15 +588,15 @@ var gcd = a => b =>
 //optimizing this
 var message_encoding = by (message => 
 	so ((_=_=>
-	L .get (
+	pinpoint (
 	[ L .choice ( ... 
-		[ [ message_as_teacher_ping .ping, L .when (I), L .getInverse (ensemble_as_ping) ]
-		, [ message_as_teacher_settings .settings, L .when (I), L .getInverse (ensemble_as_settings) ]
-		, [ message_as_teacher_progress .progress, L .when (I), L .getInverse (ensemble_as_progress) ]
-		, [ message_as_student_ping .ping, L .when (I), L .getInverse ([ ensemble_as_pings, wrapped_with_student ]) ]
-		, [ message_as_student_join .board, L .when (I), L .getInverse ([ ensemble_as_boards, wrapped_with_student ]) ]
-		, [ message_as_student_update .past, L .when (I), L .getInverse ([ ensemble_as_pasts, wrapped_with_student ]) ] ] )
-	, ensemble_as_ensemble
+		[ [ message_as_of_teacher_ping .ping, L .when (I), L .getInverse (ensemble_as_ping) ]
+		, [ message_as_of_teacher_settings .settings, L .when (I), L .getInverse (ensemble_as_settings) ]
+		, [ message_as_of_teacher_progress .progress, L .when (I), L .getInverse (ensemble_as_progress) ]
+		, [ message_as_of_student_ping .ping, L .when (I), L .getInverse ([ ensemble_as_pings, wrapped_with_student ]) ]
+		, [ message_as_of_student_join .board, L .when (I), L .getInverse ([ ensemble_as_boards, wrapped_with_student ]) ]
+		, [ message_as_of_student_update .past, L .when (I), L .getInverse ([ ensemble_as_pasts, wrapped_with_student ]) ] ] )
+	, ensemble_as_of_ensemble
 	, strip ] ),
 	where
 	, strip = L .modify (L .satisfying (equals ())) (L_ .remove)
@@ -609,8 +607,9 @@ var message_encoding = by (message =>
 var messages_encoding = list =>
 	R .reduce (R .mergeDeepRight) ({}) (list .map (message_encoding))
 
-var decode_to_ensemble = L .get (
-	[ L .inverse (ensemble_as_ensemble)
+var decode_to_ensemble =
+	pinpoint (
+	[ L .inverse (ensemble_as_of_ensemble)
 	, L .modify (ensemble_as_pings) (L .collect (L .values))
 	, L .modify (ensemble_as_boards) (L .collect (L .values))
 	, L .modify (ensemble_as_pasts) (L .collect (L .values)) ] )
@@ -690,7 +689,7 @@ var _api = so ((_=_=>
 		) =>
 		go
 		.then (K (_api .sockets [room] .ready))
-		.then (_=> {;_api .sockets [room] .send (JSON .stringify ({ ...req, id: id }))})
+		.then (_=> {;_api .sockets [room] .send (JSON .stringify ({ ... req, id: id }))})
 		.then (_=> {;begin = performance .now ()})
 		.then (K (continuation))
 		.then (_=> {;end = performance .now ()})
@@ -737,7 +736,7 @@ var _api = so ((_=_=>
 						 ;_api .continuations [id] (data) } } } } )=>_)
 
 	, update_ping = sample => by (ping_info =>
-		L .get (
+		pinpoint (
 		[ L .valueOr ([0, 0, 0, 0])
 		, ([ mean, sqr_mean, n, _ ]) => so ((_=_=>
 			[ mean * carry + sample / (n + 1)
@@ -787,7 +786,7 @@ var toggle_order = prop => _ordering => so ((_=_=>
 	[ [prop, opposite_direction], ... irrelevant_orderings ],
 	where
 	, irrelevant_orderings = T (_ordering) (R .filter (([_prop, _]) => not (equals (prop) (_prop))))
-	, opposite_direction = T (_ordering) (L .get ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
+	, opposite_direction = T (_ordering) (pinpoint ([ R .find (([_prop, _]) => equals (prop) (_prop)), L .last, L .valueOr ('ascending'), direction_opposite ])) )=>_)
 
 
 var api = so ((_=_=> impure ((room, req) =>
@@ -810,11 +809,11 @@ var api = so ((_=_=> impure ((room, req) =>
 				? messages_encoding
 				: message_encoding
 			, post ] ) )
-	, decode = L .get (
-		L .choices (
-			[ L .when (L .isDefined ('error')) ],
-			[ L .when (L .isDefined ('ok')) ],
-			[ decode_to_ensemble ] ) ) )=>_)
+	, decode = pinpoint (
+		L .choices
+		( L .when (L .isDefined ('error'))
+		, L .when (L .isDefined ('ok'))
+		, decode_to_ensemble ) ) )=>_)
 ;api .ping = _api .ping
 
 
@@ -833,7 +832,7 @@ var map_zip = mash => a => b => {
 	return _zip }
 
 
-var chain_el = el_fn => [ L .chain ($ ([ el_fn, K ])) ([]), L .valueOr ([]) ]
+var chain_el = el_fn => [ L .chain ($ ([ el_fn, K ])), L .valueOr ([]) ]
 
 
 var uuid = _ =>
@@ -1032,21 +1031,23 @@ window .stuff = { ...window .stuff,
 	default_problems, default_rules, default_settings,
 	map_v_as_key, map_v_as_value, as_value_of,
 	as_complete, complete_,
-	app_as_setup, app_as_get_ready, app_as_playing, app_as_game_over, app_as_progress,
+	app_as_of_setup, app_as_of_get_ready, app_as_of_playing, app_as_of_game_over,
+	app_as_progress,
 	settings_as_problems, settings_as_rules,
 	settings_as_size, settings_as_time_limit, settings_as_win_rule,
-	io_as_inert, io_as_connecting, io_as_heartbeat,
+	io_as_of_inert, io_as_of_connecting, io_as_of_heartbeat,
 	ensemble_as_ping, ensemble_as_settings, ensemble_as_progress, 
 	ensemble_as_pings, ensemble_as_boards, ensemble_as_pasts,
 	progress_as_step, progress_as_timestamp, 
 	question_as_text, question_as_image, question_as_solution, 
-	attempt_as_position, attempt_as_latency, 
+	attempt_as_problem, attempt_as_position, attempt_as_latency, 
+	past_as_attempts,
 	app_as_settings, app_as_student, app_as_students, app_as_room, app_as_problems,
 	app_as_board, app_as_past, app_as_progress,
 	app_as_boards, app_as_pasts, 
-	avatar_as_lion, avatar_as_bunny, 
+	avatar_as_of_lion, avatar_as_of_bunny, 
 	win_rule_as_first_bingo, win_rule_as_limit_time, win_rule_as_all_problems, win_rule_as_time_limit,
-	student_as_student, student_as_id, student_as_name, student_as_icon, 
+	student_as_of_student, student_as_id, student_as_name, student_as_icon, 
 	rules_as_size, rules_as_time_limit, rules_as_win_rule, settings_as_size, settings_as_time_limit,
 	problem_as_question, problem_as_answers,
 	cell_as_position, as_position, cell_as_choice, 
