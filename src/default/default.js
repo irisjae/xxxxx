@@ -16,6 +16,24 @@ var memoize = require ('fast-memoize')
 
 
 
+
+var as_reduction = ([ ... pairs ]) =>
+	L .choice (... R .map (([ def, point ]) => [ L .when (L .isDefined (def)), K (point) ]) (pairs))
+
+var as_point = a => b =>
+	[ L .is (a), L .inverse (L .is (b)) ]
+var as_points_on = iso => ([ ...pairs ]) =>
+	L .alternatives (... R .map (([a, b]) => as_point (a) (b)) (pairs), iso)
+var as_points = ([ ...pairs ]) =>
+	L .alternatives (... R .map (([a, b]) => as_point (a) (b)) (pairs))
+var points_ = ([ ...pairs ]) => L  .get (as_points ([ ...pairs ]))
+var pointed_ = a => b => f =>
+	by (_x => !! equals (a) (_x) ? K (b) : f)
+var pointed_I = a => b => pointed_ (a) (b) (I)
+
+
+
+
 var as_sole = L .singleton
 var sole = list =>
 	!! (list .length === 1) ? list [0]
@@ -48,71 +66,50 @@ var never = new Promise (_ => {})
 
 
 var Map = window .Map
-var __data_length = new Map
-var __data_lens = new Map
+var __data_info = new Map
 
 var fiat = {}
-var data = cons_definitions =>
-	T (cons_definitions
+var data = cons_defs =>
+	T (cons_defs
 	) (
 	L .modify (L .values) ((def_fn, cons_label) => 
 		suppose (
-		( args_match = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
+		( parts_match = def_fn .toString () .match (/\(((?:.|\s)*?)\)\s*=>/) [1]
 		) =>
-		!! args_match
-		?
+		!! parts_match ?
 			suppose (
 			( _cons = (...vals) => (
-					{ [cons_label]: R .fromPairs (R .zip (arg_labels, vals)) } )
-			, arg_labels = args_match .split (/\(.+?\)/g) .join ('') .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
-			, $__record_arglength = __data_length .set (_cons, arg_labels .length)
-			, $__record_lens = __data_lens .set (_cons, [cons_label])
+					{ [cons_label]: R .fromPairs (R .zip (parts_labels, vals)) } )
+			, parts_labels = parts_match .split (/\(.+?\)/g) .join ('') .split (',') .map (x => x .match (/([^\s=]+)\s*(?:=.+)?/) [1])
+			, $__cons_info = __data_info .set (_cons, { label: cons_label, length: parts_labels .length })
 			) =>
 			_cons )
 		:
 			suppose (
 			( _cons = { [cons_label]: {} }
-			, $__record_arglength = __data_length .set (_cons, 0)
-			, $__record_lens = __data_lens .set (_cons, [cons_label])
+			, $__cons_info = __data_info .set (_cons, { label: cons_label, length: 0 })
 			) =>
 			_cons ) ) ))
 
-var cons_memoize = cons => 
-	memoize (cons
-	, { serializer: cons => {
-		if (! cons_memoize .ids .get (cons)) {
-			;cons_memoize .next_id = (cons_memoize .next_id || 0) + 1
-			var id = cons_memoize .next_id
-			;cons_memoize .ids .set (cons, id) }
-		return cons_memoize .ids .get (cons) } })
-;cons_memoize .ids = new Map
-
-var data_lens = cons_memoize (cons =>
+var __memoize =
 	suppose (
-	( _lens = __data_lens .get (cons)
-	, $__sub_lenses =
-		!! not (cons .constructor === Function) ? 'nothing'
-		: 
-			suppose (
-			( marked_template = so ((_=_=> 
-					T (cons) ([ apply, T (markers) ]),
-					where
-					, cons_length = __data_length .get (cons)
-					, markers = R .range (1) (cons_length + 1) )=>_)
-			, factors = T (marked_template) ([ R .values, sole, R .keys ])
-			) =>
-			T (factors) (R .forEach (_x => {
-				;_lens [_x] = [ _lens, _x ] })) )
+	( ids = new Map
+	, next_id = 0
 	) =>
-	_lens ) )
+	cons_fn => memoize (cons_fn,
+		{ serializer: cons => {
+			if (! ids .get (cons)) {
+				;ids .set (cons, next_id)
+				;next_id = next_id + 1 }
+			return ids .get (cons) } }) )
 
-var data_iso = cons_memoize (cons =>
+var as_in = __memoize (cons =>
 	suppose (
 	( cons_fn = factors =>
 		!! not (cons .constructor === Function) ? cons
 		: T (cons) ([ apply, T (factors) ])
 	, marked_template = suppose (
-		( cons_length = __data_length .get (cons)
+		( cons_length = __data_info .get (cons) .length
 		, markers = R .range (1) (cons_length + 1)
 		) =>
 		cons_fn (markers) )
@@ -127,6 +124,27 @@ var data_iso = cons_memoize (cons =>
 	) =>
 	_iso ) )
 
+// make more elegant
+var as = __memoize (data =>
+	L .modify
+	( (
+	L .values
+	) (
+	alternatives => !! equals (R .length (alternatives)) (1) ? R .head (alternatives) : L .choice (... alternatives)
+	) (
+	L .get
+	( (
+	L .inverse (L .keyed) )
+	) (
+	L .collectAs
+	( (
+	map => [ L .get ([L .first, L .first]) (map), L .collect ([ L .elems, L .suffix (-1) ]) (map) ] )
+	) (
+	[ L .groupBy (L .first) , L .elems ]
+	) (
+	L .collect ([ L .values, L .keyed, L .elems ]) (L .modify (L .values) (as_in) (student_app)) ) ) ) ) )
+
+
 
 var data_kind = by (data =>
 	L .get ([ L .keys, L .first ]))
@@ -137,8 +155,6 @@ var data_kind = by (data =>
 
 /*var focused_iso_ = lens => point => 
 	L .iso (L .get (lens), _x => L .set (lens) (_x) (point))*/
-var l_point_sum = (... traversals) => x =>
-	L .and ([ L .elems, _trav => L .isEmpty (_trav) (x) ]) (traversals)
 
 
 
@@ -158,9 +174,15 @@ var n_reducer = binary => n =>
 	
 var l_sum = traversals =>
 	[ L .pick (T (traversals) (L .get ([ L .indexed, L .inverse (L .keyed) ]))), L .values ]
+var l_undefined = so ((_=_=>
+	L .iso (flip_defined) (flip_defined),
+	where
+	, flip_defined = x => !! equals (x) (undefined) ? {} : undefined )=>_)
 
 var pin = L .forEach (I)
 var pinpoint = L .get
+var pin_first = (... traversals) => x =>
+	L .and ([ L .elems, _trav => L .isEmpty (_trav) (x) ]) (traversals)
 	
 	
 	
@@ -270,8 +292,11 @@ window .stuff = { ... window .stuff,
 	Y, impure, jinx, suppose,
 	so, by, 
 	go, never, panic, panic_on,
-	fiat, data, data_lens, data_iso, data_kind,
-	last_n, n_reducer, l_sum, l_point_sum, pin, pinpoint,
+	fiat, data, as_in, as, data_kind,
+	last_n, n_reducer,
+	l_sum, l_undefined,
+	pin, pin_first, pinpoint,
 	map_defined_, map_defined, from_just, 
+	as_reduction, as_point, as_points_on, as_points, points_, pointed_, pointed_I, 
 	as_sole, sole, shuffle,
 	I, K, not, equals }

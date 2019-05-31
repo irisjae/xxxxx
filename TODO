@@ -1,13 +1,14 @@
-add compression
-remove old 'points' data ~ encode info directly into attempts
-use new data
 fix ordering
+add compression
+use new data
 improve debugging (now, need to manually recreate state...)
 profile...
+use higher order state
 
 
 
 done:
+remove old 'points' data ~ encode info directly into attempts
 fix time syncing issues
 untangle server-side api from ensemble
 uniqueness types for feedbacks
