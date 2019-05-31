@@ -18,7 +18,7 @@ order,
 order_sort, direction_opposite, toggle_order, 
 shuffle, uuid, map_zip, last_n, mean, api, with_io, room_status,
 el, attrs_, on_, View,
-ticker, 
+ticker, consensus,
 avatar, student, problem, choice, latency, ping, position,
 attempt, past, board, win_rule, rules, settings,
 teacher_app, student_app,
@@ -400,10 +400,6 @@ var playing_view = _ => so ((_=_=>
 	, confirm_end = _ => {;please (L_ .set (feedback .end (uniq ()))) (feedback_state)}  
 	, toggle_background_music = _ => {;please (not) (ambient_background_music_on_state)} )=>_)
 		
-
-var show_unit = _x => !! (not (equals (0) (_x)) && ! _x) ? '-' :  _x .toFixed (2) * 1
-var show_time = _x => !! (not (equals (0) (_x)) && ! _x) ?  '-' : _x .toFixed (2) * 1 + '秒'
-
 var students_analysis_view = so ((_=_=>
 	_ordering =>
 		<students-analysis-etc>
@@ -567,6 +563,7 @@ var reset_game = _ => {
 var step_clock = ticker (app_progression_progress_timestamp_state) (1000)
 var game_clock = ticker (app_progression_start_state) (1000)
 
+var [ consent, next_consent ] = consensus ()
 
 				
 // rules
@@ -689,22 +686,6 @@ S .root (_ => {
 
 	// communication
 
-	var next_signal = S .data ()
-	var signals = _continue => {
-		;_continue ('read') (_continue => {
-			;_continue ('read') (_continue => {
-				;_continue ('write') (_continue => {
-					;signals (_continue) }) }) }) }
-	var signal = S .on (next_signal, suppose (
-		( unread = messages
-		, extract_message = _ => {
-			var next
-			;unread (_head => _tail => {
-				;next = _head 
-				;unread = _tail })
-			return next }
-		) =>
-		extract_message ) )
 	;S (_ => 
 		impure (
 		T (mark (app_room_state)
@@ -713,17 +694,18 @@ S .root (_ => {
 		[ L .when (I)
 		, _room =>
 			suppose (
-			( _signal = signal ()
+			( _consent = consent ()
 			) =>
 			with_io (_ =>
 			go
 			.then (_ =>
-				!! equals (_signal) ('write') ? so ((_=_=>
+				!! equals (_consent) ('write') ? so ((_=_=>
 				api (_room, ping_message),
+
 				where
 				, ping_message = message .teacher_ping (room_status (_room)) )=>_)
 
-				: equals (_signal) ('read') ?
+				: equals (_consent) ('read') ?
 				api (_room)
 				.then (_ensemble => {
 					if (equals (_room) (show (app_room_state))) {
@@ -735,4 +717,4 @@ S .root (_ => {
 				( [ 'error', L .is ('timeout'), L .when (I), _ => {;console .warn ('Room timed out')} ]
 				, panic ) ) )
 			.then (_ => {
-				;setTimeout (next_signal, 300) }) ) ]) ) ) ) })
+				;setTimeout (next_consent, 300) }) ) ]) ) ) ) })

@@ -1,3 +1,7 @@
+pinpoint (as_reduction) is pattern matching -> case_of/matches
+$ ([ R .reverse, $ ]) -> X
+L .subset -> matches_, l_is -> X (matches_, equals)
+make v first class (with as lenses, with named fields, with tagged cons)
 fix ordering
 add compression
 use new data
@@ -13,3 +17,5 @@ fix time syncing issues
 untangle server-side api from ensemble
 uniqueness types for feedbacks
 move resources into aux
+used some higher order state (last_n, mean)
+used higher order as

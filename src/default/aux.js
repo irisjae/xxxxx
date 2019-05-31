@@ -549,6 +549,26 @@ var ticker = reference_state => _precision =>
 		reference_state )
 	) =>
 	_ticker_state )
+var protocol = _continue => {
+	;_continue ('read') (_continue => {
+		;_continue ('read') (_continue => {
+			;_continue ('write') (_continue => {
+				;protocol (_continue) }) }) }) }
+var consensus = _ =>
+	suppose (
+	( next_deal = S .data ()
+	, deal = S .on (next_deal, suppose (
+		( deals_to_do = protocol
+		, _deal = _ => {
+			var next
+			;deals_to_do (_head => _tail => {
+				;next = _head 
+				;deals_to_do = _tail })
+			return next }
+		) =>
+		_deal ) )
+	) =>
+	[ deal, next_deal ] )
 
 
 
@@ -1055,7 +1075,7 @@ window .stuff = { ...window .stuff,
 	order_sort, direction_opposite, toggle_order, 
 	shuffle, uuid, map_zip, last_n, mean, api, with_io, room_status,
 	el, attrs_, on_, View,
-	ticker, 
+	ticker, consensus, 
 	avatar, student, problem, choice, latency, ping, position,
 	attempt, past, board, win_rule, rules, settings,
 	teacher_app, student_app,

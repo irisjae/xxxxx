@@ -18,7 +18,7 @@ order,
 order_sort, direction_opposite, toggle_order, 
 shuffle, uuid, map_zip, last_n, mean, api, with_io, room_status,
 el, attrs_, on_, View,
-ticker, 
+ticker, consensus,
 avatar, student, problem, choice, latency, ping, position,
 attempt, past, board, win_rule, rules, settings,
 teacher_app, student_app,
@@ -198,7 +198,7 @@ var setup_student_view = _ => so ((_=_=>
 			<avatar x-for="bunny" x-selected={T (_icon) (L .isDefined (as_in (avatar .bunny)))}>
 				<selected-input />
 				<img src={ img .bunny_avatar } /> </avatar> </icon> 
-		{ el (pinpoint (K (
+		{ el (L .get (K (
 		<button fn={on_ ([ clicking, feedback_enter_student ])} x-custom x-for="connect"><img src={ img .connect } /></button> )
 		) (
 		complete_ (
@@ -511,6 +511,7 @@ var self_correcting_timestamp_state = suppose (
 var step_clock = ticker (self_correcting_timestamp_state) (1000)
 var fine_step_clock = ticker (self_correcting_timestamp_state) (1)
 
+var [ consent, next_consent ] = consensus ()
 				
 
 // rules
@@ -621,22 +622,6 @@ var fine_step_clock = ticker (self_correcting_timestamp_state) (1)
 
 	// communication
 
-	var next_signal = S .data ()
-	var signals = _continue => {
-		;_continue ('read') (_continue => {
-			;_continue ('read') (_continue => {
-				;_continue ('write') (_continue => {
-					;signals (_continue) }) }) }) }
-	var signal = S .on (next_signal, suppose (
-		( unread = messages
-		, extract_message = _ => {
-			var next
-			;unread (_head => _tail => {
-				;next = _head 
-				;unread = _tail })
-			return next }
-		) =>
-		extract_message ) )
 	;S (_ => 
 		impure (
 		T (
@@ -647,13 +632,14 @@ var fine_step_clock = ticker (self_correcting_timestamp_state) (1)
 		[ as_complete
 		, ({ _room, _student }) =>
 			suppose (
-			( _signal = signal ()
+			( _consent = consent ()
 			) =>
 			with_io (_ =>
 			go
 			.then (_ =>
-				!! equals (_signal) ('write') ? so ((_=_=>
+				!! equals (_consent) ('write') ? so ((_=_=>
 				api (_room, [ message .student_ping (_student, room_status (_room)), ... in_playing_messages ]),
+
 				where
 				, _board = show (app_board_state)
 				, _past = show (app_past_state)
@@ -666,7 +652,7 @@ var fine_step_clock = ticker (self_correcting_timestamp_state) (1)
 					) (
 					show (app_state) ) )=>_)
 
-				: equals (_signal) ('read') ?
+				: equals (_consent) ('read') ?
 				api (_room)
 				.then (_ensemble => {
 					if (equals (_room) (show (app_room_state))) {
@@ -678,4 +664,4 @@ var fine_step_clock = ticker (self_correcting_timestamp_state) (1)
 				( [ 'error', L .is ('timeout'), L .when (I), _ => {;console .warn ('Room timed out')} ]
 				, panic ) ) )
 			.then (_ => {
-				;setTimeout (next_signal, 300) }) ) ] ) ) ) ) })
+				;setTimeout (next_consent, 300) }) ) ] ) ) ) ) })
